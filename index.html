@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>PocketStore</title>
+  </head>
+  <body>
+    <h1>PocketStore</h1>
+    <script src="./dist/pocketstore.min.js"></script>
+    <script>
+      store1 = new PocketStore({value1: true, sub1: { sub2: { value2: false}}});
+      console.log(store1)
+      store2 = new PocketStore();
+      sub0 = store1.subscribe(function(state, message) { 
+        console.log('sub0' + JSON.stringify(state) + message) 
+      });
+      sub1 = store1.subscribe(function(state, message) {
+        console.log('sub1' + JSON.stringify(state) + message) 
+      }, 'sub1');
+      sub2 = sub1.subscribe(function(state, message) { 
+        console.log('sub2' + JSON.stringify(state) + message)
+        console.log(sub2)
+      }, 'sub2')
+      sub2a = sub1.subscribe(function(state, message) {
+        console.log('sub2a' + JSON.stringify(state) + message)
+      }, 'sub2a');
+      sub2.dispatch(function(state, dispatcher) { 
+        state.value3 = false, 'hello from sub2!' 
+        dispatcher(state, 'hoi1')});
+      console.log(store1.yet())
+      sub2.dispatch(function(state, dispatcher) { 
+        setTimeout(function() {
+          dispatcher({value4:true}, 'hello 2 from sub2')
+        }, 3000)
+      });
+      store1.us(sub2)
+      store1.dispatch('hello!')
+    </script>
+  </body>
+</html>
