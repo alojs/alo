@@ -1,0 +1,35 @@
+{
+  "name": "pocketstore",
+  "version": "0.0.1",
+  "description": "A minimalist approach to javascript state management",
+  "main": "dist/pocketstore.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/webpack && ./node_modules/.bin/uglifyjs ./dist/pocketstore.js -c -m -o ./dist/pocketstore.min.js --source-map ./dist/pocketstore.min.js.map"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katywings/PocketStore.git"
+  },
+  "keywords": [
+    "minimalist",
+    "javascript",
+    "state",
+    "management",
+    "library"
+  ],
+  "author": {
+    "name": "Katja Lutz",
+    "email": "",
+    "url": "https://github.com/katywings"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/katywings/PocketStore/issues"
+  },
+  "homepage": "https://github.com/katywings/PocketStore#readme",
+  "devDependencies": {
+    "uglify-js": "^2.7.3",
+    "webpack": "^1.13.2"
+  }
+}
