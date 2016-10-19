@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/katywings/PocketStore.git"
+    "url": "git+https://github.com/katywings/pocketstore.git"
   },
   "keywords": [
     "minimalist",
@@ -25,9 +25,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/katywings/PocketStore/issues"
+    "url": "https://github.com/katywings/pocketstore/issues"
   },
-  "homepage": "https://github.com/katywings/PocketStore#readme",
+  "homepage": "https://github.com/katywings/pocketstore#readme",
   "devDependencies": {
     "uglify-js": "^2.7.3",
     "webpack": "^1.13.2"
