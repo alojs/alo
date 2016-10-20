@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>PocketStore</title>
+    <title>Alo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" />
   </head>
   <body>
     <div class="container">
       <div class="row">
         <div class="col-xs-12">
-          <h1 class="display-1">PocketStore</h1>
+          <h1 class="display-1">Alo</h1>
           <p class="lead">A minimalist approach to javascript state management</p>
         </div>
       </div>
@@ -19,11 +19,11 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"></script>
-    <script src="./dist/pocketstore.min.js"></script>
+    <script src="./dist/alo.js"></script>
     <script>
-      store1 = new PocketStore({value1: true, sub1: { sub2: { value2: false}}});
+      store1 = new alo.Store({value1: true, sub1: { sub2: { value2: false}}});
       console.log(store1)
-      store2 = new PocketStore();
+      store2 = new alo.Store();
       sub0 = store1.subscribe(function(state, message) { 
         console.log('sub0' + JSON.stringify(state) + message) 
       });

@@ -1,9 +1,12 @@
+var path = require("path");
+
 module.exports = {
   target: 'web',
   entry: './src/main.js',
   output: {
-    library: 'PocketStore',
-    path: './dist',
-    filename: 'pocketstore.js'
+    publicPath: '/dist/',
+    library: 'alo',
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'alo.js'
   }
 }

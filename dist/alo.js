@@ -1,4 +1,4 @@
-var PocketStore =
+var alo =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -35,7 +35,7 @@ var PocketStore =
 /******/ 	__webpack_require__.c = installedModules;
 
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/dist/";
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -45,7 +45,11 @@ var PocketStore =
 /* 0 */
 /***/ function(module, exports) {
 
-	var PocketStore = function (state) {
+	/**
+	 * The core of Alo. A store is the central place for application state
+	 * @param {Object} state - Optional object to set as a start state
+	 */
+	var Store = function AloStore (state) {
 	  if (typeof (state) !== 'object') {
 	    state = {}
 	  }
@@ -57,11 +61,11 @@ var PocketStore =
 	  this._synchronize()
 	}
 
-	PocketStore.prototype._synchronize = function _synchronize () {
+	Store.prototype._synchronize = function _synchronize () {
 	  this.protected.publicState = this._cloneObject(this.protected.state)
 	}
 
-	PocketStore.prototype._publish = function _publish (namespace, message) {
+	Store.prototype._publish = function _publish (namespace, message) {
 	  var self = this
 	  self._synchronize()
 	  self.protected.subscriptions.forEach(function (subscription) {
@@ -69,7 +73,7 @@ var PocketStore =
 	  })
 	}
 
-	PocketStore.prototype._setState = function _setState (newState, namespace, state) {
+	Store.prototype._setState = function _setState (newState, namespace, state) {
 	  var self = this
 	  if (typeof (state) === 'undefined') {
 	    state = self.protected.state
@@ -90,7 +94,7 @@ var PocketStore =
 	  }
 	}
 
-	PocketStore.prototype._getStateByNamespace = function _getStateByNamespace (namespace, state) {
+	Store.prototype._getStateByNamespace = function _getStateByNamespace (namespace, state) {
 	  var self = this
 	  if (typeof (state) === 'undefined') {
 	    state = self.protected.state
@@ -105,7 +109,7 @@ var PocketStore =
 	  return state
 	}
 
-	PocketStore.prototype._getPreparedNamespace = function _getPreparedNamespace (namespace) {
+	Store.prototype._getPreparedNamespace = function _getPreparedNamespace (namespace) {
 	  switch (typeof (namespace)) {
 	    case 'string':
 	      namespace = namespace.split('.')
@@ -117,7 +121,7 @@ var PocketStore =
 	  return namespace
 	}
 
-	PocketStore.prototype._callSubscription = function _callSubscription (subscription, namespace, message) {
+	Store.prototype._callSubscription = function _callSubscription (subscription, namespace, message) {
 	  var self = this
 	  if (subscription != null) {
 	    var state = self._getStateByNamespace(subscription.namespace)
@@ -140,7 +144,7 @@ var PocketStore =
 	  return self
 	}
 
-	PocketStore.prototype._cloneObject = function _cloneObject (object) {
+	Store.prototype._cloneObject = function _cloneObject (object) {
 	  var clone = null
 	  if (this._isArray(object)) {
 	    clone = []
@@ -157,7 +161,7 @@ var PocketStore =
 	  return clone
 	}
 
-	PocketStore.prototype._getDispatcher = function _getDispatcher (namespace) {
+	Store.prototype._getDispatcher = function _getDispatcher (namespace) {
 	  var self = this
 	  return function (newState, message) {
 	    if (typeof (newState) === 'object' && newState != null) {
@@ -167,33 +171,33 @@ var PocketStore =
 	  }
 	}
 
-	PocketStore.prototype._isArray = function _isArray (object) {
+	Store.prototype._isArray = function _isArray (object) {
 	  return Object.prototype.toString.call(object) === '[object Array]'
 	}
 
-	PocketStore.prototype.yt = PocketStore.prototype.yet = function yet (namespace) {
+	Store.prototype.yt = Store.prototype.yet = function yet (namespace) {
 	  namespace = this._getExtendedNamespace(namespace)
 	  return this._getStateByNamespace(namespace, this.protected.publicState)
 	}
 
-	PocketStore.prototype._getNamespace = function _getNamespace () {
+	Store.prototype._getNamespace = function _getNamespace () {
 	  return []
 	}
 
-	PocketStore.prototype._getExtendedNamespace = function _getExtendedNamespace (extNamespace) {
+	Store.prototype._getExtendedNamespace = function _getExtendedNamespace (extNamespace) {
 	  var self = this
 	  var namespace = self._getNamespace()
 	  extNamespace = self._getPreparedNamespace(extNamespace)
 	  return namespace.concat(extNamespace)
 	}
 
-	PocketStore.prototype.ss = PocketStore.prototype.subscribe = function subscribe (functionParam, namespace) {
+	Store.prototype.ss = Store.prototype.subscribe = function subscribe (functionParam, namespace) {
 	  var self = this
 	  var subscription = {
 	    namespace: self._cloneObject(self._getExtendedNamespace(namespace))
 	  }
 	  var callbackFunction = null
-	  if (functionParam instanceof PocketStore) {
+	  if (functionParam instanceof Store) {
 	    callbackFunction = function () {
 	      functionParam.dispatch()
 	    }
@@ -204,29 +208,29 @@ var PocketStore =
 	  var idx = self.protected.subscriptions.push(subscription)
 	  idx--
 
-	  var PocketStoreSubscription = function () {
+	  var Subscription = function AloSubscribtion() {
 	    this.id = idx
 	    this.protected = self.protected
 	  }
-	  PocketStoreSubscription.prototype = Object.create(PocketStore.prototype)
-	  PocketStoreSubscription.prototype.constructor = PocketStoreSubscription
-	  PocketStoreSubscription.prototype.remember = function remember () {
+	  Subscription.prototype = Object.create(Store.prototype)
+	  Subscription.prototype.constructor = Subscription
+	  Subscription.prototype.remember = function remember () {
 	    self._callSubscription(self.protected.subscriptions[idx])
 	    return self
 	  }
 
-	  PocketStoreSubscription.prototype._getNamespace = function _getNamespace () {
+	  Subscription.prototype._getNamespace = function _getNamespace () {
 	    return subscription.namespace
 	  }
-	  return new PocketStoreSubscription()
+	  return new Subscription()
 	}
 
-	PocketStore.prototype.us = PocketStore.prototype.unsubscribe = function unsubscribe (subscription) {
+	Store.prototype.us = Store.prototype.unsubscribe = function unsubscribe (subscription) {
 	  this.protected.subscriptions[subscription.id] = null
 	  return this
 	}
 
-	PocketStore.prototype.dp = PocketStore.prototype.dispatch = function dispatch (functionParam, namespace) {
+	Store.prototype.dp = Store.prototype.dispatch = function dispatch (functionParam, namespace) {
 	  var self = this
 	  namespace = self._getExtendedNamespace(namespace)
 	  var state = self._getStateByNamespace(namespace)
@@ -247,7 +251,6 @@ var PocketStore =
 	      }
 	    }
 	  }
-	  console.log(functionParam)
 	  switch (typeof (functionParam)) {
 	    case 'function':
 	      handleSingleDispatch(functionParam)
@@ -268,7 +271,9 @@ var PocketStore =
 	  return this
 	}
 
-	module.exports = PocketStore
+	module.exports = {
+	  Store: Store
+	}
 
 
 /***/ }
