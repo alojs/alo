@@ -1,15 +1,15 @@
 {
-  "name": "pocketstore",
+  "name": "alo",
   "version": "0.0.1",
   "description": "A minimalist approach to javascript state management",
-  "main": "dist/pocketstore.js",
+  "main": "dist/alo.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/.bin/webpack && ./node_modules/.bin/uglifyjs ./dist/pocketstore.js -c -m -o ./dist/pocketstore.min.js --source-map ./dist/pocketstore.min.js.map"
+    "build": "./node_modules/.bin/webpack && ./node_modules/.bin/uglifyjs ./dist/alo.js -c -m -o ./dist/alo.min.js --source-map ./dist/alo.min.js.map"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/katywings/pocketstore.git"
+    "url": "git+https://github.com/lufrai/alo.git"
   },
   "keywords": [
     "minimalist",
@@ -25,9 +25,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/katywings/pocketstore/issues"
+    "url": "https://github.com/lufrai/alo/issues"
   },
-  "homepage": "https://github.com/katywings/pocketstore#readme",
+  "homepage": "https://github.com/lufrai/alo#readme",
   "devDependencies": {
     "uglify-js": "^2.7.3",
     "webpack": "^1.13.2"
