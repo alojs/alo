@@ -21,33 +21,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"></script>
     <script src="./dist/alo.js"></script>
     <script>
-      store1 = new alo.Store({value1: true, sub1: { sub2: { value2: false}}});
-      console.log(store1)
-      store2 = new alo.Store();
-      sub0 = store1.subscribe(function(state, message) { 
-        console.log('sub0' + JSON.stringify(state) + message) 
+      var store1 = new alo.Store();
+      store1.subscribe(function(state) {
+	      console.log(['person1',state]);
       });
-      sub1 = store1.subscribe(function(state, message) {
-        console.log('sub1' + JSON.stringify(state) + message) 
-      }, 'sub1');
-      sub2 = sub1.subscribe(function(state, message) { 
-        console.log('sub2' + JSON.stringify(state) + message)
-        console.log(sub2)
-      }, 'sub2')
-      sub2a = sub1.subscribe(function(state, message) {
-        console.log('sub2a' + JSON.stringify(state) + message)
-      }, 'sub2a');
-      sub2.dispatch(function(state, dispatcher) { 
-        state.value3 = false, 'hello from sub2!' 
-        dispatcher(state, 'hoi1')});
-      console.log(store1.yet())
-      sub2.dispatch(function(state, dispatcher) { 
-        setTimeout(function() {
-          dispatcher({value4:true}, 'hello 2 from sub2')
-        }, 3000)
+      store1.dispatch(function(state, dispatcher) {
+	      state.hello = 'world';
+	      dispatcher(state, 'hello world changed');
       });
-      store1.us(sub2)
-      store1.dispatch('hello!')
+      store1.dispatch(function(state) {
+        state.toodaloo = 'alividertschi';
+	return state;
+      });
+      var sub1 = store1.subscribe(function(state) {
+	console.log(['person2',state]);
+      }, 'myNamespace');
+      sub1.dispatch(function(state, dispatcher) {
+        state.hello2 = 'world2';
+	dispatcher(state);
+      });
+      sub1.dispatch(function(state) {
+	state.toodaloo2 = 'alividertschi2';
+	return state;
+      });
+      store1.dispatch(function(state) {
+	      state.myNamespace.lastCheck = 'yes!';
+	      return state;
+      });
     </script>
   </body>
 </html>

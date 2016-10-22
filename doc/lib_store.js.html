@@ -1,11 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/store.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/store.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Store
+ * @module alo/store
+ * @see module:alo/subscription
+ */
+
+var Store =
 /**
  * The core of Alo. A store is the central place for application state
+ *
+ * @function
+ *
  * @param {Object} state - Optional object to set as a start state
  */
-var Store = function AloStore (state) {
+module.exports = function AloStore (state) {	
   if (typeof (state) !== 'object') {
     state = {}
   }
+
+  this._namespace = []
+
   this.protected = {
     state: state,
     publicState: {},
@@ -26,24 +67,26 @@ Store.prototype._publish = function _publish (namespace, message) {
   })
 }
 
-Store.prototype._setState = function _setState (newState, namespace, state) {
+Store.prototype._setState = function _setState (newState, namespace, stateParam) {
   var self = this
-  if (typeof (state) === 'undefined') {
-    state = self.protected.state
-  }
   if (typeof (namespace) !== 'string') {
-    if (namespace.length > 1) {
-      var currentNamespace = namespace[0]
-      if (state[currentNamespace] == null) {
-        state[currentNamespace] = {}
-      }
-      namespace.shift()
-      return self._setState(newState, namespace, state[currentNamespace])
-    } else if (namespace.length === 1) {
-      state[namespace[0]] = newState
+    if (typeof(stateParam) == 'undefined') {
+      namespace.unshift('state')
+      self._setState(newState, namespace, self.protected)
     } else {
-      state = newState
+      if (namespace.length > 1) {
+        var currentNamespace = namespace[0]
+        if (stateParam[currentNamespace] == null) {
+          stateParam[currentNamespace] = {}
+        }
+        namespace.shift()
+        return self._setState(newState, namespace, stateParam[currentNamespace])
+      } else if (namespace.length === 1) {
+        stateParam[namespace[0]] = newState
+      }
     }
+  } else {
+    self.protected.state = newState;
   }
 }
 
@@ -105,7 +148,7 @@ Store.prototype._cloneObject = function _cloneObject (object) {
     clone = {}
   }
   for (var i in object) {
-    if (typeof (object[i]) === 'object' && object[i] != null) {
+    if (typeof (object[i]) === 'object' &amp;&amp; object[i] != null) {
       clone[i] = this._cloneObject(object[i])
     } else {
       clone[i] = object[i]
@@ -117,7 +160,7 @@ Store.prototype._cloneObject = function _cloneObject (object) {
 Store.prototype._getDispatcher = function _getDispatcher (namespace) {
   var self = this
   return function (newState, message) {
-    if (typeof (newState) === 'object' && newState != null) {
+    if (typeof (newState) === 'object' &amp;&amp; newState != null) {
       self._setState(newState, self._cloneObject(namespace))
     }
     self._publish(namespace, message)
@@ -134,7 +177,7 @@ Store.prototype.yt = Store.prototype.yet = function yet (namespace) {
 }
 
 Store.prototype._getNamespace = function _getNamespace () {
-  return []
+  return this._namespace
 }
 
 Store.prototype._getExtendedNamespace = function _getExtendedNamespace (extNamespace) {
@@ -161,21 +204,8 @@ Store.prototype.ss = Store.prototype.subscribe = function subscribe (functionPar
   var idx = self.protected.subscriptions.push(subscription)
   idx--
 
-  var Subscription = function AloSubscribtion() {
-    this.id = idx
-    this.protected = self.protected
-  }
-  Subscription.prototype = Object.create(Store.prototype)
-  Subscription.prototype.constructor = Subscription
-  Subscription.prototype.remember = function remember () {
-    self._callSubscription(self.protected.subscriptions[idx])
-    return self
-  }
-
-  Subscription.prototype._getNamespace = function _getNamespace () {
-    return subscription.namespace
-  }
-  return new Subscription()
+  var Subscription = require('./subscription.js')
+  return new Subscription(idx, self.protected, subscription.namespace)
 }
 
 Store.prototype.us = Store.prototype.unsubscribe = function unsubscribe (subscription) {
@@ -224,6 +254,27 @@ Store.prototype.dp = Store.prototype.dispatch = function dispatch (functionParam
   return this
 }
 
-module.exports = {
-  Store: Store
-}
+module.exports = Store
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-alo.html">alo</a></li><li><a href="module-alo_store.html">alo/store</a></li><li><a href="module-alo_subscription.html">alo/subscription</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sat Oct 22 2016 02:15:10 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
