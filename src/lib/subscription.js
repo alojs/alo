@@ -6,7 +6,6 @@
 
 var Store = require('./store.js')
 
-var Subscription =
 /**
  * Subscription Constructor, is used in the Store Class to create Subscriptions to state
  *
@@ -17,7 +16,7 @@ var Subscription =
  * @param {Object} storeProtected
  * @param {string | Array} namespace
  */
-module.exports = function AloSubscription(id, storeProtected, namespace) {
+var Subscription = function AloSubscription(id, storeProtected, namespace) {
   this._id = id
   this._namespace = this._getPreparedNamespace(namespace) 
   this.protected = storeProtected
@@ -29,3 +28,5 @@ Subscription.prototype.remember = function remember () {
   this._callSubscription(this.protected.subscriptions[this._id])
   return this
 }
+
+module.exports = Subscription

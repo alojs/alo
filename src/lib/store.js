@@ -4,7 +4,6 @@
  * @see module:alo/subscription
  */
 
-var Store =
 /**
  * The core of Alo. A store is the central place for application state
  *
@@ -12,7 +11,7 @@ var Store =
  *
  * @param {Object} state - Optional object to set as a start state
  */
-module.exports = function AloStore (state) {	
+var Store = function AloStore (state) {	
   if (typeof (state) !== 'object') {
     state = {}
   }

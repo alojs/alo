@@ -79,7 +79,6 @@ var alo =
 	 * @see module:alo/subscription
 	 */
 
-	var Store =
 	/**
 	 * The core of Alo. A store is the central place for application state
 	 *
@@ -87,7 +86,7 @@ var alo =
 	 *
 	 * @param {Object} state - Optional object to set as a start state
 	 */
-	module.exports = function AloStore (state) {	
+	var Store = function AloStore (state) {	
 	  if (typeof (state) !== 'object') {
 	    state = {}
 	  }
@@ -316,7 +315,6 @@ var alo =
 
 	var Store = __webpack_require__(1)
 
-	var Subscription =
 	/**
 	 * Subscription Constructor, is used in the Store Class to create Subscriptions to state
 	 *
@@ -327,7 +325,7 @@ var alo =
 	 * @param {Object} storeProtected
 	 * @param {string | Array} namespace
 	 */
-	module.exports = function AloSubscription(id, storeProtected, namespace) {
+	var Subscription = function AloSubscription(id, storeProtected, namespace) {
 	  this._id = id
 	  this._namespace = this._getPreparedNamespace(namespace) 
 	  this.protected = storeProtected
@@ -339,6 +337,8 @@ var alo =
 	  this._callSubscription(this.protected.subscriptions[this._id])
 	  return this
 	}
+
+	module.exports = Subscription
 
 
 /***/ }
