@@ -48,9 +48,9 @@ var alo =
 	/**
 	 * alo Modul
 	 * @module alo
-	 * @see module:alo/store
-	 * @see module:alo/subscription
 	 */
+
+	var Store = __webpack_require__(1);
 
 	/**
 	 * public object with access to the different constructors
@@ -58,10 +58,12 @@ var alo =
 	module.exports = {
 	  /**
 	   * Access to the store constructor
+	   * @see module:alo/store
 	   */
-	  Store: __webpack_require__(1),
+	  Store: Store,
 	  /**
 	   * Access to the subscription constructor
+	   * @see module:alo/subscription
 	   */
 	  Subscription: __webpack_require__(2)
 	}
@@ -77,6 +79,7 @@ var alo =
 	 * @see module:alo/subscription
 	 */
 
+	var Store =
 	/**
 	 * The core of Alo. A store is the central place for application state
 	 *
@@ -313,6 +316,7 @@ var alo =
 
 	var Store = __webpack_require__(1)
 
+	var Subscription =
 	/**
 	 * Subscription Constructor, is used in the Store Class to create Subscriptions to state
 	 *
