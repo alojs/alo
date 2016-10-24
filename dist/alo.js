@@ -259,6 +259,9 @@ var alo =
 	  return this
 	}
 
+	/**
+	 * Dispatches new state
+	 */
 	Store.prototype.dp = Store.prototype.dispatch = function dispatch (functionParam, namespace) {
 	  var self = this
 	  namespace = self._getExtendedNamespace(namespace)
@@ -269,10 +272,16 @@ var alo =
 	    if (typeof (functionParam) === 'function') {
 	      switch (functionParam.length) {
 	        case 0:
-	          dispatcher(functionParam())
+	          var functionResult = functionParam();
+		  if (functionResult != null) {
+	            dispatcher(functionResult)
+		  }
 	          break
 	        case 1:
-	          dispatcher(functionParam(state))
+	          var functionResult = functionParam(state);
+		  if (functionResult != null) {
+	            dispatcher(functionResult)
+		  }
 	          break
 	        default:
 	          functionParam(state, dispatcher)
