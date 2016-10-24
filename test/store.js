@@ -52,26 +52,49 @@ describe('Store', function() {
       var sub = newStore.subscribe(function() {});
       assert.equal(true, sub instanceof alo.Subscription);
     });
-    it('subscription function should be called on dispatch', function() {
-      var newStore = new alo.Store();
-      var status = false;
-      newStore.subscribe(function() {
-        status = true;
+    describe('callback function', function() {	    
+      it('should get called on dispatch', function() {
+        var newStore = new alo.Store();
+        var status = 0;
+        newStore.subscribe(function() {
+          status += 1;
+        });
+        newStore.dispatch();
+        assert.equal(1, status);
+	newStore.dispatch(function(){
+	  return { hello: 'world'};
+	});
+	assert.equal(2, status);
+	newStore.dispatch(function(state, dispatcher) {
+	  dispatcher({ hello: 'world' });
+	});
+	assert.equal(3, status);
       });
-      newStore.dispatch();
-      assert.equal(true, status);
-    });
-    it('subscription function should get new state of dispatch', function() {
-      var newStore = new alo.Store();
-      var state = {};
-      newStore.subscribe(function(newState) {
-        state = newState;
+      it('should not get called on incomplete dispatch', function() {
+        var newStore = new alo.Store();
+	var status = false;
+	newStore.ss(function() {
+	  status = true;
+	});
+	newStore.dp(function(state, dispatcher) {});
+	assert.equal(false, status);
+	newStore.dp(function(state) {});
+	assert.equal(false, status);
+	newStore.dp(function() {});
+	assert.equal(false, status);
       });
-      newStore.dispatch(function(state) {
-        state.hello = 'world';
-        return state;
+      it('should get new state of dispatch', function() {
+        var newStore = new alo.Store();
+        var state = {};
+        newStore.subscribe(function(newState) {
+          state = newState;
+        });
+        newStore.dispatch(function(state) {
+          state.hello = 'world';
+          return state;
+        });
+        assert.equal('world', state.hello);
       });
-      assert.equal('world', state.hello);
     });
   });
 });
