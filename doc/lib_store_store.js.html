@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Alo Source: lib/store/store.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.flatly.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Alo</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Handler_protected.html">Handler#protected</a></li><li><a href="util.html">util</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-alo.html">alo</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Handler.html">Handler</a></li><li><a href="Store.html">Store</a></li><li><a href="Subscription.html">Subscription</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: lib/store/store.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">var Handler = require('./../handler/handler.js')
+var u = require('./../util/util.js')
+
+/**
+ * The core of Alo. A store is the central place for application state
+ *
+ * @class
+ *
+ * @param {Object} state - Optional object to set as a start state
+ */
+var Store = function AloStore (state) {
+  if (!u.isObject(state)) {
+    state = {}
+  }
+
+  /**
+   * @private
+   */
+  this._namespace = []
+
+  /**
+   * @private
+   */
+  this.protected = {
+    id: u.uniqueId(),
+    state: state,
+    publicState: {},
+    handlers: {},
+    subscriptions: []
+  }
+
+  this._synchronize()
+}
+
+Store.prototype.getId = function getId () {
+  return this.protected.id
+}
+
+/**
+ * Adds a handler object to the registered handlers
+ *
+ * @param {Handler} handler
+ *
+ * @return {Store} this
+ */
+Store.prototype.addHandler = function addHandler (handler, fromHandler) {
+  if (handler instanceof Handler) {
+    var id = handler.getId()
+    if (u.isString(id) &amp;&amp; id !== '') {
+      if (!u.isBoolean(fromHandler) || fromHandler !== true) {
+        handler.addStore(this, true)
+      }
+      this.protected.handlers[id] = handler
+    }
+  }
+  return this
+}
+
+/**
+ * Removes a handler from the currently registered handlers
+ * {int|Handler} handler id or Handler
+ * @return {Store} this
+ */
+Store.prototype.removeHandler = function removeHandler (arg1, fromHandler) {
+  var id = null
+
+  if (u.isString(arg1)) {
+    id = arg1
+  } else if (arg1 instanceof Handler) {
+    id = arg1.getId()
+  }
+
+  if (u.isString(id) &amp;&amp; id !== '') {
+    if (!u.isBoolean(fromHandler) || fromHandler !== true) {
+      this.protected.handlers[id].removeStore(this.getId(), true)
+    }
+    delete this.protected.handlers[id]
+  }
+
+  return this
+}
+
+/**
+ * Registers one or multible reducers
+ *
+ * @function
+ *
+ * @param {array/...function} Array or variadic call of one or multible reducer functions
+ *
+ * @return {Handler}
+ * @see Handler
+ */
+Store.prototype.addReducer = u.polymorphic()
+var addReducer = Store.prototype.addReducer
+var addReducerArray = function (reducer) {
+  var handler = new Handler()
+  u.forEach(reducer, function (item) {
+    if (!u.isFunction(item)) {
+      throw new Error('Given argument ist not a function')
+    } else {
+      handler.addReducer(item)
+    }
+  })
+  this.addHandler(handler)
+  return handler
+}
+addReducer.signature('array', addReducerArray)
+addReducer.signature('function', function (func) {
+  var reducers = [func]
+  return addReducerArray.call(this, reducers)
+})
+addReducer.signature('...', function (rest) {
+  return addReducerArray.call(this, rest)
+})
+
+/**
+ * Syncs the public state variable with the protected state
+ * @private
+ * @param no param :)
+ */
+Store.prototype._synchronize = function _synchronize () {
+  this.protected.publicState = u.cloneDeep(this.protected.state)
+}
+
+Store.prototype._publish = function _publish (namespace, message) {
+  var self = this
+  self._synchronize()
+  u.forEach(self.protected.subscriptions, function (subscription) {
+    self._callSubscription(subscription, namespace, message)
+  })
+}
+
+Store.prototype._setState = function _setState (newState, namespace, stateParam) {
+  var self = this
+  if (!u.isString(namespace)) {
+    if (typeof (stateParam) === 'undefined') {
+      namespace.unshift('state')
+      self._setState(newState, namespace, self.protected)
+    } else {
+      if (namespace.length > 1) {
+        var currentNamespace = namespace[0]
+        if (stateParam[currentNamespace] == null) {
+          stateParam[currentNamespace] = {}
+        }
+        namespace.shift()
+        return self._setState(newState, namespace, stateParam[currentNamespace])
+      } else if (namespace.length === 1) {
+        stateParam[namespace[0]] = newState
+      }
+    }
+  } else {
+    self.protected.state = newState
+  }
+}
+
+Store.prototype._getStateByNamespace = function _getStateByNamespace (namespace, state) {
+  var self = this
+  if (typeof (state) === 'undefined') {
+    state = self.protected.state
+  }
+  namespace = self._getPreparedNamespace(namespace)
+  u.forEach(namespace, function (currentNamespace) {
+    if (state[currentNamespace] == null) {
+      state[currentNamespace] = {}
+    }
+    state = state[currentNamespace]
+  })
+  return state
+}
+
+Store.prototype._getPreparedNamespace = function _getPreparedNamespace (namespace) {
+  switch (typeof (namespace)) {
+    case 'string':
+      namespace = namespace.split('.')
+      break
+    case 'undefined':
+      namespace = []
+      break
+  }
+  return namespace
+}
+
+Store.prototype._getExtendedNamespace = function _getExtendedNamespace (extNamespace) {
+  var self = this
+  var namespace = self._getNamespace()
+  extNamespace = self._getPreparedNamespace(extNamespace)
+  return namespace.concat(extNamespace)
+}
+
+Store.prototype._callSubscription = function _callSubscription (subscription, namespace, message) {
+  var self = this
+  if (subscription != null) {
+    var state = self._getStateByNamespace(subscription.namespace)
+    if (subscription.namespace != null) {
+      namespace = self._getPreparedNamespace(namespace)
+      if (namespace.length > 0) {
+        var inNamespace = namespace.every(function (namespaceItem, idx) {
+          return (subscription.namespace[idx] == null || subscription.namespace[idx] === namespaceItem)
+        })
+        if (inNamespace) {
+          subscription.callbackFunction.call(null, u.cloneDeep(state), message)
+        }
+      } else {
+        subscription.callbackFunction.call(null, u.cloneDeep(state), message)
+      }
+    } else {
+      subscription.callbackFunction.call(null, u.cloneDeep(state), message)
+    }
+  }
+  return self
+}
+
+Store.prototype._getDispatcher = function _getDispatcher (namespace) {
+  var self = this
+  return function (newState, message) {
+    if (u.isObject(newState) &amp;&amp; newState != null) {
+      self._setState(newState, u.cloneDeep(namespace))
+      u.forEach(self.protected.handlers, function (handler) {
+        // TODO: State and action needs to be added here
+        handler._handle()
+      })
+    }
+    self._publish(namespace, message)
+  }
+}
+
+Store.prototype.yet = function yet (namespace) {
+  namespace = this._getExtendedNamespace(namespace)
+  return this._getStateByNamespace(namespace, this.protected.publicState)
+}
+
+Store.prototype._getNamespace = function _getNamespace () {
+  return this._namespace
+}
+
+Store.prototype.subscribe = function subscribe (functionParam, namespace) {
+  var self = this
+  var subscription = {
+    namespace: u.cloneDeep(self._getExtendedNamespace(namespace))
+  }
+  var callbackFunction = null
+  if (functionParam instanceof Store) {
+    callbackFunction = function () {
+      functionParam.dispatch()
+    }
+  } else {
+    callbackFunction = functionParam
+  }
+  subscription.callbackFunction = callbackFunction
+  var idx = self.protected.subscriptions.push(subscription)
+  idx--
+
+  var Subscription = require('./../subscription/subscription.js')
+  return new Subscription(idx, self.protected, subscription.namespace)
+}
+
+Store.prototype.us = Store.prototype.unsubscribe = function unsubscribe (subscription) {
+  this.protected.subscriptions[subscription.id] = null
+  return this
+}
+
+/**
+ * Dispatches new state
+ */
+Store.prototype.dispatch = function dispatch (functionParam, namespace) {
+  var self = this
+  namespace = self._getExtendedNamespace(namespace)
+  var state = self._getStateByNamespace(namespace)
+  state = u.cloneDeep(state)
+  var dispatcher = self._getDispatcher(namespace)
+  var handleSingleDispatch = function handleSingleDispatch (func) {
+    if (u.isFunction(functionParam)) {
+      switch (functionParam.length) {
+        case 0:
+          var functionResult = functionParam()
+          if (functionResult != null) {
+            dispatcher(functionResult)
+          }
+          break
+        case 1:
+          var functionResult = functionParam(state)
+          if (functionResult != null) {
+            dispatcher(functionResult)
+          }
+          break
+        default:
+          functionParam(state, dispatcher)
+          break
+      }
+    }
+  }
+  switch (typeof (functionParam)) {
+    case 'function':
+      handleSingleDispatch(functionParam)
+      break
+    case 'object':
+      if (u.isArray(functionParam)) {
+        u.forEach(functionParam, function (functionParamItem) {
+          handleSingleDispatch(functionParamItem)
+        })
+      }
+      break
+    case 'string':
+      dispatcher(null, functionParam)
+      break
+    default:
+      dispatcher()
+  }
+  return this
+}
+
+module.exports = Store
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; 2016 Lufrai
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
+	
+		on 2016-11-23T19:41:32+01:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

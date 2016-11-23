@@ -1,47 +1,139 @@
-/**
- * Store
- * @module alo/store
- * @see module:alo/subscription
- */
+var Handler = require('./../handler/handler.js')
+var u = require('./../util/util.js')
 
 /**
  * The core of Alo. A store is the central place for application state
  *
- * @function
+ * @class
  *
  * @param {Object} state - Optional object to set as a start state
  */
-var Store = function AloStore (state) {	
-  if (typeof (state) !== 'object') {
+var Store = function AloStore (state) {
+  if (!u.isObject(state)) {
     state = {}
   }
 
+  /**
+   * @private
+   */
   this._namespace = []
 
+  /**
+   * @private
+   */
   this.protected = {
+    id: u.uniqueId(),
     state: state,
     publicState: {},
+    handlers: {},
     subscriptions: []
   }
+
   this._synchronize()
 }
 
+Store.prototype.getId = function getId () {
+  return this.protected.id
+}
+
+/**
+ * Adds a handler object to the registered handlers
+ *
+ * @param {Handler} handler
+ *
+ * @return {Store} this
+ */
+Store.prototype.addHandler = function addHandler (handler, fromHandler) {
+  if (handler instanceof Handler) {
+    var id = handler.getId()
+    if (u.isString(id) && id !== '') {
+      if (!u.isBoolean(fromHandler) || fromHandler !== true) {
+        handler.addStore(this, true)
+      }
+      this.protected.handlers[id] = handler
+    }
+  }
+  return this
+}
+
+/**
+ * Removes a handler from the currently registered handlers
+ * {int|Handler} handler id or Handler
+ * @return {Store} this
+ */
+Store.prototype.removeHandler = function removeHandler (arg1, fromHandler) {
+  var id = null
+
+  if (u.isString(arg1)) {
+    id = arg1
+  } else if (arg1 instanceof Handler) {
+    id = arg1.getId()
+  }
+
+  if (u.isString(id) && id !== '') {
+    if (!u.isBoolean(fromHandler) || fromHandler !== true) {
+      this.protected.handlers[id].removeStore(this.getId(), true)
+    }
+    delete this.protected.handlers[id]
+  }
+
+  return this
+}
+
+/**
+ * Registers one or multible reducers
+ *
+ * @function
+ *
+ * @param {array/...function} Array or variadic call of one or multible reducer functions
+ *
+ * @return {Handler}
+ * @see Handler
+ */
+Store.prototype.addReducer = u.polymorphic()
+var addReducer = Store.prototype.addReducer
+var addReducerArray = function (reducer) {
+  var handler = new Handler()
+  u.forEach(reducer, function (item) {
+    if (!u.isFunction(item)) {
+      throw new Error('Given argument ist not a function')
+    } else {
+      handler.addReducer(item)
+    }
+  })
+  this.addHandler(handler)
+  return handler
+}
+addReducer.signature('array', addReducerArray)
+addReducer.signature('function', function (func) {
+  var reducers = [func]
+  return addReducerArray.call(this, reducers)
+})
+addReducer.signature('...', function (rest) {
+  return addReducerArray.call(this, rest)
+})
+
+/**
+ * Syncs the public state variable with the protected state
+ * @private
+ * @param no param :)
+ */
 Store.prototype._synchronize = function _synchronize () {
-  this.protected.publicState = this._cloneObject(this.protected.state)
+  this.protected.publicState = u.cloneDeep(this.protected.state)
 }
 
 Store.prototype._publish = function _publish (namespace, message) {
   var self = this
   self._synchronize()
-  self.protected.subscriptions.forEach(function (subscription) {
+  u.forEach(self.protected.subscriptions, function (subscription) {
     self._callSubscription(subscription, namespace, message)
   })
 }
 
 Store.prototype._setState = function _setState (newState, namespace, stateParam) {
   var self = this
-  if (typeof (namespace) !== 'string') {
-    if (typeof(stateParam) == 'undefined') {
+  if (!u.isString(namespace)) {
+    if (typeof (stateParam) === 'undefined') {
       namespace.unshift('state')
       self._setState(newState, namespace, self.protected)
     } else {
@@ -57,7 +149,7 @@ Store.prototype._setState = function _setState (newState, namespace, stateParam)
       }
     }
   } else {
-    self.protected.state = newState;
+    self.protected.state = newState
   }
 }
 
@@ -67,7 +159,7 @@ Store.prototype._getStateByNamespace = function _getStateByNamespace (namespace,
     state = self.protected.state
   }
   namespace = self._getPreparedNamespace(namespace)
-  namespace.forEach(function (currentNamespace) {
+  u.forEach(namespace, function (currentNamespace) {
     if (state[currentNamespace] == null) {
       state[currentNamespace] = {}
     }
@@ -88,6 +180,13 @@ Store.prototype._getPreparedNamespace = function _getPreparedNamespace (namespac
   return namespace
 }
 
+Store.prototype._getExtendedNamespace = function _getExtendedNamespace (extNamespace) {
+  var self = this
+  var namespace = self._getNamespace()
+  extNamespace = self._getPreparedNamespace(extNamespace)
+  return namespace.concat(extNamespace)
+}
+
 Store.prototype._callSubscription = function _callSubscription (subscription, namespace, message) {
   var self = this
   if (subscription != null) {
@@ -99,50 +198,33 @@ Store.prototype._callSubscription = function _callSubscription (subscription, na
           return (subscription.namespace[idx] == null || subscription.namespace[idx] === namespaceItem)
         })
         if (inNamespace) {
-          subscription.callbackFunction.call(null, self._cloneObject(state), message)
+          subscription.callbackFunction.call(null, u.cloneDeep(state), message)
         }
       } else {
-        subscription.callbackFunction.call(null, self._cloneObject(state), message)
+        subscription.callbackFunction.call(null, u.cloneDeep(state), message)
       }
     } else {
-      subscription.callbackFunction.call(null, self._cloneObject(state), message)
+      subscription.callbackFunction.call(null, u.cloneDeep(state), message)
     }
   }
   return self
 }
 
-Store.prototype._cloneObject = function _cloneObject (object) {
-  var clone = null
-  if (this._isArray(object)) {
-    clone = []
-  } else {
-    clone = {}
-  }
-  for (var i in object) {
-    if (typeof (object[i]) === 'object' && object[i] != null) {
-      clone[i] = this._cloneObject(object[i])
-    } else {
-      clone[i] = object[i]
-    }
-  }
-  return clone
-}
-
 Store.prototype._getDispatcher = function _getDispatcher (namespace) {
   var self = this
   return function (newState, message) {
-    if (typeof (newState) === 'object' && newState != null) {
-      self._setState(newState, self._cloneObject(namespace))
+    if (u.isObject(newState) && newState != null) {
+      self._setState(newState, u.cloneDeep(namespace))
+      u.forEach(self.protected.handlers, function (handler) {
+        // TODO: State and action needs to be added here
+        handler._handle()
+      })
     }
     self._publish(namespace, message)
   }
 }
 
-Store.prototype._isArray = function _isArray (object) {
-  return Object.prototype.toString.call(object) === '[object Array]'
-}
-
-Store.prototype.yt = Store.prototype.yet = function yet (namespace) {
+Store.prototype.yet = function yet (namespace) {
   namespace = this._getExtendedNamespace(namespace)
   return this._getStateByNamespace(namespace, this.protected.publicState)
 }
@@ -151,17 +233,10 @@ Store.prototype._getNamespace = function _getNamespace () {
   return this._namespace
 }
 
-Store.prototype._getExtendedNamespace = function _getExtendedNamespace (extNamespace) {
-  var self = this
-  var namespace = self._getNamespace()
-  extNamespace = self._getPreparedNamespace(extNamespace)
-  return namespace.concat(extNamespace)
-}
-
-Store.prototype.ss = Store.prototype.subscribe = function subscribe (functionParam, namespace) {
+Store.prototype.subscribe = function subscribe (functionParam, namespace) {
   var self = this
   var subscription = {
-    namespace: self._cloneObject(self._getExtendedNamespace(namespace))
+    namespace: u.cloneDeep(self._getExtendedNamespace(namespace))
   }
   var callbackFunction = null
   if (functionParam instanceof Store) {
@@ -175,7 +250,7 @@ Store.prototype.ss = Store.prototype.subscribe = function subscribe (functionPar
   var idx = self.protected.subscriptions.push(subscription)
   idx--
 
-  var Subscription = require('./subscription.js')
+  var Subscription = require('./../subscription/subscription.js')
   return new Subscription(idx, self.protected, subscription.namespace)
 }
 
@@ -187,26 +262,26 @@ Store.prototype.us = Store.prototype.unsubscribe = function unsubscribe (subscri
 /**
  * Dispatches new state
  */
-Store.prototype.dp = Store.prototype.dispatch = function dispatch (functionParam, namespace) {
+Store.prototype.dispatch = function dispatch (functionParam, namespace) {
   var self = this
   namespace = self._getExtendedNamespace(namespace)
   var state = self._getStateByNamespace(namespace)
-  state = self._cloneObject(state)
+  state = u.cloneDeep(state)
   var dispatcher = self._getDispatcher(namespace)
   var handleSingleDispatch = function handleSingleDispatch (func) {
-    if (typeof (functionParam) === 'function') {
+    if (u.isFunction(functionParam)) {
       switch (functionParam.length) {
         case 0:
-          var functionResult = functionParam();
-	  if (functionResult != null) {
+          var functionResult = functionParam()
+          if (functionResult != null) {
             dispatcher(functionResult)
-	  }
+          }
           break
         case 1:
-          var functionResult = functionParam(state);
-	  if (functionResult != null) {
+          var functionResult = functionParam(state)
+          if (functionResult != null) {
             dispatcher(functionResult)
-	  }
+          }
           break
         default:
           functionParam(state, dispatcher)
@@ -219,8 +294,8 @@ Store.prototype.dp = Store.prototype.dispatch = function dispatch (functionParam
       handleSingleDispatch(functionParam)
       break
     case 'object':
-      if (self._isArray(functionParam)) {
-        functionParam.forEach(function (functionParamItem) {
+      if (u.isArray(functionParam)) {
+        u.forEach(functionParam, function (functionParamItem) {
           handleSingleDispatch(functionParamItem)
         })
       }
