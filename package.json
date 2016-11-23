@@ -8,8 +8,7 @@
     "test-watch": "mocha-webpack --watch",
     "build": "npm run build:main",
     "build:main": "./node_modules/.bin/webpack && ./node_modules/.bin/uglifyjs ./dist/alo.js -c -m -o ./dist/alo.min.js --source-map ./dist/alo.min.js.map",
-    "dev-server": "./node_modules/.bin/webpack-dev-server",
-    "prepublish": "npm run build"
+    "dev-server": "./node_modules/.bin/webpack-dev-server"
   },
   "repository": {
     "type": "git",
