@@ -1,6 +1,6 @@
 # Summary
 
 * [Read Me](README.md)
-* Reference
+* [Reference](docs/reference/API.md)
    * API
 
