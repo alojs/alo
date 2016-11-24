@@ -1,3 +1,3 @@
 # API
 
-The API is available at [API](http://git.alojs.com/doc/index.html)
+The API is available at [API](http://git.alojs.com/docs/api/index.html)
