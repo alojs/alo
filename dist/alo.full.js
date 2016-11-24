@@ -45,7 +45,20 @@ var alo =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(1)
+	var alo = __webpack_require__(1)
+
+	/**
+	 * Useful functions
+	 *
+	 * @memberof module:alo
+	 *
+	 * @see extras
+	 */
+	var extras = __webpack_require__(140)
+
+	alo.extras = extras
+
+	module.exports = alo
 
 
 /***/ },
@@ -6008,6 +6021,44 @@ var alo =
 	}
 
 	module.exports = Subscription
+
+
+/***/ },
+/* 140 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Extra, but useful stuff
+	 *
+	 * @namespace
+	 */
+	var extras = {}
+
+	/**
+	 * Several included reducer examples
+	 */
+	extras.reducers = __webpack_require__(141)
+
+	module.exports = extras
+
+
+/***/ },
+/* 141 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(29)
+
+	var basic = function (state, action) {
+	  /*
+	  if (action.payload != null && isObject(action.payload)) {
+	    return action.payload
+	  }
+	  */
+	}
+
+	module.exports = {
+	  basic: basic
+	}
 
 
 /***/ }

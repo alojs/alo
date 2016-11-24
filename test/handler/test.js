@@ -3,8 +3,26 @@
 var alo = require('./../../src/main/alo.js')
 var assert = require('assert')
 
-describe('Handler functions', function () {
-  describe('addReducers', function () {
+describe('Handler', function () {
+  describe('constructor', function () {
+    it('should take an array of reducer functions', function () {
+      var handler = alo.createHandler([
+        function () {},
+        function () {},
+        function () {}
+      ])
+      assert.equal(3, handler._getReducers().length)
+    })
+    it('should take multible reducer functions', function () {
+      var handler = alo.createHandler(
+        function () {},
+        function () {},
+        function () {}
+      )
+      assert.equal(3, handler._getReducers().length)
+    })
+  })
+  describe('addReducer', function () {
     it('should run the reducer', function () {
       var reducerDone = false
       var store = new alo.Store({

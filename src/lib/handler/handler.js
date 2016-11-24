@@ -6,36 +6,61 @@ var u = require('./../util/util.js')
  *
  * @class
  */
-var Handler = function AloHandler () {
-  /**
-   * Private properties
-   *
-   * @namespace
-   *
-   * @private
-   */
-  this.protected = {}
-
+var Handler = function Handler () {
+  handler.apply(this, arguments)
+}
+var handler = u.polymorphic()
+var handlerWithReducerArray = function handlerWithReducerArray (reducers) {
   /**
    * Is this handler enabled?
+   *
+   * @name _enabled
+   * @memberof Handler
+   * @private
    */
-  this.protected.enabled = true
+  this._enabled = true
 
   /**
    * Unique ID of this handler
+   *
+   * @name _id
+   * @memberof Handler
+   * @private
    */
-  this.protected.id = u.uniqueId()
+  this._id = u.uniqueId()
 
   /**
    * Array of registered reducers
+   *
+   * @name _reducers
+   * @memberof Handler
+   * @private
    */
-  this.protected.reducers = []
+  this._reducers = []
 
   /**
    * Object of registered stores
+   *
+   * @name _stores
+   * @memberof Handler
+   * @private
    */
-  this.protected.stores = {}
+  this._stores = {}
+
+  if (!u.isArray(reducers)) {
+    throw new Error('Argument given is not an array')
+  } else {
+    this.addReducer(reducers)
+  }
 }
+handler.signature('array', handlerWithReducerArray)
+handler.signature('...', handlerWithReducerArray)
+handler.signature('function', function (func) {
+  handlerWithReducerArray.call(this, [func])
+})
+handler.signature('', function () {
+  handlerWithReducerArray.call(this, [])
+})
 
 /**
  * Calls the registered reducers with the provided state and action
@@ -50,8 +75,8 @@ var Handler = function AloHandler () {
  */
 
 Handler.prototype._handle = function _handle (state, action) {
-  if (this.protected.enabled === true) {
-    u.forEach(this.protected.reducers, function (item) {
+  if (this._enabled === true) {
+    u.forEach(this._reducers, function (item) {
       state = item.call(this, state, action)
     })
   }
@@ -81,7 +106,7 @@ var addReducerArray = function addReducerArray (reducers) {
     if (!u.isFunction(reducer)) {
       throw new Error('Item in array is not a function')
     } else {
-      self.protected.reducers.push(reducer)
+      self._reducers.push(reducer)
     }
   })
 
@@ -111,14 +136,13 @@ var addStoreArray = function addStoreArray (stores, fromStore) {
     throw new Error('Argument given is not an array')
   }
   if (stores.length > 0) {
-    var Store = require('./../store/store.js')
     u.forEach(stores, function (store) {
-      if (!(store instanceof Store)) {
+      if (!u.isStore(store)) {
         throw new Error('Item in array given is not a store')
       } else {
         var id = store.getId()
         if (u.isString(id) && id !== '') {
-          self.protected.stores[id] = store
+          self._stores[id] = store
           if (!u.isBoolean(fromStore) || fromStore !== true) {
             store.addHandler(self, true)
           }
@@ -140,7 +164,7 @@ addStore.signature('object, boolean b=false', function (store, fromStore) {
  * @return {Handler} this
  */
 Handler.prototype.disable = function disable () {
-  this.protected.enabled = false
+  this._enabled = false
 
   return this
 }
@@ -151,7 +175,7 @@ Handler.prototype.disable = function disable () {
  * @return {Handler} this
  */
 Handler.prototype.enable = function enable () {
-  this.protected.enabled = true
+  this._enabled = true
 
   return this
 }
@@ -162,7 +186,18 @@ Handler.prototype.enable = function enable () {
  * @return {string} Unique ID of this handler
  */
 Handler.prototype.getId = function getId () {
-  return this.protected.id
+  return this._id
+}
+
+/**
+ * Get registered reducers
+ *
+ * @private
+ *
+ * @return {array} reducers
+ */
+Handler.prototype._getReducers = function _getReducers () {
+  return this._reducers
 }
 
 /**
@@ -181,14 +216,13 @@ var removeStoreById = function removeStoreById (id, fromStore) {
   if (!u.isString(id) || id !== '') {
     throw new Error('Provided id is not a valid string')
   } else {
-    if (this.protected.stores[id] != null) {
+    if (this._stores[id] != null) {
       if (!u.isBoolean(fromStore) || fromStore !== true) {
-        var Store = require('./../store/store.js')
-        if (this.protected.stores[id] instanceof Store) {
-          this.protected.stores[id].removeHandler(this.getId(), true)
+        if (u.isStore(this._stores[id])) {
+          this._stores[id].removeHandler(this.getId(), true)
         }
       }
-      delete this.protected.stores[id]
+      delete this._stores[id]
     }
   }
 
@@ -196,8 +230,7 @@ var removeStoreById = function removeStoreById (id, fromStore) {
 }
 removeStore.signature('string, boolean b=false', removeStoreById)
 removeStore.signature('object, boolean b=false', function (store, fromStore) {
-  var Store = require('./../store/store.js')
-  if (!(store instanceof Store)) {
+  if (!u.isStore(store)) {
     throw new Error('Argument of type object is not a store')
   } else {
     return removeStoreById.call(this, store.getId(), fromStore)
@@ -206,7 +239,7 @@ removeStore.signature('object, boolean b=false', function (store, fromStore) {
 removeStore.signature('boolean a=false', function (fromStore) {
   var self = this
 
-  u.forEach(this.protected.stores, function (store, idx) {
+  u.forEach(this._stores, function (store, idx) {
     removeStoreById.call(self, idx, fromStore)
   })
 

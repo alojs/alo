@@ -21,6 +21,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"></script>
     <script src="./dist/alo.js"></script>
     <script>
+      var handler = alo.createHandler(function() {})
+      var handler2 = alo.createHandler([function() {}, function() {}])
+      var handler3 = alo.createHandler(function() {}, function() {}, function() {})
+
       var store1 = new alo.Store();
       store1.subscribe(function(state) {
 	      console.log(['person1',state]);

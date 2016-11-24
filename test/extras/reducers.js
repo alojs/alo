@@ -1,6 +1,6 @@
 /* global describe, it */
 
-var alo = require('./../../src/main/alo.js')
+var alo = require('./../../src/main/alo.full.js')
 var assert = require('assert')
 
 describe('reducers', function () {
@@ -9,7 +9,7 @@ describe('reducers', function () {
       var store = new alo.Store({
         value: false
       })
-      store.addReducer(alo.util.reducers.basic)
+      store.addReducer(alo.extras.reducers.basic)
       store.dispatch(function (state) {
         state.value = true
         return state
