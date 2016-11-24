@@ -1,5 +1,7 @@
 var alo = require('./../lib/namespace.js')
 
+var extras = require('./../lib/extras/extras.js')
+
 /**
  * Useful functions
  *
@@ -7,8 +9,6 @@ var alo = require('./../lib/namespace.js')
  *
  * @see extras
  */
-var extras = require('./../lib/extras/extras.js')
-
 alo.extras = extras
 
 module.exports = alo

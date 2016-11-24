@@ -1,5 +1,5 @@
 /**
- * Extra, but useful stuff
+ * Extras, but useful stuff
  *
  * @namespace
  */

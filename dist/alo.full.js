@@ -47,6 +47,8 @@ var alo =
 
 	var alo = __webpack_require__(1)
 
+	var extras = __webpack_require__(140)
+
 	/**
 	 * Useful functions
 	 *
@@ -54,8 +56,6 @@ var alo =
 	 *
 	 * @see extras
 	 */
-	var extras = __webpack_require__(140)
-
 	alo.extras = extras
 
 	module.exports = alo
@@ -6028,7 +6028,7 @@ var alo =
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * Extra, but useful stuff
+	 * Extras, but useful stuff
 	 *
 	 * @namespace
 	 */
@@ -6048,7 +6048,14 @@ var alo =
 
 	var isObject = __webpack_require__(29)
 
-	var basic = function (state, action) {
+	var reducers = {}
+
+	/**
+	 * A basic reducer which just dispatches untyped actions
+	 *
+	 * @memberof extras
+	 */
+	reducers.basic = function (state, action) {
 	  /*
 	  if (action.payload != null && isObject(action.payload)) {
 	    return action.payload
@@ -6056,9 +6063,7 @@ var alo =
 	  */
 	}
 
-	module.exports = {
-	  basic: basic
-	}
+	module.exports = reducers
 
 
 /***/ }
