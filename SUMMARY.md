@@ -1,5 +1,5 @@
 # Summary
 
 * [Read Me](README.md)
-* API
+* [API](docs/API.md)
 
