@@ -1,1 +1,3 @@
-<iframe src="https://raw.githubusercontent.com/alojs/alo/master/doc/index.html"></iframe>
+# API
+
+The API is available at [API](git.alojs.com/doc/index.html)
