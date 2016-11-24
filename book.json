@@ -4,11 +4,11 @@
   "plugins": ["edit-link", "prism", "-highlight", "github", "anchorjs"],
   "pluginsConfig": {
     "edit-link": {
-      "base": "https://github.com/reactjs/redux/tree/master",
+      "base": "https://github.com/alojs/alo/tree/master",
       "label": "Edit This Page"
     },
     "github": {
-      "url": "https://github.com/reactjs/redux/"
+      "url": "https://github.com/alojs/alo/"
     }
   }
 }
