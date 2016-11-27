@@ -2,7 +2,7 @@
   "name": "alo",
   "version": "1.0.0",
   "description": "A minimalist approach to javascript state management",
-  "main": "src/main/alo.js",
+  "main": "src/main/alo.full.js",
   "scripts": {
     "test": "mocha-webpack",
     "test-watch": "mocha-webpack --watch",
