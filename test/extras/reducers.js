@@ -9,12 +9,12 @@ describe('reducers', function () {
       var store = new alo.Store({
         value: false
       })
-      store.addReducer(alo.extras.reducers.basic)
+      store.addReducer(alo.extras.reducers.createUntypedReplace())
       store.dispatch(function (state) {
         state.value = true
         return state
       })
-      assert.equal(true, store.yet().value)
+      assert.equal(true, store.getState().value)
     })
   })
 })

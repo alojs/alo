@@ -18,6 +18,13 @@ var util = {}
 util.cloneDeep = require('lodash/cloneDeep')
 
 /**
+ * Lodash values, can be used
+ *
+ * @function
+ */
+util.values = require('lodash/values')
+
+/**
  * Lodash forEach, can be used
  *
  * @function
@@ -65,6 +72,13 @@ util.isBoolean = require('lodash/isBoolean')
  * @function
  */
 util.uniqueId = require('lodash/uniqueId')
+
+/**
+ * Lodash startCase, can be used
+ *
+ * @function
+ */
+util.startCase = require('lodash/startCase')
 
 var flyd = require('flyd')
 /**
@@ -149,11 +163,25 @@ util.curryN = flyd.curryN
  *
  * @function
  */
-util.polymorphic = require('polymorphic')
+util.createPolymorphic = require('polymorphic')
 
 /**
  * Alo specific functions
  */
+
+util.createSubscription = function createSubscription () {
+  var Subscription = require('./../subscription/subscription.js')
+  var subscription = Object.create(Subscription.prototype)
+  Subscription.apply(subscription, arguments)
+  return subscription
+}
+
+util.createMember = function createMember () {
+  var Member = require('./../subscription/member.js')
+  var member = Object.create(Member.prototype)
+  Member.apply(member, arguments)
+  return member
+}
 
 /**
  * Same as new Handler
@@ -175,6 +203,13 @@ util.createStore = function createStore () {
   var store = Object.create(Store.prototype)
   Store.apply(store, arguments)
   return store
+}
+
+util.createObjectRelation = function createObjectRelation () {
+  var ObjectRelation = require('./../object_relation/object_relation.js')
+  var objectRelation = Object.create(ObjectRelation.prototype)
+  ObjectRelation.apply(objectRelation, arguments)
+  return objectRelation
 }
 
 /**
@@ -199,6 +234,21 @@ util.isHandler = function isHandler (handler) {
 util.isStore = function isStore (store) {
   var Store = require('./../store/store.js')
   return (store instanceof Store)
+}
+
+util.isMiddleware = function isMiddleware (middleware) {
+  var Middleware = require('./../middleware/middleware.js')
+  return (middleware instanceof Middleware)
+}
+
+util.isMember = function isMember (member) {
+  var Member = require('./../subscription/member.js')
+  return (member instanceof Member)
+}
+
+util.isSubscription = function isSubscription (subscription) {
+  var Subscription = require('./../subscription/subscription.js')
+  return (subscription instanceof Subscription)
 }
 
 module.exports = util
