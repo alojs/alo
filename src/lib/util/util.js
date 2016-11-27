@@ -206,7 +206,7 @@ util.createStore = function createStore () {
 }
 
 util.createObjectRelation = function createObjectRelation () {
-  var ObjectRelation = require('./../object_relation/object_relation.js')
+  var ObjectRelation = require('./../object-relation/object-relation.js')
   var objectRelation = Object.create(ObjectRelation.prototype)
   ObjectRelation.apply(objectRelation, arguments)
   return objectRelation

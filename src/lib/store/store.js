@@ -1,5 +1,5 @@
 var u = require('./../util/util.js')
-var ObjectRelation = require('./../object_relation/object_relation.js')
+var ObjectRelation = require('./../object-relation/object-relation.js')
 
 var handlerRelation = new ObjectRelation('store', 'handler', u.isHandler)
 var subscriptionRelation = new ObjectRelation('store', 'subscription', u.isSubscription)
@@ -35,17 +35,17 @@ var Store = function Store (state) {
   /**
    * Handlers
    */
-  this._handlers = null
+  this._handlerRelations = null
 
   /**
    * Middlewares
    */
-  this._middlewares = null
+  this._middlewareRelations = null
 
   /**
    * Subscriptions
    */
-  this._subscriptions = null
+  this._subscriptionRelations = null
 
   handlerRelation.constructParent(this)
   middlewareRelation.constructParent(this)

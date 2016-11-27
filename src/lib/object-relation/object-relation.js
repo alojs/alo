@@ -29,7 +29,7 @@ objectRelation.signature('string, string, function', function (parentName, relat
     this.idPropertyName = '_id'
     this.parentName = parentName
     this.relationName = relationName
-    this.relationPropertyName = '_' + relationName + 's'
+    this.relationPropertyName = '_' + relationName + 'Relations'
     this.isRelationObject = isRelationObject
 
     this.functions = {}
@@ -38,8 +38,8 @@ objectRelation.signature('string, string, function', function (parentName, relat
         after: []
       }
       if (func.relation === true) {
-        self.functions[funcName].parent = formatFunctionName(funcName, parentName)
-        self.functions[funcName].relation = formatFunctionName(funcName, relationName)
+        self.functions[funcName].parentName = formatFunctionName(funcName, parentName)
+        self.functions[funcName].relationName = formatFunctionName(funcName, relationName)
       }
     })
   }
@@ -48,12 +48,12 @@ objectRelation.signature('string, string, function', function (parentName, relat
 /**
  * Should be called in the constructor of the parent
  */
-ObjectRelation.prototype.constructParent = function (parent) {
-  if (parent[this.idPropertyName] === null) {
+ObjectRelation.prototype.constructParent = function (parentObject) {
+  if (parentObject[this.idPropertyName] === null || parentObject[this.idPropertyName] === undefined) {
     var id = u.uniqueId()
-    parent[this.idPropertyName] = id
+    parentObject[this.idPropertyName] = id
   }
-  parent[this.relationPropertyName] = {}
+  parentObject[this.relationPropertyName] = {}
 }
 
 ObjectRelation.prototype.registerParentPrototype = function (prototype) {
@@ -73,8 +73,8 @@ ObjectRelation.prototype.registerParentPrototype = function (prototype) {
 
   u.forEach(self.functions, function (func, funcName) {
     var prototypeFunctionName = funcName
-    if (u.isString(func.relation) && func.relation !== '') {
-      prototypeFunctionName = func.relation
+    if (u.isString(func.relationName) && func.relationName !== '') {
+      prototypeFunctionName = func.relationName
     }
     prototype[prototypeFunctionName] = createCaller(funcName, self[funcName + 'Function'])
   })
@@ -110,7 +110,7 @@ add.signature('object, object, boolean b=false', function (config, relationObjec
       throw new Error('Id is not a string or empty')
     } else {
       if (fromRelation !== true) {
-        relationObject[config.functions.add.parent](this, true)
+        relationObject[config.functions.add.parentName](this, true)
       }
       this[config.relationPropertyName][id] = relationObject
     }
@@ -140,8 +140,8 @@ remove.signature('object, string, boolean b=false', function (config, id, fromRe
     throw new Error('Argument given should not be empty')
   } else {
     if (!u.isBoolean(fromRelation) || fromRelation !== true) {
-      if (config.isRelation(this[config.relationPropertyName][id])) {
-        this[config.relationPropertyName][id][config.functions.remove.parent](this.getId(), true)
+      if (config.isRelationObject(this[config.relationPropertyName][id])) {
+        this[config.relationPropertyName][id][config.functions.remove.parentName](this.getId(), true)
       }
     }
     delete this[config.relationPropertyName][id]

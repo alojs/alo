@@ -47,7 +47,7 @@ handler.signature('array', function (reducers) {
    * @memberof Handler
    * @private
    */
-  this._stores = null
+  this._storeRelations = null
 
   storeRelation.constructParent(this)
 

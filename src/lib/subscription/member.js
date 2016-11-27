@@ -1,5 +1,5 @@
 var u = require('./../util/util.js')
-var ObjectRelation = require('./../object_relation/object_relation.js')
+var ObjectRelation = require('./../object-relation/object-relation.js')
 
 var subscriptionRelation = new ObjectRelation('member', 'subscription', u.isSubscription)
 
@@ -47,5 +47,8 @@ Member.prototype.setFunction = function setFunction (func) {
   }
   return this
 }
+
+// TODO: Implement setDependencies
+Member.prototype.setDependencies = null
 
 module.exports = Member

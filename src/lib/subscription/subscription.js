@@ -16,8 +16,8 @@ var memberRelation = u.createObjectRelation('subscription', 'member', u.isMember
 var Subscription = function Subscription () {
   this._id = null
 
-  this._stores = null
-  this._members = null
+  this._storeRelations = null
+  this._memberRelations = null
 
   this._streams = []
 
@@ -79,7 +79,7 @@ addFunction.signature('array', function (functions) {
 
 Subscription.prototype._publish = function (store, state) {
   if (this._binding_publish === false) {
-    u.forEach(this._members, function (member) {
+    u.forEach(this.getMember(), function (member) {
       member._call(state)
     })
   }
@@ -90,9 +90,6 @@ Subscription.prototype.after = null
 
 Subscription.prototype.enable = null
 Subscription.prototype.disable = null
-
-Subscription.prototype.addDependency = null
-Subscription.prototype.removeDependency = null
 
 Subscription.prototype.remember = function remember () {
   var self = this
