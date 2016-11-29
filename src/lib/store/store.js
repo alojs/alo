@@ -12,8 +12,8 @@ var middlewareRelation = new ObjectRelation('store', 'middleware', u.isMiddlewar
  *
  * @param {Object} state - Optional object to set as a start state
  */
-var Store = function Store (state) {
-  if (!u.isObject(state)) {
+var Store = function Store (state, id) {
+  if (state === undefined || state === null) {
     state = {}
   }
 
@@ -26,6 +26,12 @@ var Store = function Store (state) {
    */
 
   this._id = null
+  if (u.isString(id)) {
+    id = id.trim()
+    if (id !== '') {
+      this._id = id
+    }
+  }
 
   /**
    * Stream
@@ -46,6 +52,8 @@ var Store = function Store (state) {
    * Subscriptions
    */
   this._subscriptionRelations = null
+
+  this._computedProperty = {}
 
   handlerRelation.constructParent(this)
   middlewareRelation.constructParent(this)
@@ -143,6 +151,29 @@ Store.prototype.removeSubscription = null
 handlerRelation.registerParentPrototype(Store.prototype)
 middlewareRelation.registerParentPrototype(Store.prototype)
 subscriptionRelation.registerParentPrototype(Store.prototype)
+
+Store.prototype.addComputedProperty = u.createPolymorphic()
+var addComputedProperty = Store.prototype.addComputedProperty
+addComputedProperty.signature('string, function', function (name, func) {
+  if (name === '') {
+    throw new Error('Name of computed property should not be empty')
+  } else {
+    this._computedProperty[name] = func
+  }
+
+  return this
+})
+addComputedProperty.signature('object', function (properties) {
+  var self = this
+
+  u.forEach(properties, function (func, name) {
+    self.addComputedProperty(name, func)
+  })
+
+  return this
+})
+
+// TODO: Implement removeComputedProperty
 
 /*
 Store.prototype.removeHandler = u.polymorphic()
@@ -245,12 +276,18 @@ Store.prototype.getStream = function getStream () {
  * @return {object} current state
  */
 Store.prototype.getState = function getState () {
+  var state = u.cloneDeep(this._stream())
+
+  u.forEach(this.getComputedProperty, function (func, name) {
+    state[name] = func(state)
+  })
+
   return u.cloneDeep(this._stream())
 }
 
-// TODO: Reimplement with new subscription
-Store.prototype.subscribe = function subscribe (func) {
-  var subscription = u.createSubscription(func)
+// TODO: Add additional signatures
+Store.prototype.createSubscription = function createSubscription () {
+  var subscription = u.createSubscription.apply(null, arguments)
   this.addSubscription(subscription)
   return subscription
 }
@@ -338,77 +375,87 @@ var dispatch = Store.prototype.dispatch
 // Main dispatch signature
 dispatch.signature('object', function (action) {
   var self = this
-  var state = this.getState()
 
-  // Set the type to null if it is undefined
-  if (action.type === undefined) {
-    action.type = null
-  }
+  return u.createPromise(function (resolve, reject) {
+    var state = self.getState()
 
-  /*
-   * This is the final commit function
-   * It will be called after all middlewares are applied
-   */
-  var commit = function (action) {
-    if (u.isObject(action)) {
-      // Call the registered handlers
-      u.forEach(self.getHandler(), function (handler) {
-        if (u.isHandler(handler)) {
-          state = handler._handle(u.cloneDeep(state), action)
-        }
-      })
-      // Apply the changed state
-      var stream = self.getStream()
-      stream(state)
+    // Set the type to null if it is undefined
+    if (action.type === undefined) {
+      action.type = null
     }
-  }
-
-  var middlewares = this.getMiddleware()
-  if (middlewares.length > 0) {
-    // When middlewares are registered, we need to call them
-
-    // Every middleware must give an answer
-    var answerCount = 0
 
     /*
-     * Recursive function, will be called by the middleware
-     * it calls the next middleware or the commit function
+     * This is the final commit function
+     * It will be called after all middlewares are applied
      */
-    var callMiddlewares = function (action) {
+    var commit = function (action) {
       if (u.isObject(action)) {
-        if (middlewares.length === answerCount) {
-          // In this case every middleware was called, so we can commit
-          commit(action)
-        } else {
-          var middleware = middlewares[answerCount]
-          answerCount++
-          if (u.isMiddleware(middleware)) {
-            // If the middleware is a valid middleware, call it
-            middleware._call(callMiddlewares, action)
-          } else {
-            // If its not a valid middleware, just ignore it
-            callMiddlewares(action)
+        // Call the registered handlers
+        u.forEach(self.getHandler(), function (handler) {
+          if (u.isHandler(handler)) {
+            state = handler._handle(u.cloneDeep(state), action)
           }
-        }
+        })
+        // Apply the changed state
+        var stream = self.getStream()
+        stream(state)
       }
+      return resolve()
     }
 
-    // Launch the middlewareHandler
-    callMiddlewares(action)
-  } else {
-    // If no middlewares are registered, we can just call commit
-    commit(action)
-  }
+    var middlewares = self.getMiddleware()
+    if (middlewares.length > 0) {
+      // When middlewares are registered, we need to call them
 
-  return this
+      // Every middleware must give an answer
+      var answerCount = 0
+
+      /*
+       * Recursive function, will be called by the middleware
+       * it calls the next middleware or the commit function
+       */
+      var callMiddlewares = function (action) {
+        if (u.isObject(action)) {
+          if (middlewares.length === answerCount) {
+            // In this case every middleware was called, so we can commit
+            commit(action)
+          } else {
+            var middleware = middlewares[answerCount]
+            answerCount++
+            if (u.isMiddleware(middleware)) {
+              // If the middleware is a valid middleware, call it
+              middleware._call(callMiddlewares, action)
+            } else {
+              // If its not a valid middleware, just ignore it
+              callMiddlewares(action)
+            }
+          }
+        } else {
+          return resolve()
+        }
+      }
+
+      // Launch the middlewareHandler
+      return callMiddlewares(action)
+    } else {
+      // If no middlewares are registered, we can just call commit
+      return commit(action)
+    }
+  })
 })
 
 // Alternative untyped dispatch signature
 dispatch.signature('function', function (func) {
-  var payload = func(this.getState())
-  if (payload !== undefined) {
-    this.dispatch({payload: payload})
-  }
+  var self = this
+
+  return u.createPromise(function (resolve, reject) {
+    var payload = func(self.getState())
+    if (payload !== undefined) {
+      return resolve(self.dispatch({payload: payload}))
+    } else {
+      return resolve()
+    }
+  })
 })
 
 module.exports = Store

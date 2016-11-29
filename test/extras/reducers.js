@@ -13,8 +13,9 @@ describe('reducers', function () {
       store.dispatch(function (state) {
         state.value = true
         return state
+      }).then(function () {
+        assert.equal(true, store.getState().value)
       })
-      assert.equal(true, store.getState().value)
     })
   })
 })

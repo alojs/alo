@@ -10,7 +10,7 @@ var reducers = {}
 reducers.createUntypedReplace = function () {
   return function (state, action) {
     if (action.type === undefined || action.type === null || action.type === '') {
-      if (action.payload != null && u.isObject(action.payload)) {
+      if (action.payload !== undefined) {
         return action.payload
       }
     }

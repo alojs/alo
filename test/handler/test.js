@@ -34,8 +34,9 @@ describe('Handler', function () {
       store.dispatch(function (state) {
         state.value = true
         return state
+      }).then(function () {
+        assert.equal(true, reducerDone)
       })
-      assert.equal(true, reducerDone)
     })
   })
 })

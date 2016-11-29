@@ -93,7 +93,7 @@ util.createStream = flyd.stream
  *
  * @function
  */
-util.combineStream = flyd.combine
+util.combineStreams = flyd.combine
 
 /**
  * Flyd isStream: Might change!
@@ -164,6 +164,12 @@ util.curryN = flyd.curryN
  * @function
  */
 util.createPolymorphic = require('polymorphic')
+
+util.Promise = require('es6-promise').Promise
+
+util.createPromise = function createPromise (resolve, reject) {
+  return new util.Promise(resolve, reject)
+}
 
 /**
  * Alo specific functions
