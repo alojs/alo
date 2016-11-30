@@ -4,6 +4,8 @@ var alo = require('./../../src/main/alo.full.js')
 var u = alo.util
 var assert = require('assert')
 
+// u.Promise.longStackTraces()
+
 describe('Store', function () {
   describe('Constructor', function () {
     it('should instantiate a store with an empty state when no state is provided', function () {
@@ -17,22 +19,33 @@ describe('Store', function () {
   })
 
   describe('dispatch', function () {
+    describe('with promise', function () {
+      it('should use the returned value in the reducer', function () {
+        var store = alo.createStore()
+        var promise = u.createPromise(function (res, rej) {
+          store.addReducer(function (state, action) {
+            res(action)
+          })
+        }).then(function (action) {
+          assert.equal('test', action.type)
+        })
+        store.dispatch(u.Promise.resolve({ type: 'test' }))
+        return promise
+      })
+    })
     describe('with object', function () {
       it('should call the subscriptions', function () {
         var store = new alo.Store()
         var status = 0
 
-        var promise = u.createPromise(function (resolve, reject) {
-          store.createSubscription(function (state) {
-            status += 1
-            resolve()
-          })
+        store.createSubscription(function (state) {
+          status += 1
         })
 
         return store.dispatch({}).then(function () {
-          return promise
-        }).then(function () {
-          assert.equal(1, status)
+          return setTimeout(function () {
+            assert.equal(1, status)
+          }, 100)
         })
       })
     })
@@ -67,35 +80,28 @@ describe('Store', function () {
         assert.notEqual('world', newStore.getState())
       })
       it('should call the subscriptions, when it not returns undefined', function () {
-        var called = false
+        var called = 0
         var store = new alo.Store({}, 'myStore')
         store.addReducer(alo.extras.reducers.createUntypedReplace())
-        var promise = u.createPromise(function (resolve, reject) {
-          var sub1 = store.createSubscription(function (state) {
-            called = true
-            resolve(1)
-          })
-          sub1.on('beforePublish', function (state, resolve2, reject) {
-            sub1.remember()
-            return resolve2(true)
-          })
-          sub1.on('afterPublish', function (state, resolve2, reject) {
-            sub1.remember()
-            return resolve2()
-          })
-          return sub1
-        }).then(function (result) {
-          return assert.equal(1, result)
-        }).catch(function (e) {
-          return e
+        var sub = store.createSubscription(function (state) {
+          called++
         })
-        return store.dispatch(function () {
-          return 'hello'
+        sub.on('beforePublish', function (state) {
+          called++
+          return true
+        })
+        var prom = u.createPromise(function (resolve, reject) {
+          sub.on('afterPublish', function (state) {
+            called++
+            return resolve()
+          })
         }).then(function () {
-          return promise
-        }).then(function (resut) {
-          assert.equal(true, called)
+          assert.equal(3, called)
         })
+        store.dispatch(function () {
+          return 'hello'
+        })
+        return prom
       })
       it('should not call subscription when it returns undefined', function () {
         var store = new alo.Store()

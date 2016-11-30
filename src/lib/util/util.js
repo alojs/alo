@@ -165,7 +165,8 @@ util.curryN = flyd.curryN
  */
 util.createPolymorphic = require('polymorphic')
 
-util.Promise = require('es6-promise').Promise
+// util.Promise = require('es6-promise').Promise
+util.Promise = require('bluebird')
 
 util.createPromise = function createPromise (resolve, reject) {
   return new util.Promise(resolve, reject)

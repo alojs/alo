@@ -154,11 +154,14 @@ subscriptionRelation.registerParentPrototype(Store.prototype)
 
 Store.prototype.addComputedProperty = u.createPolymorphic()
 var addComputedProperty = Store.prototype.addComputedProperty
-addComputedProperty.signature('string, function', function (name, func) {
+addComputedProperty.signature('string, array b=[], function', function (name, dependencies, func) {
   if (name === '') {
     throw new Error('Name of computed property should not be empty')
   } else {
-    this._computedProperty[name] = func
+    this._computedProperty[name] = {
+      dependencies: dependencies,
+      propertyFunction: func
+    }
   }
 
   return this
@@ -174,33 +177,6 @@ addComputedProperty.signature('object', function (properties) {
 })
 
 // TODO: Implement removeComputedProperty
-
-/*
-Store.prototype.removeHandler = u.polymorphic()
-var removeHandler = Store.prototype.removeHandler
-removeHandler.signature('string, boolean b=false', function (id, fromHandler) {
-  if (id === '') {
-    throw new Error('Argument given should not be empty')
-  } else {
-    if (!u.isBoolean(fromHandler) || fromHandler !== true) {
-      if (u.isHandler(this._handlers[id])) {
-        this._handlers[id].removeStore(this.getId(), true)
-      }
-    }
-    delete this._handlers[id]
-  }
-
-  return this
-})
-removeHandler.signature('object, boolean b=false', function (handler, fromHandler) {
-  if (!u.isHandler(handler)) {
-    throw new Error('Argument given is not a handler')
-  } else {
-    var id = handler.getId()
-    this.removeHandler(id, fromHandler)
-  }
-})
-*/
 
 /**
  * Registers one or multible reducers
@@ -276,90 +252,14 @@ Store.prototype.getStream = function getStream () {
  * @return {object} current state
  */
 Store.prototype.getState = function getState () {
-  var state = u.cloneDeep(this._stream())
-
-  u.forEach(this.getComputedProperty, function (func, name) {
-    state[name] = func(state)
-  })
-
-  return u.cloneDeep(this._stream())
+  return u.cloneDeep(this.getStream()())
 }
 
-// TODO: Add additional signatures
 Store.prototype.createSubscription = function createSubscription () {
   var subscription = u.createSubscription.apply(null, arguments)
   this.addSubscription(subscription)
   return subscription
 }
-
-/*
-Store.prototype.addMiddleware = u.polymorphic()
-var addMiddleware = Store.prototype.addMiddleware
-addMiddleware.signature('object, boolean b=false', function (middleware, fromMiddleware) {
-  if (!u.isMiddleware(middleware)) {
-    throw new Error('Argument given is not a middleware')
-  } else {
-    if (fromMiddleware === false) {
-      middleware.addStore(this, true)
-    }
-    this._middlewares[middleware.getId()] = middleware
-  }
-
-  return this
-})
-addMiddleware.signature('array', function (middlewares) {
-  u.foreach(middlewares, function (middleware) {
-    this.addMiddleware(middleware)
-  })
-
-  return this
-})
-addMiddleware.signature('...', addMiddleware)
-*/
-
-/*
-Store.prototype.removeMiddleware = u.polymorphic()
-var removeMiddleware = Store.prototype.removeMiddleware
-removeMiddleware.signature('string, boolean b=false', function (id, fromMiddleware) {
-  if (id !== '') {
-    if (fromMiddleware === false) {
-      if (this._middlewares[id] !== null) {
-        this._middlewares[id].removeStore(this, true)
-      }
-    }
-    delete this._middlewares[id]
-  }
-
-  return this
-})
-removeMiddleware.signature('object, boolean b=false', function (middleware, fromMiddleware) {
-  if (!u.isMiddleware(middleware)) {
-    throw new Error('Argument given is not a middleware')
-  } else {
-    var id = middleware.getId()
-    this.removeMiddleware(id, fromMiddleware)
-  }
-
-  return this
-})
-*/
-
-/*
-Store.prototype.getMiddleware = function getMiddleware (id) {
-  if (u.isString(id)) {
-    if (id === '') {
-      throw new Error('Argument given should not be an empty string')
-    } else {
-      if (this._middlewares[id] !== null) {
-        return this._middlewares[id]
-      } else {
-        return false
-      }
-    }
-  }
-  return this._middlewares
-}
-*/
 
 /**
  * Dispatches an action
@@ -372,74 +272,88 @@ Store.prototype.getMiddleware = function getMiddleware (id) {
 Store.prototype.dispatch = u.createPolymorphic()
 var dispatch = Store.prototype.dispatch
 
+dispatch.signature('Promise', function (promise) {
+  var self = this
+
+  return promise.then(function (action) {
+    return self.dispatch(action)
+  })
+})
+
 // Main dispatch signature
 dispatch.signature('object', function (action) {
   var self = this
 
-  return u.createPromise(function (resolve, reject) {
-    var state = self.getState()
-
+  var formatAction = function (action) {
     // Set the type to null if it is undefined
     if (action.type === undefined) {
       action.type = null
     }
-
-    /*
-     * This is the final commit function
-     * It will be called after all middlewares are applied
-     */
-    var commit = function (action) {
-      if (u.isObject(action)) {
-        // Call the registered handlers
-        u.forEach(self.getHandler(), function (handler) {
-          if (u.isHandler(handler)) {
-            state = handler._handle(u.cloneDeep(state), action)
-          }
-        })
-        // Apply the changed state
-        var stream = self.getStream()
-        stream(state)
-      }
-      return resolve()
+    if (action.payload === undefined) {
+      action.payload = null
     }
+    return action
+  }
 
+  action = formatAction(action)
+
+  var state = self.getState()
+
+  return u.Promise.resolve().then(function () {
+    /*
+     * Start with middleware logic
+     */
     var middlewares = self.getMiddleware()
     if (middlewares.length > 0) {
-      // When middlewares are registered, we need to call them
-
-      // Every middleware must give an answer
-      var answerCount = 0
+      /*
+       * The middleware handling is done in a recursive manner
+       */
+      var idx = 0
+      var handleMiddleware = function (idx) {
+        return u.Promise.resolve(action).then(function (action) {
+          return middlewares[idx](u.cloneDeep(state), action)
+        }).then(function (result) {
+          idx++
+          if (!u.isObject(result)) {
+            result = false
+          }
+          if (idx === middlewares.length || result === false) {
+            return result
+          } else {
+            return handleMiddleware(idx)
+          }
+        })
+      }
+      return handleMiddleware(idx)
+    } else {
+      return action
+    }
+  }).then(function (action) {
+    /*
+     * Here is the final commit part
+     */
+    if (action === false) {
+      return false
+    } else {
+      action = formatAction(action)
+      u.forEach(self.getHandler(), function (handler) {
+        if (u.isHandler(handler)) {
+          state = handler._handle(u.cloneDeep(state), action)
+        }
+      })
 
       /*
-       * Recursive function, will be called by the middleware
-       * it calls the next middleware or the commit function
+       * Add the computed properties into the mix
        */
-      var callMiddlewares = function (action) {
-        if (u.isObject(action)) {
-          if (middlewares.length === answerCount) {
-            // In this case every middleware was called, so we can commit
-            commit(action)
-          } else {
-            var middleware = middlewares[answerCount]
-            answerCount++
-            if (u.isMiddleware(middleware)) {
-              // If the middleware is a valid middleware, call it
-              middleware._call(callMiddlewares, action)
-            } else {
-              // If its not a valid middleware, just ignore it
-              callMiddlewares(action)
-            }
-          }
-        } else {
-          return resolve()
-        }
-      }
+      // TODO: Reimplement computed properties
+      /*
+      u.forEach(this.getComputedProperty, function (func, name) {
+        state[name] = func(state)
+      })*/
 
-      // Launch the middlewareHandler
-      return callMiddlewares(action)
-    } else {
-      // If no middlewares are registered, we can just call commit
-      return commit(action)
+      // Apply the changed state
+      var stream = self.getStream()
+      stream(state)
     }
   })
 })

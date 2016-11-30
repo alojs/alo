@@ -109,15 +109,13 @@ addFunction.signature('array', function (functions) {
   return this
 })
 
-Subscription.prototype._callEvent = function (name, state, resolve, reject) {
+Subscription.prototype._callEvent = function (name, state) {
   var promises = this._events[name].map(function (func) {
-    return u.createPromise(function (resolve2, reject2) {
-      func(state, resolve2, reject2)
-    })
+    return u.Promise.resolve(state).then(func)
   })
   return u.Promise.all(promises).then(function (results) {
     var result = (results.indexOf(false) === -1)
-    return resolve(result)
+    return result
   })
 }
 
@@ -125,20 +123,23 @@ Subscription.prototype._publish = function (state) {
   var self = this
   if (self._muted === false && this._binding_publish === false) {
     self._muted = true
-    var promise = u.createPromise(function (resolve, reject) {
-      return self._callEvent('beforePublish', state, resolve, reject)
+    var promise = u.Promise.resolve().then(function () {
+      return self._callEvent('beforePublish', state)
     }).then(function (runPublish) {
-      return u.createPromise(function (resolve, reject) {
-        if (runPublish !== false) {
-          var state = self.getState()
-          u.forEach(self.getMember(), function (member) {
-            member._call(state)
-          })
-          return self._callEvent('afterPublish', state, resolve, reject)
-        } else {
-          return resolve()
-        }
-      })
+      if (runPublish !== false) {
+        var state = self.getState()
+        var promises = []
+        u.forEach(self.getMember(), function (member) {
+          promises.push(member._call(state))
+        })
+        return u.Promise.all(promises)
+      } else {
+        return false
+      }
+    }).then(function (runPublish) {
+      if (runPublish !== false) {
+        return self._callEvent('afterPublish', state)
+      }
     }).then(function () {
       self._muted = false
       return null
@@ -153,11 +154,13 @@ Subscription.prototype.disable = null
 Subscription.prototype.remember = function remember () {
   var self = this
 
+  var promises = []
+
   u.forEach(this.getStore(), function (store) {
-    self._publish(store, store.getState())
+    promises.push(self._publish(store, store.getState()))
   })
 
-  return this
+  return u.Promise.all(promises)
 }
 
 Subscription.prototype.stop = function stop () {
