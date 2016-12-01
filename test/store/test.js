@@ -1,7 +1,6 @@
 /* global describe, it */
 
 var alo = require('./../../main/alo.full.js')
-console.log(alo)
 var u = alo.util
 var assert = require('assert')
 
