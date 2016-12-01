@@ -1,6 +1,6 @@
 /* global describe, it */
 
-var alo = require('./../../src/main/alo.js')
+var alo = require('./../../main/alo.js')
 var assert = require('assert')
 
 describe('Handler', function () {

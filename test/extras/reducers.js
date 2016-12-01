@@ -1,6 +1,6 @@
 /* global describe, it */
 
-var alo = require('./../../src/main/alo.full.js')
+var alo = require('./../../main/alo.full.js')
 var assert = require('assert')
 
 describe('reducers', function () {

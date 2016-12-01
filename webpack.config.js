@@ -2,7 +2,7 @@ var path = require('path')
 var JsDocPlugin = require('jsdoc-webpack-plugin')
 
 module.exports = {
-  context: path.join(__dirname, 'src', 'main'),
+  context: path.join(__dirname, 'main'),
   target: 'web',
   entry: {
     'alo': './alo.js',

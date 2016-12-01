@@ -2,7 +2,7 @@
   "name": "alo",
   "version": "1.0.1",
   "description": "A minimalist approach to javascript state management",
-  "main": "src/main/alo.full.js",
+  "main": "main/alo.full.js",
   "scripts": {
     "test": "mocha-webpack",
     "test-watch": "mocha-webpack --watch",
@@ -35,23 +35,22 @@
   },
   "homepage": "https://github.com/alojs/alo#readme",
   "dependencies": {
-    "bluebird": "^3.4.6",
-    "es6-promise": "^4.0.5",
     "flyd": "^0.2.2",
     "lodash": "^4.17.2",
-    "polymorphic": "^1.4.0"
+    "polymorphic": "^1.4.0",
+    "yaku": "^0.16.7"
   },
   "devDependencies": {
     "fs-extra": "^0.30.0",
     "ink-docstrap": "^1.3.0",
-    "jsdoc": "^3.4.2",
+    "jsdoc": "^3.4.3",
     "jsdoc-webpack-plugin": "0.0.1",
-    "mocha": "^3.1.2",
+    "mocha": "^3.2.0",
     "mocha-webpack": "^0.7.0",
-    "standard": "^8.5.0",
-    "standard-format": "^2.2.3",
-    "uglify-js": "^2.7.3",
-    "webpack": "^1.13.2",
+    "standard": "^8.6.0",
+    "standard-format": "^2.2.4",
+    "uglify-js": "^2.7.5",
+    "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2",
     "webpack-node-externals": "^1.5.4"
   }
