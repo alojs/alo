@@ -6,7 +6,7 @@ var assert = require('assert')
 describe('util', function () {
   describe('isHandler', function () {
     it('should return true for handlers', function () {
-      var handler = new alo.Handler()
+      var handler = alo.createHandler()
       assert.equal(true, alo.util.isHandler(handler))
     })
     it('should return false for objects', function () {
@@ -16,7 +16,7 @@ describe('util', function () {
 
   describe('isStore', function () {
     it('should return true for stores', function () {
-      var store = new alo.Store()
+      var store = alo.createStore()
       assert.equal(true, alo.util.isStore(store))
     })
     it('should return false for objects', function () {

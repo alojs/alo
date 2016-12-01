@@ -6,7 +6,7 @@ var assert = require('assert')
 describe('reducers', function () {
   describe('basic', function () {
     it('should replace old state with new state', function () {
-      var store = new alo.Store({
+      var store = new alo.createStore({
         value: false
       })
       store.addReducer(alo.extras.reducers.createUntypedReplace())

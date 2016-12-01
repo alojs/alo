@@ -25,7 +25,7 @@ describe('Handler', function () {
   describe('addReducer', function () {
     it('should run the reducer', function () {
       var reducerDone = false
-      var store = new alo.Store({
+      var store = alo.createStore({
         value: false
       })
       store.addReducer(function () {

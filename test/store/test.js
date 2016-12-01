@@ -1,6 +1,7 @@
 /* global describe, it */
 
 var alo = require('./../../main/alo.full.js')
+console.log(alo)
 var u = alo.util
 var assert = require('assert')
 
@@ -9,11 +10,11 @@ var assert = require('assert')
 describe('Store', function () {
   describe('Constructor', function () {
     it('should instantiate a store with an empty state when no state is provided', function () {
-      var newStore = new alo.Store()
+      var newStore = alo.createStore()
       assert.deepEqual({}, newStore.getState())
     })
     it('should instantiate a store with a state when a state is provided', function () {
-      var newStore = new alo.Store({hello: 'world'})
+      var newStore = alo.createStore({hello: 'world'})
       assert.equal('world', newStore.getState().hello)
     })
   })
@@ -35,7 +36,7 @@ describe('Store', function () {
     })
     describe('with object', function () {
       it('should call the subscriptions', function () {
-        var store = new alo.Store()
+        var store = alo.createStore()
         var status = 0
 
         store.createSubscription(function (state) {
@@ -51,7 +52,7 @@ describe('Store', function () {
     })
     describe('with function', function () {
       it('should change state with returned state', function () {
-        var store = new alo.Store()
+        var store = alo.createStore()
         store.addReducer(alo.extras.reducers.createUntypedReplace())
         store.dispatch(function (state) {
           state.hello = 'world'
@@ -61,7 +62,7 @@ describe('Store', function () {
         })
       })
       it('should not change state, when no state is returned', function () {
-        var store = new alo.Store()
+        var store = alo.createStore()
         store.addReducer(alo.extras.reducers.createUntypedReplace())
 
         store.dispatch(function (state) {
@@ -71,7 +72,7 @@ describe('Store', function () {
         })
       })
       it('should not change state, when incorrect state was returned', function () {
-        var newStore = new alo.Store()
+        var newStore = alo.createStore()
         // TODO: Hier weitermachen
         newStore.dispatch(function (state) {
           state = 'world'
@@ -81,7 +82,7 @@ describe('Store', function () {
       })
       it('should call the subscriptions, when it not returns undefined', function () {
         var called = 0
-        var store = new alo.Store({}, 'myStore')
+        var store = alo.createStore({}, 'myStore')
         store.addReducer(alo.extras.reducers.createUntypedReplace())
         var sub = store.createSubscription(function (state) {
           called++
@@ -104,7 +105,7 @@ describe('Store', function () {
         return prom
       })
       it('should not call subscription when it returns undefined', function () {
-        var store = new alo.Store()
+        var store = alo.createStore()
         var status = false
         store.createSubscription(function () {
           status = true
@@ -117,7 +118,7 @@ describe('Store', function () {
 
   describe('subscribe', function () {
     it('should return an object of type Subscription', function () {
-      var newStore = new alo.Store()
+      var newStore = alo.createStore()
       var sub = newStore.createSubscription(function () {})
       assert.equal(true, u.isSubscription(sub))
     })
