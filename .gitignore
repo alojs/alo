@@ -1,3 +1,4 @@
 node_modules
 .tmp/mocha-webpack
 .tern-port
+npm-debug.log

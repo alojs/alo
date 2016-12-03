@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="extras.html">extras</a></li><li><a href="util.html">util</a></li>
+					<li><a href="extras.html">extras</a></li>
 				</ul>
 			</li>
 			
@@ -47,7 +47,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Handler.html">Handler</a></li><li><a href="Store.html">Store</a></li><li><a href="Subscription.html">Subscription</a></li>
+					<li><a href="Reducer.html">Reducer</a></li><li><a href="Store.html">Store</a></li><li><a href="Subscription.html">Subscription</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#Util">Util</a></li>
 				</ul>
 			</li>
 			
@@ -84,12 +91,13 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript linenums">var u = require('./../util/util.js')
-var ObjectRelation = require('./../object-relation/object-relation.js')
+            class="sunlight-highlight-javascript linenums">var Alo = require('./../alo.js')
+var alo = new Alo()
+var u = alo.util
 
-var handlerRelation = new ObjectRelation('store', 'handler', u.isHandler)
-var subscriptionRelation = new ObjectRelation('store', 'subscription', u.isSubscription)
-var middlewareRelation = new ObjectRelation('store', 'middleware', u.isMiddleware)
+var reducerRelation = u.createObjectRelation('store', 'reducer', alo.isReducer)
+var subscriptionRelation = u.createObjectRelation('store', 'subscription', alo.isSubscription)
+var middlewareRelation = u.createObjectRelation('store', 'middleware', alo.isMiddleware)
 
 /**
  * The core of Alo. A store is the central place for application state
@@ -125,9 +133,9 @@ var Store = function Store (state, id) {
   this._stream = u.createStream(state)
 
   /**
-   * Handlers
+   * Reducers
    */
-  this._handlerRelations = null
+  this._reducerRelations = null
 
   /**
    * Middlewares
@@ -141,7 +149,7 @@ var Store = function Store (state, id) {
 
   this._computedProperty = {}
 
-  handlerRelation.constructParent(this)
+  reducerRelation.constructParent(this)
   middlewareRelation.constructParent(this)
   subscriptionRelation.constructParent(this)
 }
@@ -158,32 +166,32 @@ var Store = function Store (state, id) {
 Store.prototype.getId = null
 
 /**
- * Returns the registered handlers
+ * Returns the registered reducers
  *
  * @function
- * @return {array} Array of handlers
+ * @return {array} Array of reducers
  */
-Store.prototype.getHandler = null
+Store.prototype.getReducer = null
 
 /**
- * Adds a handler object to the registered handlers
+ * Adds a reducer object to the registered reducers
  *
  * @function
- * @param {Handler} handler
+ * @param {Reducer} reducer
  *
  * @return {Store} this
  */
-Store.prototype.addHandler = null
+Store.prototype.addReducer = null
 
 /**
- * Removes a handler from the currently registered handlers
+ * Removes a reducer from the currently registered reducers
  *
  * @function
- * @param {int|Handler} handler id or Handler
+ * @param {int|Reducer} reducer id or Reducer
  *
  * @return {Store} this
  */
-Store.prototype.removeHandler = null
+Store.prototype.removeReducer = null
 
 /**
  * Returns the registered middlewares
@@ -234,7 +242,7 @@ Store.prototype.addSubscription = null
  */
 Store.prototype.removeSubscription = null
 
-handlerRelation.registerParentPrototype(Store.prototype)
+reducerRelation.registerParentPrototype(Store.prototype)
 middlewareRelation.registerParentPrototype(Store.prototype)
 subscriptionRelation.registerParentPrototype(Store.prototype)
 
@@ -265,28 +273,21 @@ addComputedProperty.signature('object', function (properties) {
 // TODO: Implement removeComputedProperty
 
 /**
- * Registers one or multible reducers
+ * Creates and registers one or multible reducers
  *
  * @function
  *
  * @param {array|...function} Array or variadic call of one or multible reducer functions
  *
- * @return {Handler}
- * @see Handler
+ * @return {Reducer}
+ * @see Reducer
  */
-Store.prototype.addReducer = u.createPolymorphic()
-var addReducer = Store.prototype.addReducer
-addReducer.signature('array', function (reducers) {
-  var handler = u.createHandler(reducers)
-  this.addHandler(handler)
+Store.prototype.createReducer = function createReducer () {
+  var reducer = alo.createReducer.apply(null, arguments)
+  this.addReducer(reducer)
 
-  return handler
-})
-addReducer.signature('function', function (func) {
-  return this.addReducer([func])
-})
-// TODO: Change to better signature
-addReducer.signature('...', addReducer)
+  return reducer
+}
 
 Store.prototype._getStateByNamespace = function _getStateByNamespace (namespace, state) {
   var self = this
@@ -342,7 +343,7 @@ Store.prototype.getState = function getState () {
 }
 
 Store.prototype.createSubscription = function createSubscription () {
-  var subscription = u.createSubscription.apply(null, arguments)
+  var subscription = alo.createSubscription.apply(null, arguments)
   this.addSubscription(subscription)
   return subscription
 }
@@ -422,9 +423,9 @@ dispatch.signature('object', function (action) {
       return false
     } else {
       action = formatAction(action)
-      u.forEach(self.getHandler(), function (handler) {
-        if (u.isHandler(handler)) {
-          state = handler._handle(u.cloneDeep(state), action)
+      u.forEach(self.getReducer(), function (reducer) {
+        if (alo.isReducer(reducer)) {
+          state = reducer.reduce(u.cloneDeep(state), action)
         }
       })
 
@@ -504,7 +505,7 @@ module.exports = Store
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2016-12-01T20:34:39+01:00
+		on 2016-12-03T15:13:37+01:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

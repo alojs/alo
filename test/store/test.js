@@ -23,7 +23,7 @@ describe('Store', function () {
       it('should use the returned value in the reducer', function () {
         var store = alo.createStore()
         var promise = u.createPromise(function (res, rej) {
-          store.addReducer(function (state, action) {
+          store.createReducer(function (state, action) {
             res(action)
           })
         }).then(function (action) {
@@ -38,8 +38,9 @@ describe('Store', function () {
         var store = alo.createStore()
         var status = 0
 
-        store.createSubscription(function (state) {
-          status += 1
+        var sub = store.createSubscription()
+        sub.createMember(function () {
+          status++
         })
 
         return store.dispatch({}).then(function () {
@@ -83,7 +84,8 @@ describe('Store', function () {
         var called = 0
         var store = alo.createStore({}, 'myStore')
         store.addReducer(alo.extras.reducers.createUntypedReplace())
-        var sub = store.createSubscription(function (state) {
+        var sub = store.createSubscription()
+        sub.createMember(function (state) {
           called++
         })
         sub.on('beforePublish', function (state) {
@@ -106,7 +108,8 @@ describe('Store', function () {
       it('should not call subscription when it returns undefined', function () {
         var store = alo.createStore()
         var status = false
-        store.createSubscription(function () {
+        var sub = store.createSubscription()
+        sub.createMember(function () {
           status = true
         })
         store.dispatch(function (state) {})
@@ -118,8 +121,8 @@ describe('Store', function () {
   describe('subscribe', function () {
     it('should return an object of type Subscription', function () {
       var newStore = alo.createStore()
-      var sub = newStore.createSubscription(function () {})
-      assert.equal(true, u.isSubscription(sub))
+      var sub = newStore.createSubscription()
+      assert.equal(true, alo.isSubscription(sub))
     })
   })
 })

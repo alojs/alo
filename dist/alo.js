@@ -52,20 +52,14 @@ var alo =
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var util = __webpack_require__(2)
+	var Util = __webpack_require__(2)
+	var util = new Util()
 
 	/**
 	 * alo Modul
 	 * @module alo
 	 */
 	var alo = util.createAlo()
-
-	/**
-	 * Access to the util namespace
-	 *
-	 * @see util
-	 */
-	alo.util = util
 
 	module.exports = alo
 
@@ -79,10 +73,8 @@ var alo =
 	 *
 	 * Some of this functions / libs might change over time: Please read the description of the specific function / lib.
 	 *
-	 * @namespace
-	 *
 	 */
-	var util = {}
+	var Util = function () {}
 
 	// Library functions
 	// Lodash
@@ -91,279 +83,181 @@ var alo =
 	 *
 	 * @function
 	 */
-	util.cloneDeep = __webpack_require__(3)
+	Util.prototype.cloneDeep = __webpack_require__(3)
 
 	/**
 	 * Lodash values, can be used
 	 *
 	 * @function
 	 */
-	util.values = __webpack_require__(114)
+	Util.prototype.values = __webpack_require__(114)
 
 	/**
 	 * Lodash forEach, can be used
 	 *
 	 * @function
 	 */
-	util.forEach = __webpack_require__(117)
+	Util.prototype.forEach = __webpack_require__(117)
 
 	/**
 	 * Lodash isFunction, can be used
 	 *
 	 * @function
 	 */
-	util.isFunction = __webpack_require__(22)
+	Util.prototype.isFunction = __webpack_require__(22)
 
 	/**
 	 * Lodash isString, can be used
 	 *
 	 * @function
 	 */
-	util.isString = __webpack_require__(125)
+	Util.prototype.isString = __webpack_require__(125)
 
 	/**
 	 * Lodash isObject, can be used
 	 *
 	 * @function
 	 */
-	util.isObject = __webpack_require__(29)
+	Util.prototype.isObject = __webpack_require__(29)
 
 	/**
 	 * Lodash isArray, can be used
 	 *
 	 * @function
 	 */
-	util.isArray = __webpack_require__(61)
+	Util.prototype.isArray = __webpack_require__(61)
 
 	/**
 	 * Lodash isBoolean, can be used
 	 *
 	 * @function
 	 */
-	util.isBoolean = __webpack_require__(126)
+	Util.prototype.isBoolean = __webpack_require__(126)
 
 	/**
 	 * Lodash uniqueId, can be used
 	 *
 	 * @function
 	 */
-	util.uniqueId = __webpack_require__(127)
+	Util.prototype.uniqueId = __webpack_require__(127)
 
-	/**
-	 * Lodash startCase, can be used
-	 *
-	 * @function
-	 */
-	util.startCase = __webpack_require__(131)
-
-	var flyd = __webpack_require__(148)
+	var flyd = __webpack_require__(131)
 	/**
 	 * Flyd stream: Might change!
 	 *
 	 * @function
 	 */
-	util.createStream = flyd.stream
+	Util.prototype.createStream = flyd.stream
 
 	/**
 	 * Flyd stream: Might change!
 	 *
 	 * @function
 	 */
-	util.combineStreams = flyd.combine
+	Util.prototype.combineStreams = flyd.combine
 
 	/**
 	 * Flyd isStream: Might change!
 	 *
 	 * @function
 	 */
-	util.isStream = flyd.isStream
+	Util.prototype.isStream = flyd.isStream
 
 	/**
 	 * Flyd immediate: Might change!
 	 *
 	 * @function
 	 */
-	util.immediateStream = flyd.immediate
+	Util.prototype.immediateStream = flyd.immediate
 
 	/**
 	 * Flyd endsOn: Might change!
 	 *
 	 * @function
 	 */
-	util.streamEndsOn = flyd.endsOn
+	Util.prototype.streamEndsOn = flyd.endsOn
 
 	/**
 	 * Flyd map: Might change!
 	 *
 	 * @function
 	 */
-	util.mapStream = flyd.map
+	Util.prototype.mapStream = flyd.map
 
 	/**
 	 * Flyd on: Might change!
 	 *
 	 * @function
 	 */
-	util.streamOn = flyd.on
+	Util.prototype.streamOn = flyd.on
 
 	/**
 	 * Flyd scan: Might change!
 	 *
 	 * @function
 	 */
-	util.scanStream = flyd.scan
+	Util.prototype.scanStream = flyd.scan
 
 	/**
 	 * Flyd merge: Might change!
 	 *
 	 * @function
 	 */
-	util.mergeStream = flyd.merge
+	Util.prototype.mergeStream = flyd.merge
 
 	/**
 	 * Flyd transduce: Might change!
 	 *
 	 * @function
 	 */
-	util.transduceStream = flyd.transduce
+	Util.prototype.transduceStream = flyd.transduce
 
 	/**
 	 * Flyd curryN: Might change!
 	 *
 	 * @function
 	 */
-	util.curryN = flyd.curryN
+	Util.prototype.curryN = flyd.curryN
 
 	/**
 	 * Polymorphic helper: Might change!
 	 *
 	 * @function
 	 */
-	util.createPolymorphic = __webpack_require__(155)
+	Util.prototype.createPolymorphic = __webpack_require__(138)
 
-	util.Promise = __webpack_require__(156)
+	Util.prototype.Promise = __webpack_require__(139)
 
-	util.createPromise = function createPromise (resolve, reject) {
-	  return new util.Promise(resolve, reject)
+	Util.prototype.createPromise = function createPromise (resolve, reject) {
+	  return new this.Promise(resolve, reject)
 	}
 
 	/**
-	 * Alo specific functions
+	 * Same as new Alo
+	 * @see Alo
 	 */
-
-	/**
-	 * Same as new Store
-	 * @see Store
-	 */
-	util.createAlo = function createStore () {
-	  var Alo = __webpack_require__(157)
+	Util.prototype.createAlo = function createAlo () {
+	  var Alo = __webpack_require__(140)
 	  var alo = Object.create(Alo.prototype)
 	  Alo.apply(alo, arguments)
 	  return alo
 	}
 
-	util.createSubscription = function createSubscription () {
-	  var Subscription = __webpack_require__(158)
-	  var subscription = Object.create(Subscription.prototype)
-	  Subscription.apply(subscription, arguments)
-	  return subscription
+	Util.prototype.createDependencyCache = function createDependencyCache () {
+	  var DependencyCache = __webpack_require__(146)
+	  var dependencyCache = Object.create(DependencyCache.prototype)
+	  DependencyCache.apply(dependencyCache, arguments)
+	  return dependencyCache
 	}
 
-	util.isSubscription = function isSubscription (subscription) {
-	  var Subscription = __webpack_require__(158)
-	  return (subscription instanceof Subscription)
-	}
-
-	util.createMember = function createMember () {
-	  var Member = __webpack_require__(159)
-	  var member = Object.create(Member.prototype)
-	  Member.apply(member, arguments)
-	  return member
-	}
-
-	util.isMember = function isMember (member) {
-	  var Member = __webpack_require__(159)
-	  return (member instanceof Member)
-	}
-
-	/**
-	 * Access to the handler constructor
-	 *
-	 * @see Handler
-	 */
-	// util.Handler = require('./../handler/handler.js'),
-	/**
-	 * Access to the store constructor
-	 *
-	 * @see Store
-	 */
-	// util.Store = require('./../store/store.js'),
-	/**
-	 * Access to the subscription constructor
-	 *
-	 * @see Subscription
-	 */
-	// util.Subscription = require('./../subscription/subscription.js')
-
-	/**
-	 * Same as new Handler
-	 * @see Handler
-	 */
-	util.createHandler = function createHandler () {
-	  var Handler = __webpack_require__(161)
-	  var handler = Object.create(Handler.prototype)
-	  Handler.apply(handler, arguments)
-	  return handler
-	}
-
-	/**
-	 * Instanceof check for handlers
-	 *
-	 * @param {*} handler Argument to check if it is a handler
-	 *
-	 * @return {boolean} true of it is a handler, false in the other case
-	 */
-	util.isHandler = function isHandler (handler) {
-	  var Handler = __webpack_require__(161)
-	  return (handler instanceof Handler)
-	}
-
-	util.createObjectRelation = function createObjectRelation () {
-	  var ObjectRelation = __webpack_require__(160)
+	Util.prototype.createObjectRelation = function createObjectRelation () {
+	  var ObjectRelation = __webpack_require__(147)
 	  var objectRelation = Object.create(ObjectRelation.prototype)
 	  ObjectRelation.apply(objectRelation, arguments)
 	  return objectRelation
 	}
 
-	/**
-	 * Same as new Store
-	 * @see Store
-	 */
-	util.createStore = function createStore () {
-	  var Store = __webpack_require__(162)
-	  var store = Object.create(Store.prototype)
-	  Store.apply(store, arguments)
-	  return store
-	}
-
-	/**
-	 * Instanceof check for stores
-	 *
-	 * @param {*} store Argument to check if it is a store
-	 *
-	 * @return {boolean} true of it is a store, false in the other case
-	 */
-	util.isStore = function isStore (store) {
-	  var Store = __webpack_require__(162)
-	  return (store instanceof Store)
-	}
-
-	util.isMiddleware = function isMiddleware (middleware) {
-	  var Middleware = __webpack_require__(163)
-	  return (middleware instanceof Middleware)
-	}
-
-	module.exports = util
+	module.exports = Util
 
 
 /***/ },
@@ -4206,628 +4100,9 @@ var alo =
 /* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createCompounder = __webpack_require__(132),
-	    upperFirst = __webpack_require__(140);
-
-	/**
-	 * Converts `string` to
-	 * [start case](https://en.wikipedia.org/wiki/Letter_case#Stylistic_or_specialised_usage).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 3.1.0
-	 * @category String
-	 * @param {string} [string=''] The string to convert.
-	 * @returns {string} Returns the start cased string.
-	 * @example
-	 *
-	 * _.startCase('--foo-bar--');
-	 * // => 'Foo Bar'
-	 *
-	 * _.startCase('fooBar');
-	 * // => 'Foo Bar'
-	 *
-	 * _.startCase('__FOO_BAR__');
-	 * // => 'FOO BAR'
-	 */
-	var startCase = createCompounder(function(result, word, index) {
-	  return result + (index ? ' ' : '') + upperFirst(word);
-	});
-
-	module.exports = startCase;
-
-
-/***/ },
-/* 132 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var arrayReduce = __webpack_require__(104),
-	    deburr = __webpack_require__(133),
-	    words = __webpack_require__(136);
-
-	/** Used to compose unicode capture groups. */
-	var rsApos = "['\u2019]";
-
-	/** Used to match apostrophes. */
-	var reApos = RegExp(rsApos, 'g');
-
-	/**
-	 * Creates a function like `_.camelCase`.
-	 *
-	 * @private
-	 * @param {Function} callback The function to combine each word.
-	 * @returns {Function} Returns the new compounder function.
-	 */
-	function createCompounder(callback) {
-	  return function(string) {
-	    return arrayReduce(words(deburr(string).replace(reApos, '')), callback, '');
-	  };
-	}
-
-	module.exports = createCompounder;
-
-
-/***/ },
-/* 133 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var deburrLetter = __webpack_require__(134),
-	    toString = __webpack_require__(128);
-
-	/** Used to match Latin Unicode letters (excluding mathematical operators). */
-	var reLatin = /[\xc0-\xd6\xd8-\xf6\xf8-\xff\u0100-\u017f]/g;
-
-	/** Used to compose unicode character classes. */
-	var rsComboMarksRange = '\\u0300-\\u036f',
-	    reComboHalfMarksRange = '\\ufe20-\\ufe2f',
-	    rsComboSymbolsRange = '\\u20d0-\\u20ff',
-	    rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange;
-
-	/** Used to compose unicode capture groups. */
-	var rsCombo = '[' + rsComboRange + ']';
-
-	/**
-	 * Used to match [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks) and
-	 * [combining diacritical marks for symbols](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks_for_Symbols).
-	 */
-	var reComboMark = RegExp(rsCombo, 'g');
-
-	/**
-	 * Deburrs `string` by converting
-	 * [Latin-1 Supplement](https://en.wikipedia.org/wiki/Latin-1_Supplement_(Unicode_block)#Character_table)
-	 * and [Latin Extended-A](https://en.wikipedia.org/wiki/Latin_Extended-A)
-	 * letters to basic Latin letters and removing
-	 * [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 3.0.0
-	 * @category String
-	 * @param {string} [string=''] The string to deburr.
-	 * @returns {string} Returns the deburred string.
-	 * @example
-	 *
-	 * _.deburr('déjà vu');
-	 * // => 'deja vu'
-	 */
-	function deburr(string) {
-	  string = toString(string);
-	  return string && string.replace(reLatin, deburrLetter).replace(reComboMark, '');
-	}
-
-	module.exports = deburr;
-
-
-/***/ },
-/* 134 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var basePropertyOf = __webpack_require__(135);
-
-	/** Used to map Latin Unicode letters to basic Latin letters. */
-	var deburredLetters = {
-	  // Latin-1 Supplement block.
-	  '\xc0': 'A',  '\xc1': 'A', '\xc2': 'A', '\xc3': 'A', '\xc4': 'A', '\xc5': 'A',
-	  '\xe0': 'a',  '\xe1': 'a', '\xe2': 'a', '\xe3': 'a', '\xe4': 'a', '\xe5': 'a',
-	  '\xc7': 'C',  '\xe7': 'c',
-	  '\xd0': 'D',  '\xf0': 'd',
-	  '\xc8': 'E',  '\xc9': 'E', '\xca': 'E', '\xcb': 'E',
-	  '\xe8': 'e',  '\xe9': 'e', '\xea': 'e', '\xeb': 'e',
-	  '\xcc': 'I',  '\xcd': 'I', '\xce': 'I', '\xcf': 'I',
-	  '\xec': 'i',  '\xed': 'i', '\xee': 'i', '\xef': 'i',
-	  '\xd1': 'N',  '\xf1': 'n',
-	  '\xd2': 'O',  '\xd3': 'O', '\xd4': 'O', '\xd5': 'O', '\xd6': 'O', '\xd8': 'O',
-	  '\xf2': 'o',  '\xf3': 'o', '\xf4': 'o', '\xf5': 'o', '\xf6': 'o', '\xf8': 'o',
-	  '\xd9': 'U',  '\xda': 'U', '\xdb': 'U', '\xdc': 'U',
-	  '\xf9': 'u',  '\xfa': 'u', '\xfb': 'u', '\xfc': 'u',
-	  '\xdd': 'Y',  '\xfd': 'y', '\xff': 'y',
-	  '\xc6': 'Ae', '\xe6': 'ae',
-	  '\xde': 'Th', '\xfe': 'th',
-	  '\xdf': 'ss',
-	  // Latin Extended-A block.
-	  '\u0100': 'A',  '\u0102': 'A', '\u0104': 'A',
-	  '\u0101': 'a',  '\u0103': 'a', '\u0105': 'a',
-	  '\u0106': 'C',  '\u0108': 'C', '\u010a': 'C', '\u010c': 'C',
-	  '\u0107': 'c',  '\u0109': 'c', '\u010b': 'c', '\u010d': 'c',
-	  '\u010e': 'D',  '\u0110': 'D', '\u010f': 'd', '\u0111': 'd',
-	  '\u0112': 'E',  '\u0114': 'E', '\u0116': 'E', '\u0118': 'E', '\u011a': 'E',
-	  '\u0113': 'e',  '\u0115': 'e', '\u0117': 'e', '\u0119': 'e', '\u011b': 'e',
-	  '\u011c': 'G',  '\u011e': 'G', '\u0120': 'G', '\u0122': 'G',
-	  '\u011d': 'g',  '\u011f': 'g', '\u0121': 'g', '\u0123': 'g',
-	  '\u0124': 'H',  '\u0126': 'H', '\u0125': 'h', '\u0127': 'h',
-	  '\u0128': 'I',  '\u012a': 'I', '\u012c': 'I', '\u012e': 'I', '\u0130': 'I',
-	  '\u0129': 'i',  '\u012b': 'i', '\u012d': 'i', '\u012f': 'i', '\u0131': 'i',
-	  '\u0134': 'J',  '\u0135': 'j',
-	  '\u0136': 'K',  '\u0137': 'k', '\u0138': 'k',
-	  '\u0139': 'L',  '\u013b': 'L', '\u013d': 'L', '\u013f': 'L', '\u0141': 'L',
-	  '\u013a': 'l',  '\u013c': 'l', '\u013e': 'l', '\u0140': 'l', '\u0142': 'l',
-	  '\u0143': 'N',  '\u0145': 'N', '\u0147': 'N', '\u014a': 'N',
-	  '\u0144': 'n',  '\u0146': 'n', '\u0148': 'n', '\u014b': 'n',
-	  '\u014c': 'O',  '\u014e': 'O', '\u0150': 'O',
-	  '\u014d': 'o',  '\u014f': 'o', '\u0151': 'o',
-	  '\u0154': 'R',  '\u0156': 'R', '\u0158': 'R',
-	  '\u0155': 'r',  '\u0157': 'r', '\u0159': 'r',
-	  '\u015a': 'S',  '\u015c': 'S', '\u015e': 'S', '\u0160': 'S',
-	  '\u015b': 's',  '\u015d': 's', '\u015f': 's', '\u0161': 's',
-	  '\u0162': 'T',  '\u0164': 'T', '\u0166': 'T',
-	  '\u0163': 't',  '\u0165': 't', '\u0167': 't',
-	  '\u0168': 'U',  '\u016a': 'U', '\u016c': 'U', '\u016e': 'U', '\u0170': 'U', '\u0172': 'U',
-	  '\u0169': 'u',  '\u016b': 'u', '\u016d': 'u', '\u016f': 'u', '\u0171': 'u', '\u0173': 'u',
-	  '\u0174': 'W',  '\u0175': 'w',
-	  '\u0176': 'Y',  '\u0177': 'y', '\u0178': 'Y',
-	  '\u0179': 'Z',  '\u017b': 'Z', '\u017d': 'Z',
-	  '\u017a': 'z',  '\u017c': 'z', '\u017e': 'z',
-	  '\u0132': 'IJ', '\u0133': 'ij',
-	  '\u0152': 'Oe', '\u0153': 'oe',
-	  '\u0149': "'n", '\u017f': 's'
-	};
-
-	/**
-	 * Used by `_.deburr` to convert Latin-1 Supplement and Latin Extended-A
-	 * letters to basic Latin letters.
-	 *
-	 * @private
-	 * @param {string} letter The matched letter to deburr.
-	 * @returns {string} Returns the deburred letter.
-	 */
-	var deburrLetter = basePropertyOf(deburredLetters);
-
-	module.exports = deburrLetter;
-
-
-/***/ },
-/* 135 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.propertyOf` without support for deep paths.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {Function} Returns the new accessor function.
-	 */
-	function basePropertyOf(object) {
-	  return function(key) {
-	    return object == null ? undefined : object[key];
-	  };
-	}
-
-	module.exports = basePropertyOf;
-
-
-/***/ },
-/* 136 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var asciiWords = __webpack_require__(137),
-	    hasUnicodeWord = __webpack_require__(138),
-	    toString = __webpack_require__(128),
-	    unicodeWords = __webpack_require__(139);
-
-	/**
-	 * Splits `string` into an array of its words.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 3.0.0
-	 * @category String
-	 * @param {string} [string=''] The string to inspect.
-	 * @param {RegExp|string} [pattern] The pattern to match words.
-	 * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
-	 * @returns {Array} Returns the words of `string`.
-	 * @example
-	 *
-	 * _.words('fred, barney, & pebbles');
-	 * // => ['fred', 'barney', 'pebbles']
-	 *
-	 * _.words('fred, barney, & pebbles', /[^, ]+/g);
-	 * // => ['fred', 'barney', '&', 'pebbles']
-	 */
-	function words(string, pattern, guard) {
-	  string = toString(string);
-	  pattern = guard ? undefined : pattern;
-
-	  if (pattern === undefined) {
-	    return hasUnicodeWord(string) ? unicodeWords(string) : asciiWords(string);
-	  }
-	  return string.match(pattern) || [];
-	}
-
-	module.exports = words;
-
-
-/***/ },
-/* 137 */
-/***/ function(module, exports) {
-
-	/** Used to match words composed of alphanumeric characters. */
-	var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
-
-	/**
-	 * Splits an ASCII `string` into an array of its words.
-	 *
-	 * @private
-	 * @param {string} The string to inspect.
-	 * @returns {Array} Returns the words of `string`.
-	 */
-	function asciiWords(string) {
-	  return string.match(reAsciiWord) || [];
-	}
-
-	module.exports = asciiWords;
-
-
-/***/ },
-/* 138 */
-/***/ function(module, exports) {
-
-	/** Used to detect strings that need a more robust regexp to match words. */
-	var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2,}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
-
-	/**
-	 * Checks if `string` contains a word composed of Unicode symbols.
-	 *
-	 * @private
-	 * @param {string} string The string to inspect.
-	 * @returns {boolean} Returns `true` if a word is found, else `false`.
-	 */
-	function hasUnicodeWord(string) {
-	  return reHasUnicodeWord.test(string);
-	}
-
-	module.exports = hasUnicodeWord;
-
-
-/***/ },
-/* 139 */
-/***/ function(module, exports) {
-
-	/** Used to compose unicode character classes. */
-	var rsAstralRange = '\\ud800-\\udfff',
-	    rsComboMarksRange = '\\u0300-\\u036f',
-	    reComboHalfMarksRange = '\\ufe20-\\ufe2f',
-	    rsComboSymbolsRange = '\\u20d0-\\u20ff',
-	    rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange,
-	    rsDingbatRange = '\\u2700-\\u27bf',
-	    rsLowerRange = 'a-z\\xdf-\\xf6\\xf8-\\xff',
-	    rsMathOpRange = '\\xac\\xb1\\xd7\\xf7',
-	    rsNonCharRange = '\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf',
-	    rsPunctuationRange = '\\u2000-\\u206f',
-	    rsSpaceRange = ' \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000',
-	    rsUpperRange = 'A-Z\\xc0-\\xd6\\xd8-\\xde',
-	    rsVarRange = '\\ufe0e\\ufe0f',
-	    rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
-
-	/** Used to compose unicode capture groups. */
-	var rsApos = "['\u2019]",
-	    rsBreak = '[' + rsBreakRange + ']',
-	    rsCombo = '[' + rsComboRange + ']',
-	    rsDigits = '\\d+',
-	    rsDingbat = '[' + rsDingbatRange + ']',
-	    rsLower = '[' + rsLowerRange + ']',
-	    rsMisc = '[^' + rsAstralRange + rsBreakRange + rsDigits + rsDingbatRange + rsLowerRange + rsUpperRange + ']',
-	    rsFitz = '\\ud83c[\\udffb-\\udfff]',
-	    rsModifier = '(?:' + rsCombo + '|' + rsFitz + ')',
-	    rsNonAstral = '[^' + rsAstralRange + ']',
-	    rsRegional = '(?:\\ud83c[\\udde6-\\uddff]){2}',
-	    rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]',
-	    rsUpper = '[' + rsUpperRange + ']',
-	    rsZWJ = '\\u200d';
-
-	/** Used to compose unicode regexes. */
-	var rsMiscLower = '(?:' + rsLower + '|' + rsMisc + ')',
-	    rsMiscUpper = '(?:' + rsUpper + '|' + rsMisc + ')',
-	    rsOptContrLower = '(?:' + rsApos + '(?:d|ll|m|re|s|t|ve))?',
-	    rsOptContrUpper = '(?:' + rsApos + '(?:D|LL|M|RE|S|T|VE))?',
-	    reOptMod = rsModifier + '?',
-	    rsOptVar = '[' + rsVarRange + ']?',
-	    rsOptJoin = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*',
-	    rsOrdLower = '\\d*(?:(?:1st|2nd|3rd|(?![123])\\dth)\\b)',
-	    rsOrdUpper = '\\d*(?:(?:1ST|2ND|3RD|(?![123])\\dTH)\\b)',
-	    rsSeq = rsOptVar + reOptMod + rsOptJoin,
-	    rsEmoji = '(?:' + [rsDingbat, rsRegional, rsSurrPair].join('|') + ')' + rsSeq;
-
-	/** Used to match complex or compound words. */
-	var reUnicodeWord = RegExp([
-	  rsUpper + '?' + rsLower + '+' + rsOptContrLower + '(?=' + [rsBreak, rsUpper, '$'].join('|') + ')',
-	  rsMiscUpper + '+' + rsOptContrUpper + '(?=' + [rsBreak, rsUpper + rsMiscLower, '$'].join('|') + ')',
-	  rsUpper + '?' + rsMiscLower + '+' + rsOptContrLower,
-	  rsUpper + '+' + rsOptContrUpper,
-	  rsOrdUpper,
-	  rsOrdLower,
-	  rsDigits,
-	  rsEmoji
-	].join('|'), 'g');
-
-	/**
-	 * Splits a Unicode `string` into an array of its words.
-	 *
-	 * @private
-	 * @param {string} The string to inspect.
-	 * @returns {Array} Returns the words of `string`.
-	 */
-	function unicodeWords(string) {
-	  return string.match(reUnicodeWord) || [];
-	}
-
-	module.exports = unicodeWords;
-
-
-/***/ },
-/* 140 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var createCaseFirst = __webpack_require__(141);
-
-	/**
-	 * Converts the first character of `string` to upper case.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category String
-	 * @param {string} [string=''] The string to convert.
-	 * @returns {string} Returns the converted string.
-	 * @example
-	 *
-	 * _.upperFirst('fred');
-	 * // => 'Fred'
-	 *
-	 * _.upperFirst('FRED');
-	 * // => 'FRED'
-	 */
-	var upperFirst = createCaseFirst('toUpperCase');
-
-	module.exports = upperFirst;
-
-
-/***/ },
-/* 141 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var castSlice = __webpack_require__(142),
-	    hasUnicode = __webpack_require__(144),
-	    stringToArray = __webpack_require__(145),
-	    toString = __webpack_require__(128);
-
-	/**
-	 * Creates a function like `_.lowerFirst`.
-	 *
-	 * @private
-	 * @param {string} methodName The name of the `String` case method to use.
-	 * @returns {Function} Returns the new case function.
-	 */
-	function createCaseFirst(methodName) {
-	  return function(string) {
-	    string = toString(string);
-
-	    var strSymbols = hasUnicode(string)
-	      ? stringToArray(string)
-	      : undefined;
-
-	    var chr = strSymbols
-	      ? strSymbols[0]
-	      : string.charAt(0);
-
-	    var trailing = strSymbols
-	      ? castSlice(strSymbols, 1).join('')
-	      : string.slice(1);
-
-	    return chr[methodName]() + trailing;
-	  };
-	}
-
-	module.exports = createCaseFirst;
-
-
-/***/ },
-/* 142 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseSlice = __webpack_require__(143);
-
-	/**
-	 * Casts `array` to a slice if it's needed.
-	 *
-	 * @private
-	 * @param {Array} array The array to inspect.
-	 * @param {number} start The start position.
-	 * @param {number} [end=array.length] The end position.
-	 * @returns {Array} Returns the cast slice.
-	 */
-	function castSlice(array, start, end) {
-	  var length = array.length;
-	  end = end === undefined ? length : end;
-	  return (!start && end >= length) ? array : baseSlice(array, start, end);
-	}
-
-	module.exports = castSlice;
-
-
-/***/ },
-/* 143 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.slice` without an iteratee call guard.
-	 *
-	 * @private
-	 * @param {Array} array The array to slice.
-	 * @param {number} [start=0] The start position.
-	 * @param {number} [end=array.length] The end position.
-	 * @returns {Array} Returns the slice of `array`.
-	 */
-	function baseSlice(array, start, end) {
-	  var index = -1,
-	      length = array.length;
-
-	  if (start < 0) {
-	    start = -start > length ? 0 : (length + start);
-	  }
-	  end = end > length ? length : end;
-	  if (end < 0) {
-	    end += length;
-	  }
-	  length = start > end ? 0 : ((end - start) >>> 0);
-	  start >>>= 0;
-
-	  var result = Array(length);
-	  while (++index < length) {
-	    result[index] = array[index + start];
-	  }
-	  return result;
-	}
-
-	module.exports = baseSlice;
-
-
-/***/ },
-/* 144 */
-/***/ function(module, exports) {
-
-	/** Used to compose unicode character classes. */
-	var rsAstralRange = '\\ud800-\\udfff',
-	    rsComboMarksRange = '\\u0300-\\u036f',
-	    reComboHalfMarksRange = '\\ufe20-\\ufe2f',
-	    rsComboSymbolsRange = '\\u20d0-\\u20ff',
-	    rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange,
-	    rsVarRange = '\\ufe0e\\ufe0f';
-
-	/** Used to compose unicode capture groups. */
-	var rsZWJ = '\\u200d';
-
-	/** Used to detect strings with [zero-width joiners or code points from the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/). */
-	var reHasUnicode = RegExp('[' + rsZWJ + rsAstralRange  + rsComboRange + rsVarRange + ']');
-
-	/**
-	 * Checks if `string` contains Unicode symbols.
-	 *
-	 * @private
-	 * @param {string} string The string to inspect.
-	 * @returns {boolean} Returns `true` if a symbol is found, else `false`.
-	 */
-	function hasUnicode(string) {
-	  return reHasUnicode.test(string);
-	}
-
-	module.exports = hasUnicode;
-
-
-/***/ },
-/* 145 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var asciiToArray = __webpack_require__(146),
-	    hasUnicode = __webpack_require__(144),
-	    unicodeToArray = __webpack_require__(147);
-
-	/**
-	 * Converts `string` to an array.
-	 *
-	 * @private
-	 * @param {string} string The string to convert.
-	 * @returns {Array} Returns the converted array.
-	 */
-	function stringToArray(string) {
-	  return hasUnicode(string)
-	    ? unicodeToArray(string)
-	    : asciiToArray(string);
-	}
-
-	module.exports = stringToArray;
-
-
-/***/ },
-/* 146 */
-/***/ function(module, exports) {
-
-	/**
-	 * Converts an ASCII `string` to an array.
-	 *
-	 * @private
-	 * @param {string} string The string to convert.
-	 * @returns {Array} Returns the converted array.
-	 */
-	function asciiToArray(string) {
-	  return string.split('');
-	}
-
-	module.exports = asciiToArray;
-
-
-/***/ },
-/* 147 */
-/***/ function(module, exports) {
-
-	/** Used to compose unicode character classes. */
-	var rsAstralRange = '\\ud800-\\udfff',
-	    rsComboMarksRange = '\\u0300-\\u036f',
-	    reComboHalfMarksRange = '\\ufe20-\\ufe2f',
-	    rsComboSymbolsRange = '\\u20d0-\\u20ff',
-	    rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange,
-	    rsVarRange = '\\ufe0e\\ufe0f';
-
-	/** Used to compose unicode capture groups. */
-	var rsAstral = '[' + rsAstralRange + ']',
-	    rsCombo = '[' + rsComboRange + ']',
-	    rsFitz = '\\ud83c[\\udffb-\\udfff]',
-	    rsModifier = '(?:' + rsCombo + '|' + rsFitz + ')',
-	    rsNonAstral = '[^' + rsAstralRange + ']',
-	    rsRegional = '(?:\\ud83c[\\udde6-\\uddff]){2}',
-	    rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]',
-	    rsZWJ = '\\u200d';
-
-	/** Used to compose unicode regexes. */
-	var reOptMod = rsModifier + '?',
-	    rsOptVar = '[' + rsVarRange + ']?',
-	    rsOptJoin = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*',
-	    rsSeq = rsOptVar + reOptMod + rsOptJoin,
-	    rsSymbol = '(?:' + [rsNonAstral + rsCombo + '?', rsCombo, rsRegional, rsSurrPair, rsAstral].join('|') + ')';
-
-	/** Used to match [string symbols](https://mathiasbynens.be/notes/javascript-unicode). */
-	var reUnicode = RegExp(rsFitz + '(?=' + rsFitz + ')|' + rsSymbol + rsSeq, 'g');
-
-	/**
-	 * Converts a Unicode `string` to an array.
-	 *
-	 * @private
-	 * @param {string} string The string to convert.
-	 * @returns {Array} Returns the converted array.
-	 */
-	function unicodeToArray(string) {
-	  return string.match(reUnicode) || [];
-	}
-
-	module.exports = unicodeToArray;
-
-
-/***/ },
-/* 148 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
-	var curryN = __webpack_require__(149);
+	var curryN = __webpack_require__(132);
 
 	// Utility
 	function isFunction(obj) {
@@ -5454,13 +4729,13 @@ var alo =
 
 
 /***/ },
-/* 149 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _arity = __webpack_require__(150);
-	var _curry1 = __webpack_require__(151);
-	var _curry2 = __webpack_require__(153);
-	var _curryN = __webpack_require__(154);
+	var _arity = __webpack_require__(133);
+	var _curry1 = __webpack_require__(134);
+	var _curry2 = __webpack_require__(136);
+	var _curryN = __webpack_require__(137);
 
 
 	/**
@@ -5514,7 +4789,7 @@ var alo =
 
 
 /***/ },
-/* 150 */
+/* 133 */
 /***/ function(module, exports) {
 
 	module.exports = function _arity(n, fn) {
@@ -5537,10 +4812,10 @@ var alo =
 
 
 /***/ },
-/* 151 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _isPlaceholder = __webpack_require__(152);
+	var _isPlaceholder = __webpack_require__(135);
 
 
 	/**
@@ -5563,7 +4838,7 @@ var alo =
 
 
 /***/ },
-/* 152 */
+/* 135 */
 /***/ function(module, exports) {
 
 	module.exports = function _isPlaceholder(a) {
@@ -5574,11 +4849,11 @@ var alo =
 
 
 /***/ },
-/* 153 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _curry1 = __webpack_require__(151);
-	var _isPlaceholder = __webpack_require__(152);
+	var _curry1 = __webpack_require__(134);
+	var _isPlaceholder = __webpack_require__(135);
 
 
 	/**
@@ -5608,11 +4883,11 @@ var alo =
 
 
 /***/ },
-/* 154 */
+/* 137 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _arity = __webpack_require__(150);
-	var _isPlaceholder = __webpack_require__(152);
+	var _arity = __webpack_require__(133);
+	var _isPlaceholder = __webpack_require__(135);
 
 
 	/**
@@ -5654,7 +4929,7 @@ var alo =
 
 
 /***/ },
-/* 155 */
+/* 138 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6138,7 +5413,7 @@ var alo =
 
 
 /***/ },
-/* 156 */
+/* 139 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*
@@ -6983,28 +6258,127 @@ var alo =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 157 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var util = __webpack_require__(2)
+	var Alo = function Alo () {
+	  var Util = __webpack_require__(2)
 
-	var Alo = function Alo () {}
+	  /**
+	   * Access to the util namespace
+	   *
+	   * @see util
+	   */
+	  this.util = new Util()
+	}
 
-	Alo.prototype.createHandler = util.createHandler
+	Alo.prototype.createSubscription = function createSubscription () {
+	  var Subscription = __webpack_require__(141)
+	  var subscription = Object.create(Subscription.prototype)
+	  Subscription.apply(subscription, arguments)
+	  return subscription
+	}
 
-	Alo.prototype.createStore = util.createStore
+	Alo.prototype.isSubscription = function isSubscription (subscription) {
+	  var Subscription = __webpack_require__(141)
+	  return (subscription instanceof Subscription)
+	}
+
+	Alo.prototype.createMember = function createMember () {
+	  var Member = __webpack_require__(142)
+	  var member = Object.create(Member.prototype)
+	  Member.apply(member, arguments)
+	  return member
+	}
+
+	Alo.prototype.isMember = function isMember (member) {
+	  var Member = __webpack_require__(142)
+	  return (member instanceof Member)
+	}
+
+	/**
+	 * Access to the handler constructor
+	 *
+	 * @see Handler
+	 */
+	// util.Handler = require('./../handler/handler.js'),
+	/**
+	 * Access to the store constructor
+	 *
+	 * @see Store
+	 */
+	// util.Store = require('./../store/store.js'),
+	/**
+	 * Access to the subscription constructor
+	 *
+	 * @see Subscription
+	 */
+	// util.Subscription = require('./../subscription/subscription.js')
+
+	/**
+	 * Same as new Reducer
+	 * @see Reducer
+	 */
+	Alo.prototype.createReducer = function createReducer () {
+	  var Reducer = __webpack_require__(143)
+	  var reducer = Object.create(Reducer.prototype)
+	  Reducer.apply(reducer, arguments)
+	  return reducer
+	}
+
+	/**
+	 * Instanceof check for reducers
+	 *
+	 * @param {*} reducer Argument to check if it is a reducer
+	 *
+	 * @return {boolean} true of it is a reducer, false in the other case
+	 */
+	Alo.prototype.isReducer = function isReducer (reducer) {
+	  var Reducer = __webpack_require__(143)
+	  return (reducer instanceof Reducer)
+	}
+
+	/**
+	 * Same as new Store
+	 * @see Store
+	 */
+	Alo.prototype.createStore = function createStore () {
+	  var Store = __webpack_require__(144)
+	  var store = Object.create(Store.prototype)
+	  Store.apply(store, arguments)
+	  return store
+	}
+
+	/**
+	 * Instanceof check for stores
+	 *
+	 * @param {*} store Argument to check if it is a store
+	 *
+	 * @return {boolean} true of it is a store, false in the other case
+	 */
+	Alo.prototype.isStore = function isStore (store) {
+	  var Store = __webpack_require__(144)
+	  return (store instanceof Store)
+	}
+
+	Alo.prototype.isMiddleware = function isMiddleware (middleware) {
+	  var Middleware = __webpack_require__(145)
+	  return (middleware instanceof Middleware)
+	}
 
 	module.exports = Alo
 
 
 /***/ },
-/* 158 */
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var u = __webpack_require__(2)
+	var Alo = __webpack_require__(140)
+	var alo = new Alo()
+	var u = alo.util
 
-	var storeRelation = u.createObjectRelation('subscription', 'store', u.isStore)
-	var memberRelation = u.createObjectRelation('subscription', 'member', u.isMember)
+	var storeRelation = u.createObjectRelation('subscription', 'store', alo.isStore)
+	var memberRelation = u.createObjectRelation('subscription', 'member', alo.isMember)
 
 	/**
 	 * Subscription Constructor, is used in the Store Class to create Subscriptions to state
@@ -7030,6 +6404,8 @@ var alo =
 	  this._subscriptionStream = null
 	  this._stream = null
 
+	  this._dependencyCache = u.createDependencyCache()
+
 	  // While binding the publish function to the streams of the registered stores
 	  this._binding_publish = false
 	  this._muted = false
@@ -7037,22 +6413,32 @@ var alo =
 	  storeRelation.constructParent(this)
 	  memberRelation.constructParent(this)
 
-	  this.addFunction.apply(this, arguments)
+	  subscription.apply(this, arguments)
 	}
 
 	// TODO: Implement additional signatures
-	/*var subscription = u.createPolymorphic()
+	var subscription = u.createPolymorphic()
+	subscription.signature('', function () {})
+	subscription.signature('object, array', function (dependencies, members) {
+	  this._dependencyCache.setDependency(dependencies)
+	  this.addMember(members)
+	})
+	subscription.signature('object', function (dependencies) {
+	  this._dependencyCache.setDependency(dependencies)
+	})
+	subscription.signature('array', function (members) {
+	  this.addMember(members)
+	})
 	subscription.signature('function', function (func) {
-	  this.addFunction(func)
-	})*/
+	  this.createMember(func)
+	})
 
 	Subscription.prototype.addMember = null
 	Subscription.prototype.getMember = null
 
-	storeRelation.after('add', function () {
+	var afterChange = function () {
 	  var self = this
 
-	  // TODO: Utility isStream
 	  if (u.isStream(this._stream)) {
 	    this._stream.end(true)
 	    this._stream = null
@@ -7071,7 +6457,7 @@ var alo =
 	  this._stream = u.combineStreams(function () {
 	    var streamState = {}
 	    u.forEach(u.values(arguments), function (stream, idx) {
-	      if (u.isStore(stores[idx])) {
+	      if (alo.isStore(stores[idx])) {
 	        streamState[stores[idx].getId()] = stream()
 	      }
 	    })
@@ -7081,36 +6467,20 @@ var alo =
 	    self._publish(state)
 	  }, this._stream)
 	  this._binding_publish = false
-	})
+	}
+
+	storeRelation.after('add', afterChange)
+	storeRelation.after('remove', afterChange)
 
 	storeRelation.registerParentPrototype(Subscription.prototype)
 	memberRelation.registerParentPrototype(Subscription.prototype)
 
-	Subscription.prototype.addFunction = u.createPolymorphic()
-	var addFunction = Subscription.prototype.addFunction
-	addFunction.signature('function', function (func) {
-	  return this.addFunction({}, func)
-	})
-	addFunction.signature('object, function', function (dependency, func) {
-	  var Member = __webpack_require__(159)
-	  var member = new Member(dependency, func)
+	Subscription.prototype.createMember = function createMember () {
+	  var member = alo.createMember.apply(null, arguments)
 	  this.addMember(member)
 
-	  return member
-	})
-	addFunction.signature('array', function (functions) {
-	  var self = this
-
-	  u.forEach(functions, function (func) {
-	    if (u.isArray(func)) {
-	      self.addFunction.apply(this, func)
-	    } else {
-	      self.addFunction(func)
-	    }
-	  })
-
 	  return this
-	})
+	}
 
 	Subscription.prototype._callEvent = function (name, state) {
 	  var promises = this._events[name].map(function (func) {
@@ -7132,7 +6502,7 @@ var alo =
 	      if (runPublish !== false) {
 	        var state = self.getState()
 	        var promises = []
-	        u.forEach(self.getMember(), function (member) {
+	        u.forEach(self.getMember(false), function (member) {
 	          promises.push(member._call(state))
 	        })
 	        return u.Promise.all(promises)
@@ -7209,13 +6579,14 @@ var alo =
 
 
 /***/ },
-/* 159 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var u = __webpack_require__(2)
-	var ObjectRelation = __webpack_require__(160)
+	var Alo = __webpack_require__(140)
+	var alo = new Alo()
+	var u = alo.util
 
-	var subscriptionRelation = new ObjectRelation('member', 'subscription', u.isSubscription)
+	var subscriptionRelation = u.createObjectRelation('member', 'subscription', alo.isSubscription)
 
 	var Member = function Member () {
 	  this._dependency = {}
@@ -7319,290 +6690,160 @@ var alo =
 
 
 /***/ },
-/* 160 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var u = __webpack_require__(2)
+	var Alo = __webpack_require__(140)
+	var alo = new Alo()
+	var u = alo.util
 
-	var functions = {
-	  get: {
-	    relation: true
-	  },
-	  add: {
-	    relation: true
-	  },
-	  remove: {
-	    relation: true
-	  },
-	  getId: {}
-	}
-
-	var formatFunctionName = function (action, name) {
-	  return action + u.startCase(name)
-	}
-
-	var ObjectRelation = function ObjectRelation () {
-	  objectRelation.apply(this, arguments)
-	}
-	var objectRelation = u.createPolymorphic()
-	objectRelation.signature('string, string, function', function (parentName, relationName, isRelationObject) {
-	  var self = this
-	  if (parentName === '' || relationName === '') {
-	    throw new Error('Argument given should not be empty')
-	  } else {
-	    this.idPropertyName = '_id'
-	    this.parentName = parentName
-	    this.relationName = relationName
-	    this.relationPropertyName = '_' + relationName + 'Relations'
-	    this.isRelationObject = isRelationObject
-
-	    this.functions = {}
-	    u.forEach(functions, function (func, funcName) {
-	      self.functions[funcName] = {
-	        after: []
-	      }
-	      if (func.relation === true) {
-	        self.functions[funcName].parentName = formatFunctionName(funcName, parentName)
-	        self.functions[funcName].relationName = formatFunctionName(funcName, relationName)
-	      }
-	    })
-	  }
-	})
+	var storeRelation = u.createObjectRelation('reducer', 'store', alo.isStore)
+	var reducerRelation = u.createObjectRelation('reducer', 'parentReducer', alo.isReducer)
+	var parentReducerRelation = u.createObjectRelation('parentReducer', 'reducer', alo.isReducer)
 
 	/**
-	 * Should be called in the constructor of the parent
-	 */
-	ObjectRelation.prototype.constructParent = function (parentObject) {
-	  if (parentObject[this.idPropertyName] === null || parentObject[this.idPropertyName] === undefined) {
-	    var id = u.uniqueId()
-	    parentObject[this.idPropertyName] = id
-	  }
-	  parentObject[this.relationPropertyName] = {}
-	}
-
-	ObjectRelation.prototype.registerParentPrototype = function (prototype) {
-	  var self = this
-	  var createCaller = function (funcName, func) {
-	    return function () {
-	      var parent = this
-	      var args = u.values(arguments)
-	      args.unshift(self)
-	      var result = func.apply(parent, args)
-	      u.forEach(self.functions[funcName].after, function (afterFunc) {
-	        afterFunc.call(parent)
-	      })
-	      return result
-	    }
-	  }
-
-	  u.forEach(self.functions, function (func, funcName) {
-	    var prototypeFunctionName = funcName
-	    if (u.isString(func.relationName) && func.relationName !== '') {
-	      prototypeFunctionName = func.relationName
-	    }
-	    prototype[prototypeFunctionName] = createCaller(funcName, self[funcName + 'Function'])
-	  })
-	}
-
-	ObjectRelation.prototype.getIdFunction = function getId (config) {
-	  return this[config.idPropertyName]
-	}
-
-	ObjectRelation.prototype.getFunction = function get (config, id) {
-	  if (u.isString(id)) {
-	    if (id === '') {
-	      throw new Error('Argument given should not be an empty string')
-	    } else {
-	      if (this[config.relationPropertyName][id] !== null) {
-	        return this[config.relationPropertyName][id]
-	      } else {
-	        return false
-	      }
-	    }
-	  }
-	  return this[config.relationPropertyName]
-	}
-
-	ObjectRelation.prototype.addFunction = u.createPolymorphic()
-	var add = ObjectRelation.prototype.addFunction
-	add.signature('object, object, boolean b=false', function (config, relationObject, fromRelation) {
-	  if (!config.isRelationObject(relationObject)) {
-	    throw new Error('Argument given is not a ' + config.relationName)
-	  } else {
-	    var id = relationObject.getId()
-	    if (!u.isString(id) || id === '') {
-	      throw new Error('Id is not a string or empty')
-	    } else {
-	      if (fromRelation !== true) {
-	        relationObject[config.functions.add.parentName](this, true)
-	      }
-	      this[config.relationPropertyName][id] = relationObject
-	    }
-	  }
-
-	  return this
-	})
-	add.signature('object, array', function (config, relationObjects) {
-	  var self = this
-
-	  u.forEach(relationObjects, function (relationObject) {
-	    add.call(self, config, relationObject)
-	  })
-
-	  return this
-	})
-	add.signature('object, object, object, ...', function (config, relationObject1, relationObject2, rest) {
-	  var relationObjects = [relationObject1, relationObject2]
-
-	  return add.call(this, config, relationObjects.concat(rest))
-	})
-
-	ObjectRelation.prototype.removeFunction = u.createPolymorphic()
-	var remove = ObjectRelation.prototype.removeFunction
-	remove.signature('object, string, boolean b=false', function (config, id, fromRelation) {
-	  if (id === '') {
-	    throw new Error('Argument given should not be empty')
-	  } else {
-	    if (!u.isBoolean(fromRelation) || fromRelation !== true) {
-	      if (config.isRelationObject(this[config.relationPropertyName][id])) {
-	        this[config.relationPropertyName][id][config.functions.remove.parentName](this.getId(), true)
-	      }
-	    }
-	    delete this[config.relationPropertyName][id]
-	  }
-
-	  return this
-	})
-	remove.signature('object, object, boolean b=false', function (config, relationObject, fromRelation) {
-	  if (!config.isRelation(relationObject)) {
-	    throw new Error('Argument given is not a ' + config.relationName)
-	  } else {
-	    var id = relationObject.getId()
-	    return remove.call(this, config, id, fromRelation)
-	  }
-	})
-	remove.signature('object', function (config) {
-	  var self = this
-
-	  u.forEach(this[config.relationPropertyName], function (relationObject, id) {
-	    remove.call(self, config, id)
-	  })
-
-	  return this
-	})
-
-	ObjectRelation.prototype.after = u.createPolymorphic()
-	var after = ObjectRelation.prototype.after
-	after.signature('string, function', function (functionName, func) {
-	  this.functions[functionName].after.push(func)
-	})
-
-	module.exports = ObjectRelation
-
-
-/***/ },
-/* 161 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var u = __webpack_require__(2)
-
-	var storeRelation = u.createObjectRelation('handler', 'store', u.isStore)
-
-	/**
-	 * Handler class
+	 * Reducer class
 	 * TODO: Describe what this class is all about
 	 *
 	 * @class
 	 */
-	var Handler = function Handler () {
-	  handler.apply(this, arguments)
-	}
-	var handler = u.createPolymorphic()
-	handler.signature('array', function (reducers) {
+	var Reducer = function Reducer () {
 	  /**
-	   * Is this handler enabled?
+	   * Is this reducer enabled?
 	   *
 	   * @name _enabled
-	   * @memberof Handler
+	   * @memberof Reducer
 	   * @private
 	   */
 	  this._enabled = true
 
 	  /**
-	   * Unique ID of this handler
+	   * Unique ID of this reducer
 	   *
 	   * @name _id
-	   * @memberof Handler
+	   * @memberof Reducer
 	   * @private
 	   */
 	  this._id = null
+
+	  this._prepareFunction = false
+	  this._finalizeFunction = false
 
 	  /**
 	   * Array of registered reducers
 	   *
 	   * @name _reducers
-	   * @memberof Handler
+	   * @memberof Reducer
 	   * @private
 	   */
-	  this._reducers = []
+	  this._reducerRelations = null
 
 	  /**
 	   * Object of registered stores
 	   *
 	   * @name _stores
-	   * @memberof Handler
+	   * @memberof Reducer
 	   * @private
 	   */
 	  this._storeRelations = null
 
 	  storeRelation.constructParent(this)
+	  reducerRelation.constructParent(this)
+	  parentReducerRelation.constructParent(this)
 
-	  if (!u.isArray(reducers)) {
-	    throw new Error('Argument given is not an array')
-	  } else {
-	    this.addReducer(reducers)
-	  }
+	  reducer.apply(this, arguments)
+	}
+	var reducer = u.createPolymorphic()
+	reducer.signature('', function () {})
+	reducer.signature('function', function (prepareFunction) {
+	  this.setPrepare(prepareFunction)
 	})
-	handler.signature('...', handler)
-	handler.signature('function', function (func) {
-	  handler.call(this, [func])
+	reducer.signature('array', function (reducers) {
+	  this.addReducer(reducers)
 	})
-	handler.signature('', function () {
-	  handler.call(this, [])
+	reducer.signature('function, function', function (prepareFunction, finalizeFunction) {
+	  this.setPrepare(prepareFunction)
+	  this.setFinalize(finalizeFunction)
+	})
+	reducer.signature('function, array', function (prepareFunction, reducers) {
+	  this.setPrepare(prepareFunction)
+	  this.addReducer(reducers)
+	})
+	reducer.signature('function, function, array', function (prepareFunction, finalizeFunction, reducers) {
+	  this.setPrepare(prepareFunction)
+	  this.setFinalize(finalizeFunction)
+	  this.addReducer(reducers)
 	})
 
 	/**
-	 * Get id of this handler
+	 * Get id of this reducer
 	 *
-	 * @return {string} Unique ID of this handler
+	 * @return {string} Unique ID of this reducer
 	 */
-	Handler.prototype.getId = null
+	Reducer.prototype.getId = null
 
 	/**
-	 * Connect one or multible stores to this handler
+	 * Connect one or multible stores to this reducer
 	 *
 	 * @function
 	 *
 	 * @param {Store|array} store One store or array of stores
 	 * @param {boolean} fromStore Was this function called within a store
 	 *
-	 * @return {Handler} this
+	 * @return {Reducer} this
 	 */
-	Handler.prototype.addStore = null
+	Reducer.prototype.addStore = null
 
 	/**
-	 * Remove a store or all stores from this handler
+	 * Remove a store or all stores from this reducer
 	 *
 	 * @function
 	 *
 	 * @param {integer|Store|boolean} store|fromStore
 	 * @param {boolean} fromStore Was this called within a store?
 	 *
-	 * @return {Handler} this
+	 * @return {Reducer} this
 	 */
-	Handler.prototype.removeStore = null
+	Reducer.prototype.removeStore = null
 
-	storeRelation.registerParentPrototype(Handler.prototype)
+	storeRelation.registerParentPrototype(Reducer.prototype)
+	reducerRelation.registerParentPrototype(Reducer.prototype)
+	parentReducerRelation.registerParentPrototype(Reducer.prototype)
+
+	/**
+	 *
+	 */
+	Reducer.prototype.setPrepare = function setReduce (func) {
+	  if (!u.isFunction(func)) {
+	    throw new Error('Argument for setReduce should be a function')
+	  } else {
+	    this._prepareFunction = func
+	  }
+	}
+
+	Reducer.prototype.hasPrepare = function hasPrepare () {
+	  return u.isFunction(this.getPrepare())
+	}
+
+	Reducer.prototype.getPrepare = function getPrepare () {
+	  return this._prepareFunction
+	}
+
+	Reducer.prototype.setFinalize = function setFinalize (func) {
+	  if (!u.isFunction(func)) {
+	    throw new Error('Argument for setReduce should be a function')
+	  } else {
+	    this._finalizeFunction = func
+	  }
+	}
+
+	Reducer.prototype.hasFinalize = function hasFinalize () {
+	  return u.isFunction(this.getFinalize())
+	}
+
+	Reducer.prototype.getFinalize = function getFinalize () {
+	  return this._finalizeFunction
+	}
 
 	/**
 	 * Calls the registered reducers with the provided state and action
@@ -7615,112 +6856,75 @@ var alo =
 	 *
 	 * @return {object} state Returns the changed state
 	 */
-
-	Handler.prototype._handle = function _handle (state, action) {
+	Reducer.prototype.reduce = function reduce (state, action) {
 	  if (this.isEnabled()) {
-	    u.forEach(this._reducers, function (item) {
-	      state = item.call(this, state, action)
+	    var preparer = this.getPrepare()
+	    if (u.isFunction(preparer)) {
+	      state = preparer(u.cloneDeep(state), action)
+	    }
+	    u.forEach(this.getReducer(false), function (item) {
+	      state = item.reduce(u.cloneDeep(state), action)
 	    })
+	    var finalizer = this.getFinalize()
+	    if (u.isFunction(finalizer)) {
+	      state = finalizer(u.cloneDeep(state), action)
+	    }
 	  }
 
 	  return state
 	}
 
 	/**
-	 * Add reducer functions to the handler
+	 * Disables this reducer
 	 *
-	 * @function
-	 *
-	 * @param {array|function} reducer Array of reducers or single reducer function
-	 * @param {...function} reducers More reducers
-	 *
-	 * @return {Handler} this
+	 * @return {Reducer} this
 	 */
-	Handler.prototype.addReducer = u.createPolymorphic()
-	var addReducer = Handler.prototype.addReducer
-	var addReducerArray = function addReducerArray (reducers) {
-	  var self = this
-
-	  if (!u.isArray(reducers)) {
-	    throw new Error('Argument given is not an array')
-	  }
-	  u.forEach(reducers, function (reducer) {
-	    if (!u.isFunction(reducer)) {
-	      throw new Error('Item in array is not a function')
-	    } else {
-	      self._reducers.push(reducer)
-	    }
-	  })
-
-	  return this
-	}
-	addReducer.signature('array', addReducerArray)
-	addReducer.signature('...', addReducerArray)
-	addReducer.signature('function', function (reducer) {
-	  return addReducerArray.call(this, [reducer])
-	})
-
-	/**
-	 * Disables this handler
-	 *
-	 * @return {Handler} this
-	 */
-	Handler.prototype.disable = function disable () {
+	Reducer.prototype.disable = function disable () {
 	  this._enabled = false
 
 	  return this
 	}
 
 	/**
-	 * Enables this handler
+	 * Enables this reducer
 	 *
-	 * @return {Handler} this
+	 * @return {Reducer} this
 	 */
-	Handler.prototype.enable = function enable () {
+	Reducer.prototype.enable = function enable () {
 	  this._enabled = true
 
 	  return this
 	}
 
-	Handler.prototype.isEnabled = function isEnabled () {
+	Reducer.prototype.isEnabled = function isEnabled () {
 	  return this._enabled
 	}
 
 	/**
-	 * Get registered reducers
+	 * Stops this reducer: it will be disabled and removed from all stores
 	 *
-	 * @private
-	 *
-	 * @return {array} reducers
+	 * @return {Reducer} this
 	 */
-	Handler.prototype._getReducers = function _getReducers () {
-	  return this._reducers
-	}
-
-	/**
-	 * Stops this handler: it will be disabled and removed from all stores
-	 *
-	 * @return {Handler} this
-	 */
-	Handler.prototype.stop = function stop () {
+	Reducer.prototype.stop = function stop () {
 	  this.removeStore()
 	  this.disable()
 	  return this
 	}
 
-	module.exports = Handler
+	module.exports = Reducer
 
 
 /***/ },
-/* 162 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var u = __webpack_require__(2)
-	var ObjectRelation = __webpack_require__(160)
+	var Alo = __webpack_require__(140)
+	var alo = new Alo()
+	var u = alo.util
 
-	var handlerRelation = new ObjectRelation('store', 'handler', u.isHandler)
-	var subscriptionRelation = new ObjectRelation('store', 'subscription', u.isSubscription)
-	var middlewareRelation = new ObjectRelation('store', 'middleware', u.isMiddleware)
+	var reducerRelation = u.createObjectRelation('store', 'reducer', alo.isReducer)
+	var subscriptionRelation = u.createObjectRelation('store', 'subscription', alo.isSubscription)
+	var middlewareRelation = u.createObjectRelation('store', 'middleware', alo.isMiddleware)
 
 	/**
 	 * The core of Alo. A store is the central place for application state
@@ -7756,9 +6960,9 @@ var alo =
 	  this._stream = u.createStream(state)
 
 	  /**
-	   * Handlers
+	   * Reducers
 	   */
-	  this._handlerRelations = null
+	  this._reducerRelations = null
 
 	  /**
 	   * Middlewares
@@ -7772,7 +6976,7 @@ var alo =
 
 	  this._computedProperty = {}
 
-	  handlerRelation.constructParent(this)
+	  reducerRelation.constructParent(this)
 	  middlewareRelation.constructParent(this)
 	  subscriptionRelation.constructParent(this)
 	}
@@ -7789,32 +6993,32 @@ var alo =
 	Store.prototype.getId = null
 
 	/**
-	 * Returns the registered handlers
+	 * Returns the registered reducers
 	 *
 	 * @function
-	 * @return {array} Array of handlers
+	 * @return {array} Array of reducers
 	 */
-	Store.prototype.getHandler = null
+	Store.prototype.getReducer = null
 
 	/**
-	 * Adds a handler object to the registered handlers
+	 * Adds a reducer object to the registered reducers
 	 *
 	 * @function
-	 * @param {Handler} handler
+	 * @param {Reducer} reducer
 	 *
 	 * @return {Store} this
 	 */
-	Store.prototype.addHandler = null
+	Store.prototype.addReducer = null
 
 	/**
-	 * Removes a handler from the currently registered handlers
+	 * Removes a reducer from the currently registered reducers
 	 *
 	 * @function
-	 * @param {int|Handler} handler id or Handler
+	 * @param {int|Reducer} reducer id or Reducer
 	 *
 	 * @return {Store} this
 	 */
-	Store.prototype.removeHandler = null
+	Store.prototype.removeReducer = null
 
 	/**
 	 * Returns the registered middlewares
@@ -7865,7 +7069,7 @@ var alo =
 	 */
 	Store.prototype.removeSubscription = null
 
-	handlerRelation.registerParentPrototype(Store.prototype)
+	reducerRelation.registerParentPrototype(Store.prototype)
 	middlewareRelation.registerParentPrototype(Store.prototype)
 	subscriptionRelation.registerParentPrototype(Store.prototype)
 
@@ -7896,28 +7100,21 @@ var alo =
 	// TODO: Implement removeComputedProperty
 
 	/**
-	 * Registers one or multible reducers
+	 * Creates and registers one or multible reducers
 	 *
 	 * @function
 	 *
 	 * @param {array|...function} Array or variadic call of one or multible reducer functions
 	 *
-	 * @return {Handler}
-	 * @see Handler
+	 * @return {Reducer}
+	 * @see Reducer
 	 */
-	Store.prototype.addReducer = u.createPolymorphic()
-	var addReducer = Store.prototype.addReducer
-	addReducer.signature('array', function (reducers) {
-	  var handler = u.createHandler(reducers)
-	  this.addHandler(handler)
+	Store.prototype.createReducer = function createReducer () {
+	  var reducer = alo.createReducer.apply(null, arguments)
+	  this.addReducer(reducer)
 
-	  return handler
-	})
-	addReducer.signature('function', function (func) {
-	  return this.addReducer([func])
-	})
-	// TODO: Change to better signature
-	addReducer.signature('...', addReducer)
+	  return reducer
+	}
 
 	Store.prototype._getStateByNamespace = function _getStateByNamespace (namespace, state) {
 	  var self = this
@@ -7973,7 +7170,7 @@ var alo =
 	}
 
 	Store.prototype.createSubscription = function createSubscription () {
-	  var subscription = u.createSubscription.apply(null, arguments)
+	  var subscription = alo.createSubscription.apply(null, arguments)
 	  this.addSubscription(subscription)
 	  return subscription
 	}
@@ -8053,9 +7250,9 @@ var alo =
 	      return false
 	    } else {
 	      action = formatAction(action)
-	      u.forEach(self.getHandler(), function (handler) {
-	        if (u.isHandler(handler)) {
-	          state = handler._handle(u.cloneDeep(state), action)
+	      u.forEach(self.getReducer(), function (reducer) {
+	        if (alo.isReducer(reducer)) {
+	          state = reducer.reduce(u.cloneDeep(state), action)
 	        }
 	      })
 
@@ -8093,12 +7290,224 @@ var alo =
 
 
 /***/ },
-/* 163 */
+/* 145 */
 /***/ function(module, exports) {
 
 	var Middleware = function Middleware () {}
 
 	module.exports = Middleware
+
+
+/***/ },
+/* 146 */
+/***/ function(module, exports) {
+
+	module.exports = function DependencyCache () {}
+
+
+/***/ },
+/* 147 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Util = __webpack_require__(2)
+	var u = new Util()
+
+	var functions = {
+	  get: {
+	    relation: true
+	  },
+	  add: {
+	    relation: true
+	  },
+	  remove: {
+	    relation: true
+	  },
+	  getId: {}
+	}
+
+	var formatFunctionName = function (action, name) {
+	  name = name.split('')
+	  name[0] = name[0].toUpperCase()
+	  name = name.join('')
+	  return action + name
+	}
+
+	var ObjectRelation = function ObjectRelation () {
+	  objectRelation.apply(this, arguments)
+	}
+	var objectRelation = u.createPolymorphic()
+	objectRelation.signature('string, string, function', function (parentName, relationName, isRelationObject) {
+	  var self = this
+	  if (parentName === '' || relationName === '') {
+	    throw new Error('Argument given should not be empty')
+	  } else {
+	    this.idPropertyName = '_id'
+	    this.parentName = parentName
+	    this.relationName = relationName
+	    this.relationByIdPropertyName = '_' + relationName + 'RelationsById'
+	    this.relationPropertyName = '_' + relationName + 'Relations'
+	    this.isRelationObject = isRelationObject
+
+	    this.functions = {}
+	    u.forEach(functions, function (func, funcName) {
+	      self.functions[funcName] = {
+	        after: []
+	      }
+	      if (func.relation === true) {
+	        self.functions[funcName].parentName = formatFunctionName(funcName, parentName)
+	        self.functions[funcName].relationName = formatFunctionName(funcName, relationName)
+	      }
+	    })
+	  }
+	})
+
+	/**
+	 * Should be called in the constructor of the parent
+	 */
+	ObjectRelation.prototype.constructParent = function (parentObject) {
+	  if (parentObject[this.idPropertyName] === null || parentObject[this.idPropertyName] === undefined) {
+	    var id = u.uniqueId()
+	    parentObject[this.idPropertyName] = id
+	  }
+	  parentObject[this.relationByIdPropertyName] = {}
+	  parentObject[this.relationPropertyName] = []
+	}
+
+	ObjectRelation.prototype.registerParentPrototype = function (prototype) {
+	  var self = this
+	  var createCaller = function (funcName, func) {
+	    return function () {
+	      var parent = this
+	      var args = u.values(arguments)
+	      args.unshift(self)
+	      var result = func.apply(parent, args)
+	      u.forEach(self.functions[funcName].after, function (afterFunc) {
+	        afterFunc.call(parent)
+	      })
+	      return result
+	    }
+	  }
+
+	  u.forEach(self.functions, function (func, funcName) {
+	    var prototypeFunctionName = funcName
+	    if (u.isString(func.relationName) && func.relationName !== '') {
+	      prototypeFunctionName = func.relationName
+	    }
+	    prototype[prototypeFunctionName] = createCaller(funcName, self[funcName + 'Function'])
+	  })
+	}
+
+	ObjectRelation.prototype.getIdFunction = function getId (config) {
+	  return this[config.idPropertyName]
+	}
+
+	ObjectRelation.prototype.getFunction = u.createPolymorphic()
+	var get = ObjectRelation.prototype.getFunction
+	get.signature('object, boolean b=true', function (config, byId) {
+	  var self = this
+
+	  if (byId) {
+	    return this[config.relationByIdPropertyName]
+	  } else {
+	    var result = []
+	    u.forEach(this[config.relationPropertyName], function (item) {
+	      result.push(get.call(self, config, item))
+	    })
+	    return result
+	  }
+	})
+	get.signature('object, string', function (config, id) {
+	  if (id === '') {
+	    throw new Error('Argument given should not be an empty string')
+	  } else {
+	    if (this[config.relationByIdPropertyName][id] !== null) {
+	      return this[config.relationByIdPropertyName][id]
+	    } else {
+	      return false
+	    }
+	  }
+	})
+
+	ObjectRelation.prototype.addFunction = u.createPolymorphic()
+	var add = ObjectRelation.prototype.addFunction
+	add.signature('object, object, boolean b=false', function (config, relationObject, fromRelation) {
+	  if (!config.isRelationObject(relationObject)) {
+	    throw new Error('Argument given is not a ' + config.relationName)
+	  } else {
+	    var id = relationObject.getId()
+	    if (!u.isString(id) || id === '') {
+	      throw new Error('Id is not a string or empty')
+	    } else {
+	      if (fromRelation !== true) {
+	        relationObject[config.functions.add.parentName](this, true)
+	      }
+	      this[config.relationByIdPropertyName][id] = relationObject
+	      this[config.relationPropertyName].push(id)
+	    }
+	  }
+
+	  return this
+	})
+	add.signature('object, array', function (config, relationObjects) {
+	  var self = this
+
+	  u.forEach(relationObjects, function (relationObject) {
+	    add.call(self, config, relationObject)
+	  })
+
+	  return this
+	})
+	add.signature('object, object, object, ...', function (config, relationObject1, relationObject2, rest) {
+	  var relationObjects = [relationObject1, relationObject2]
+
+	  return add.call(this, config, relationObjects.concat(rest))
+	})
+
+	ObjectRelation.prototype.removeFunction = u.createPolymorphic()
+	var remove = ObjectRelation.prototype.removeFunction
+	remove.signature('object, string, boolean b=false', function (config, id, fromRelation) {
+	  if (id === '') {
+	    throw new Error('Argument given should not be empty')
+	  } else {
+	    if (!u.isBoolean(fromRelation) || fromRelation !== true) {
+	      if (config.isRelationObject(this[config.relationPropertyName][id])) {
+	        this[config.relationByIdPropertyName][id][config.functions.remove.parentName](this.getId(), true)
+	      }
+	    }
+	    delete this[config.relationByIdPropertyName][id]
+	    var position = this[config.relationPropertyName].indexOf(id)
+	    if (position > -1) {
+	      this[config.relationPropertyName].splice(position, 1)
+	    }
+	  }
+
+	  return this
+	})
+	remove.signature('object, object, boolean b=false', function (config, relationObject, fromRelation) {
+	  if (!config.isRelation(relationObject)) {
+	    throw new Error('Argument given is not a ' + config.relationName)
+	  } else {
+	    var id = relationObject.getId()
+	    return remove.call(this, config, id, fromRelation)
+	  }
+	})
+	remove.signature('object', function (config) {
+	  var self = this
+
+	  u.forEach(this[config.relationPropertyName], function (id) {
+	    remove.call(self, config, id)
+	  })
+
+	  return this
+	})
+
+	ObjectRelation.prototype.after = u.createPolymorphic()
+	var after = ObjectRelation.prototype.after
+	after.signature('string, function', function (functionName, func) {
+	  this.functions[functionName].after.push(func)
+	})
+
+	module.exports = ObjectRelation
 
 
 /***/ }
