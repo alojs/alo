@@ -1,6 +1,7 @@
 /* global describe, it */
 
-var alo = require('./../../main/alo.js')
+var Alo = require('./../../main/alo.js')
+var alo = new Alo()
 var assert = require('assert')
 
 describe('Reducer', function () {
@@ -21,13 +22,11 @@ describe('Reducer', function () {
       var store = alo.createStore({
         value: false
       })
-      store.addReducer(alo.createReducer(function () {
+      store.addReducer(alo.createReducer(function (state) {
         reducerDone = true
-      }))
-      store.dispatch(function (state) {
-        state.value = true
         return state
-      }).then(function () {
+      }))
+      return store.dispatch({ payload: 'test' }).then(function () {
         assert.equal(true, reducerDone)
       })
     })

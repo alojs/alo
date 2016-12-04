@@ -1,4 +1,4 @@
-var alo = require('./../lib/namespace.js')
+var Alo = require('./../lib/alo.js')
 
 var extras = require('./../lib/extras/extras.js')
 
@@ -9,6 +9,6 @@ var extras = require('./../lib/extras/extras.js')
  *
  * @see extras
  */
-alo.extras = extras
+Alo.prototype.extras = extras
 
-module.exports = alo
+module.exports = Alo

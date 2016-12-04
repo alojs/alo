@@ -1,1 +1,1 @@
-module.exports = require('./../lib/namespace.js')
+module.exports = require('./../lib/alo.js')

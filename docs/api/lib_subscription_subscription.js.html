@@ -38,13 +38,6 @@
 			</li>
 			
 			<li class="dropdown">
-				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="module-alo.html">alo</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
 					<li><a href="Reducer.html">Reducer</a></li><li><a href="Store.html">Store</a></li><li><a href="Subscription.html">Subscription</a></li>
@@ -97,6 +90,7 @@ var u = alo.util
 
 var storeRelation = u.createObjectRelation('subscription', 'store', alo.isStore)
 var memberRelation = u.createObjectRelation('subscription', 'member', alo.isMember)
+var dependencyRelation = u.createObjectRelation('subscription', 'dependency', alo.isDependency)
 
 /**
  * Subscription Constructor, is used in the Store Class to create Subscriptions to state
@@ -113,6 +107,7 @@ var Subscription = function Subscription () {
 
   this._storeRelations = null
   this._memberRelations = null
+  this._dependencyRelations = null
 
   this._events = {
     'beforePublish': [],
@@ -121,15 +116,13 @@ var Subscription = function Subscription () {
 
   this._subscriptionStream = null
   this._stream = null
+  this._lastData = {}
 
-  this._dependencyCache = u.createDependencyCache()
-
-  // While binding the publish function to the streams of the registered stores
-  this._binding_publish = false
   this._muted = false
 
   storeRelation.constructParent(this)
   memberRelation.constructParent(this)
+  dependencyRelation.constructParent(this)
 
   subscription.apply(this, arguments)
 }
@@ -166,7 +159,6 @@ var afterChange = function () {
     this._subscriptionStream = null
   }
 
-  this._binding_publish = true
   var streams = []
   var stores = u.values(this.getStore())
   u.forEach(stores, function (store) {
@@ -179,12 +171,49 @@ var afterChange = function () {
         streamState[stores[idx].getId()] = stream()
       }
     })
-    return streamState
+    return u.Promise.resolve().then(function () {
+      var dependencies = self.getDependency(false)
+      if (dependencies.length > 0) {
+        var depsState = {
+          state: streamState,
+          computed: {}
+        }
+        var idx = 0
+        var walker = function () {
+          if (dependencies[idx] !== undefined) {
+            if (alo.isDependency(dependencies[idx])) {
+              return u.Promise.resolve().then(function () {
+                return dependencies[idx].reduce(depsState)
+              }).then(function (computed) {
+                depsState.computed = computed
+                idx++
+                return walker()
+              })
+            } else {
+              idx++
+              return walker()
+            }
+          } else {
+            return depsState.computed
+          }
+        }
+        return walker()
+      } else {
+        return {}
+      }
+    }).then(function (computed) {
+      return {stores: streamState, computed: computed}
+    })
   }, streams)
-  this._subscriptionStream = u.streamOn(function (state) {
-    self._publish(state)
+  this._subscriptionStream = u.streamOn(function (data) {
+    var computedLength = u.values(data.computed).length
+    if ((computedLength === 0 &amp;&amp; !u.isEqual(self._lastData.stores, data.stores)) ||
+      (computedLength > 0 &amp;&amp; !u.isEqual(self._lastData.computed, data.computed))
+    ) {
+      self._lastData = data
+      self._publish(data)
+    }
   }, this._stream)
-  this._binding_publish = false
 }
 
 storeRelation.after('add', afterChange)
@@ -192,6 +221,7 @@ storeRelation.after('remove', afterChange)
 
 storeRelation.registerParentPrototype(Subscription.prototype)
 memberRelation.registerParentPrototype(Subscription.prototype)
+dependencyRelation.registerParentPrototype(Subscription.prototype)
 
 Subscription.prototype.createMember = function createMember () {
   var member = alo.createMember.apply(null, arguments)
@@ -212,16 +242,16 @@ Subscription.prototype._callEvent = function (name, state) {
 
 Subscription.prototype._publish = function (state) {
   var self = this
-  if (self._muted === false &amp;&amp; this._binding_publish === false) {
+  if (self._muted === false) {
     self._muted = true
     var promise = u.Promise.resolve().then(function () {
       return self._callEvent('beforePublish', state)
     }).then(function (runPublish) {
       if (runPublish !== false) {
-        var state = self.getState()
+        var state = self.getData()
         var promises = []
         u.forEach(self.getMember(false), function (member) {
-          promises.push(member._call(state))
+          promises.push(member._call(state.stores, state.computed))
         })
         return u.Promise.all(promises)
       } else {
@@ -242,13 +272,14 @@ Subscription.prototype._publish = function (state) {
 Subscription.prototype.enable = null
 Subscription.prototype.disable = null
 
+// TODO: Rewrite
 Subscription.prototype.remember = function remember () {
   var self = this
 
   var promises = []
 
   u.forEach(this.getStore(), function (store) {
-    promises.push(self._publish(store, store.getState()))
+    promises.push(self._publish(store, store.getData()))
   })
 
   return u.Promise.all(promises)
@@ -265,16 +296,15 @@ Subscription.prototype.getStream = function getStream () {
   return this._stream
 }
 
-Subscription.prototype.getState = function getState () {
+Subscription.prototype.getData = function getData () {
   return u.cloneDeep(this.getStream()())
 }
 
-Subscription.prototype.setDependency = function setDependency (dependency) {
-  u.forEach(this.getMember(), function (member) {
-    member.setDependency(dependency)
-  })
+Subscription.prototype.createDependency = function createDependency () {
+  var dependency = alo.createDependency.apply(null, arguments)
+  this.addDependency(dependency)
 
-  return this
+  return dependency
 }
 
 Subscription.prototype.on = u.createPolymorphic()
@@ -339,7 +369,7 @@ module.exports = Subscription
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2016-12-03T15:13:37+01:00
+		on 2016-12-04T20:46:44+01:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

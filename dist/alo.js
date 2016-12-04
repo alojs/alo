@@ -52,16 +52,124 @@ var alo =
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Util = __webpack_require__(2)
-	var util = new Util()
+	var Alo = function Alo () {
+	  var Util = __webpack_require__(2)
+
+	  /**
+	   * Access to the util namespace
+	   *
+	   * @see util
+	   */
+	  this.util = new Util()
+	}
+
+	Alo.prototype.createSubscription = function createSubscription () {
+	  var Subscription = __webpack_require__(196)
+	  var subscription = Object.create(Subscription.prototype)
+	  Subscription.apply(subscription, arguments)
+	  return subscription
+	}
+
+	Alo.prototype.isSubscription = function isSubscription (subscription) {
+	  var Subscription = __webpack_require__(196)
+	  return (subscription instanceof Subscription)
+	}
+
+	Alo.prototype.createDependency = function createDependency () {
+	  var Dependency = __webpack_require__(197)
+	  var dependency = Object.create(Dependency.prototype)
+	  Dependency.apply(dependency, arguments)
+	  return dependency
+	}
+
+	Alo.prototype.isDependency = function isDependency (dependency) {
+	  var Dependency = __webpack_require__(197)
+	  return (dependency instanceof Dependency)
+	}
+
+	Alo.prototype.createMember = function createMember () {
+	  var Member = __webpack_require__(198)
+	  var member = Object.create(Member.prototype)
+	  Member.apply(member, arguments)
+	  return member
+	}
+
+	Alo.prototype.isMember = function isMember (member) {
+	  var Member = __webpack_require__(198)
+	  return (member instanceof Member)
+	}
 
 	/**
-	 * alo Modul
-	 * @module alo
+	 * Access to the handler constructor
+	 *
+	 * @see Handler
 	 */
-	var alo = util.createAlo()
+	// util.Handler = require('./../handler/handler.js'),
+	/**
+	 * Access to the store constructor
+	 *
+	 * @see Store
+	 */
+	// util.Store = require('./../store/store.js'),
+	/**
+	 * Access to the subscription constructor
+	 *
+	 * @see Subscription
+	 */
+	// util.Subscription = require('./../subscription/subscription.js')
 
-	module.exports = alo
+	/**
+	 * Same as new Reducer
+	 * @see Reducer
+	 */
+	Alo.prototype.createReducer = function createReducer () {
+	  var Reducer = __webpack_require__(199)
+	  var reducer = Object.create(Reducer.prototype)
+	  Reducer.apply(reducer, arguments)
+	  return reducer
+	}
+
+	/**
+	 * Instanceof check for reducers
+	 *
+	 * @param {*} reducer Argument to check if it is a reducer
+	 *
+	 * @return {boolean} true of it is a reducer, false in the other case
+	 */
+	Alo.prototype.isReducer = function isReducer (reducer) {
+	  var Reducer = __webpack_require__(199)
+	  return (reducer instanceof Reducer)
+	}
+
+	/**
+	 * Same as new Store
+	 * @see Store
+	 */
+	Alo.prototype.createStore = function createStore () {
+	  var Store = __webpack_require__(200)
+	  var store = Object.create(Store.prototype)
+	  Store.apply(store, arguments)
+	  return store
+	}
+
+	/**
+	 * Instanceof check for stores
+	 *
+	 * @param {*} store Argument to check if it is a store
+	 *
+	 * @return {boolean} true of it is a store, false in the other case
+	 */
+	Alo.prototype.isStore = function isStore (store) {
+	  var Store = __webpack_require__(200)
+	  return (store instanceof Store)
+	}
+
+	Alo.prototype.isMiddleware = function isMiddleware (middleware) {
+	  var Middleware = __webpack_require__(201)
+	  return (middleware instanceof Middleware)
+	}
+
+	module.exports = Alo
 
 
 /***/ },
@@ -85,19 +193,21 @@ var alo =
 	 */
 	Util.prototype.cloneDeep = __webpack_require__(3)
 
+	Util.prototype.filter = __webpack_require__(114)
+
 	/**
 	 * Lodash values, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.values = __webpack_require__(114)
+	Util.prototype.values = __webpack_require__(158)
 
 	/**
 	 * Lodash forEach, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.forEach = __webpack_require__(117)
+	Util.prototype.forEach = __webpack_require__(160)
 
 	/**
 	 * Lodash isFunction, can be used
@@ -111,7 +221,7 @@ var alo =
 	 *
 	 * @function
 	 */
-	Util.prototype.isString = __webpack_require__(125)
+	Util.prototype.isString = __webpack_require__(162)
 
 	/**
 	 * Lodash isObject, can be used
@@ -119,6 +229,22 @@ var alo =
 	 * @function
 	 */
 	Util.prototype.isObject = __webpack_require__(29)
+
+	Util.prototype.merge = __webpack_require__(163)
+
+	/**
+	 * Lodash isEqual, can be used
+	 *
+	 * @function
+	 */
+	Util.prototype.isEqual = __webpack_require__(179)
+
+	/**
+	 * Lodash isPlainObject, can be used
+	 *
+	 * @function
+	 */
+	Util.prototype.isPlainObject = __webpack_require__(168)
 
 	/**
 	 * Lodash isArray, can be used
@@ -132,16 +258,18 @@ var alo =
 	 *
 	 * @function
 	 */
-	Util.prototype.isBoolean = __webpack_require__(126)
+	Util.prototype.isBoolean = __webpack_require__(180)
 
 	/**
 	 * Lodash uniqueId, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.uniqueId = __webpack_require__(127)
+	Util.prototype.uniqueId = __webpack_require__(181)
 
-	var flyd = __webpack_require__(131)
+	Util.prototype.toPairs = __webpack_require__(182)
+
+	var flyd = __webpack_require__(186)
 	/**
 	 * Flyd stream: Might change!
 	 *
@@ -224,9 +352,9 @@ var alo =
 	 *
 	 * @function
 	 */
-	Util.prototype.createPolymorphic = __webpack_require__(138)
+	Util.prototype.createPolymorphic = __webpack_require__(193)
 
-	Util.prototype.Promise = __webpack_require__(139)
+	Util.prototype.Promise = __webpack_require__(194)
 
 	Util.prototype.createPromise = function createPromise (resolve, reject) {
 	  return new this.Promise(resolve, reject)
@@ -237,21 +365,14 @@ var alo =
 	 * @see Alo
 	 */
 	Util.prototype.createAlo = function createAlo () {
-	  var Alo = __webpack_require__(140)
+	  var Alo = __webpack_require__(1)
 	  var alo = Object.create(Alo.prototype)
 	  Alo.apply(alo, arguments)
 	  return alo
 	}
 
-	Util.prototype.createDependencyCache = function createDependencyCache () {
-	  var DependencyCache = __webpack_require__(146)
-	  var dependencyCache = Object.create(DependencyCache.prototype)
-	  DependencyCache.apply(dependencyCache, arguments)
-	  return dependencyCache
-	}
-
 	Util.prototype.createObjectRelation = function createObjectRelation () {
-	  var ObjectRelation = __webpack_require__(147)
+	  var ObjectRelation = __webpack_require__(195)
 	  var objectRelation = Object.create(ObjectRelation.prototype)
 	  ObjectRelation.apply(objectRelation, arguments)
 	  return objectRelation
@@ -3564,7 +3685,1711 @@ var alo =
 /* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseValues = __webpack_require__(115),
+	var arrayFilter = __webpack_require__(115),
+	    baseFilter = __webpack_require__(116),
+	    baseIteratee = __webpack_require__(122),
+	    isArray = __webpack_require__(61);
+
+	/**
+	 * Iterates over elements of `collection`, returning an array of all elements
+	 * `predicate` returns truthy for. The predicate is invoked with three
+	 * arguments: (value, index|key, collection).
+	 *
+	 * **Note:** Unlike `_.remove`, this method returns a new array.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Collection
+	 * @param {Array|Object} collection The collection to iterate over.
+	 * @param {Function} [predicate=_.identity] The function invoked per iteration.
+	 * @returns {Array} Returns the new filtered array.
+	 * @see _.reject
+	 * @example
+	 *
+	 * var users = [
+	 *   { 'user': 'barney', 'age': 36, 'active': true },
+	 *   { 'user': 'fred',   'age': 40, 'active': false }
+	 * ];
+	 *
+	 * _.filter(users, function(o) { return !o.active; });
+	 * // => objects for ['fred']
+	 *
+	 * // The `_.matches` iteratee shorthand.
+	 * _.filter(users, { 'age': 36, 'active': true });
+	 * // => objects for ['barney']
+	 *
+	 * // The `_.matchesProperty` iteratee shorthand.
+	 * _.filter(users, ['active', false]);
+	 * // => objects for ['fred']
+	 *
+	 * // The `_.property` iteratee shorthand.
+	 * _.filter(users, 'active');
+	 * // => objects for ['barney']
+	 */
+	function filter(collection, predicate) {
+	  var func = isArray(collection) ? arrayFilter : baseFilter;
+	  return func(collection, baseIteratee(predicate, 3));
+	}
+
+	module.exports = filter;
+
+
+/***/ },
+/* 115 */
+/***/ function(module, exports) {
+
+	/**
+	 * A specialized version of `_.filter` for arrays without support for
+	 * iteratee shorthands.
+	 *
+	 * @private
+	 * @param {Array} [array] The array to iterate over.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @returns {Array} Returns the new filtered array.
+	 */
+	function arrayFilter(array, predicate) {
+	  var index = -1,
+	      length = array == null ? 0 : array.length,
+	      resIndex = 0,
+	      result = [];
+
+	  while (++index < length) {
+	    var value = array[index];
+	    if (predicate(value, index, array)) {
+	      result[resIndex++] = value;
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = arrayFilter;
+
+
+/***/ },
+/* 116 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseEach = __webpack_require__(117);
+
+	/**
+	 * The base implementation of `_.filter` without support for iteratee shorthands.
+	 *
+	 * @private
+	 * @param {Array|Object} collection The collection to iterate over.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @returns {Array} Returns the new filtered array.
+	 */
+	function baseFilter(collection, predicate) {
+	  var result = [];
+	  baseEach(collection, function(value, index, collection) {
+	    if (predicate(value, index, collection)) {
+	      result.push(value);
+	    }
+	  });
+	  return result;
+	}
+
+	module.exports = baseFilter;
+
+
+/***/ },
+/* 117 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseForOwn = __webpack_require__(118),
+	    createBaseEach = __webpack_require__(121);
+
+	/**
+	 * The base implementation of `_.forEach` without support for iteratee shorthands.
+	 *
+	 * @private
+	 * @param {Array|Object} collection The collection to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @returns {Array|Object} Returns `collection`.
+	 */
+	var baseEach = createBaseEach(baseForOwn);
+
+	module.exports = baseEach;
+
+
+/***/ },
+/* 118 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseFor = __webpack_require__(119),
+	    keys = __webpack_require__(55);
+
+	/**
+	 * The base implementation of `_.forOwn` without support for iteratee shorthands.
+	 *
+	 * @private
+	 * @param {Object} object The object to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseForOwn(object, iteratee) {
+	  return object && baseFor(object, iteratee, keys);
+	}
+
+	module.exports = baseForOwn;
+
+
+/***/ },
+/* 119 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var createBaseFor = __webpack_require__(120);
+
+	/**
+	 * The base implementation of `baseForOwn` which iterates over `object`
+	 * properties returned by `keysFunc` and invokes `iteratee` for each property.
+	 * Iteratee functions may exit iteration early by explicitly returning `false`.
+	 *
+	 * @private
+	 * @param {Object} object The object to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @param {Function} keysFunc The function to get the keys of `object`.
+	 * @returns {Object} Returns `object`.
+	 */
+	var baseFor = createBaseFor();
+
+	module.exports = baseFor;
+
+
+/***/ },
+/* 120 */
+/***/ function(module, exports) {
+
+	/**
+	 * Creates a base function for methods like `_.forIn` and `_.forOwn`.
+	 *
+	 * @private
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {Function} Returns the new base function.
+	 */
+	function createBaseFor(fromRight) {
+	  return function(object, iteratee, keysFunc) {
+	    var index = -1,
+	        iterable = Object(object),
+	        props = keysFunc(object),
+	        length = props.length;
+
+	    while (length--) {
+	      var key = props[fromRight ? length : ++index];
+	      if (iteratee(iterable[key], key, iterable) === false) {
+	        break;
+	      }
+	    }
+	    return object;
+	  };
+	}
+
+	module.exports = createBaseFor;
+
+
+/***/ },
+/* 121 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArrayLike = __webpack_require__(75);
+
+	/**
+	 * Creates a `baseEach` or `baseEachRight` function.
+	 *
+	 * @private
+	 * @param {Function} eachFunc The function to iterate over a collection.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {Function} Returns the new base function.
+	 */
+	function createBaseEach(eachFunc, fromRight) {
+	  return function(collection, iteratee) {
+	    if (collection == null) {
+	      return collection;
+	    }
+	    if (!isArrayLike(collection)) {
+	      return eachFunc(collection, iteratee);
+	    }
+	    var length = collection.length,
+	        index = fromRight ? length : -1,
+	        iterable = Object(collection);
+
+	    while ((fromRight ? index-- : ++index < length)) {
+	      if (iteratee(iterable[index], index, iterable) === false) {
+	        break;
+	      }
+	    }
+	    return collection;
+	  };
+	}
+
+	module.exports = createBaseEach;
+
+
+/***/ },
+/* 122 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseMatches = __webpack_require__(123),
+	    baseMatchesProperty = __webpack_require__(138),
+	    identity = __webpack_require__(154),
+	    isArray = __webpack_require__(61),
+	    property = __webpack_require__(155);
+
+	/**
+	 * The base implementation of `_.iteratee`.
+	 *
+	 * @private
+	 * @param {*} [value=_.identity] The value to convert to an iteratee.
+	 * @returns {Function} Returns the iteratee.
+	 */
+	function baseIteratee(value) {
+	  // Don't store the `typeof` result in a variable to avoid a JIT bug in Safari 9.
+	  // See https://bugs.webkit.org/show_bug.cgi?id=156034 for more details.
+	  if (typeof value == 'function') {
+	    return value;
+	  }
+	  if (value == null) {
+	    return identity;
+	  }
+	  if (typeof value == 'object') {
+	    return isArray(value)
+	      ? baseMatchesProperty(value[0], value[1])
+	      : baseMatches(value);
+	  }
+	  return property(value);
+	}
+
+	module.exports = baseIteratee;
+
+
+/***/ },
+/* 123 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsMatch = __webpack_require__(124),
+	    getMatchData = __webpack_require__(135),
+	    matchesStrictComparable = __webpack_require__(137);
+
+	/**
+	 * The base implementation of `_.matches` which doesn't clone `source`.
+	 *
+	 * @private
+	 * @param {Object} source The object of property values to match.
+	 * @returns {Function} Returns the new spec function.
+	 */
+	function baseMatches(source) {
+	  var matchData = getMatchData(source);
+	  if (matchData.length == 1 && matchData[0][2]) {
+	    return matchesStrictComparable(matchData[0][0], matchData[0][1]);
+	  }
+	  return function(object) {
+	    return object === source || baseIsMatch(object, source, matchData);
+	  };
+	}
+
+	module.exports = baseMatches;
+
+
+/***/ },
+/* 124 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Stack = __webpack_require__(5),
+	    baseIsEqual = __webpack_require__(125);
+
+	/** Used to compose bitmasks for value comparisons. */
+	var COMPARE_PARTIAL_FLAG = 1,
+	    COMPARE_UNORDERED_FLAG = 2;
+
+	/**
+	 * The base implementation of `_.isMatch` without support for iteratee shorthands.
+	 *
+	 * @private
+	 * @param {Object} object The object to inspect.
+	 * @param {Object} source The object of property values to match.
+	 * @param {Array} matchData The property names, values, and compare flags to match.
+	 * @param {Function} [customizer] The function to customize comparisons.
+	 * @returns {boolean} Returns `true` if `object` is a match, else `false`.
+	 */
+	function baseIsMatch(object, source, matchData, customizer) {
+	  var index = matchData.length,
+	      length = index,
+	      noCustomizer = !customizer;
+
+	  if (object == null) {
+	    return !length;
+	  }
+	  object = Object(object);
+	  while (index--) {
+	    var data = matchData[index];
+	    if ((noCustomizer && data[2])
+	          ? data[1] !== object[data[0]]
+	          : !(data[0] in object)
+	        ) {
+	      return false;
+	    }
+	  }
+	  while (++index < length) {
+	    data = matchData[index];
+	    var key = data[0],
+	        objValue = object[key],
+	        srcValue = data[1];
+
+	    if (noCustomizer && data[2]) {
+	      if (objValue === undefined && !(key in object)) {
+	        return false;
+	      }
+	    } else {
+	      var stack = new Stack;
+	      if (customizer) {
+	        var result = customizer(objValue, srcValue, key, object, source, stack);
+	      }
+	      if (!(result === undefined
+	            ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack)
+	            : result
+	          )) {
+	        return false;
+	      }
+	    }
+	  }
+	  return true;
+	}
+
+	module.exports = baseIsMatch;
+
+
+/***/ },
+/* 125 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsEqualDeep = __webpack_require__(126),
+	    isObject = __webpack_require__(29),
+	    isObjectLike = __webpack_require__(60);
+
+	/**
+	 * The base implementation of `_.isEqual` which supports partial comparisons
+	 * and tracks traversed objects.
+	 *
+	 * @private
+	 * @param {*} value The value to compare.
+	 * @param {*} other The other value to compare.
+	 * @param {boolean} bitmask The bitmask flags.
+	 *  1 - Unordered comparison
+	 *  2 - Partial comparison
+	 * @param {Function} [customizer] The function to customize comparisons.
+	 * @param {Object} [stack] Tracks traversed `value` and `other` objects.
+	 * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+	 */
+	function baseIsEqual(value, other, bitmask, customizer, stack) {
+	  if (value === other) {
+	    return true;
+	  }
+	  if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
+	    return value !== value && other !== other;
+	  }
+	  return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
+	}
+
+	module.exports = baseIsEqual;
+
+
+/***/ },
+/* 126 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Stack = __webpack_require__(5),
+	    equalArrays = __webpack_require__(127),
+	    equalByTag = __webpack_require__(133),
+	    equalObjects = __webpack_require__(134),
+	    getTag = __webpack_require__(92),
+	    isArray = __webpack_require__(61),
+	    isBuffer = __webpack_require__(62),
+	    isTypedArray = __webpack_require__(66);
+
+	/** Used to compose bitmasks for value comparisons. */
+	var COMPARE_PARTIAL_FLAG = 1;
+
+	/** `Object#toString` result references. */
+	var argsTag = '[object Arguments]',
+	    arrayTag = '[object Array]',
+	    objectTag = '[object Object]';
+
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * A specialized version of `baseIsEqual` for arrays and objects which performs
+	 * deep comparisons and tracks traversed objects enabling objects with circular
+	 * references to be compared.
+	 *
+	 * @private
+	 * @param {Object} object The object to compare.
+	 * @param {Object} other The other object to compare.
+	 * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+	 * @param {Function} customizer The function to customize comparisons.
+	 * @param {Function} equalFunc The function to determine equivalents of values.
+	 * @param {Object} [stack] Tracks traversed `object` and `other` objects.
+	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+	 */
+	function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
+	  var objIsArr = isArray(object),
+	      othIsArr = isArray(other),
+	      objTag = arrayTag,
+	      othTag = arrayTag;
+
+	  if (!objIsArr) {
+	    objTag = getTag(object);
+	    objTag = objTag == argsTag ? objectTag : objTag;
+	  }
+	  if (!othIsArr) {
+	    othTag = getTag(other);
+	    othTag = othTag == argsTag ? objectTag : othTag;
+	  }
+	  var objIsObj = objTag == objectTag,
+	      othIsObj = othTag == objectTag,
+	      isSameTag = objTag == othTag;
+
+	  if (isSameTag && isBuffer(object)) {
+	    if (!isBuffer(other)) {
+	      return false;
+	    }
+	    objIsArr = true;
+	    objIsObj = false;
+	  }
+	  if (isSameTag && !objIsObj) {
+	    stack || (stack = new Stack);
+	    return (objIsArr || isTypedArray(object))
+	      ? equalArrays(object, other, bitmask, customizer, equalFunc, stack)
+	      : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
+	  }
+	  if (!(bitmask & COMPARE_PARTIAL_FLAG)) {
+	    var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
+	        othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
+
+	    if (objIsWrapped || othIsWrapped) {
+	      var objUnwrapped = objIsWrapped ? object.value() : object,
+	          othUnwrapped = othIsWrapped ? other.value() : other;
+
+	      stack || (stack = new Stack);
+	      return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
+	    }
+	  }
+	  if (!isSameTag) {
+	    return false;
+	  }
+	  stack || (stack = new Stack);
+	  return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
+	}
+
+	module.exports = baseIsEqualDeep;
+
+
+/***/ },
+/* 127 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var SetCache = __webpack_require__(128),
+	    arraySome = __webpack_require__(131),
+	    cacheHas = __webpack_require__(132);
+
+	/** Used to compose bitmasks for value comparisons. */
+	var COMPARE_PARTIAL_FLAG = 1,
+	    COMPARE_UNORDERED_FLAG = 2;
+
+	/**
+	 * A specialized version of `baseIsEqualDeep` for arrays with support for
+	 * partial deep comparisons.
+	 *
+	 * @private
+	 * @param {Array} array The array to compare.
+	 * @param {Array} other The other array to compare.
+	 * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+	 * @param {Function} customizer The function to customize comparisons.
+	 * @param {Function} equalFunc The function to determine equivalents of values.
+	 * @param {Object} stack Tracks traversed `array` and `other` objects.
+	 * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
+	 */
+	function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
+	  var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
+	      arrLength = array.length,
+	      othLength = other.length;
+
+	  if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
+	    return false;
+	  }
+	  // Assume cyclic values are equal.
+	  var stacked = stack.get(array);
+	  if (stacked && stack.get(other)) {
+	    return stacked == other;
+	  }
+	  var index = -1,
+	      result = true,
+	      seen = (bitmask & COMPARE_UNORDERED_FLAG) ? new SetCache : undefined;
+
+	  stack.set(array, other);
+	  stack.set(other, array);
+
+	  // Ignore non-index properties.
+	  while (++index < arrLength) {
+	    var arrValue = array[index],
+	        othValue = other[index];
+
+	    if (customizer) {
+	      var compared = isPartial
+	        ? customizer(othValue, arrValue, index, other, array, stack)
+	        : customizer(arrValue, othValue, index, array, other, stack);
+	    }
+	    if (compared !== undefined) {
+	      if (compared) {
+	        continue;
+	      }
+	      result = false;
+	      break;
+	    }
+	    // Recursively compare arrays (susceptible to call stack limits).
+	    if (seen) {
+	      if (!arraySome(other, function(othValue, othIndex) {
+	            if (!cacheHas(seen, othIndex) &&
+	                (arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
+	              return seen.push(othIndex);
+	            }
+	          })) {
+	        result = false;
+	        break;
+	      }
+	    } else if (!(
+	          arrValue === othValue ||
+	            equalFunc(arrValue, othValue, bitmask, customizer, stack)
+	        )) {
+	      result = false;
+	      break;
+	    }
+	  }
+	  stack['delete'](array);
+	  stack['delete'](other);
+	  return result;
+	}
+
+	module.exports = equalArrays;
+
+
+/***/ },
+/* 128 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var MapCache = __webpack_require__(34),
+	    setCacheAdd = __webpack_require__(129),
+	    setCacheHas = __webpack_require__(130);
+
+	/**
+	 *
+	 * Creates an array cache object to store unique values.
+	 *
+	 * @private
+	 * @constructor
+	 * @param {Array} [values] The values to cache.
+	 */
+	function SetCache(values) {
+	  var index = -1,
+	      length = values == null ? 0 : values.length;
+
+	  this.__data__ = new MapCache;
+	  while (++index < length) {
+	    this.add(values[index]);
+	  }
+	}
+
+	// Add methods to `SetCache`.
+	SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
+	SetCache.prototype.has = setCacheHas;
+
+	module.exports = SetCache;
+
+
+/***/ },
+/* 129 */
+/***/ function(module, exports) {
+
+	/** Used to stand-in for `undefined` hash values. */
+	var HASH_UNDEFINED = '__lodash_hash_undefined__';
+
+	/**
+	 * Adds `value` to the array cache.
+	 *
+	 * @private
+	 * @name add
+	 * @memberOf SetCache
+	 * @alias push
+	 * @param {*} value The value to cache.
+	 * @returns {Object} Returns the cache instance.
+	 */
+	function setCacheAdd(value) {
+	  this.__data__.set(value, HASH_UNDEFINED);
+	  return this;
+	}
+
+	module.exports = setCacheAdd;
+
+
+/***/ },
+/* 130 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is in the array cache.
+	 *
+	 * @private
+	 * @name has
+	 * @memberOf SetCache
+	 * @param {*} value The value to search for.
+	 * @returns {number} Returns `true` if `value` is found, else `false`.
+	 */
+	function setCacheHas(value) {
+	  return this.__data__.has(value);
+	}
+
+	module.exports = setCacheHas;
+
+
+/***/ },
+/* 131 */
+/***/ function(module, exports) {
+
+	/**
+	 * A specialized version of `_.some` for arrays without support for iteratee
+	 * shorthands.
+	 *
+	 * @private
+	 * @param {Array} [array] The array to iterate over.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @returns {boolean} Returns `true` if any element passes the predicate check,
+	 *  else `false`.
+	 */
+	function arraySome(array, predicate) {
+	  var index = -1,
+	      length = array == null ? 0 : array.length;
+
+	  while (++index < length) {
+	    if (predicate(array[index], index, array)) {
+	      return true;
+	    }
+	  }
+	  return false;
+	}
+
+	module.exports = arraySome;
+
+
+/***/ },
+/* 132 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if a `cache` value for `key` exists.
+	 *
+	 * @private
+	 * @param {Object} cache The cache to query.
+	 * @param {string} key The key of the entry to check.
+	 * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+	 */
+	function cacheHas(cache, key) {
+	  return cache.has(key);
+	}
+
+	module.exports = cacheHas;
+
+
+/***/ },
+/* 133 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Symbol = __webpack_require__(24),
+	    Uint8Array = __webpack_require__(100),
+	    eq = __webpack_require__(10),
+	    equalArrays = __webpack_require__(127),
+	    mapToArray = __webpack_require__(105),
+	    setToArray = __webpack_require__(109);
+
+	/** Used to compose bitmasks for value comparisons. */
+	var COMPARE_PARTIAL_FLAG = 1,
+	    COMPARE_UNORDERED_FLAG = 2;
+
+	/** `Object#toString` result references. */
+	var boolTag = '[object Boolean]',
+	    dateTag = '[object Date]',
+	    errorTag = '[object Error]',
+	    mapTag = '[object Map]',
+	    numberTag = '[object Number]',
+	    regexpTag = '[object RegExp]',
+	    setTag = '[object Set]',
+	    stringTag = '[object String]',
+	    symbolTag = '[object Symbol]';
+
+	var arrayBufferTag = '[object ArrayBuffer]',
+	    dataViewTag = '[object DataView]';
+
+	/** Used to convert symbols to primitives and strings. */
+	var symbolProto = Symbol ? Symbol.prototype : undefined,
+	    symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
+
+	/**
+	 * A specialized version of `baseIsEqualDeep` for comparing objects of
+	 * the same `toStringTag`.
+	 *
+	 * **Note:** This function only supports comparing values with tags of
+	 * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+	 *
+	 * @private
+	 * @param {Object} object The object to compare.
+	 * @param {Object} other The other object to compare.
+	 * @param {string} tag The `toStringTag` of the objects to compare.
+	 * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+	 * @param {Function} customizer The function to customize comparisons.
+	 * @param {Function} equalFunc The function to determine equivalents of values.
+	 * @param {Object} stack Tracks traversed `object` and `other` objects.
+	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+	 */
+	function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
+	  switch (tag) {
+	    case dataViewTag:
+	      if ((object.byteLength != other.byteLength) ||
+	          (object.byteOffset != other.byteOffset)) {
+	        return false;
+	      }
+	      object = object.buffer;
+	      other = other.buffer;
+
+	    case arrayBufferTag:
+	      if ((object.byteLength != other.byteLength) ||
+	          !equalFunc(new Uint8Array(object), new Uint8Array(other))) {
+	        return false;
+	      }
+	      return true;
+
+	    case boolTag:
+	    case dateTag:
+	    case numberTag:
+	      // Coerce booleans to `1` or `0` and dates to milliseconds.
+	      // Invalid dates are coerced to `NaN`.
+	      return eq(+object, +other);
+
+	    case errorTag:
+	      return object.name == other.name && object.message == other.message;
+
+	    case regexpTag:
+	    case stringTag:
+	      // Coerce regexes to strings and treat strings, primitives and objects,
+	      // as equal. See http://www.ecma-international.org/ecma-262/7.0/#sec-regexp.prototype.tostring
+	      // for more details.
+	      return object == (other + '');
+
+	    case mapTag:
+	      var convert = mapToArray;
+
+	    case setTag:
+	      var isPartial = bitmask & COMPARE_PARTIAL_FLAG;
+	      convert || (convert = setToArray);
+
+	      if (object.size != other.size && !isPartial) {
+	        return false;
+	      }
+	      // Assume cyclic values are equal.
+	      var stacked = stack.get(object);
+	      if (stacked) {
+	        return stacked == other;
+	      }
+	      bitmask |= COMPARE_UNORDERED_FLAG;
+
+	      // Recursively compare objects (susceptible to call stack limits).
+	      stack.set(object, other);
+	      var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
+	      stack['delete'](object);
+	      return result;
+
+	    case symbolTag:
+	      if (symbolValueOf) {
+	        return symbolValueOf.call(object) == symbolValueOf.call(other);
+	      }
+	  }
+	  return false;
+	}
+
+	module.exports = equalByTag;
+
+
+/***/ },
+/* 134 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var keys = __webpack_require__(55);
+
+	/** Used to compose bitmasks for value comparisons. */
+	var COMPARE_PARTIAL_FLAG = 1;
+
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * A specialized version of `baseIsEqualDeep` for objects with support for
+	 * partial deep comparisons.
+	 *
+	 * @private
+	 * @param {Object} object The object to compare.
+	 * @param {Object} other The other object to compare.
+	 * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+	 * @param {Function} customizer The function to customize comparisons.
+	 * @param {Function} equalFunc The function to determine equivalents of values.
+	 * @param {Object} stack Tracks traversed `object` and `other` objects.
+	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+	 */
+	function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
+	  var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
+	      objProps = keys(object),
+	      objLength = objProps.length,
+	      othProps = keys(other),
+	      othLength = othProps.length;
+
+	  if (objLength != othLength && !isPartial) {
+	    return false;
+	  }
+	  var index = objLength;
+	  while (index--) {
+	    var key = objProps[index];
+	    if (!(isPartial ? key in other : hasOwnProperty.call(other, key))) {
+	      return false;
+	    }
+	  }
+	  // Assume cyclic values are equal.
+	  var stacked = stack.get(object);
+	  if (stacked && stack.get(other)) {
+	    return stacked == other;
+	  }
+	  var result = true;
+	  stack.set(object, other);
+	  stack.set(other, object);
+
+	  var skipCtor = isPartial;
+	  while (++index < objLength) {
+	    key = objProps[index];
+	    var objValue = object[key],
+	        othValue = other[key];
+
+	    if (customizer) {
+	      var compared = isPartial
+	        ? customizer(othValue, objValue, key, other, object, stack)
+	        : customizer(objValue, othValue, key, object, other, stack);
+	    }
+	    // Recursively compare objects (susceptible to call stack limits).
+	    if (!(compared === undefined
+	          ? (objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack))
+	          : compared
+	        )) {
+	      result = false;
+	      break;
+	    }
+	    skipCtor || (skipCtor = key == 'constructor');
+	  }
+	  if (result && !skipCtor) {
+	    var objCtor = object.constructor,
+	        othCtor = other.constructor;
+
+	    // Non `Object` object instances with different constructors are not equal.
+	    if (objCtor != othCtor &&
+	        ('constructor' in object && 'constructor' in other) &&
+	        !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
+	          typeof othCtor == 'function' && othCtor instanceof othCtor)) {
+	      result = false;
+	    }
+	  }
+	  stack['delete'](object);
+	  stack['delete'](other);
+	  return result;
+	}
+
+	module.exports = equalObjects;
+
+
+/***/ },
+/* 135 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isStrictComparable = __webpack_require__(136),
+	    keys = __webpack_require__(55);
+
+	/**
+	 * Gets the property names, values, and compare flags of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the match data of `object`.
+	 */
+	function getMatchData(object) {
+	  var result = keys(object),
+	      length = result.length;
+
+	  while (length--) {
+	    var key = result[length],
+	        value = object[key];
+
+	    result[length] = [key, value, isStrictComparable(value)];
+	  }
+	  return result;
+	}
+
+	module.exports = getMatchData;
+
+
+/***/ },
+/* 136 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(29);
+
+	/**
+	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` if suitable for strict
+	 *  equality comparisons, else `false`.
+	 */
+	function isStrictComparable(value) {
+	  return value === value && !isObject(value);
+	}
+
+	module.exports = isStrictComparable;
+
+
+/***/ },
+/* 137 */
+/***/ function(module, exports) {
+
+	/**
+	 * A specialized version of `matchesProperty` for source values suitable
+	 * for strict equality comparisons, i.e. `===`.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @param {*} srcValue The value to match.
+	 * @returns {Function} Returns the new spec function.
+	 */
+	function matchesStrictComparable(key, srcValue) {
+	  return function(object) {
+	    if (object == null) {
+	      return false;
+	    }
+	    return object[key] === srcValue &&
+	      (srcValue !== undefined || (key in Object(object)));
+	  };
+	}
+
+	module.exports = matchesStrictComparable;
+
+
+/***/ },
+/* 138 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsEqual = __webpack_require__(125),
+	    get = __webpack_require__(139),
+	    hasIn = __webpack_require__(151),
+	    isKey = __webpack_require__(142),
+	    isStrictComparable = __webpack_require__(136),
+	    matchesStrictComparable = __webpack_require__(137),
+	    toKey = __webpack_require__(150);
+
+	/** Used to compose bitmasks for value comparisons. */
+	var COMPARE_PARTIAL_FLAG = 1,
+	    COMPARE_UNORDERED_FLAG = 2;
+
+	/**
+	 * The base implementation of `_.matchesProperty` which doesn't clone `srcValue`.
+	 *
+	 * @private
+	 * @param {string} path The path of the property to get.
+	 * @param {*} srcValue The value to match.
+	 * @returns {Function} Returns the new spec function.
+	 */
+	function baseMatchesProperty(path, srcValue) {
+	  if (isKey(path) && isStrictComparable(srcValue)) {
+	    return matchesStrictComparable(toKey(path), srcValue);
+	  }
+	  return function(object) {
+	    var objValue = get(object, path);
+	    return (objValue === undefined && objValue === srcValue)
+	      ? hasIn(object, path)
+	      : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
+	  };
+	}
+
+	module.exports = baseMatchesProperty;
+
+
+/***/ },
+/* 139 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGet = __webpack_require__(140);
+
+	/**
+	 * Gets the value at `path` of `object`. If the resolved value is
+	 * `undefined`, the `defaultValue` is returned in its place.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 3.7.0
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @param {Array|string} path The path of the property to get.
+	 * @param {*} [defaultValue] The value returned for `undefined` resolved values.
+	 * @returns {*} Returns the resolved value.
+	 * @example
+	 *
+	 * var object = { 'a': [{ 'b': { 'c': 3 } }] };
+	 *
+	 * _.get(object, 'a[0].b.c');
+	 * // => 3
+	 *
+	 * _.get(object, ['a', '0', 'b', 'c']);
+	 * // => 3
+	 *
+	 * _.get(object, 'a.b.c', 'default');
+	 * // => 'default'
+	 */
+	function get(object, path, defaultValue) {
+	  var result = object == null ? undefined : baseGet(object, path);
+	  return result === undefined ? defaultValue : result;
+	}
+
+	module.exports = get;
+
+
+/***/ },
+/* 140 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var castPath = __webpack_require__(141),
+	    toKey = __webpack_require__(150);
+
+	/**
+	 * The base implementation of `_.get` without support for default values.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {Array|string} path The path of the property to get.
+	 * @returns {*} Returns the resolved value.
+	 */
+	function baseGet(object, path) {
+	  path = castPath(path, object);
+
+	  var index = 0,
+	      length = path.length;
+
+	  while (object != null && index < length) {
+	    object = object[toKey(path[index++])];
+	  }
+	  return (index && index == length) ? object : undefined;
+	}
+
+	module.exports = baseGet;
+
+
+/***/ },
+/* 141 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArray = __webpack_require__(61),
+	    isKey = __webpack_require__(142),
+	    stringToPath = __webpack_require__(144),
+	    toString = __webpack_require__(147);
+
+	/**
+	 * Casts `value` to a path array if it's not one.
+	 *
+	 * @private
+	 * @param {*} value The value to inspect.
+	 * @param {Object} [object] The object to query keys on.
+	 * @returns {Array} Returns the cast property path array.
+	 */
+	function castPath(value, object) {
+	  if (isArray(value)) {
+	    return value;
+	  }
+	  return isKey(value, object) ? [value] : stringToPath(toString(value));
+	}
+
+	module.exports = castPath;
+
+
+/***/ },
+/* 142 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArray = __webpack_require__(61),
+	    isSymbol = __webpack_require__(143);
+
+	/** Used to match property names within property paths. */
+	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
+	    reIsPlainProp = /^\w*$/;
+
+	/**
+	 * Checks if `value` is a property name and not a property path.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @param {Object} [object] The object to query keys on.
+	 * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
+	 */
+	function isKey(value, object) {
+	  if (isArray(value)) {
+	    return false;
+	  }
+	  var type = typeof value;
+	  if (type == 'number' || type == 'symbol' || type == 'boolean' ||
+	      value == null || isSymbol(value)) {
+	    return true;
+	  }
+	  return reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
+	    (object != null && value in Object(object));
+	}
+
+	module.exports = isKey;
+
+
+/***/ },
+/* 143 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGetTag = __webpack_require__(23),
+	    isObjectLike = __webpack_require__(60);
+
+	/** `Object#toString` result references. */
+	var symbolTag = '[object Symbol]';
+
+	/**
+	 * Checks if `value` is classified as a `Symbol` primitive or object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+	 * @example
+	 *
+	 * _.isSymbol(Symbol.iterator);
+	 * // => true
+	 *
+	 * _.isSymbol('abc');
+	 * // => false
+	 */
+	function isSymbol(value) {
+	  return typeof value == 'symbol' ||
+	    (isObjectLike(value) && baseGetTag(value) == symbolTag);
+	}
+
+	module.exports = isSymbol;
+
+
+/***/ },
+/* 144 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var memoizeCapped = __webpack_require__(145);
+
+	/** Used to match property names within property paths. */
+	var reLeadingDot = /^\./,
+	    rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+
+	/** Used to match backslashes in property paths. */
+	var reEscapeChar = /\\(\\)?/g;
+
+	/**
+	 * Converts `string` to a property path array.
+	 *
+	 * @private
+	 * @param {string} string The string to convert.
+	 * @returns {Array} Returns the property path array.
+	 */
+	var stringToPath = memoizeCapped(function(string) {
+	  var result = [];
+	  if (reLeadingDot.test(string)) {
+	    result.push('');
+	  }
+	  string.replace(rePropName, function(match, number, quote, string) {
+	    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
+	  });
+	  return result;
+	});
+
+	module.exports = stringToPath;
+
+
+/***/ },
+/* 145 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var memoize = __webpack_require__(146);
+
+	/** Used as the maximum memoize cache size. */
+	var MAX_MEMOIZE_SIZE = 500;
+
+	/**
+	 * A specialized version of `_.memoize` which clears the memoized function's
+	 * cache when it exceeds `MAX_MEMOIZE_SIZE`.
+	 *
+	 * @private
+	 * @param {Function} func The function to have its output memoized.
+	 * @returns {Function} Returns the new memoized function.
+	 */
+	function memoizeCapped(func) {
+	  var result = memoize(func, function(key) {
+	    if (cache.size === MAX_MEMOIZE_SIZE) {
+	      cache.clear();
+	    }
+	    return key;
+	  });
+
+	  var cache = result.cache;
+	  return result;
+	}
+
+	module.exports = memoizeCapped;
+
+
+/***/ },
+/* 146 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var MapCache = __webpack_require__(34);
+
+	/** Error message constants. */
+	var FUNC_ERROR_TEXT = 'Expected a function';
+
+	/**
+	 * Creates a function that memoizes the result of `func`. If `resolver` is
+	 * provided, it determines the cache key for storing the result based on the
+	 * arguments provided to the memoized function. By default, the first argument
+	 * provided to the memoized function is used as the map cache key. The `func`
+	 * is invoked with the `this` binding of the memoized function.
+	 *
+	 * **Note:** The cache is exposed as the `cache` property on the memoized
+	 * function. Its creation may be customized by replacing the `_.memoize.Cache`
+	 * constructor with one whose instances implement the
+	 * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
+	 * method interface of `clear`, `delete`, `get`, `has`, and `set`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Function
+	 * @param {Function} func The function to have its output memoized.
+	 * @param {Function} [resolver] The function to resolve the cache key.
+	 * @returns {Function} Returns the new memoized function.
+	 * @example
+	 *
+	 * var object = { 'a': 1, 'b': 2 };
+	 * var other = { 'c': 3, 'd': 4 };
+	 *
+	 * var values = _.memoize(_.values);
+	 * values(object);
+	 * // => [1, 2]
+	 *
+	 * values(other);
+	 * // => [3, 4]
+	 *
+	 * object.a = 2;
+	 * values(object);
+	 * // => [1, 2]
+	 *
+	 * // Modify the result cache.
+	 * values.cache.set(object, ['a', 'b']);
+	 * values(object);
+	 * // => ['a', 'b']
+	 *
+	 * // Replace `_.memoize.Cache`.
+	 * _.memoize.Cache = WeakMap;
+	 */
+	function memoize(func, resolver) {
+	  if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
+	    throw new TypeError(FUNC_ERROR_TEXT);
+	  }
+	  var memoized = function() {
+	    var args = arguments,
+	        key = resolver ? resolver.apply(this, args) : args[0],
+	        cache = memoized.cache;
+
+	    if (cache.has(key)) {
+	      return cache.get(key);
+	    }
+	    var result = func.apply(this, args);
+	    memoized.cache = cache.set(key, result) || cache;
+	    return result;
+	  };
+	  memoized.cache = new (memoize.Cache || MapCache);
+	  return memoized;
+	}
+
+	// Expose `MapCache`.
+	memoize.Cache = MapCache;
+
+	module.exports = memoize;
+
+
+/***/ },
+/* 147 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseToString = __webpack_require__(148);
+
+	/**
+	 * Converts `value` to a string. An empty string is returned for `null`
+	 * and `undefined` values. The sign of `-0` is preserved.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to convert.
+	 * @returns {string} Returns the converted string.
+	 * @example
+	 *
+	 * _.toString(null);
+	 * // => ''
+	 *
+	 * _.toString(-0);
+	 * // => '-0'
+	 *
+	 * _.toString([1, 2, 3]);
+	 * // => '1,2,3'
+	 */
+	function toString(value) {
+	  return value == null ? '' : baseToString(value);
+	}
+
+	module.exports = toString;
+
+
+/***/ },
+/* 148 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Symbol = __webpack_require__(24),
+	    arrayMap = __webpack_require__(149),
+	    isArray = __webpack_require__(61),
+	    isSymbol = __webpack_require__(143);
+
+	/** Used as references for various `Number` constants. */
+	var INFINITY = 1 / 0;
+
+	/** Used to convert symbols to primitives and strings. */
+	var symbolProto = Symbol ? Symbol.prototype : undefined,
+	    symbolToString = symbolProto ? symbolProto.toString : undefined;
+
+	/**
+	 * The base implementation of `_.toString` which doesn't convert nullish
+	 * values to empty strings.
+	 *
+	 * @private
+	 * @param {*} value The value to process.
+	 * @returns {string} Returns the string.
+	 */
+	function baseToString(value) {
+	  // Exit early for strings to avoid a performance hit in some environments.
+	  if (typeof value == 'string') {
+	    return value;
+	  }
+	  if (isArray(value)) {
+	    // Recursively convert values (susceptible to call stack limits).
+	    return arrayMap(value, baseToString) + '';
+	  }
+	  if (isSymbol(value)) {
+	    return symbolToString ? symbolToString.call(value) : '';
+	  }
+	  var result = (value + '');
+	  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
+	}
+
+	module.exports = baseToString;
+
+
+/***/ },
+/* 149 */
+/***/ function(module, exports) {
+
+	/**
+	 * A specialized version of `_.map` for arrays without support for iteratee
+	 * shorthands.
+	 *
+	 * @private
+	 * @param {Array} [array] The array to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @returns {Array} Returns the new mapped array.
+	 */
+	function arrayMap(array, iteratee) {
+	  var index = -1,
+	      length = array == null ? 0 : array.length,
+	      result = Array(length);
+
+	  while (++index < length) {
+	    result[index] = iteratee(array[index], index, array);
+	  }
+	  return result;
+	}
+
+	module.exports = arrayMap;
+
+
+/***/ },
+/* 150 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isSymbol = __webpack_require__(143);
+
+	/** Used as references for various `Number` constants. */
+	var INFINITY = 1 / 0;
+
+	/**
+	 * Converts `value` to a string key if it's not a string or symbol.
+	 *
+	 * @private
+	 * @param {*} value The value to inspect.
+	 * @returns {string|symbol} Returns the key.
+	 */
+	function toKey(value) {
+	  if (typeof value == 'string' || isSymbol(value)) {
+	    return value;
+	  }
+	  var result = (value + '');
+	  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
+	}
+
+	module.exports = toKey;
+
+
+/***/ },
+/* 151 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseHasIn = __webpack_require__(152),
+	    hasPath = __webpack_require__(153);
+
+	/**
+	 * Checks if `path` is a direct or inherited property of `object`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @param {Array|string} path The path to check.
+	 * @returns {boolean} Returns `true` if `path` exists, else `false`.
+	 * @example
+	 *
+	 * var object = _.create({ 'a': _.create({ 'b': 2 }) });
+	 *
+	 * _.hasIn(object, 'a');
+	 * // => true
+	 *
+	 * _.hasIn(object, 'a.b');
+	 * // => true
+	 *
+	 * _.hasIn(object, ['a', 'b']);
+	 * // => true
+	 *
+	 * _.hasIn(object, 'b');
+	 * // => false
+	 */
+	function hasIn(object, path) {
+	  return object != null && hasPath(object, path, baseHasIn);
+	}
+
+	module.exports = hasIn;
+
+
+/***/ },
+/* 152 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.hasIn` without support for deep paths.
+	 *
+	 * @private
+	 * @param {Object} [object] The object to query.
+	 * @param {Array|string} key The key to check.
+	 * @returns {boolean} Returns `true` if `key` exists, else `false`.
+	 */
+	function baseHasIn(object, key) {
+	  return object != null && key in Object(object);
+	}
+
+	module.exports = baseHasIn;
+
+
+/***/ },
+/* 153 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var castPath = __webpack_require__(141),
+	    isArguments = __webpack_require__(58),
+	    isArray = __webpack_require__(61),
+	    isIndex = __webpack_require__(65),
+	    isLength = __webpack_require__(68),
+	    toKey = __webpack_require__(150);
+
+	/**
+	 * Checks if `path` exists on `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {Array|string} path The path to check.
+	 * @param {Function} hasFunc The function to check properties.
+	 * @returns {boolean} Returns `true` if `path` exists, else `false`.
+	 */
+	function hasPath(object, path, hasFunc) {
+	  path = castPath(path, object);
+
+	  var index = -1,
+	      length = path.length,
+	      result = false;
+
+	  while (++index < length) {
+	    var key = toKey(path[index]);
+	    if (!(result = object != null && hasFunc(object, key))) {
+	      break;
+	    }
+	    object = object[key];
+	  }
+	  if (result || ++index != length) {
+	    return result;
+	  }
+	  length = object == null ? 0 : object.length;
+	  return !!length && isLength(length) && isIndex(key, length) &&
+	    (isArray(object) || isArguments(object));
+	}
+
+	module.exports = hasPath;
+
+
+/***/ },
+/* 154 */
+/***/ function(module, exports) {
+
+	/**
+	 * This method returns the first argument it receives.
+	 *
+	 * @static
+	 * @since 0.1.0
+	 * @memberOf _
+	 * @category Util
+	 * @param {*} value Any value.
+	 * @returns {*} Returns `value`.
+	 * @example
+	 *
+	 * var object = { 'a': 1 };
+	 *
+	 * console.log(_.identity(object) === object);
+	 * // => true
+	 */
+	function identity(value) {
+	  return value;
+	}
+
+	module.exports = identity;
+
+
+/***/ },
+/* 155 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseProperty = __webpack_require__(156),
+	    basePropertyDeep = __webpack_require__(157),
+	    isKey = __webpack_require__(142),
+	    toKey = __webpack_require__(150);
+
+	/**
+	 * Creates a function that returns the value at `path` of a given object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 2.4.0
+	 * @category Util
+	 * @param {Array|string} path The path of the property to get.
+	 * @returns {Function} Returns the new accessor function.
+	 * @example
+	 *
+	 * var objects = [
+	 *   { 'a': { 'b': 2 } },
+	 *   { 'a': { 'b': 1 } }
+	 * ];
+	 *
+	 * _.map(objects, _.property('a.b'));
+	 * // => [2, 1]
+	 *
+	 * _.map(_.sortBy(objects, _.property(['a', 'b'])), 'a.b');
+	 * // => [1, 2]
+	 */
+	function property(path) {
+	  return isKey(path) ? baseProperty(toKey(path)) : basePropertyDeep(path);
+	}
+
+	module.exports = property;
+
+
+/***/ },
+/* 156 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new accessor function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+
+	module.exports = baseProperty;
+
+
+/***/ },
+/* 157 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGet = __webpack_require__(140);
+
+	/**
+	 * A specialized version of `baseProperty` which supports deep paths.
+	 *
+	 * @private
+	 * @param {Array|string} path The path of the property to get.
+	 * @returns {Function} Returns the new accessor function.
+	 */
+	function basePropertyDeep(path) {
+	  return function(object) {
+	    return baseGet(object, path);
+	  };
+	}
+
+	module.exports = basePropertyDeep;
+
+
+/***/ },
+/* 158 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseValues = __webpack_require__(159),
 	    keys = __webpack_require__(55);
 
 	/**
@@ -3601,10 +5426,10 @@ var alo =
 
 
 /***/ },
-/* 115 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayMap = __webpack_require__(116);
+	var arrayMap = __webpack_require__(149);
 
 	/**
 	 * The base implementation of `_.values` and `_.valuesIn` which creates an
@@ -3626,39 +5451,12 @@ var alo =
 
 
 /***/ },
-/* 116 */
-/***/ function(module, exports) {
-
-	/**
-	 * A specialized version of `_.map` for arrays without support for iteratee
-	 * shorthands.
-	 *
-	 * @private
-	 * @param {Array} [array] The array to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @returns {Array} Returns the new mapped array.
-	 */
-	function arrayMap(array, iteratee) {
-	  var index = -1,
-	      length = array == null ? 0 : array.length,
-	      result = Array(length);
-
-	  while (++index < length) {
-	    result[index] = iteratee(array[index], index, array);
-	  }
-	  return result;
-	}
-
-	module.exports = arrayMap;
-
-
-/***/ },
-/* 117 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayEach = __webpack_require__(49),
-	    baseEach = __webpack_require__(118),
-	    castFunction = __webpack_require__(123),
+	    baseEach = __webpack_require__(117),
+	    castFunction = __webpack_require__(161),
 	    isArray = __webpack_require__(61);
 
 	/**
@@ -3700,143 +5498,10 @@ var alo =
 
 
 /***/ },
-/* 118 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(119),
-	    createBaseEach = __webpack_require__(122);
-
-	/**
-	 * The base implementation of `_.forEach` without support for iteratee shorthands.
-	 *
-	 * @private
-	 * @param {Array|Object} collection The collection to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @returns {Array|Object} Returns `collection`.
-	 */
-	var baseEach = createBaseEach(baseForOwn);
-
-	module.exports = baseEach;
-
-
-/***/ },
-/* 119 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseFor = __webpack_require__(120),
-	    keys = __webpack_require__(55);
-
-	/**
-	 * The base implementation of `_.forOwn` without support for iteratee shorthands.
-	 *
-	 * @private
-	 * @param {Object} object The object to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @returns {Object} Returns `object`.
-	 */
-	function baseForOwn(object, iteratee) {
-	  return object && baseFor(object, iteratee, keys);
-	}
-
-	module.exports = baseForOwn;
-
-
-/***/ },
-/* 120 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var createBaseFor = __webpack_require__(121);
-
-	/**
-	 * The base implementation of `baseForOwn` which iterates over `object`
-	 * properties returned by `keysFunc` and invokes `iteratee` for each property.
-	 * Iteratee functions may exit iteration early by explicitly returning `false`.
-	 *
-	 * @private
-	 * @param {Object} object The object to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @param {Function} keysFunc The function to get the keys of `object`.
-	 * @returns {Object} Returns `object`.
-	 */
-	var baseFor = createBaseFor();
-
-	module.exports = baseFor;
-
-
-/***/ },
-/* 121 */
-/***/ function(module, exports) {
-
-	/**
-	 * Creates a base function for methods like `_.forIn` and `_.forOwn`.
-	 *
-	 * @private
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {Function} Returns the new base function.
-	 */
-	function createBaseFor(fromRight) {
-	  return function(object, iteratee, keysFunc) {
-	    var index = -1,
-	        iterable = Object(object),
-	        props = keysFunc(object),
-	        length = props.length;
-
-	    while (length--) {
-	      var key = props[fromRight ? length : ++index];
-	      if (iteratee(iterable[key], key, iterable) === false) {
-	        break;
-	      }
-	    }
-	    return object;
-	  };
-	}
-
-	module.exports = createBaseFor;
-
-
-/***/ },
-/* 122 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArrayLike = __webpack_require__(75);
-
-	/**
-	 * Creates a `baseEach` or `baseEachRight` function.
-	 *
-	 * @private
-	 * @param {Function} eachFunc The function to iterate over a collection.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {Function} Returns the new base function.
-	 */
-	function createBaseEach(eachFunc, fromRight) {
-	  return function(collection, iteratee) {
-	    if (collection == null) {
-	      return collection;
-	    }
-	    if (!isArrayLike(collection)) {
-	      return eachFunc(collection, iteratee);
-	    }
-	    var length = collection.length,
-	        index = fromRight ? length : -1,
-	        iterable = Object(collection);
-
-	    while ((fromRight ? index-- : ++index < length)) {
-	      if (iteratee(iterable[index], index, iterable) === false) {
-	        break;
-	      }
-	    }
-	    return collection;
-	  };
-	}
-
-	module.exports = createBaseEach;
-
-
-/***/ },
-/* 123 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var identity = __webpack_require__(124);
+	var identity = __webpack_require__(154);
 
 	/**
 	 * Casts `value` to `identity` if it's not a function.
@@ -3853,34 +5518,7 @@ var alo =
 
 
 /***/ },
-/* 124 */
-/***/ function(module, exports) {
-
-	/**
-	 * This method returns the first argument it receives.
-	 *
-	 * @static
-	 * @since 0.1.0
-	 * @memberOf _
-	 * @category Util
-	 * @param {*} value Any value.
-	 * @returns {*} Returns `value`.
-	 * @example
-	 *
-	 * var object = { 'a': 1 };
-	 *
-	 * console.log(_.identity(object) === object);
-	 * // => true
-	 */
-	function identity(value) {
-	  return value;
-	}
-
-	module.exports = identity;
-
-
-/***/ },
-/* 125 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseGetTag = __webpack_require__(23),
@@ -3916,7 +5554,704 @@ var alo =
 
 
 /***/ },
-/* 126 */
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseMerge = __webpack_require__(164),
+	    createAssigner = __webpack_require__(170);
+
+	/**
+	 * This method is like `_.assign` except that it recursively merges own and
+	 * inherited enumerable string keyed properties of source objects into the
+	 * destination object. Source properties that resolve to `undefined` are
+	 * skipped if a destination value exists. Array and plain object properties
+	 * are merged recursively. Other objects and value types are overridden by
+	 * assignment. Source objects are applied from left to right. Subsequent
+	 * sources overwrite property assignments of previous sources.
+	 *
+	 * **Note:** This method mutates `object`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.5.0
+	 * @category Object
+	 * @param {Object} object The destination object.
+	 * @param {...Object} [sources] The source objects.
+	 * @returns {Object} Returns `object`.
+	 * @example
+	 *
+	 * var object = {
+	 *   'a': [{ 'b': 2 }, { 'd': 4 }]
+	 * };
+	 *
+	 * var other = {
+	 *   'a': [{ 'c': 3 }, { 'e': 5 }]
+	 * };
+	 *
+	 * _.merge(object, other);
+	 * // => { 'a': [{ 'b': 2, 'c': 3 }, { 'd': 4, 'e': 5 }] }
+	 */
+	var merge = createAssigner(function(object, source, srcIndex) {
+	  baseMerge(object, source, srcIndex);
+	});
+
+	module.exports = merge;
+
+
+/***/ },
+/* 164 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Stack = __webpack_require__(5),
+	    assignMergeValue = __webpack_require__(165),
+	    baseFor = __webpack_require__(119),
+	    baseMergeDeep = __webpack_require__(166),
+	    isObject = __webpack_require__(29),
+	    keysIn = __webpack_require__(77);
+
+	/**
+	 * The base implementation of `_.merge` without support for multiple sources.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @param {number} srcIndex The index of `source`.
+	 * @param {Function} [customizer] The function to customize merged values.
+	 * @param {Object} [stack] Tracks traversed source values and their merged
+	 *  counterparts.
+	 */
+	function baseMerge(object, source, srcIndex, customizer, stack) {
+	  if (object === source) {
+	    return;
+	  }
+	  baseFor(source, function(srcValue, key) {
+	    if (isObject(srcValue)) {
+	      stack || (stack = new Stack);
+	      baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
+	    }
+	    else {
+	      var newValue = customizer
+	        ? customizer(object[key], srcValue, (key + ''), object, source, stack)
+	        : undefined;
+
+	      if (newValue === undefined) {
+	        newValue = srcValue;
+	      }
+	      assignMergeValue(object, key, newValue);
+	    }
+	  }, keysIn);
+	}
+
+	module.exports = baseMerge;
+
+
+/***/ },
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseAssignValue = __webpack_require__(51),
+	    eq = __webpack_require__(10);
+
+	/**
+	 * This function is like `assignValue` except that it doesn't assign
+	 * `undefined` values.
+	 *
+	 * @private
+	 * @param {Object} object The object to modify.
+	 * @param {string} key The key of the property to assign.
+	 * @param {*} value The value to assign.
+	 */
+	function assignMergeValue(object, key, value) {
+	  if ((value !== undefined && !eq(object[key], value)) ||
+	      (value === undefined && !(key in object))) {
+	    baseAssignValue(object, key, value);
+	  }
+	}
+
+	module.exports = assignMergeValue;
+
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var assignMergeValue = __webpack_require__(165),
+	    cloneBuffer = __webpack_require__(80),
+	    cloneTypedArray = __webpack_require__(111),
+	    copyArray = __webpack_require__(81),
+	    initCloneObject = __webpack_require__(112),
+	    isArguments = __webpack_require__(58),
+	    isArray = __webpack_require__(61),
+	    isArrayLikeObject = __webpack_require__(167),
+	    isBuffer = __webpack_require__(62),
+	    isFunction = __webpack_require__(22),
+	    isObject = __webpack_require__(29),
+	    isPlainObject = __webpack_require__(168),
+	    isTypedArray = __webpack_require__(66),
+	    toPlainObject = __webpack_require__(169);
+
+	/**
+	 * A specialized version of `baseMerge` for arrays and objects which performs
+	 * deep merges and tracks traversed objects enabling objects with circular
+	 * references to be merged.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @param {string} key The key of the value to merge.
+	 * @param {number} srcIndex The index of `source`.
+	 * @param {Function} mergeFunc The function to merge values.
+	 * @param {Function} [customizer] The function to customize assigned values.
+	 * @param {Object} [stack] Tracks traversed source values and their merged
+	 *  counterparts.
+	 */
+	function baseMergeDeep(object, source, key, srcIndex, mergeFunc, customizer, stack) {
+	  var objValue = object[key],
+	      srcValue = source[key],
+	      stacked = stack.get(srcValue);
+
+	  if (stacked) {
+	    assignMergeValue(object, key, stacked);
+	    return;
+	  }
+	  var newValue = customizer
+	    ? customizer(objValue, srcValue, (key + ''), object, source, stack)
+	    : undefined;
+
+	  var isCommon = newValue === undefined;
+
+	  if (isCommon) {
+	    var isArr = isArray(srcValue),
+	        isBuff = !isArr && isBuffer(srcValue),
+	        isTyped = !isArr && !isBuff && isTypedArray(srcValue);
+
+	    newValue = srcValue;
+	    if (isArr || isBuff || isTyped) {
+	      if (isArray(objValue)) {
+	        newValue = objValue;
+	      }
+	      else if (isArrayLikeObject(objValue)) {
+	        newValue = copyArray(objValue);
+	      }
+	      else if (isBuff) {
+	        isCommon = false;
+	        newValue = cloneBuffer(srcValue, true);
+	      }
+	      else if (isTyped) {
+	        isCommon = false;
+	        newValue = cloneTypedArray(srcValue, true);
+	      }
+	      else {
+	        newValue = [];
+	      }
+	    }
+	    else if (isPlainObject(srcValue) || isArguments(srcValue)) {
+	      newValue = objValue;
+	      if (isArguments(objValue)) {
+	        newValue = toPlainObject(objValue);
+	      }
+	      else if (!isObject(objValue) || (srcIndex && isFunction(objValue))) {
+	        newValue = initCloneObject(srcValue);
+	      }
+	    }
+	    else {
+	      isCommon = false;
+	    }
+	  }
+	  if (isCommon) {
+	    // Recursively merge objects and arrays (susceptible to call stack limits).
+	    stack.set(srcValue, newValue);
+	    mergeFunc(newValue, srcValue, srcIndex, customizer, stack);
+	    stack['delete'](srcValue);
+	  }
+	  assignMergeValue(object, key, newValue);
+	}
+
+	module.exports = baseMergeDeep;
+
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArrayLike = __webpack_require__(75),
+	    isObjectLike = __webpack_require__(60);
+
+	/**
+	 * This method is like `_.isArrayLike` except that it also checks if `value`
+	 * is an object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an array-like object,
+	 *  else `false`.
+	 * @example
+	 *
+	 * _.isArrayLikeObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArrayLikeObject(document.body.children);
+	 * // => true
+	 *
+	 * _.isArrayLikeObject('abc');
+	 * // => false
+	 *
+	 * _.isArrayLikeObject(_.noop);
+	 * // => false
+	 */
+	function isArrayLikeObject(value) {
+	  return isObjectLike(value) && isArrayLike(value);
+	}
+
+	module.exports = isArrayLikeObject;
+
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGetTag = __webpack_require__(23),
+	    getPrototype = __webpack_require__(88),
+	    isObjectLike = __webpack_require__(60);
+
+	/** `Object#toString` result references. */
+	var objectTag = '[object Object]';
+
+	/** Used for built-in method references. */
+	var funcProto = Function.prototype,
+	    objectProto = Object.prototype;
+
+	/** Used to resolve the decompiled source of functions. */
+	var funcToString = funcProto.toString;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/** Used to infer the `Object` constructor. */
+	var objectCtorString = funcToString.call(Object);
+
+	/**
+	 * Checks if `value` is a plain object, that is, an object created by the
+	 * `Object` constructor or one with a `[[Prototype]]` of `null`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.8.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 * }
+	 *
+	 * _.isPlainObject(new Foo);
+	 * // => false
+	 *
+	 * _.isPlainObject([1, 2, 3]);
+	 * // => false
+	 *
+	 * _.isPlainObject({ 'x': 0, 'y': 0 });
+	 * // => true
+	 *
+	 * _.isPlainObject(Object.create(null));
+	 * // => true
+	 */
+	function isPlainObject(value) {
+	  if (!isObjectLike(value) || baseGetTag(value) != objectTag) {
+	    return false;
+	  }
+	  var proto = getPrototype(value);
+	  if (proto === null) {
+	    return true;
+	  }
+	  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+	  return typeof Ctor == 'function' && Ctor instanceof Ctor &&
+	    funcToString.call(Ctor) == objectCtorString;
+	}
+
+	module.exports = isPlainObject;
+
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var copyObject = __webpack_require__(54),
+	    keysIn = __webpack_require__(77);
+
+	/**
+	 * Converts `value` to a plain object flattening inherited enumerable string
+	 * keyed properties of `value` to own properties of the plain object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 3.0.0
+	 * @category Lang
+	 * @param {*} value The value to convert.
+	 * @returns {Object} Returns the converted plain object.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.assign({ 'a': 1 }, new Foo);
+	 * // => { 'a': 1, 'b': 2 }
+	 *
+	 * _.assign({ 'a': 1 }, _.toPlainObject(new Foo));
+	 * // => { 'a': 1, 'b': 2, 'c': 3 }
+	 */
+	function toPlainObject(value) {
+	  return copyObject(value, keysIn(value));
+	}
+
+	module.exports = toPlainObject;
+
+
+/***/ },
+/* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseRest = __webpack_require__(171),
+	    isIterateeCall = __webpack_require__(178);
+
+	/**
+	 * Creates a function like `_.assign`.
+	 *
+	 * @private
+	 * @param {Function} assigner The function to assign values.
+	 * @returns {Function} Returns the new assigner function.
+	 */
+	function createAssigner(assigner) {
+	  return baseRest(function(object, sources) {
+	    var index = -1,
+	        length = sources.length,
+	        customizer = length > 1 ? sources[length - 1] : undefined,
+	        guard = length > 2 ? sources[2] : undefined;
+
+	    customizer = (assigner.length > 3 && typeof customizer == 'function')
+	      ? (length--, customizer)
+	      : undefined;
+
+	    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+	      customizer = length < 3 ? undefined : customizer;
+	      length = 1;
+	    }
+	    object = Object(object);
+	    while (++index < length) {
+	      var source = sources[index];
+	      if (source) {
+	        assigner(object, source, index, customizer);
+	      }
+	    }
+	    return object;
+	  });
+	}
+
+	module.exports = createAssigner;
+
+
+/***/ },
+/* 171 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var identity = __webpack_require__(154),
+	    overRest = __webpack_require__(172),
+	    setToString = __webpack_require__(174);
+
+	/**
+	 * The base implementation of `_.rest` which doesn't validate or coerce arguments.
+	 *
+	 * @private
+	 * @param {Function} func The function to apply a rest parameter to.
+	 * @param {number} [start=func.length-1] The start position of the rest parameter.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseRest(func, start) {
+	  return setToString(overRest(func, start, identity), func + '');
+	}
+
+	module.exports = baseRest;
+
+
+/***/ },
+/* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var apply = __webpack_require__(173);
+
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * A specialized version of `baseRest` which transforms the rest array.
+	 *
+	 * @private
+	 * @param {Function} func The function to apply a rest parameter to.
+	 * @param {number} [start=func.length-1] The start position of the rest parameter.
+	 * @param {Function} transform The rest array transform.
+	 * @returns {Function} Returns the new function.
+	 */
+	function overRest(func, start, transform) {
+	  start = nativeMax(start === undefined ? (func.length - 1) : start, 0);
+	  return function() {
+	    var args = arguments,
+	        index = -1,
+	        length = nativeMax(args.length - start, 0),
+	        array = Array(length);
+
+	    while (++index < length) {
+	      array[index] = args[start + index];
+	    }
+	    index = -1;
+	    var otherArgs = Array(start + 1);
+	    while (++index < start) {
+	      otherArgs[index] = args[index];
+	    }
+	    otherArgs[start] = transform(array);
+	    return apply(func, this, otherArgs);
+	  };
+	}
+
+	module.exports = overRest;
+
+
+/***/ },
+/* 173 */
+/***/ function(module, exports) {
+
+	/**
+	 * A faster alternative to `Function#apply`, this function invokes `func`
+	 * with the `this` binding of `thisArg` and the arguments of `args`.
+	 *
+	 * @private
+	 * @param {Function} func The function to invoke.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {Array} args The arguments to invoke `func` with.
+	 * @returns {*} Returns the result of `func`.
+	 */
+	function apply(func, thisArg, args) {
+	  switch (args.length) {
+	    case 0: return func.call(thisArg);
+	    case 1: return func.call(thisArg, args[0]);
+	    case 2: return func.call(thisArg, args[0], args[1]);
+	    case 3: return func.call(thisArg, args[0], args[1], args[2]);
+	  }
+	  return func.apply(thisArg, args);
+	}
+
+	module.exports = apply;
+
+
+/***/ },
+/* 174 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseSetToString = __webpack_require__(175),
+	    shortOut = __webpack_require__(177);
+
+	/**
+	 * Sets the `toString` method of `func` to return `string`.
+	 *
+	 * @private
+	 * @param {Function} func The function to modify.
+	 * @param {Function} string The `toString` result.
+	 * @returns {Function} Returns `func`.
+	 */
+	var setToString = shortOut(baseSetToString);
+
+	module.exports = setToString;
+
+
+/***/ },
+/* 175 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var constant = __webpack_require__(176),
+	    defineProperty = __webpack_require__(52),
+	    identity = __webpack_require__(154);
+
+	/**
+	 * The base implementation of `setToString` without support for hot loop shorting.
+	 *
+	 * @private
+	 * @param {Function} func The function to modify.
+	 * @param {Function} string The `toString` result.
+	 * @returns {Function} Returns `func`.
+	 */
+	var baseSetToString = !defineProperty ? identity : function(func, string) {
+	  return defineProperty(func, 'toString', {
+	    'configurable': true,
+	    'enumerable': false,
+	    'value': constant(string),
+	    'writable': true
+	  });
+	};
+
+	module.exports = baseSetToString;
+
+
+/***/ },
+/* 176 */
+/***/ function(module, exports) {
+
+	/**
+	 * Creates a function that returns `value`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 2.4.0
+	 * @category Util
+	 * @param {*} value The value to return from the new function.
+	 * @returns {Function} Returns the new constant function.
+	 * @example
+	 *
+	 * var objects = _.times(2, _.constant({ 'a': 1 }));
+	 *
+	 * console.log(objects);
+	 * // => [{ 'a': 1 }, { 'a': 1 }]
+	 *
+	 * console.log(objects[0] === objects[1]);
+	 * // => true
+	 */
+	function constant(value) {
+	  return function() {
+	    return value;
+	  };
+	}
+
+	module.exports = constant;
+
+
+/***/ },
+/* 177 */
+/***/ function(module, exports) {
+
+	/** Used to detect hot functions by number of calls within a span of milliseconds. */
+	var HOT_COUNT = 800,
+	    HOT_SPAN = 16;
+
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeNow = Date.now;
+
+	/**
+	 * Creates a function that'll short out and invoke `identity` instead
+	 * of `func` when it's called `HOT_COUNT` or more times in `HOT_SPAN`
+	 * milliseconds.
+	 *
+	 * @private
+	 * @param {Function} func The function to restrict.
+	 * @returns {Function} Returns the new shortable function.
+	 */
+	function shortOut(func) {
+	  var count = 0,
+	      lastCalled = 0;
+
+	  return function() {
+	    var stamp = nativeNow(),
+	        remaining = HOT_SPAN - (stamp - lastCalled);
+
+	    lastCalled = stamp;
+	    if (remaining > 0) {
+	      if (++count >= HOT_COUNT) {
+	        return arguments[0];
+	      }
+	    } else {
+	      count = 0;
+	    }
+	    return func.apply(undefined, arguments);
+	  };
+	}
+
+	module.exports = shortOut;
+
+
+/***/ },
+/* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var eq = __webpack_require__(10),
+	    isArrayLike = __webpack_require__(75),
+	    isIndex = __webpack_require__(65),
+	    isObject = __webpack_require__(29);
+
+	/**
+	 * Checks if the given arguments are from an iteratee call.
+	 *
+	 * @private
+	 * @param {*} value The potential iteratee value argument.
+	 * @param {*} index The potential iteratee index or key argument.
+	 * @param {*} object The potential iteratee object argument.
+	 * @returns {boolean} Returns `true` if the arguments are from an iteratee call,
+	 *  else `false`.
+	 */
+	function isIterateeCall(value, index, object) {
+	  if (!isObject(object)) {
+	    return false;
+	  }
+	  var type = typeof index;
+	  if (type == 'number'
+	        ? (isArrayLike(object) && isIndex(index, object.length))
+	        : (type == 'string' && index in object)
+	      ) {
+	    return eq(object[index], value);
+	  }
+	  return false;
+	}
+
+	module.exports = isIterateeCall;
+
+
+/***/ },
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsEqual = __webpack_require__(125);
+
+	/**
+	 * Performs a deep comparison between two values to determine if they are
+	 * equivalent.
+	 *
+	 * **Note:** This method supports comparing arrays, array buffers, booleans,
+	 * date objects, error objects, maps, numbers, `Object` objects, regexes,
+	 * sets, strings, symbols, and typed arrays. `Object` objects are compared
+	 * by their own, not inherited, enumerable properties. Functions and DOM
+	 * nodes are **not** supported.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Lang
+	 * @param {*} value The value to compare.
+	 * @param {*} other The other value to compare.
+	 * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+	 * @example
+	 *
+	 * var object = { 'a': 1 };
+	 * var other = { 'a': 1 };
+	 *
+	 * _.isEqual(object, other);
+	 * // => true
+	 *
+	 * object === other;
+	 * // => false
+	 */
+	function isEqual(value, other) {
+	  return baseIsEqual(value, other);
+	}
+
+	module.exports = isEqual;
+
+
+/***/ },
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseGetTag = __webpack_require__(23),
@@ -3951,10 +6286,10 @@ var alo =
 
 
 /***/ },
-/* 127 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toString = __webpack_require__(128);
+	var toString = __webpack_require__(147);
 
 	/** Used to generate unique IDs. */
 	var idCounter = 0;
@@ -3985,124 +6320,132 @@ var alo =
 
 
 /***/ },
-/* 128 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(129);
+	var createToPairs = __webpack_require__(183),
+	    keys = __webpack_require__(55);
 
 	/**
-	 * Converts `value` to a string. An empty string is returned for `null`
-	 * and `undefined` values. The sign of `-0` is preserved.
+	 * Creates an array of own enumerable string keyed-value pairs for `object`
+	 * which can be consumed by `_.fromPairs`. If `object` is a map or set, its
+	 * entries are returned.
 	 *
 	 * @static
 	 * @memberOf _
 	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to convert.
-	 * @returns {string} Returns the converted string.
+	 * @alias entries
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the key-value pairs.
 	 * @example
 	 *
-	 * _.toString(null);
-	 * // => ''
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
 	 *
-	 * _.toString(-0);
-	 * // => '-0'
+	 * Foo.prototype.c = 3;
 	 *
-	 * _.toString([1, 2, 3]);
-	 * // => '1,2,3'
+	 * _.toPairs(new Foo);
+	 * // => [['a', 1], ['b', 2]] (iteration order is not guaranteed)
 	 */
-	function toString(value) {
-	  return value == null ? '' : baseToString(value);
-	}
+	var toPairs = createToPairs(keys);
 
-	module.exports = toString;
+	module.exports = toPairs;
 
 
 /***/ },
-/* 129 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Symbol = __webpack_require__(24),
-	    arrayMap = __webpack_require__(116),
-	    isArray = __webpack_require__(61),
-	    isSymbol = __webpack_require__(130);
-
-	/** Used as references for various `Number` constants. */
-	var INFINITY = 1 / 0;
-
-	/** Used to convert symbols to primitives and strings. */
-	var symbolProto = Symbol ? Symbol.prototype : undefined,
-	    symbolToString = symbolProto ? symbolProto.toString : undefined;
-
-	/**
-	 * The base implementation of `_.toString` which doesn't convert nullish
-	 * values to empty strings.
-	 *
-	 * @private
-	 * @param {*} value The value to process.
-	 * @returns {string} Returns the string.
-	 */
-	function baseToString(value) {
-	  // Exit early for strings to avoid a performance hit in some environments.
-	  if (typeof value == 'string') {
-	    return value;
-	  }
-	  if (isArray(value)) {
-	    // Recursively convert values (susceptible to call stack limits).
-	    return arrayMap(value, baseToString) + '';
-	  }
-	  if (isSymbol(value)) {
-	    return symbolToString ? symbolToString.call(value) : '';
-	  }
-	  var result = (value + '');
-	  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
-	}
-
-	module.exports = baseToString;
-
-
-/***/ },
-/* 130 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseGetTag = __webpack_require__(23),
-	    isObjectLike = __webpack_require__(60);
+	var baseToPairs = __webpack_require__(184),
+	    getTag = __webpack_require__(92),
+	    mapToArray = __webpack_require__(105),
+	    setToPairs = __webpack_require__(185);
 
 	/** `Object#toString` result references. */
-	var symbolTag = '[object Symbol]';
+	var mapTag = '[object Map]',
+	    setTag = '[object Set]';
 
 	/**
-	 * Checks if `value` is classified as a `Symbol` primitive or object.
+	 * Creates a `_.toPairs` or `_.toPairsIn` function.
 	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
-	 * @example
-	 *
-	 * _.isSymbol(Symbol.iterator);
-	 * // => true
-	 *
-	 * _.isSymbol('abc');
-	 * // => false
+	 * @private
+	 * @param {Function} keysFunc The function to get the keys of a given object.
+	 * @returns {Function} Returns the new pairs function.
 	 */
-	function isSymbol(value) {
-	  return typeof value == 'symbol' ||
-	    (isObjectLike(value) && baseGetTag(value) == symbolTag);
+	function createToPairs(keysFunc) {
+	  return function(object) {
+	    var tag = getTag(object);
+	    if (tag == mapTag) {
+	      return mapToArray(object);
+	    }
+	    if (tag == setTag) {
+	      return setToPairs(object);
+	    }
+	    return baseToPairs(object, keysFunc(object));
+	  };
 	}
 
-	module.exports = isSymbol;
+	module.exports = createToPairs;
 
 
 /***/ },
-/* 131 */
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arrayMap = __webpack_require__(149);
+
+	/**
+	 * The base implementation of `_.toPairs` and `_.toPairsIn` which creates an array
+	 * of key-value pairs for `object` corresponding to the property names of `props`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {Array} props The property names to get values for.
+	 * @returns {Object} Returns the key-value pairs.
+	 */
+	function baseToPairs(object, props) {
+	  return arrayMap(props, function(key) {
+	    return [key, object[key]];
+	  });
+	}
+
+	module.exports = baseToPairs;
+
+
+/***/ },
+/* 185 */
+/***/ function(module, exports) {
+
+	/**
+	 * Converts `set` to its value-value pairs.
+	 *
+	 * @private
+	 * @param {Object} set The set to convert.
+	 * @returns {Array} Returns the value-value pairs.
+	 */
+	function setToPairs(set) {
+	  var index = -1,
+	      result = Array(set.size);
+
+	  set.forEach(function(value) {
+	    result[++index] = [value, value];
+	  });
+	  return result;
+	}
+
+	module.exports = setToPairs;
+
+
+/***/ },
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var curryN = __webpack_require__(132);
+	var curryN = __webpack_require__(187);
 
 	// Utility
 	function isFunction(obj) {
@@ -4729,13 +7072,13 @@ var alo =
 
 
 /***/ },
-/* 132 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _arity = __webpack_require__(133);
-	var _curry1 = __webpack_require__(134);
-	var _curry2 = __webpack_require__(136);
-	var _curryN = __webpack_require__(137);
+	var _arity = __webpack_require__(188);
+	var _curry1 = __webpack_require__(189);
+	var _curry2 = __webpack_require__(191);
+	var _curryN = __webpack_require__(192);
 
 
 	/**
@@ -4789,7 +7132,7 @@ var alo =
 
 
 /***/ },
-/* 133 */
+/* 188 */
 /***/ function(module, exports) {
 
 	module.exports = function _arity(n, fn) {
@@ -4812,10 +7155,10 @@ var alo =
 
 
 /***/ },
-/* 134 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _isPlaceholder = __webpack_require__(135);
+	var _isPlaceholder = __webpack_require__(190);
 
 
 	/**
@@ -4838,7 +7181,7 @@ var alo =
 
 
 /***/ },
-/* 135 */
+/* 190 */
 /***/ function(module, exports) {
 
 	module.exports = function _isPlaceholder(a) {
@@ -4849,11 +7192,11 @@ var alo =
 
 
 /***/ },
-/* 136 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _curry1 = __webpack_require__(134);
-	var _isPlaceholder = __webpack_require__(135);
+	var _curry1 = __webpack_require__(189);
+	var _isPlaceholder = __webpack_require__(190);
 
 
 	/**
@@ -4883,11 +7226,11 @@ var alo =
 
 
 /***/ },
-/* 137 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _arity = __webpack_require__(133);
-	var _isPlaceholder = __webpack_require__(135);
+	var _arity = __webpack_require__(188);
+	var _isPlaceholder = __webpack_require__(190);
 
 
 	/**
@@ -4929,7 +7272,7 @@ var alo =
 
 
 /***/ },
-/* 138 */
+/* 193 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -5413,7 +7756,7 @@ var alo =
 
 
 /***/ },
-/* 139 */
+/* 194 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*
@@ -6258,1055 +8601,7 @@ var alo =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 140 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Alo = function Alo () {
-	  var Util = __webpack_require__(2)
-
-	  /**
-	   * Access to the util namespace
-	   *
-	   * @see util
-	   */
-	  this.util = new Util()
-	}
-
-	Alo.prototype.createSubscription = function createSubscription () {
-	  var Subscription = __webpack_require__(141)
-	  var subscription = Object.create(Subscription.prototype)
-	  Subscription.apply(subscription, arguments)
-	  return subscription
-	}
-
-	Alo.prototype.isSubscription = function isSubscription (subscription) {
-	  var Subscription = __webpack_require__(141)
-	  return (subscription instanceof Subscription)
-	}
-
-	Alo.prototype.createMember = function createMember () {
-	  var Member = __webpack_require__(142)
-	  var member = Object.create(Member.prototype)
-	  Member.apply(member, arguments)
-	  return member
-	}
-
-	Alo.prototype.isMember = function isMember (member) {
-	  var Member = __webpack_require__(142)
-	  return (member instanceof Member)
-	}
-
-	/**
-	 * Access to the handler constructor
-	 *
-	 * @see Handler
-	 */
-	// util.Handler = require('./../handler/handler.js'),
-	/**
-	 * Access to the store constructor
-	 *
-	 * @see Store
-	 */
-	// util.Store = require('./../store/store.js'),
-	/**
-	 * Access to the subscription constructor
-	 *
-	 * @see Subscription
-	 */
-	// util.Subscription = require('./../subscription/subscription.js')
-
-	/**
-	 * Same as new Reducer
-	 * @see Reducer
-	 */
-	Alo.prototype.createReducer = function createReducer () {
-	  var Reducer = __webpack_require__(143)
-	  var reducer = Object.create(Reducer.prototype)
-	  Reducer.apply(reducer, arguments)
-	  return reducer
-	}
-
-	/**
-	 * Instanceof check for reducers
-	 *
-	 * @param {*} reducer Argument to check if it is a reducer
-	 *
-	 * @return {boolean} true of it is a reducer, false in the other case
-	 */
-	Alo.prototype.isReducer = function isReducer (reducer) {
-	  var Reducer = __webpack_require__(143)
-	  return (reducer instanceof Reducer)
-	}
-
-	/**
-	 * Same as new Store
-	 * @see Store
-	 */
-	Alo.prototype.createStore = function createStore () {
-	  var Store = __webpack_require__(144)
-	  var store = Object.create(Store.prototype)
-	  Store.apply(store, arguments)
-	  return store
-	}
-
-	/**
-	 * Instanceof check for stores
-	 *
-	 * @param {*} store Argument to check if it is a store
-	 *
-	 * @return {boolean} true of it is a store, false in the other case
-	 */
-	Alo.prototype.isStore = function isStore (store) {
-	  var Store = __webpack_require__(144)
-	  return (store instanceof Store)
-	}
-
-	Alo.prototype.isMiddleware = function isMiddleware (middleware) {
-	  var Middleware = __webpack_require__(145)
-	  return (middleware instanceof Middleware)
-	}
-
-	module.exports = Alo
-
-
-/***/ },
-/* 141 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Alo = __webpack_require__(140)
-	var alo = new Alo()
-	var u = alo.util
-
-	var storeRelation = u.createObjectRelation('subscription', 'store', alo.isStore)
-	var memberRelation = u.createObjectRelation('subscription', 'member', alo.isMember)
-
-	/**
-	 * Subscription Constructor, is used in the Store Class to create Subscriptions to state
-	 *
-	 * @class
-	 * @extends {Store}
-	 * @see Store
-	 * @param {number} id
-	 * @param {Object} storeProtected
-	 * @param {string | Array} namespace
-	 */
-	var Subscription = function Subscription () {
-	  this._id = null
-
-	  this._storeRelations = null
-	  this._memberRelations = null
-
-	  this._events = {
-	    'beforePublish': [],
-	    'afterPublish': []
-	  }
-
-	  this._subscriptionStream = null
-	  this._stream = null
-
-	  this._dependencyCache = u.createDependencyCache()
-
-	  // While binding the publish function to the streams of the registered stores
-	  this._binding_publish = false
-	  this._muted = false
-
-	  storeRelation.constructParent(this)
-	  memberRelation.constructParent(this)
-
-	  subscription.apply(this, arguments)
-	}
-
-	// TODO: Implement additional signatures
-	var subscription = u.createPolymorphic()
-	subscription.signature('', function () {})
-	subscription.signature('object, array', function (dependencies, members) {
-	  this._dependencyCache.setDependency(dependencies)
-	  this.addMember(members)
-	})
-	subscription.signature('object', function (dependencies) {
-	  this._dependencyCache.setDependency(dependencies)
-	})
-	subscription.signature('array', function (members) {
-	  this.addMember(members)
-	})
-	subscription.signature('function', function (func) {
-	  this.createMember(func)
-	})
-
-	Subscription.prototype.addMember = null
-	Subscription.prototype.getMember = null
-
-	var afterChange = function () {
-	  var self = this
-
-	  if (u.isStream(this._stream)) {
-	    this._stream.end(true)
-	    this._stream = null
-	  }
-	  if (u.isStream(this._subscriptionStream)) {
-	    this._subscriptionStream.end(true)
-	    this._subscriptionStream = null
-	  }
-
-	  this._binding_publish = true
-	  var streams = []
-	  var stores = u.values(this.getStore())
-	  u.forEach(stores, function (store) {
-	    streams.push(store.getStream())
-	  })
-	  this._stream = u.combineStreams(function () {
-	    var streamState = {}
-	    u.forEach(u.values(arguments), function (stream, idx) {
-	      if (alo.isStore(stores[idx])) {
-	        streamState[stores[idx].getId()] = stream()
-	      }
-	    })
-	    return streamState
-	  }, streams)
-	  this._subscriptionStream = u.streamOn(function (state) {
-	    self._publish(state)
-	  }, this._stream)
-	  this._binding_publish = false
-	}
-
-	storeRelation.after('add', afterChange)
-	storeRelation.after('remove', afterChange)
-
-	storeRelation.registerParentPrototype(Subscription.prototype)
-	memberRelation.registerParentPrototype(Subscription.prototype)
-
-	Subscription.prototype.createMember = function createMember () {
-	  var member = alo.createMember.apply(null, arguments)
-	  this.addMember(member)
-
-	  return this
-	}
-
-	Subscription.prototype._callEvent = function (name, state) {
-	  var promises = this._events[name].map(function (func) {
-	    return u.Promise.resolve(state).then(func)
-	  })
-	  return u.Promise.all(promises).then(function (results) {
-	    var result = (results.indexOf(false) === -1)
-	    return result
-	  })
-	}
-
-	Subscription.prototype._publish = function (state) {
-	  var self = this
-	  if (self._muted === false && this._binding_publish === false) {
-	    self._muted = true
-	    var promise = u.Promise.resolve().then(function () {
-	      return self._callEvent('beforePublish', state)
-	    }).then(function (runPublish) {
-	      if (runPublish !== false) {
-	        var state = self.getState()
-	        var promises = []
-	        u.forEach(self.getMember(false), function (member) {
-	          promises.push(member._call(state))
-	        })
-	        return u.Promise.all(promises)
-	      } else {
-	        return false
-	      }
-	    }).then(function (runPublish) {
-	      if (runPublish !== false) {
-	        return self._callEvent('afterPublish', state)
-	      }
-	    }).then(function () {
-	      self._muted = false
-	      return null
-	    })
-	    return promise
-	  }
-	}
-
-	Subscription.prototype.enable = null
-	Subscription.prototype.disable = null
-
-	Subscription.prototype.remember = function remember () {
-	  var self = this
-
-	  var promises = []
-
-	  u.forEach(this.getStore(), function (store) {
-	    promises.push(self._publish(store, store.getState()))
-	  })
-
-	  return u.Promise.all(promises)
-	}
-
-	Subscription.prototype.stop = function stop () {
-	  this.disable()
-	  this.removeStore()
-
-	  return this
-	}
-
-	Subscription.prototype.getStream = function getStream () {
-	  return this._stream
-	}
-
-	Subscription.prototype.getState = function getState () {
-	  return u.cloneDeep(this.getStream()())
-	}
-
-	Subscription.prototype.setDependency = function setDependency (dependency) {
-	  u.forEach(this.getMember(), function (member) {
-	    member.setDependency(dependency)
-	  })
-
-	  return this
-	}
-
-	Subscription.prototype.on = u.createPolymorphic()
-	var on = Subscription.prototype.on
-	on.signature('string, function', function (type, func) {
-	  if (!u.isArray(this._events[type])) {
-	    throw new Error('Argument type is not a valid type')
-	  } else {
-	    var idx = this._events[type].length
-	    this._events[type].push(func)
-	  }
-	  return {
-	    stop: function () {
-	      delete this._events[type][idx]
-	    }
-	  }
-	})
-
-	module.exports = Subscription
-
-
-/***/ },
-/* 142 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Alo = __webpack_require__(140)
-	var alo = new Alo()
-	var u = alo.util
-
-	var subscriptionRelation = u.createObjectRelation('member', 'subscription', alo.isSubscription)
-
-	var Member = function Member () {
-	  this._dependency = {}
-	  this._function = null
-	  this._enabled = true
-
-	  subscriptionRelation.constructParent(this)
-	  member.apply(this, arguments)
-	}
-	var member = u.createPolymorphic()
-	member.signature('function', function (func) {
-	  return member.call(this, {}, func)
-	})
-	member.signature('object, function', function (dependency, func) {
-	  this.addDependency(dependency)
-	  this.setFunction(func)
-	})
-
-	subscriptionRelation.registerParentPrototype(Member.prototype)
-
-	Member.prototype._call = function _call () {
-	  if (this.isEnabled()) {
-	    var functionArguments = u.values(arguments)
-	    var dependency = this.getDependency()
-	    var dependencyCount = u.values(dependency).length
-	    if (dependencyCount > 0) {
-	      var state = {}
-	      u.forEach(dependency, function (dependencyItem, name) {
-	        if (u.isString(name) && name !== '' && u.isFunction(dependencyItem)) {
-	          state[name] = dependencyItem.apply(null, functionArguments)
-	        }
-	      })
-	      functionArguments[0] = state
-	    }
-	    this.getFunction().apply(null, functionArguments)
-	  }
-	  return this
-	}
-
-	Member.prototype.disable = function disable () {
-	  this._enabled = false
-	  return this
-	}
-
-	Member.prototype.enable = function enable () {
-	  this._enabled = true
-	  return this
-	}
-
-	Member.prototype.isEnabled = function isEnabled () {
-	  return this._enabled
-	}
-
-	Member.prototype.getFunction = function getFunction () {
-	  return this._function
-	}
-
-	Member.prototype.setFunction = function setFunction (func) {
-	  if (!u.isFunction(func)) {
-	    throw new Error('Argument given needs to be a function')
-	  } else {
-	    this._function = func
-	  }
-
-	  return this
-	}
-
-	Member.prototype.getDependency = function getDependency () {
-	  return this._dependency
-	}
-
-	Member.prototype.addDependency = u.createPolymorphic()
-	var addDependency = Member.prototype.addDependency
-	addDependency.signature('string, function', function (name, func) {
-	  if (name === '') {
-	    throw new Error('Dependency name should not be empty')
-	  } else {
-	    this._dependency[name] = func
-	  }
-
-	  return this
-	})
-	addDependency.signature('object', function addDependency (dependency) {
-	  var self = this
-
-	  u.forEach(dependency, function (func, name) {
-	    self.addDependency(name, func)
-	  })
-
-	  return this
-	})
-
-	Member.prototype.stop = function stop () {
-	  this.disable()
-	  this.removeSubscription()
-
-	  return this
-	}
-
-	module.exports = Member
-
-
-/***/ },
-/* 143 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Alo = __webpack_require__(140)
-	var alo = new Alo()
-	var u = alo.util
-
-	var storeRelation = u.createObjectRelation('reducer', 'store', alo.isStore)
-	var reducerRelation = u.createObjectRelation('reducer', 'parentReducer', alo.isReducer)
-	var parentReducerRelation = u.createObjectRelation('parentReducer', 'reducer', alo.isReducer)
-
-	/**
-	 * Reducer class
-	 * TODO: Describe what this class is all about
-	 *
-	 * @class
-	 */
-	var Reducer = function Reducer () {
-	  /**
-	   * Is this reducer enabled?
-	   *
-	   * @name _enabled
-	   * @memberof Reducer
-	   * @private
-	   */
-	  this._enabled = true
-
-	  /**
-	   * Unique ID of this reducer
-	   *
-	   * @name _id
-	   * @memberof Reducer
-	   * @private
-	   */
-	  this._id = null
-
-	  this._prepareFunction = false
-	  this._finalizeFunction = false
-
-	  /**
-	   * Array of registered reducers
-	   *
-	   * @name _reducers
-	   * @memberof Reducer
-	   * @private
-	   */
-	  this._reducerRelations = null
-
-	  /**
-	   * Object of registered stores
-	   *
-	   * @name _stores
-	   * @memberof Reducer
-	   * @private
-	   */
-	  this._storeRelations = null
-
-	  storeRelation.constructParent(this)
-	  reducerRelation.constructParent(this)
-	  parentReducerRelation.constructParent(this)
-
-	  reducer.apply(this, arguments)
-	}
-	var reducer = u.createPolymorphic()
-	reducer.signature('', function () {})
-	reducer.signature('function', function (prepareFunction) {
-	  this.setPrepare(prepareFunction)
-	})
-	reducer.signature('array', function (reducers) {
-	  this.addReducer(reducers)
-	})
-	reducer.signature('function, function', function (prepareFunction, finalizeFunction) {
-	  this.setPrepare(prepareFunction)
-	  this.setFinalize(finalizeFunction)
-	})
-	reducer.signature('function, array', function (prepareFunction, reducers) {
-	  this.setPrepare(prepareFunction)
-	  this.addReducer(reducers)
-	})
-	reducer.signature('function, function, array', function (prepareFunction, finalizeFunction, reducers) {
-	  this.setPrepare(prepareFunction)
-	  this.setFinalize(finalizeFunction)
-	  this.addReducer(reducers)
-	})
-
-	/**
-	 * Get id of this reducer
-	 *
-	 * @return {string} Unique ID of this reducer
-	 */
-	Reducer.prototype.getId = null
-
-	/**
-	 * Connect one or multible stores to this reducer
-	 *
-	 * @function
-	 *
-	 * @param {Store|array} store One store or array of stores
-	 * @param {boolean} fromStore Was this function called within a store
-	 *
-	 * @return {Reducer} this
-	 */
-	Reducer.prototype.addStore = null
-
-	/**
-	 * Remove a store or all stores from this reducer
-	 *
-	 * @function
-	 *
-	 * @param {integer|Store|boolean} store|fromStore
-	 * @param {boolean} fromStore Was this called within a store?
-	 *
-	 * @return {Reducer} this
-	 */
-	Reducer.prototype.removeStore = null
-
-	storeRelation.registerParentPrototype(Reducer.prototype)
-	reducerRelation.registerParentPrototype(Reducer.prototype)
-	parentReducerRelation.registerParentPrototype(Reducer.prototype)
-
-	/**
-	 *
-	 */
-	Reducer.prototype.setPrepare = function setReduce (func) {
-	  if (!u.isFunction(func)) {
-	    throw new Error('Argument for setReduce should be a function')
-	  } else {
-	    this._prepareFunction = func
-	  }
-	}
-
-	Reducer.prototype.hasPrepare = function hasPrepare () {
-	  return u.isFunction(this.getPrepare())
-	}
-
-	Reducer.prototype.getPrepare = function getPrepare () {
-	  return this._prepareFunction
-	}
-
-	Reducer.prototype.setFinalize = function setFinalize (func) {
-	  if (!u.isFunction(func)) {
-	    throw new Error('Argument for setReduce should be a function')
-	  } else {
-	    this._finalizeFunction = func
-	  }
-	}
-
-	Reducer.prototype.hasFinalize = function hasFinalize () {
-	  return u.isFunction(this.getFinalize())
-	}
-
-	Reducer.prototype.getFinalize = function getFinalize () {
-	  return this._finalizeFunction
-	}
-
-	/**
-	 * Calls the registered reducers with the provided state and action
-	 * This is automatically started after a successfull dispatch on the Store
-	 *
-	 * @private
-	 *
-	 * @param {object} state
-	 * @param {object} action
-	 *
-	 * @return {object} state Returns the changed state
-	 */
-	Reducer.prototype.reduce = function reduce (state, action) {
-	  if (this.isEnabled()) {
-	    var preparer = this.getPrepare()
-	    if (u.isFunction(preparer)) {
-	      state = preparer(u.cloneDeep(state), action)
-	    }
-	    u.forEach(this.getReducer(false), function (item) {
-	      state = item.reduce(u.cloneDeep(state), action)
-	    })
-	    var finalizer = this.getFinalize()
-	    if (u.isFunction(finalizer)) {
-	      state = finalizer(u.cloneDeep(state), action)
-	    }
-	  }
-
-	  return state
-	}
-
-	/**
-	 * Disables this reducer
-	 *
-	 * @return {Reducer} this
-	 */
-	Reducer.prototype.disable = function disable () {
-	  this._enabled = false
-
-	  return this
-	}
-
-	/**
-	 * Enables this reducer
-	 *
-	 * @return {Reducer} this
-	 */
-	Reducer.prototype.enable = function enable () {
-	  this._enabled = true
-
-	  return this
-	}
-
-	Reducer.prototype.isEnabled = function isEnabled () {
-	  return this._enabled
-	}
-
-	/**
-	 * Stops this reducer: it will be disabled and removed from all stores
-	 *
-	 * @return {Reducer} this
-	 */
-	Reducer.prototype.stop = function stop () {
-	  this.removeStore()
-	  this.disable()
-	  return this
-	}
-
-	module.exports = Reducer
-
-
-/***/ },
-/* 144 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Alo = __webpack_require__(140)
-	var alo = new Alo()
-	var u = alo.util
-
-	var reducerRelation = u.createObjectRelation('store', 'reducer', alo.isReducer)
-	var subscriptionRelation = u.createObjectRelation('store', 'subscription', alo.isSubscription)
-	var middlewareRelation = u.createObjectRelation('store', 'middleware', alo.isMiddleware)
-
-	/**
-	 * The core of Alo. A store is the central place for application state
-	 *
-	 * @class
-	 *
-	 * @param {Object} state - Optional object to set as a start state
-	 */
-	var Store = function Store (state, id) {
-	  if (state === undefined || state === null) {
-	    state = {}
-	  }
-
-	  /**
-	   * @private
-	   */
-
-	  /*
-	   * TODO: Document members
-	   */
-
-	  this._id = null
-	  if (u.isString(id)) {
-	    id = id.trim()
-	    if (id !== '') {
-	      this._id = id
-	    }
-	  }
-
-	  /**
-	   * Stream
-	   */
-	  this._stream = u.createStream(state)
-
-	  /**
-	   * Reducers
-	   */
-	  this._reducerRelations = null
-
-	  /**
-	   * Middlewares
-	   */
-	  this._middlewareRelations = null
-
-	  /**
-	   * Subscriptions
-	   */
-	  this._subscriptionRelations = null
-
-	  this._computedProperty = {}
-
-	  reducerRelation.constructParent(this)
-	  middlewareRelation.constructParent(this)
-	  subscriptionRelation.constructParent(this)
-	}
-
-	/*
-	 * Setup relations
-	 */
-
-	/**
-	 * Returns the id of the store
-	 *
-	 * @function
-	 */
-	Store.prototype.getId = null
-
-	/**
-	 * Returns the registered reducers
-	 *
-	 * @function
-	 * @return {array} Array of reducers
-	 */
-	Store.prototype.getReducer = null
-
-	/**
-	 * Adds a reducer object to the registered reducers
-	 *
-	 * @function
-	 * @param {Reducer} reducer
-	 *
-	 * @return {Store} this
-	 */
-	Store.prototype.addReducer = null
-
-	/**
-	 * Removes a reducer from the currently registered reducers
-	 *
-	 * @function
-	 * @param {int|Reducer} reducer id or Reducer
-	 *
-	 * @return {Store} this
-	 */
-	Store.prototype.removeReducer = null
-
-	/**
-	 * Returns the registered middlewares
-	 *
-	 * @function
-	 * @param {string} [id] The id is optional
-	 *
-	 * @return {array|Middleware|false} Array of middlewares, middleware with id, or false if middleware with id wasn't found
-	 */
-	Store.prototype.getMiddleware = null
-
-	/**
-	 * Registers one or multible middlewares on this store
-	 *
-	 * @function
-	 * @return {Store} this
-	 */
-	Store.prototype.addMiddleware = null
-
-	/**
-	 * Removes a middleware
-	 *
-	 * @function
-	 * @param {id|Middleware} id of middleware or middleware
-	 *
-	 * @return {Store} this
-	 */
-	Store.prototype.removeMiddleware
-
-	/**
-	 * Get a registered subscription by id
-	 *
-	 * @function
-	 */
-	Store.prototype.getSubscription = null
-
-	/**
-	 * Registers a subscription
-	 *
-	 * @function
-	 */
-	Store.prototype.addSubscription = null
-
-	/**
-	 * Removes a subscription
-	 *
-	 * @function
-	 */
-	Store.prototype.removeSubscription = null
-
-	reducerRelation.registerParentPrototype(Store.prototype)
-	middlewareRelation.registerParentPrototype(Store.prototype)
-	subscriptionRelation.registerParentPrototype(Store.prototype)
-
-	Store.prototype.addComputedProperty = u.createPolymorphic()
-	var addComputedProperty = Store.prototype.addComputedProperty
-	addComputedProperty.signature('string, array b=[], function', function (name, dependencies, func) {
-	  if (name === '') {
-	    throw new Error('Name of computed property should not be empty')
-	  } else {
-	    this._computedProperty[name] = {
-	      dependencies: dependencies,
-	      propertyFunction: func
-	    }
-	  }
-
-	  return this
-	})
-	addComputedProperty.signature('object', function (properties) {
-	  var self = this
-
-	  u.forEach(properties, function (func, name) {
-	    self.addComputedProperty(name, func)
-	  })
-
-	  return this
-	})
-
-	// TODO: Implement removeComputedProperty
-
-	/**
-	 * Creates and registers one or multible reducers
-	 *
-	 * @function
-	 *
-	 * @param {array|...function} Array or variadic call of one or multible reducer functions
-	 *
-	 * @return {Reducer}
-	 * @see Reducer
-	 */
-	Store.prototype.createReducer = function createReducer () {
-	  var reducer = alo.createReducer.apply(null, arguments)
-	  this.addReducer(reducer)
-
-	  return reducer
-	}
-
-	Store.prototype._getStateByNamespace = function _getStateByNamespace (namespace, state) {
-	  var self = this
-	  if (typeof (state) === 'undefined') {
-	    state = self.protected.state
-	  }
-	  namespace = self._getPreparedNamespace(namespace)
-	  u.forEach(namespace, function (currentNamespace) {
-	    if (state[currentNamespace] == null) {
-	      state[currentNamespace] = {}
-	    }
-	    state = state[currentNamespace]
-	  })
-	  return state
-	}
-
-	Store.prototype._getPreparedNamespace = function _getPreparedNamespace (namespace) {
-	  switch (typeof (namespace)) {
-	    case 'string':
-	      namespace = namespace.split('.')
-	      break
-	    case 'undefined':
-	      namespace = []
-	      break
-	  }
-	  return namespace
-	}
-
-	Store.prototype._getExtendedNamespace = function _getExtendedNamespace (extNamespace) {
-	  var self = this
-	  var namespace = self._getNamespace()
-	  extNamespace = self._getPreparedNamespace(extNamespace)
-	  return namespace.concat(extNamespace)
-	}
-
-	/**
-	 * Returns the stream of this store
-	 *
-	 * @return {stream} flyd stream
-	 */
-	Store.prototype.getStream = function getStream () {
-	  // TODO: Implement Stream Combine
-	  return this._stream
-	}
-
-	/**
-	 * Returns the current state
-	 *
-	 * @return {object} current state
-	 */
-	Store.prototype.getState = function getState () {
-	  return u.cloneDeep(this.getStream()())
-	}
-
-	Store.prototype.createSubscription = function createSubscription () {
-	  var subscription = alo.createSubscription.apply(null, arguments)
-	  this.addSubscription(subscription)
-	  return subscription
-	}
-
-	/**
-	 * Dispatches an action
-	 *
-	 * @function
-	 * @param {function|object} action An untyped action function that returns payload, or an action object
-	 *
-	 * @return {Store} this
-	 */
-	Store.prototype.dispatch = u.createPolymorphic()
-	var dispatch = Store.prototype.dispatch
-
-	dispatch.signature('Promise', function (promise) {
-	  var self = this
-
-	  return promise.then(function (action) {
-	    return self.dispatch(action)
-	  })
-	})
-
-	// Main dispatch signature
-	dispatch.signature('object', function (action) {
-	  var self = this
-
-	  var formatAction = function (action) {
-	    // Set the type to null if it is undefined
-	    if (action.type === undefined) {
-	      action.type = null
-	    }
-	    if (action.payload === undefined) {
-	      action.payload = null
-	    }
-	    return action
-	  }
-
-	  action = formatAction(action)
-
-	  var state = self.getState()
-
-	  return u.Promise.resolve().then(function () {
-	    /*
-	     * Start with middleware logic
-	     */
-	    var middlewares = self.getMiddleware()
-	    if (middlewares.length > 0) {
-	      /*
-	       * The middleware handling is done in a recursive manner
-	       */
-	      var idx = 0
-	      var handleMiddleware = function (idx) {
-	        return u.Promise.resolve(action).then(function (action) {
-	          return middlewares[idx](u.cloneDeep(state), action)
-	        }).then(function (result) {
-	          idx++
-	          if (!u.isObject(result)) {
-	            result = false
-	          }
-	          if (idx === middlewares.length || result === false) {
-	            return result
-	          } else {
-	            return handleMiddleware(idx)
-	          }
-	        })
-	      }
-	      return handleMiddleware(idx)
-	    } else {
-	      return action
-	    }
-	  }).then(function (action) {
-	    /*
-	     * Here is the final commit part
-	     */
-	    if (action === false) {
-	      return false
-	    } else {
-	      action = formatAction(action)
-	      u.forEach(self.getReducer(), function (reducer) {
-	        if (alo.isReducer(reducer)) {
-	          state = reducer.reduce(u.cloneDeep(state), action)
-	        }
-	      })
-
-	      /*
-	       * Add the computed properties into the mix
-	       */
-	      // TODO: Reimplement computed properties
-	      /*
-	      u.forEach(this.getComputedProperty, function (func, name) {
-	        state[name] = func(state)
-	      })*/
-
-	      // Apply the changed state
-	      var stream = self.getStream()
-	      stream(state)
-	    }
-	  })
-	})
-
-	// Alternative untyped dispatch signature
-	dispatch.signature('function', function (func) {
-	  var self = this
-
-	  return u.createPromise(function (resolve, reject) {
-	    var payload = func(self.getState())
-	    if (payload !== undefined) {
-	      return resolve(self.dispatch({payload: payload}))
-	    } else {
-	      return resolve()
-	    }
-	  })
-	})
-
-	module.exports = Store
-
-
-/***/ },
-/* 145 */
-/***/ function(module, exports) {
-
-	var Middleware = function Middleware () {}
-
-	module.exports = Middleware
-
-
-/***/ },
-/* 146 */
-/***/ function(module, exports) {
-
-	module.exports = function DependencyCache () {}
-
-
-/***/ },
-/* 147 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Util = __webpack_require__(2)
@@ -7508,6 +8803,1240 @@ var alo =
 	})
 
 	module.exports = ObjectRelation
+
+
+/***/ },
+/* 196 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Alo = __webpack_require__(1)
+	var alo = new Alo()
+	var u = alo.util
+
+	var storeRelation = u.createObjectRelation('subscription', 'store', alo.isStore)
+	var memberRelation = u.createObjectRelation('subscription', 'member', alo.isMember)
+	var dependencyRelation = u.createObjectRelation('subscription', 'dependency', alo.isDependency)
+
+	/**
+	 * Subscription Constructor, is used in the Store Class to create Subscriptions to state
+	 *
+	 * @class
+	 * @extends {Store}
+	 * @see Store
+	 * @param {number} id
+	 * @param {Object} storeProtected
+	 * @param {string | Array} namespace
+	 */
+	var Subscription = function Subscription () {
+	  this._id = null
+
+	  this._storeRelations = null
+	  this._memberRelations = null
+	  this._dependencyRelations = null
+
+	  this._events = {
+	    'beforePublish': [],
+	    'afterPublish': []
+	  }
+
+	  this._subscriptionStream = null
+	  this._stream = null
+	  this._lastData = {}
+
+	  this._muted = false
+
+	  storeRelation.constructParent(this)
+	  memberRelation.constructParent(this)
+	  dependencyRelation.constructParent(this)
+
+	  subscription.apply(this, arguments)
+	}
+
+	// TODO: Implement additional signatures
+	var subscription = u.createPolymorphic()
+	subscription.signature('', function () {})
+	subscription.signature('object, array', function (dependencies, members) {
+	  this._dependencyCache.setDependency(dependencies)
+	  this.addMember(members)
+	})
+	subscription.signature('object', function (dependencies) {
+	  this._dependencyCache.setDependency(dependencies)
+	})
+	subscription.signature('array', function (members) {
+	  this.addMember(members)
+	})
+	subscription.signature('function', function (func) {
+	  this.createMember(func)
+	})
+
+	Subscription.prototype.addMember = null
+	Subscription.prototype.getMember = null
+
+	var afterChange = function () {
+	  var self = this
+
+	  if (u.isStream(this._stream)) {
+	    this._stream.end(true)
+	    this._stream = null
+	  }
+	  if (u.isStream(this._subscriptionStream)) {
+	    this._subscriptionStream.end(true)
+	    this._subscriptionStream = null
+	  }
+
+	  var streams = []
+	  var stores = u.values(this.getStore())
+	  u.forEach(stores, function (store) {
+	    streams.push(store.getStream())
+	  })
+	  this._stream = u.combineStreams(function () {
+	    var streamState = {}
+	    u.forEach(u.values(arguments), function (stream, idx) {
+	      if (alo.isStore(stores[idx])) {
+	        streamState[stores[idx].getId()] = stream()
+	      }
+	    })
+	    return u.Promise.resolve().then(function () {
+	      var dependencies = self.getDependency(false)
+	      if (dependencies.length > 0) {
+	        var depsState = {
+	          state: streamState,
+	          computed: {}
+	        }
+	        var idx = 0
+	        var walker = function () {
+	          if (dependencies[idx] !== undefined) {
+	            if (alo.isDependency(dependencies[idx])) {
+	              return u.Promise.resolve().then(function () {
+	                return dependencies[idx].reduce(depsState)
+	              }).then(function (computed) {
+	                depsState.computed = computed
+	                idx++
+	                return walker()
+	              })
+	            } else {
+	              idx++
+	              return walker()
+	            }
+	          } else {
+	            return depsState.computed
+	          }
+	        }
+	        return walker()
+	      } else {
+	        return {}
+	      }
+	    }).then(function (computed) {
+	      return {stores: streamState, computed: computed}
+	    })
+	  }, streams)
+	  this._subscriptionStream = u.streamOn(function (data) {
+	    var computedLength = u.values(data.computed).length
+	    if ((computedLength === 0 && !u.isEqual(self._lastData.stores, data.stores)) ||
+	      (computedLength > 0 && !u.isEqual(self._lastData.computed, data.computed))
+	    ) {
+	      self._lastData = data
+	      self._publish(data)
+	    }
+	  }, this._stream)
+	}
+
+	storeRelation.after('add', afterChange)
+	storeRelation.after('remove', afterChange)
+
+	storeRelation.registerParentPrototype(Subscription.prototype)
+	memberRelation.registerParentPrototype(Subscription.prototype)
+	dependencyRelation.registerParentPrototype(Subscription.prototype)
+
+	Subscription.prototype.createMember = function createMember () {
+	  var member = alo.createMember.apply(null, arguments)
+	  this.addMember(member)
+
+	  return this
+	}
+
+	Subscription.prototype._callEvent = function (name, state) {
+	  var promises = this._events[name].map(function (func) {
+	    return u.Promise.resolve(state).then(func)
+	  })
+	  return u.Promise.all(promises).then(function (results) {
+	    var result = (results.indexOf(false) === -1)
+	    return result
+	  })
+	}
+
+	Subscription.prototype._publish = function (state) {
+	  var self = this
+	  if (self._muted === false) {
+	    self._muted = true
+	    var promise = u.Promise.resolve().then(function () {
+	      return self._callEvent('beforePublish', state)
+	    }).then(function (runPublish) {
+	      if (runPublish !== false) {
+	        var state = self.getData()
+	        var promises = []
+	        u.forEach(self.getMember(false), function (member) {
+	          promises.push(member._call(state.stores, state.computed))
+	        })
+	        return u.Promise.all(promises)
+	      } else {
+	        return false
+	      }
+	    }).then(function (runPublish) {
+	      if (runPublish !== false) {
+	        return self._callEvent('afterPublish', state)
+	      }
+	    }).then(function () {
+	      self._muted = false
+	      return null
+	    })
+	    return promise
+	  }
+	}
+
+	Subscription.prototype.enable = null
+	Subscription.prototype.disable = null
+
+	// TODO: Rewrite
+	Subscription.prototype.remember = function remember () {
+	  var self = this
+
+	  var promises = []
+
+	  u.forEach(this.getStore(), function (store) {
+	    promises.push(self._publish(store, store.getData()))
+	  })
+
+	  return u.Promise.all(promises)
+	}
+
+	Subscription.prototype.stop = function stop () {
+	  this.disable()
+	  this.removeStore()
+
+	  return this
+	}
+
+	Subscription.prototype.getStream = function getStream () {
+	  return this._stream
+	}
+
+	Subscription.prototype.getData = function getData () {
+	  return u.cloneDeep(this.getStream()())
+	}
+
+	Subscription.prototype.createDependency = function createDependency () {
+	  var dependency = alo.createDependency.apply(null, arguments)
+	  this.addDependency(dependency)
+
+	  return dependency
+	}
+
+	Subscription.prototype.on = u.createPolymorphic()
+	var on = Subscription.prototype.on
+	on.signature('string, function', function (type, func) {
+	  if (!u.isArray(this._events[type])) {
+	    throw new Error('Argument type is not a valid type')
+	  } else {
+	    var idx = this._events[type].length
+	    this._events[type].push(func)
+	  }
+	  return {
+	    stop: function () {
+	      delete this._events[type][idx]
+	    }
+	  }
+	})
+
+	module.exports = Subscription
+
+
+/***/ },
+/* 197 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Alo = __webpack_require__(1)
+	var alo = new Alo()
+	var u = alo.util
+
+	var dependencyRelation = u.createObjectRelation('dependency', 'parentDependency', alo.isDependency)
+	var parentDependencyRelation = u.createObjectRelation('parentDependency', 'dependency', alo.isDependency)
+	var storeRelation = u.createObjectRelation('dependency', 'store', alo.isStore)
+	var subscriptionRelation = u.createObjectRelation('dependency', 'subscription', alo.isSubscription)
+	var memberRelation = u.createObjectRelation('dependency', 'member', alo.isMember)
+
+	var Dependency = function Dependency () {
+	  this._beforeDependencies = {}
+	  this._afterDependencies = {}
+
+	  // TODO: Implement Cache Class
+	  this._cache = {}
+
+	  dependencyRelation.constructParent(this)
+	  parentDependencyRelation.constructParent(this)
+	  storeRelation.constructParent(this)
+	  subscriptionRelation.constructParent(this)
+	  memberRelation.constructParent(this)
+
+	  this.add.apply(this, arguments)
+	}
+
+	dependencyRelation.registerParentPrototype(Dependency.prototype)
+	parentDependencyRelation.registerParentPrototype(Dependency.prototype)
+	storeRelation.registerParentPrototype(Dependency.prototype)
+	subscriptionRelation.registerParentPrototype(Dependency.prototype)
+	memberRelation.registerParentPrototype(Dependency.prototype)
+
+	Dependency.prototype.get = u.createPolymorphic()
+	var get = Dependency.prototype.get
+	get.signature('string a=after', function (type) {
+	  switch (type) {
+	    case 'before':
+	      return this._beforeDependencies
+	    case 'after':
+	      return this._afterDependencies
+	    default:
+	      throw new Error('Argument for type should be before or after')
+	  }
+	})
+
+	Dependency.prototype.add = u.createPolymorphic()
+	var add = Dependency.prototype.add
+	add.signature('', function () {})
+	add.signature('object, string b=after', function (dependencies, type) {
+	  var self = this
+	  if (['before', 'after'].indexOf(type) === -1) {
+	    throw new Error('Argument type should be before or after')
+	  } else {
+	    u.forEach(dependencies, function (dependency, name) {
+	      if (u.isArray(dependency)) {
+	        self.add(name, dependency[0], dependency[1], type)
+	      } else {
+	        self.add(name, dependency, type)
+	      }
+	    })
+	  }
+
+	  return this
+	})
+	add.signature('string, array, function, string a=after', function (name, dependencies, func, type) {
+	  u.forEach(dependencies, function (dependency) {
+	    if (!u.isString(dependency) || dependency === '') {
+	      throw new Error('Dependency should be a string and not empty')
+	    }
+	  })
+	  switch (type) {
+	    case 'before':
+	      this._beforeDependencies[name] = [dependencies, func]
+	      break
+	    case 'after':
+	      this._afterDependencies[name] = [dependencies, func]
+	      break
+	    default:
+	      throw new Error('Type should be before or after')
+	  }
+
+	  return this
+	})
+	add.signature('string, function, string a=after', function (name, func, type) {
+	  return add.call(this, name, [], func, type)
+	})
+
+	Dependency.prototype.remove = function remove (name, type) {
+	  if (type !== undefined && ['before', 'after'].indexOf(type) === -1) {
+	    throw new Error('Argument for type should be before or after')
+	  } else {
+	    if (type === undefined || type === 'before') {
+	      this._beforeDependencies = false
+	    }
+	    if (type === undefined || type === 'after') {
+	      this._afterDependencies = false
+	    }
+	  }
+
+	  return this
+	}
+
+	Dependency.prototype.reduce = function reduce (state) {
+	  var self = this
+
+	  var walkDependencies = function (dependencies, called) {
+	    var pairs = u.toPairs(dependencies)
+	    if (called === undefined) {
+	      called = []
+	    }
+	    var idx = 0
+	    var walker = function () {
+	      if (pairs[idx] !== undefined) {
+	        return u.Promise.resolve().then(function () {
+	          return walkDependency(called, pairs[idx], dependencies)
+	        }).then(function (newCalled) {
+	          called = newCalled
+	          idx++
+	          return walker()
+	        })
+	      } else {
+	        return called
+	      }
+	    }
+	    return walker()
+	  }
+
+	  var walkDependency = function (called, properties, dependencies) {
+	    var name = properties[0]
+	    var deps = properties[1][0]
+	    var func = properties[1][1]
+	    if (called.indexOf(name) === -1) {
+	      return u.Promise.resolve().then(function () {
+	        if (deps.length > 0) {
+	          var filteredDeps = u.filter(deps, function (name) {
+	            return (state.computed[name] === undefined)
+	          })
+	          var preparedDeps = {}
+	          u.forEach(filteredDeps, function (name) {
+	            preparedDeps[name] = dependencies[name]
+	          })
+	          return walkDependencies(preparedDeps, called)
+	        } else {
+	          return called
+	        }
+	      }).then(function (called) {
+	        var recalculate = true
+	        if (deps.length > 0) {
+	          recalculate = false
+	          u.forEach(deps, function (name) {
+	            if (!u.isEqual(state.computed[name], self._cache[name])) {
+	              recalculate = true
+	              return false
+	            }
+	          })
+	        }
+	        if (recalculate) {
+	          if (u.isFunction(func)) {
+	            return func(state.state, state.computed, state.action)
+	          } else {
+	            return null
+	          }
+	        } else {
+	          return self._cache[name]
+	        }
+	      }).then(function (result) {
+	        if (result === undefined) {
+	          result = null
+	        }
+	        state.computed[name] = result
+	        called.push(name)
+	        return called
+	      })
+	    } else {
+	      return called
+	    }
+	  }
+
+	  var nextDependencies = {
+	    before: this.get('before'),
+	    after: this.get('after')
+	  }
+
+	  return u.Promise.resolve().then(function () {
+	    return walkDependencies(nextDependencies.before, [])
+	  }).then(function (called) {
+	    var idx = 0
+	    var relationDependencies = self.getDependency(false)
+	    var walker = function () {
+	      if (relationDependencies[idx] !== undefined) {
+	        if (alo.isDependency(relationDependencies[idx])) {
+	          return u.Promise.resolve().then(function () {
+	            return relationDependencies[idx].reduce(state)
+	          }).then(function (computed, called) {
+	            state.computed = computed
+	            idx++
+	            return walker()
+	          })
+	        } else {
+	          idx++
+	          return walker()
+	        }
+	      } else {
+	        return true
+	      }
+	    }
+	    return walker()
+	  }).then(function () {
+	    return walkDependencies(nextDependencies.after, [])
+	  }).then(function () {
+	    self._cache = state.computed
+	    return state.computed
+	  })
+	}
+
+	module.exports = Dependency
+
+
+/***/ },
+/* 198 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Alo = __webpack_require__(1)
+	var alo = new Alo()
+	var u = alo.util
+
+	var subscriptionRelation = u.createObjectRelation('member', 'subscription', alo.isSubscription)
+
+	var Member = function Member () {
+	  this._dependency = {}
+	  this._function = null
+	  this._enabled = true
+
+	  subscriptionRelation.constructParent(this)
+	  member.apply(this, arguments)
+	}
+	var member = u.createPolymorphic()
+	member.signature('function', function (func) {
+	  return member.call(this, {}, func)
+	})
+	member.signature('object, function', function (dependency, func) {
+	  this.addDependency(dependency)
+	  this.setFunction(func)
+	})
+
+	subscriptionRelation.registerParentPrototype(Member.prototype)
+
+	Member.prototype._call = function _call (stores, computed) {
+	  if (this.isEnabled()) {
+	    var func = this.getFunction()
+	    if (u.isFunction(func)) {
+	      func(stores, computed)
+	    }
+	  }
+	  return this
+	}
+
+	Member.prototype.disable = function disable () {
+	  this._enabled = false
+	  return this
+	}
+
+	Member.prototype.enable = function enable () {
+	  this._enabled = true
+	  return this
+	}
+
+	Member.prototype.isEnabled = function isEnabled () {
+	  return this._enabled
+	}
+
+	Member.prototype.getFunction = function getFunction () {
+	  return this._function
+	}
+
+	Member.prototype.setFunction = function setFunction (func) {
+	  if (!u.isFunction(func)) {
+	    throw new Error('Argument given needs to be a function')
+	  } else {
+	    this._function = func
+	  }
+
+	  return this
+	}
+
+	Member.prototype.getDependency = function getDependency () {
+	  return this._dependency
+	}
+
+	Member.prototype.addDependency = u.createPolymorphic()
+	var addDependency = Member.prototype.addDependency
+	addDependency.signature('string, function', function (name, func) {
+	  if (name === '') {
+	    throw new Error('Dependency name should not be empty')
+	  } else {
+	    this._dependency[name] = func
+	  }
+
+	  return this
+	})
+	addDependency.signature('object', function addDependency (dependency) {
+	  var self = this
+
+	  u.forEach(dependency, function (func, name) {
+	    self.addDependency(name, func)
+	  })
+
+	  return this
+	})
+
+	Member.prototype.stop = function stop () {
+	  this.disable()
+	  this.removeSubscription()
+
+	  return this
+	}
+
+	module.exports = Member
+
+
+/***/ },
+/* 199 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Alo = __webpack_require__(1)
+	var alo = new Alo()
+	var u = alo.util
+
+	var storeRelation = u.createObjectRelation('reducer', 'store', alo.isStore)
+	var reducerRelation = u.createObjectRelation('reducer', 'parentReducer', alo.isReducer)
+	var parentReducerRelation = u.createObjectRelation('parentReducer', 'reducer', alo.isReducer)
+
+	/**
+	 * Reducer class
+	 * TODO: Describe what this class is all about
+	 *
+	 * @class
+	 */
+	var Reducer = function Reducer () {
+	  /**
+	   * Is this reducer enabled?
+	   *
+	   * @name _enabled
+	   * @memberof Reducer
+	   * @private
+	   */
+	  this._enabled = true
+
+	  /**
+	   * Unique ID of this reducer
+	   *
+	   * @name _id
+	   * @memberof Reducer
+	   * @private
+	   */
+	  this._id = null
+
+	  this._prepareFunction = false
+	  this._finalizeFunction = false
+
+	  /**
+	   * Array of registered reducers
+	   *
+	   * @name _reducers
+	   * @memberof Reducer
+	   * @private
+	   */
+	  this._reducerRelations = null
+
+	  /**
+	   * Object of registered stores
+	   *
+	   * @name _stores
+	   * @memberof Reducer
+	   * @private
+	   */
+	  this._storeRelations = null
+
+	  storeRelation.constructParent(this)
+	  reducerRelation.constructParent(this)
+	  parentReducerRelation.constructParent(this)
+
+	  reducer.apply(this, arguments)
+	}
+	var reducer = u.createPolymorphic()
+	reducer.signature('', function () {})
+	reducer.signature('function', function (prepareFunction) {
+	  this.set('prepare', prepareFunction)
+	})
+	reducer.signature('array', function (reducers) {
+	  this.addReducer(reducers)
+	})
+	reducer.signature('function, function', function (prepareFunction, finalizeFunction) {
+	  this.set('prepare', prepareFunction)
+	  this.set(finalizeFunction)
+	})
+	reducer.signature('function, array', function (prepareFunction, reducers) {
+	  this.set('prepare', prepareFunction)
+	  this.addReducer(reducers)
+	})
+	reducer.signature('function, function, array', function (prepareFunction, finalizeFunction, reducers) {
+	  this.set('prepare', prepareFunction)
+	  this.set(finalizeFunction)
+	  this.addReducer(reducers)
+	})
+
+	/**
+	 * Get id of this reducer
+	 *
+	 * @return {string} Unique ID of this reducer
+	 */
+	Reducer.prototype.getId = null
+
+	/**
+	 * Connect one or multible stores to this reducer
+	 *
+	 * @function
+	 *
+	 * @param {Store|array} store One store or array of stores
+	 * @param {boolean} fromStore Was this function called within a store
+	 *
+	 * @return {Reducer} this
+	 */
+	Reducer.prototype.addStore = null
+
+	/**
+	 * Remove a store or all stores from this reducer
+	 *
+	 * @function
+	 *
+	 * @param {integer|Store|boolean} store|fromStore
+	 * @param {boolean} fromStore Was this called within a store?
+	 *
+	 * @return {Reducer} this
+	 */
+	Reducer.prototype.removeStore = null
+
+	storeRelation.registerParentPrototype(Reducer.prototype)
+	reducerRelation.registerParentPrototype(Reducer.prototype)
+	parentReducerRelation.registerParentPrototype(Reducer.prototype)
+
+	/**
+	 *
+	 */
+	Reducer.prototype.set = u.createPolymorphic()
+	var set = Reducer.prototype.set
+	set.signature('string a=finalize, function', function (type, func) {
+	  switch (type) {
+	    case 'prepare':
+	      this._prepareFunction = func
+	      break
+	    case 'finalize':
+	      this._finalizeFunction = func
+	      break
+	    default:
+	      throw new Error('Argument for type should be prepare or finalize')
+	  }
+
+	  return this
+	})
+
+	Reducer.prototype.has = u.createPolymorphic()
+	var has = Reducer.prototype.has
+	has.signature('string a=finalize', function (type) {
+	  switch (type) {
+	    case 'prepare':
+	      return u.isFunction(this.get(type))
+	    case 'finalize':
+	      return u.isFunction(this.get(type))
+	    default:
+	      throw new Error('Argument for type should be prepare or finalize')
+	  }
+	})
+
+	Reducer.prototype.get = u.createPolymorphic()
+	var get = Reducer.prototype.get
+	get.signature('string a=finalize', function get (type) {
+	  switch (type) {
+	    case 'prepare':
+	      return this._prepareFunction
+	    case 'finalize':
+	      return this._finalizeFunction
+	    default:
+	      throw new Error('Argument for type should be prepare or finalize')
+	  }
+	})
+
+	Reducer.prototype.unset = function (type) {
+	  if (type !== undefined && ['prepare', 'finalize'].indexOf(type) === -1) {
+	    throw new Error('Argument for type should be prepare or finalize')
+	  } else {
+	    if (type === undefined || type === 'prepare') {
+	      this._prepareFunction = false
+	    }
+	    if (type === undefined || type === 'finalize') {
+	      this._finalizeFunction = false
+	    }
+	  }
+
+	  return this
+	}
+
+	/**
+	 * Calls the registered reducers with the provided state and action
+	 * This is automatically started after a successfull dispatch on the Store
+	 *
+	 * @private
+	 *
+	 * @param {object} state
+	 * @param {object} action
+	 *
+	 * @return {object} state Returns the changed state
+	 */
+	Reducer.prototype.reduce = function reduce (state, action) {
+	  if (this.isEnabled()) {
+	    var preparer = this.get('prepare')
+	    if (u.isFunction(preparer)) {
+	      state = preparer(u.cloneDeep(state), action)
+	    }
+	    u.forEach(this.getReducer(false), function (item) {
+	      state = item.reduce(u.cloneDeep(state), action)
+	    })
+	    var finalizer = this.get('finalize')
+	    if (u.isFunction(finalizer)) {
+	      state = finalizer(u.cloneDeep(state), action)
+	    }
+	  }
+
+	  return state
+	}
+
+	/**
+	 * Disables this reducer
+	 *
+	 * @return {Reducer} this
+	 */
+	Reducer.prototype.disable = function disable () {
+	  this._enabled = false
+
+	  return this
+	}
+
+	/**
+	 * Enables this reducer
+	 *
+	 * @return {Reducer} this
+	 */
+	Reducer.prototype.enable = function enable () {
+	  this._enabled = true
+
+	  return this
+	}
+
+	Reducer.prototype.isEnabled = function isEnabled () {
+	  return this._enabled
+	}
+
+	/**
+	 * Stops this reducer: it will be disabled and removed from all stores
+	 *
+	 * @return {Reducer} this
+	 */
+	Reducer.prototype.stop = function stop () {
+	  this.removeStore()
+	  this.disable()
+	  return this
+	}
+
+	module.exports = Reducer
+
+
+/***/ },
+/* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Alo = __webpack_require__(1)
+	var alo = new Alo()
+	var u = alo.util
+
+	var reducerRelation = u.createObjectRelation('store', 'reducer', alo.isReducer)
+	var subscriptionRelation = u.createObjectRelation('store', 'subscription', alo.isSubscription)
+	var middlewareRelation = u.createObjectRelation('store', 'middleware', alo.isMiddleware)
+	var computedPropertyRelation = u.createObjectRelation('store', 'computedProperty', alo.isDependency)
+
+	/**
+	 * The core of Alo. A store is the central place for application state
+	 *
+	 * @class
+	 *
+	 * @param {Object} state - Optional object to set as a start state
+	 */
+	var Store = function Store (state, id) {
+	  if (state === undefined || state === null) {
+	    state = {}
+	  }
+	  state = {
+	    state: state,
+	    computed: state,
+	    action: null
+	  }
+
+	  /**
+	   * @private
+	   */
+
+	  /*
+	   * TODO: Document members
+	   */
+
+	  this._id = null
+	  if (u.isString(id)) {
+	    id = id.trim()
+	    if (id !== '') {
+	      this._id = id
+	    }
+	  }
+
+	  /**
+	   * Stream
+	   */
+	  this._stream = u.createStream(state)
+
+	  /**
+	   * Reducers
+	   */
+	  this._reducerRelations = null
+
+	  /**
+	   * Middlewares
+	   */
+	  this._middlewareRelations = null
+
+	  /**
+	   * Subscriptions
+	   */
+	  this._subscriptionRelations = null
+
+	  this._computedProperty = {}
+
+	  reducerRelation.constructParent(this)
+	  middlewareRelation.constructParent(this)
+	  subscriptionRelation.constructParent(this)
+	  computedPropertyRelation.constructParent(this)
+	}
+
+	/*
+	 * Setup relations
+	 */
+
+	/**
+	 * Returns the id of the store
+	 *
+	 * @function
+	 */
+	Store.prototype.getId = null
+
+	/**
+	 * Returns the registered reducers
+	 *
+	 * @function
+	 * @return {array} Array of reducers
+	 */
+	Store.prototype.getReducer = null
+
+	/**
+	 * Adds a reducer object to the registered reducers
+	 *
+	 * @function
+	 * @param {Reducer} reducer
+	 *
+	 * @return {Store} this
+	 */
+	Store.prototype.addReducer = null
+
+	/**
+	 * Removes a reducer from the currently registered reducers
+	 *
+	 * @function
+	 * @param {int|Reducer} reducer id or Reducer
+	 *
+	 * @return {Store} this
+	 */
+	Store.prototype.removeReducer = null
+
+	/**
+	 * Returns the registered middlewares
+	 *
+	 * @function
+	 * @param {string} [id] The id is optional
+	 *
+	 * @return {array|Middleware|false} Array of middlewares, middleware with id, or false if middleware with id wasn't found
+	 */
+	Store.prototype.getMiddleware = null
+
+	/**
+	 * Registers one or multible middlewares on this store
+	 *
+	 * @function
+	 * @return {Store} this
+	 */
+	Store.prototype.addMiddleware = null
+
+	/**
+	 * Removes a middleware
+	 *
+	 * @function
+	 * @param {id|Middleware} id of middleware or middleware
+	 *
+	 * @return {Store} this
+	 */
+	Store.prototype.removeMiddleware
+
+	/**
+	 * Get a registered subscription by id
+	 *
+	 * @function
+	 */
+	Store.prototype.getSubscription = null
+
+	/**
+	 * Registers a subscription
+	 *
+	 * @function
+	 */
+	Store.prototype.addSubscription = null
+
+	/**
+	 * Removes a subscription
+	 *
+	 * @function
+	 */
+	Store.prototype.removeSubscription = null
+
+	reducerRelation.registerParentPrototype(Store.prototype)
+	middlewareRelation.registerParentPrototype(Store.prototype)
+	subscriptionRelation.registerParentPrototype(Store.prototype)
+	computedPropertyRelation.registerParentPrototype(Store.prototype)
+
+	/**
+	 * Creates and registers one or multible reducers
+	 *
+	 * @function
+	 *
+	 * @param {array|...function} Array or variadic call of one or multible reducer functions
+	 *
+	 * @return {Reducer}
+	 * @see Reducer
+	 */
+	Store.prototype.createReducer = function createReducer () {
+	  var reducer = alo.createReducer.apply(null, arguments)
+	  this.addReducer(reducer)
+
+	  return reducer
+	}
+
+	Store.prototype._getStateByNamespace = function _getStateByNamespace (namespace, state) {
+	  var self = this
+	  if (typeof (state) === 'undefined') {
+	    state = self.protected.state
+	  }
+	  namespace = self._getPreparedNamespace(namespace)
+	  u.forEach(namespace, function (currentNamespace) {
+	    if (state[currentNamespace] == null) {
+	      state[currentNamespace] = {}
+	    }
+	    state = state[currentNamespace]
+	  })
+	  return state
+	}
+
+	Store.prototype._getPreparedNamespace = function _getPreparedNamespace (namespace) {
+	  switch (typeof (namespace)) {
+	    case 'string':
+	      namespace = namespace.split('.')
+	      break
+	    case 'undefined':
+	      namespace = []
+	      break
+	  }
+	  return namespace
+	}
+
+	Store.prototype._getExtendedNamespace = function _getExtendedNamespace (extNamespace) {
+	  var self = this
+	  var namespace = self._getNamespace()
+	  extNamespace = self._getPreparedNamespace(extNamespace)
+	  return namespace.concat(extNamespace)
+	}
+
+	/**
+	 * Returns the stream of this store
+	 *
+	 * @return {stream} flyd stream
+	 */
+	Store.prototype.getStream = function getStream () {
+	  // TODO: Implement Stream Combine
+	  return this._stream
+	}
+
+	/**
+	 * Returns the current state
+	 *
+	 * @return {object} current state
+	 */
+	Store.prototype.getData = function getData () {
+	  return u.cloneDeep(this.getStream()())
+	}
+
+	Store.prototype.getState = function getState () {
+	  return this.getData().state
+	}
+
+	Store.prototype.createComputedProperty = function createComputedProperty () {
+	  var dependency = alo.createDependency.apply(null, arguments)
+	  this.addComputedProperty(dependency)
+
+	  return dependency
+	}
+
+	Store.prototype.createSubscription = function createSubscription () {
+	  var subscription = alo.createSubscription.apply(null, arguments)
+	  this.addSubscription(subscription)
+	  return subscription
+	}
+
+	/**
+	 * Dispatches an action
+	 *
+	 * @function
+	 * @param {function|object} action An untyped action function that returns payload, or an action object
+	 *
+	 * @return {Store} this
+	 */
+	Store.prototype.dispatch = function () {
+	  var self = this
+	  var dispatchArguments = arguments
+
+	  var formatAction = function (action) {
+	    // Set the type to null if it is undefined
+	    if (action.type === undefined) {
+	      action.type = null
+	    }
+	    if (action.payload === undefined) {
+	      action.payload = null
+	    }
+	    return action
+	  }
+
+	  return u.Promise.resolve().then(function () {
+	    /*
+	     * Start with middleware logic
+	     */
+	    var middlewares = self.getMiddleware(false)
+	    if (middlewares.length > 0) {
+	      /*
+	       * The middleware handling is done in a recursive manner
+	       */
+	      var idx = 0
+	      var walker = function () {
+	        if (middlewares[idx] !== undefined) {
+	          if (alo.isMiddleware(middlewares[idx])) {
+	            return u.Promise.resolve().then(function () {
+	              var args = u.values(dispatchArguments)
+	              args.unshift(self)
+	              return middlewares[idx]._apply(null, args)
+	            }).then(function () {
+	              dispatchArguments = arguments
+	              idx++
+	              return walker()
+	            })
+	          } else {
+	            idx++
+	            return walker()
+	          }
+	        } else {
+	          return dispatchArguments[0]
+	        }
+	      }
+	      return walker()
+	    } else {
+	      return dispatchArguments[0]
+	    }
+	  }).then(function (action) {
+	    /*
+	     * Here is the final commit part
+	     */
+	    if (!u.isPlainObject(action)) {
+	      return false
+	    } else {
+	      action = formatAction(action)
+	      var state = self.getData()
+	      var newState = state.state
+	      u.forEach(self.getReducer(false), function (reducer) {
+	        if (alo.isReducer(reducer)) {
+	          newState = reducer.reduce(u.cloneDeep(newState), action)
+	        }
+	      })
+
+	      newState = {
+	        state: newState,
+	        computed: {},
+	        action: action
+	      }
+
+	      return u.Promise.resolve().then(function () {
+	        /*
+	         * Add the computed properties into the mix
+	         */
+	        var computedProperties = self.getComputedProperty(false)
+	        if (computedProperties.length > 0) {
+	          var idx = 0
+	          var walker = function () {
+	            if (computedProperties[idx] !== undefined) {
+	              if (alo.isDependency(computedProperties[idx])) {
+	                return u.Promise.resolve().then(function () {
+	                  return computedProperties[idx].reduce(u.cloneDeep(newState))
+	                }).then(function (computed) {
+	                  newState.computed = computed
+	                  idx++
+	                  return walker()
+	                })
+	              } else {
+	                idx++
+	                return walker()
+	              }
+	            } else {
+	              return newState
+	            }
+	          }
+	          return walker()
+	        } else {
+	          return newState
+	        }
+	      }).then(function (newState) {
+	        // Apply the changed state
+	        var stream = self.getStream()
+	        stream(newState)
+	      })
+	    }
+	  })
+	}
+
+	/*
+	var dispatch = Store.prototype.dispatch
+
+	dispatch.signature('Promise', function (promise) {
+	  var self = this
+
+	  return promise.then(function (action) {
+	    return self.dispatch(action)
+	  })
+	})
+
+	// Main dispatch signature
+	dispatch.signature('object', function (action) {
+	})
+
+	// Alternative untyped dispatch signature
+	dispatch.signature('function', function (func) {
+	  var self = this
+
+	  return u.createPromise(function (resolve, reject) {
+	    var payload = func(self.getState())
+	    if (payload !== undefined) {
+	      return resolve(self.dispatch({payload: payload}))
+	    } else {
+	      return resolve()
+	    }
+	  })
+	})
+	*/
+
+	module.exports = Store
+
+
+/***/ },
+/* 201 */
+/***/ function(module, exports) {
+
+	var Middleware = function Middleware () {}
+
+	module.exports = Middleware
 
 
 /***/ }

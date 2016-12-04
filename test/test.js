@@ -1,6 +1,7 @@
 /* global describe, it */
 
-var alo = require('../main/alo.full.js')
+var Alo = require('../main/alo.full.js')
+var alo = new Alo()
 var assert = require('assert')
 
 describe('Alo', function () {
