@@ -1,6 +1,6 @@
 {
   "name": "alo",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "A minimalist approach to javascript state management",
   "main": "main/alo.full.js",
   "scripts": {
