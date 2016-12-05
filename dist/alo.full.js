@@ -65,7 +65,7 @@ var alo =
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = function Alo () {
+	var Alo = function Alo (id) {
 	  var Util = __webpack_require__(2)
 
 	  /**
@@ -74,6 +74,7 @@ var alo =
 	   * @see util
 	   */
 	  this.util = new Util()
+	  this._id = (this.util.isString(id) && id !== '') ? id : this.util.uniqueId()
 	}
 
 	Alo.prototype.createSubscription = function createSubscription () {
@@ -162,6 +163,7 @@ var alo =
 	  var Store = __webpack_require__(200)
 	  var store = Object.create(Store.prototype)
 	  Store.apply(store, arguments)
+	  store._alo = this
 	  return store
 	}
 
@@ -172,9 +174,12 @@ var alo =
 	 *
 	 * @return {boolean} true of it is a store, false in the other case
 	 */
-	Alo.prototype.isStore = function isStore (store) {
+	Alo.prototype.isStore = function isStore (store, validateId) {
+	  validateId = (validateId === true)
 	  var Store = __webpack_require__(200)
-	  return (store instanceof Store)
+	  var isStore = (store instanceof Store)
+	  var idValid = !validateId || (store._alo && store._alo._id === this._id)
+	  return isStore && idValid
 	}
 
 	Alo.prototype.isMiddleware = function isMiddleware (middleware) {
@@ -8854,7 +8859,7 @@ var alo =
 
 	  this._subscriptionStream = null
 	  this._stream = null
-	  this._lastData = {}
+	  this._lastData = null
 
 	  this._muted = false
 
@@ -8869,11 +8874,11 @@ var alo =
 	var subscription = u.createPolymorphic()
 	subscription.signature('', function () {})
 	subscription.signature('object, array', function (dependencies, members) {
-	  this._dependencyCache.setDependency(dependencies)
+	  this.setDependency(dependencies)
 	  this.addMember(members)
 	})
 	subscription.signature('object', function (dependencies) {
-	  this._dependencyCache.setDependency(dependencies)
+	  this.setDependency(dependencies)
 	})
 	subscription.signature('array', function (members) {
 	  this.addMember(members)
@@ -8921,7 +8926,7 @@ var alo =
 	          if (dependencies[idx] !== undefined) {
 	            if (alo.isDependency(dependencies[idx])) {
 	              return u.Promise.resolve().then(function () {
-	                return dependencies[idx].reduce(depsState)
+	                return dependencies[idx].reduce(self.getId(), depsState)
 	              }).then(function (computed) {
 	                depsState.computed = computed
 	                idx++
@@ -8945,7 +8950,8 @@ var alo =
 	  }, streams)
 	  this._subscriptionStream = u.streamOn(function (data) {
 	    var computedLength = u.values(data.computed).length
-	    if ((computedLength === 0 && !u.isEqual(self._lastData.stores, data.stores)) ||
+	    if (self._lastData === null ||
+	      (computedLength === 0 && !u.isEqual(self._lastData.stores, data.stores)) ||
 	      (computedLength > 0 && !u.isEqual(self._lastData.computed, data.computed))
 	    ) {
 	      self._lastData = data
@@ -8965,7 +8971,7 @@ var alo =
 	  var member = alo.createMember.apply(null, arguments)
 	  this.addMember(member)
 
-	  return this
+	  return member
 	}
 
 	Subscription.prototype._callEvent = function (name, state) {
@@ -9082,7 +9088,6 @@ var alo =
 	  this._beforeDependencies = {}
 	  this._afterDependencies = {}
 
-	  // TODO: Implement Cache Class
 	  this._cache = {}
 
 	  dependencyRelation.constructParent(this)
@@ -9170,8 +9175,9 @@ var alo =
 	  return this
 	}
 
-	Dependency.prototype.reduce = function reduce (state) {
+	Dependency.prototype.reduce = function reduce (id, data) {
 	  var self = this
+	  self._cache[id] = self._cache[id] || {}
 
 	  var walkDependencies = function (dependencies, called) {
 	    var pairs = u.toPairs(dependencies)
@@ -9203,7 +9209,7 @@ var alo =
 	      return u.Promise.resolve().then(function () {
 	        if (deps.length > 0) {
 	          var filteredDeps = u.filter(deps, function (name) {
-	            return (state.computed[name] === undefined)
+	            return (data.computed[name] === undefined)
 	          })
 	          var preparedDeps = {}
 	          u.forEach(filteredDeps, function (name) {
@@ -9218,7 +9224,7 @@ var alo =
 	        if (deps.length > 0) {
 	          recalculate = false
 	          u.forEach(deps, function (name) {
-	            if (!u.isEqual(state.computed[name], self._cache[name])) {
+	            if (!u.isEqual(data.computed[name], self._cache[id][name])) {
 	              recalculate = true
 	              return false
 	            }
@@ -9226,18 +9232,18 @@ var alo =
 	        }
 	        if (recalculate) {
 	          if (u.isFunction(func)) {
-	            return func(state.state, state.computed, state.action)
+	            return func(data.state, data.computed, data.action)
 	          } else {
 	            return null
 	          }
 	        } else {
-	          return self._cache[name]
+	          return self._cache[id][name]
 	        }
 	      }).then(function (result) {
 	        if (result === undefined) {
 	          result = null
 	        }
-	        state.computed[name] = result
+	        data.computed[name] = result
 	        called.push(name)
 	        return called
 	      })
@@ -9260,9 +9266,9 @@ var alo =
 	      if (relationDependencies[idx] !== undefined) {
 	        if (alo.isDependency(relationDependencies[idx])) {
 	          return u.Promise.resolve().then(function () {
-	            return relationDependencies[idx].reduce(state)
+	            return relationDependencies[idx].reduce(self.getId(), data)
 	          }).then(function (computed, called) {
-	            state.computed = computed
+	            data.computed = computed
 	            idx++
 	            return walker()
 	          })
@@ -9278,8 +9284,8 @@ var alo =
 	  }).then(function () {
 	    return walkDependencies(nextDependencies.after, [])
 	  }).then(function () {
-	    self._cache = state.computed
-	    return state.computed
+	    self._cache[id] = data.computed
+	    return data.computed
 	  })
 	}
 
@@ -9295,34 +9301,91 @@ var alo =
 	var u = alo.util
 
 	var subscriptionRelation = u.createObjectRelation('member', 'subscription', alo.isSubscription)
+	var dependencyRelation = u.createObjectRelation('member', 'dependency', alo.isDependency)
 
 	var Member = function Member () {
 	  this._dependency = {}
 	  this._function = null
 	  this._enabled = true
+	  this._lastData = null
 
 	  subscriptionRelation.constructParent(this)
+	  dependencyRelation.constructParent(this)
 	  member.apply(this, arguments)
 	}
 	var member = u.createPolymorphic()
 	member.signature('function', function (func) {
-	  return member.call(this, {}, func)
+	  this.setFunction(func)
 	})
-	member.signature('object, function', function (dependency, func) {
-	  this.addDependency(dependency)
+	member.signature('object', function (dependencies) {
+	  this.addDependency(dependencies)
+	})
+	member.signature('object, function', function (dependencies, func) {
+	  this.addDependency(dependencies)
 	  this.setFunction(func)
 	})
 
 	subscriptionRelation.registerParentPrototype(Member.prototype)
+	dependencyRelation.registerParentPrototype(Member.prototype)
 
 	Member.prototype._call = function _call (stores, computed) {
+	  var self = this
+
 	  if (this.isEnabled()) {
-	    var func = this.getFunction()
+	    var func = self.getFunction()
+	    if (u.isFunction(func)) {
+	      return u.Promise.resolve().then(function () {
+	        var dependencies = self.getDependency(false)
+	        if (dependencies.length > 0) {
+	          var idx = 0
+	          var depsState = {
+	            state: stores,
+	            computed: {}
+	          }
+	          var walker = function () {
+	            if (dependencies[idx] !== undefined) {
+	              if (alo.isDependency(dependencies[idx])) {
+	                return u.Promise.resolve().then(function () {
+	                  return dependencies[idx].reduce(self.getId(), depsState)
+	                }).then(function (computed) {
+	                  depsState.computed = computed
+	                  idx++
+	                  return walker()
+	                })
+	              } else {
+	                idx++
+	                return walker()
+	              }
+	            } else {
+	              return depsState.computed
+	            }
+	          }
+	          return walker()
+	        } else {
+	          return computed
+	        }
+	      }).then(function (computed) {
+	        var computedLength = u.values(computed).length
+	        if (self._lastData === null ||
+	          (computedLength > 0 && !u.isEqual(self._lastData, computed))
+	        ) {
+	          self._lastData = computed
+	          func(stores, computed)
+	        }
+	      })
+	    }
 	    if (u.isFunction(func)) {
 	      func(stores, computed)
 	    }
 	  }
 	  return this
+	}
+
+	Member.prototype.createDependency = function createDependency () {
+	  var dependency = alo.createDependency.apply(null, arguments)
+	  this.addDependency(dependency)
+
+	  return dependency
 	}
 
 	Member.prototype.disable = function disable () {
@@ -9352,31 +9415,6 @@ var alo =
 
 	  return this
 	}
-
-	Member.prototype.getDependency = function getDependency () {
-	  return this._dependency
-	}
-
-	Member.prototype.addDependency = u.createPolymorphic()
-	var addDependency = Member.prototype.addDependency
-	addDependency.signature('string, function', function (name, func) {
-	  if (name === '') {
-	    throw new Error('Dependency name should not be empty')
-	  } else {
-	    this._dependency[name] = func
-	  }
-
-	  return this
-	})
-	addDependency.signature('object', function addDependency (dependency) {
-	  var self = this
-
-	  u.forEach(dependency, function (func, name) {
-	    self.addDependency(name, func)
-	  })
-
-	  return this
-	})
 
 	Member.prototype.stop = function stop () {
 	  this.disable()
@@ -9983,7 +10021,7 @@ var alo =
 	            if (computedProperties[idx] !== undefined) {
 	              if (alo.isDependency(computedProperties[idx])) {
 	                return u.Promise.resolve().then(function () {
-	                  return computedProperties[idx].reduce(u.cloneDeep(newState))
+	                  return computedProperties[idx].reduce(self.getId(), u.cloneDeep(newState))
 	                }).then(function (computed) {
 	                  newState.computed = computed
 	                  idx++
