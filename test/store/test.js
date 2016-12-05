@@ -62,9 +62,15 @@ describe('Store', function () {
 
       var prom = u.createPromise(function (resolve, reject) {
         store.dispatch({}).then(function () {
-          var sub = store.createSubscription(function (stores, computed) {
+          var sub = store.createSubscription()
+          var memb = sub.createMember(function (stores, computed) {
             if (stores.myStore.state.test === true) {
               resolve(stores.myStore)
+            }
+          })
+          memb.createDependency({
+            'val8': function (stores) {
+              return alo.util.uniqueId()
             }
           })
           sub.createDependency({
