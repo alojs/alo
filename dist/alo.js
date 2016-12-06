@@ -65,38 +65,38 @@ var alo =
 	}
 
 	Alo.prototype.createSubscription = function createSubscription () {
-	  var Subscription = __webpack_require__(196)
+	  var Subscription = __webpack_require__(198)
 	  var subscription = Object.create(Subscription.prototype)
 	  Subscription.apply(subscription, arguments)
 	  return subscription
 	}
 
 	Alo.prototype.isSubscription = function isSubscription (subscription) {
-	  var Subscription = __webpack_require__(196)
+	  var Subscription = __webpack_require__(198)
 	  return (subscription instanceof Subscription)
 	}
 
 	Alo.prototype.createDependency = function createDependency () {
-	  var Dependency = __webpack_require__(197)
+	  var Dependency = __webpack_require__(199)
 	  var dependency = Object.create(Dependency.prototype)
 	  Dependency.apply(dependency, arguments)
 	  return dependency
 	}
 
 	Alo.prototype.isDependency = function isDependency (dependency) {
-	  var Dependency = __webpack_require__(197)
+	  var Dependency = __webpack_require__(199)
 	  return (dependency instanceof Dependency)
 	}
 
 	Alo.prototype.createMember = function createMember () {
-	  var Member = __webpack_require__(198)
+	  var Member = __webpack_require__(200)
 	  var member = Object.create(Member.prototype)
 	  Member.apply(member, arguments)
 	  return member
 	}
 
 	Alo.prototype.isMember = function isMember (member) {
-	  var Member = __webpack_require__(198)
+	  var Member = __webpack_require__(200)
 	  return (member instanceof Member)
 	}
 
@@ -124,7 +124,7 @@ var alo =
 	 * @see Reducer
 	 */
 	Alo.prototype.createReducer = function createReducer () {
-	  var Reducer = __webpack_require__(199)
+	  var Reducer = __webpack_require__(201)
 	  var reducer = Object.create(Reducer.prototype)
 	  Reducer.apply(reducer, arguments)
 	  return reducer
@@ -138,7 +138,7 @@ var alo =
 	 * @return {boolean} true of it is a reducer, false in the other case
 	 */
 	Alo.prototype.isReducer = function isReducer (reducer) {
-	  var Reducer = __webpack_require__(199)
+	  var Reducer = __webpack_require__(201)
 	  return (reducer instanceof Reducer)
 	}
 
@@ -147,7 +147,7 @@ var alo =
 	 * @see Store
 	 */
 	Alo.prototype.createStore = function createStore () {
-	  var Store = __webpack_require__(200)
+	  var Store = __webpack_require__(202)
 	  var store = Object.create(Store.prototype)
 	  Store.apply(store, arguments)
 	  store._alo = this
@@ -163,14 +163,14 @@ var alo =
 	 */
 	Alo.prototype.isStore = function isStore (store, validateId) {
 	  validateId = (validateId === true)
-	  var Store = __webpack_require__(200)
+	  var Store = __webpack_require__(202)
 	  var isStore = (store instanceof Store)
 	  var idValid = !validateId || (store._alo && store._alo._id === this._id)
 	  return isStore && idValid
 	}
 
 	Alo.prototype.isMiddleware = function isMiddleware (middleware) {
-	  var Middleware = __webpack_require__(201)
+	  var Middleware = __webpack_require__(203)
 	  return (middleware instanceof Middleware)
 	}
 
@@ -258,23 +258,25 @@ var alo =
 	 */
 	Util.prototype.isArray = __webpack_require__(61)
 
+	Util.prototype.map = __webpack_require__(180)
+
 	/**
 	 * Lodash isBoolean, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.isBoolean = __webpack_require__(180)
+	Util.prototype.isBoolean = __webpack_require__(182)
 
 	/**
 	 * Lodash uniqueId, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.uniqueId = __webpack_require__(181)
+	Util.prototype.uniqueId = __webpack_require__(183)
 
-	Util.prototype.toPairs = __webpack_require__(182)
+	Util.prototype.toPairs = __webpack_require__(184)
 
-	var flyd = __webpack_require__(186)
+	var flyd = __webpack_require__(188)
 	/**
 	 * Flyd stream: Might change!
 	 *
@@ -357,9 +359,9 @@ var alo =
 	 *
 	 * @function
 	 */
-	Util.prototype.createPolymorphic = __webpack_require__(193)
+	Util.prototype.createPolymorphic = __webpack_require__(195)
 
-	Util.prototype.Promise = __webpack_require__(194)
+	Util.prototype.Promise = __webpack_require__(196)
 
 	Util.prototype.createPromise = function createPromise (resolve, reject) {
 	  return new this.Promise(resolve, reject)
@@ -377,7 +379,7 @@ var alo =
 	}
 
 	Util.prototype.createObjectRelation = function createObjectRelation () {
-	  var ObjectRelation = __webpack_require__(195)
+	  var ObjectRelation = __webpack_require__(197)
 	  var objectRelation = Object.create(ObjectRelation.prototype)
 	  ObjectRelation.apply(objectRelation, arguments)
 	  return objectRelation
@@ -6259,6 +6261,93 @@ var alo =
 /* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var arrayMap = __webpack_require__(149),
+	    baseIteratee = __webpack_require__(122),
+	    baseMap = __webpack_require__(181),
+	    isArray = __webpack_require__(61);
+
+	/**
+	 * Creates an array of values by running each element in `collection` thru
+	 * `iteratee`. The iteratee is invoked with three arguments:
+	 * (value, index|key, collection).
+	 *
+	 * Many lodash methods are guarded to work as iteratees for methods like
+	 * `_.every`, `_.filter`, `_.map`, `_.mapValues`, `_.reject`, and `_.some`.
+	 *
+	 * The guarded methods are:
+	 * `ary`, `chunk`, `curry`, `curryRight`, `drop`, `dropRight`, `every`,
+	 * `fill`, `invert`, `parseInt`, `random`, `range`, `rangeRight`, `repeat`,
+	 * `sampleSize`, `slice`, `some`, `sortBy`, `split`, `take`, `takeRight`,
+	 * `template`, `trim`, `trimEnd`, `trimStart`, and `words`
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Collection
+	 * @param {Array|Object} collection The collection to iterate over.
+	 * @param {Function} [iteratee=_.identity] The function invoked per iteration.
+	 * @returns {Array} Returns the new mapped array.
+	 * @example
+	 *
+	 * function square(n) {
+	 *   return n * n;
+	 * }
+	 *
+	 * _.map([4, 8], square);
+	 * // => [16, 64]
+	 *
+	 * _.map({ 'a': 4, 'b': 8 }, square);
+	 * // => [16, 64] (iteration order is not guaranteed)
+	 *
+	 * var users = [
+	 *   { 'user': 'barney' },
+	 *   { 'user': 'fred' }
+	 * ];
+	 *
+	 * // The `_.property` iteratee shorthand.
+	 * _.map(users, 'user');
+	 * // => ['barney', 'fred']
+	 */
+	function map(collection, iteratee) {
+	  var func = isArray(collection) ? arrayMap : baseMap;
+	  return func(collection, baseIteratee(iteratee, 3));
+	}
+
+	module.exports = map;
+
+
+/***/ },
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseEach = __webpack_require__(117),
+	    isArrayLike = __webpack_require__(75);
+
+	/**
+	 * The base implementation of `_.map` without support for iteratee shorthands.
+	 *
+	 * @private
+	 * @param {Array|Object} collection The collection to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @returns {Array} Returns the new mapped array.
+	 */
+	function baseMap(collection, iteratee) {
+	  var index = -1,
+	      result = isArrayLike(collection) ? Array(collection.length) : [];
+
+	  baseEach(collection, function(value, key, collection) {
+	    result[++index] = iteratee(value, key, collection);
+	  });
+	  return result;
+	}
+
+	module.exports = baseMap;
+
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var baseGetTag = __webpack_require__(23),
 	    isObjectLike = __webpack_require__(60);
 
@@ -6291,7 +6380,7 @@ var alo =
 
 
 /***/ },
-/* 181 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var toString = __webpack_require__(147);
@@ -6325,10 +6414,10 @@ var alo =
 
 
 /***/ },
-/* 182 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createToPairs = __webpack_require__(183),
+	var createToPairs = __webpack_require__(185),
 	    keys = __webpack_require__(55);
 
 	/**
@@ -6361,13 +6450,13 @@ var alo =
 
 
 /***/ },
-/* 183 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToPairs = __webpack_require__(184),
+	var baseToPairs = __webpack_require__(186),
 	    getTag = __webpack_require__(92),
 	    mapToArray = __webpack_require__(105),
-	    setToPairs = __webpack_require__(185);
+	    setToPairs = __webpack_require__(187);
 
 	/** `Object#toString` result references. */
 	var mapTag = '[object Map]',
@@ -6397,7 +6486,7 @@ var alo =
 
 
 /***/ },
-/* 184 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayMap = __webpack_require__(149);
@@ -6421,7 +6510,7 @@ var alo =
 
 
 /***/ },
-/* 185 */
+/* 187 */
 /***/ function(module, exports) {
 
 	/**
@@ -6445,12 +6534,12 @@ var alo =
 
 
 /***/ },
-/* 186 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var curryN = __webpack_require__(187);
+	var curryN = __webpack_require__(189);
 
 	// Utility
 	function isFunction(obj) {
@@ -7077,13 +7166,13 @@ var alo =
 
 
 /***/ },
-/* 187 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _arity = __webpack_require__(188);
-	var _curry1 = __webpack_require__(189);
-	var _curry2 = __webpack_require__(191);
-	var _curryN = __webpack_require__(192);
+	var _arity = __webpack_require__(190);
+	var _curry1 = __webpack_require__(191);
+	var _curry2 = __webpack_require__(193);
+	var _curryN = __webpack_require__(194);
 
 
 	/**
@@ -7137,7 +7226,7 @@ var alo =
 
 
 /***/ },
-/* 188 */
+/* 190 */
 /***/ function(module, exports) {
 
 	module.exports = function _arity(n, fn) {
@@ -7160,10 +7249,10 @@ var alo =
 
 
 /***/ },
-/* 189 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _isPlaceholder = __webpack_require__(190);
+	var _isPlaceholder = __webpack_require__(192);
 
 
 	/**
@@ -7186,7 +7275,7 @@ var alo =
 
 
 /***/ },
-/* 190 */
+/* 192 */
 /***/ function(module, exports) {
 
 	module.exports = function _isPlaceholder(a) {
@@ -7197,11 +7286,11 @@ var alo =
 
 
 /***/ },
-/* 191 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _curry1 = __webpack_require__(189);
-	var _isPlaceholder = __webpack_require__(190);
+	var _curry1 = __webpack_require__(191);
+	var _isPlaceholder = __webpack_require__(192);
 
 
 	/**
@@ -7231,11 +7320,11 @@ var alo =
 
 
 /***/ },
-/* 192 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _arity = __webpack_require__(188);
-	var _isPlaceholder = __webpack_require__(190);
+	var _arity = __webpack_require__(190);
+	var _isPlaceholder = __webpack_require__(192);
 
 
 	/**
@@ -7277,7 +7366,7 @@ var alo =
 
 
 /***/ },
-/* 193 */
+/* 195 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7761,7 +7850,7 @@ var alo =
 
 
 /***/ },
-/* 194 */
+/* 196 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*
@@ -8606,7 +8695,7 @@ var alo =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 195 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Util = __webpack_require__(2)
@@ -8811,7 +8900,7 @@ var alo =
 
 
 /***/ },
-/* 196 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
@@ -9058,7 +9147,7 @@ var alo =
 
 
 /***/ },
-/* 197 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
@@ -9280,7 +9369,7 @@ var alo =
 
 
 /***/ },
-/* 198 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
@@ -9414,7 +9503,7 @@ var alo =
 
 
 /***/ },
-/* 199 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
@@ -9665,7 +9754,7 @@ var alo =
 
 
 /***/ },
-/* 200 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
@@ -9848,38 +9937,28 @@ var alo =
 	  return reducer
 	}
 
-	Store.prototype._getStateByNamespace = function _getStateByNamespace (namespace, state) {
-	  var self = this
-	  if (typeof (state) === 'undefined') {
-	    state = self.protected.state
+	Store.prototype.mapState = function mapState (func) {
+	  if (!u.isFunction(func)) {
+	    throw new Error('Argument given should be a function')
+	  } else {
+	    return u.map(this.getState(), func)
 	  }
-	  namespace = self._getPreparedNamespace(namespace)
-	  u.forEach(namespace, function (currentNamespace) {
-	    if (state[currentNamespace] == null) {
-	      state[currentNamespace] = {}
-	    }
-	    state = state[currentNamespace]
-	  })
-	  return state
 	}
 
-	Store.prototype._getPreparedNamespace = function _getPreparedNamespace (namespace) {
-	  switch (typeof (namespace)) {
-	    case 'string':
-	      namespace = namespace.split('.')
-	      break
-	    case 'undefined':
-	      namespace = []
-	      break
+	Store.prototype.mapData = function mapData (func) {
+	  if (!u.isFunction(func)) {
+	    throw new Error('Argument given should be a function')
+	  } else {
+	    return u.map(this.getData(), func)
 	  }
-	  return namespace
 	}
 
-	Store.prototype._getExtendedNamespace = function _getExtendedNamespace (extNamespace) {
-	  var self = this
-	  var namespace = self._getNamespace()
-	  extNamespace = self._getPreparedNamespace(extNamespace)
-	  return namespace.concat(extNamespace)
+	Store.prototype.mapStream = function mapStream (func) {
+	  if (!u.isFunction(func)) {
+	    throw new Error('Argument given should be a function')
+	  } else {
+	    return u.mapStream(func, this.getStream())
+	  }
 	}
 
 	/**
@@ -10069,7 +10148,7 @@ var alo =
 
 
 /***/ },
-/* 201 */
+/* 203 */
 /***/ function(module, exports) {
 
 	var Middleware = function Middleware () {}
