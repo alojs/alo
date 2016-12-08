@@ -1,11 +1,9 @@
 /* global describe, it */
 
-var Alo = require('./../../main/alo.full.js')
+var Alo = require('./../../main/alo.dev.js')
 var alo = new Alo()
 var u = alo.util
 var assert = require('assert')
-
-// u.Promise.longStackTraces()
 
 describe('Store', function () {
   describe('Constructor', function () {

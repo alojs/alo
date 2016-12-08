@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Alo Classes</title>
+	<title>Alo Source: util/util.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -74,113 +74,225 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Classes</h1>
+		<h1 class="page-title">Source: util/util.js</h1>
+    
 <section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * Several utility functions / libs used by alo
+ *
+ * Some of this functions / libs might change over time: Please read the description of the specific function / lib.
+ *
+ */
+var Util = function () {}
 
-<header>
-    
-        <h2>
-        
-        </h2>
-        
-    
-</header>
+// Library functions
+// Lodash
+/**
+ * Lodash cloneDeep, can be used
+ *
+ * @function
+ */
+Util.prototype.cloneDeep = require('lodash/cloneDeep')
 
+Util.prototype.filter = require('lodash/filter')
 
-<article>
-    <div class="container-overview">
-    
-        
+/**
+ * Lodash values, can be used
+ *
+ * @function
+ */
+Util.prototype.values = require('lodash/values')
 
-        
-<dl class="details">
-    
+/**
+ * Lodash forEach, can be used
+ *
+ * @function
+ */
+Util.prototype.forEach = require('lodash/forEach')
 
-	
+/**
+ * Lodash isFunction, can be used
+ *
+ * @function
+ */
+Util.prototype.isFunction = require('lodash/isFunction')
 
-	
+/**
+ * Lodash isString, can be used
+ *
+ * @function
+ */
+Util.prototype.isString = require('lodash/isString')
 
-	
+/**
+ * Lodash isObject, can be used
+ *
+ * @function
+ */
+Util.prototype.isObject = require('lodash/isObject')
 
-    
+Util.prototype.merge = require('lodash/merge')
 
-    
+/**
+ * Lodash isEqual, can be used
+ *
+ * @function
+ */
+Util.prototype.isEqual = require('lodash/isEqual')
 
-    
+/**
+ * Lodash isPlainObject, can be used
+ *
+ * @function
+ */
+Util.prototype.isPlainObject = require('lodash/isPlainObject')
 
-    
+/**
+ * Lodash isArray, can be used
+ *
+ * @function
+ */
+Util.prototype.isArray = require('lodash/isArray')
 
-	
+Util.prototype.map = require('lodash/map')
 
-	
+/**
+ * Lodash isBoolean, can be used
+ *
+ * @function
+ */
+Util.prototype.isBoolean = require('lodash/isBoolean')
 
-	
+/**
+ * Lodash uniqueId, can be used
+ *
+ * @function
+ */
+Util.prototype.uniqueId = require('lodash/uniqueId')
 
-	
+Util.prototype.toPairs = require('lodash/toPairs')
 
-	
+var flyd = require('flyd')
+/**
+ * Flyd stream: Might change!
+ *
+ * @function
+ */
+Util.prototype.createStream = flyd.stream
 
+/**
+ * Flyd stream: Might change!
+ *
+ * @function
+ */
+Util.prototype.combineStreams = flyd.combine
 
+/**
+ * Flyd isStream: Might change!
+ *
+ * @function
+ */
+Util.prototype.isStream = flyd.isStream
 
-	
+/**
+ * Flyd immediate: Might change!
+ *
+ * @function
+ */
+Util.prototype.immediateStream = flyd.immediate
 
-	
+/**
+ * Flyd endsOn: Might change!
+ *
+ * @function
+ */
+Util.prototype.streamEndsOn = flyd.endsOn
 
-	
+/**
+ * Flyd map: Might change!
+ *
+ * @function
+ */
+Util.prototype.mapStream = flyd.map
 
-	
-</dl>
+/**
+ * Flyd on: Might change!
+ *
+ * @function
+ */
+Util.prototype.streamOn = flyd.on
 
+/**
+ * Flyd scan: Might change!
+ *
+ * @function
+ */
+Util.prototype.scanStream = flyd.scan
 
-        
-    
-    </div>
+/**
+ * Flyd merge: Might change!
+ *
+ * @function
+ */
+Util.prototype.mergeStream = flyd.merge
 
-    
+/**
+ * Flyd transduce: Might change!
+ *
+ * @function
+ */
+Util.prototype.transduceStream = flyd.transduce
 
-    
+/**
+ * Flyd curryN: Might change!
+ *
+ * @function
+ */
+Util.prototype.curryN = flyd.curryN
 
-    
-        <h3 class="subsection-title">Classes</h3>
+/**
+ * Polymorphic helper: Might change!
+ *
+ * @function
+ */
+Util.prototype.createPolymorphic = require('polymorphic')
 
-        <dl>
-            <dt><a href="Reducer.html">Reducer</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Store.html">Store</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Subscription.html">Subscription</a></dt>
-            <dd></dd>
-        </dl>
-    
+Util.prototype.Promise = require('yaku')
 
-    
+Util.prototype.createPromise = function createPromise (resolve, reject) {
+  return new this.Promise(resolve, reject)
+}
 
-    
-        <h3 class="subsection-title">Namespaces</h3>
+/**
+ * Same as new Alo
+ * @see Alo
+ */
+Util.prototype.createAlo = function createAlo () {
+  var Alo = require('./../alo.js')
+  var alo = Object.create(Alo.prototype)
+  Alo.apply(alo, arguments)
+  return alo
+}
 
-        <dl>
-            <dt><a href="namespaces.html#extras"><a href="extras.html">extras</a></a></dt>
-            <dd></dd>
-        </dl>
-    
+Util.prototype.createObjectRelation = function createObjectRelation () {
+  var ObjectRelation = require('./object-relation.js')
+  var objectRelation = Object.create(ObjectRelation.prototype)
+  ObjectRelation.apply(objectRelation, arguments)
+  return objectRelation
+}
 
-    
-
-    
-
-    
-
-    
-</article>
-
+module.exports = Util
+</pre>
+    </article>
 </section>
+
 
 
 
@@ -190,10 +302,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>

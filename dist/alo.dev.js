@@ -46,9 +46,9 @@ var alo =
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
-	var addExtras = __webpack_require__(206)
+	var addDev = __webpack_require__(205)
 
-	module.exports = addExtras(Alo)
+	module.exports = addDev(Alo)
 
 
 /***/ },
@@ -10303,75 +10303,31 @@ var alo =
 
 
 /***/ },
-/* 205 */,
-/* 206 */
-/***/ function(module, exports, __webpack_require__) {
+/* 205 */
+/***/ function(module, exports) {
 
-	var addExtras = function addExtras (Alo) {
-	  var extras = __webpack_require__(207)
-
-	  /**
-	  * Useful functions
-	  *
-	  * @memberof Alo
-	  *
-	  * @see extras
-	  */
-	  Alo.prototype.extras = extras
-	  return Alo
-	}
-
-	module.exports = addExtras
-
-
-/***/ },
-/* 207 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Extras, but useful stuff
-	 *
-	 * @namespace
-	 */
-	var extras = {}
-
-	/**
-	 * Several included reducer examples
-	 */
-	extras.reducers = __webpack_require__(208)
-
-	module.exports = extras
-
-
-/***/ },
-/* 208 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Alo = __webpack_require__(1)
-	var alo = new Alo()
-	var u = alo.util
-
-	var reducers = {}
-
-	/**
-	 * A basic reducer which just replaces state with payload of untyped actions
-	 *
-	 * @memberof extras
-	 */
-	reducers.createUntypedReplace = function () {
-	  var reduce = function (state, action) {
-	    if (action.type === undefined || action.type === null || action.type === '') {
-	      if (action.payload !== undefined) {
-	        return action.payload
-	      }
-	    }
-	    return state
+	var addDev = function addDev (AloOld) {
+	  var catchLongStack = function (reason) {
+	    console.error(reason.longStack)
 	  }
 
-	  return alo.createReducer(reduce)
+	  var AloDev = function Alo () {
+	    AloOld.apply(this, arguments)
+	    this.util.Promise.enableLongStackTrace()
+	    this.util.Promise.unhandledRejection = catchLongStack
+	    this.util.createAlo = function createAlo () {
+	      var alo = Object.create(AloDev.prototype)
+	      AloDev.apply(alo, arguments)
+	      return alo
+	    }
+	    this.dev = true
+	  }
+	  AloDev.prototype = AloOld.prototype
+	  AloDev.prototype.catchLongStack = catchLongStack
+	  return AloDev
 	}
 
-	module.exports = reducers
+	module.exports = addDev
 
 
 /***/ }

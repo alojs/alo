@@ -147,7 +147,7 @@ var alo =
 	 * @see Store
 	 */
 	Alo.prototype.createStore = function createStore () {
-	  var Store = __webpack_require__(202)
+	  var Store = __webpack_require__(203)
 	  var store = Object.create(Store.prototype)
 	  Store.apply(store, arguments)
 	  store._alo = this
@@ -163,15 +163,22 @@ var alo =
 	 */
 	Alo.prototype.isStore = function isStore (store, validateId) {
 	  validateId = (validateId === true)
-	  var Store = __webpack_require__(202)
+	  var Store = __webpack_require__(203)
 	  var isStore = (store instanceof Store)
 	  var idValid = !validateId || (store._alo && store._alo._id === this._id)
 	  return isStore && idValid
 	}
 
 	Alo.prototype.isMiddleware = function isMiddleware (middleware) {
-	  var Middleware = __webpack_require__(203)
+	  var Middleware = __webpack_require__(204)
 	  return (middleware instanceof Middleware)
+	}
+
+	Alo.prototype.createMiddleware = function createMiddleware () {
+	  var Middleware = __webpack_require__(204)
+	  var middleware = Object.create(Middleware.prototype)
+	  Middleware.apply(middleware, arguments)
+	  return middleware
 	}
 
 	module.exports = Alo
@@ -9507,8 +9514,12 @@ var alo =
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
+	var Customizer = __webpack_require__(202)
+
 	var alo = new Alo()
 	var u = alo.util
+
+	var customizer = new Customizer(false)
 
 	var storeRelation = u.createObjectRelation('reducer', 'store', alo.isStore)
 	var reducerRelation = u.createObjectRelation('reducer', 'parentReducer', alo.isReducer)
@@ -9539,9 +9550,6 @@ var alo =
 	   */
 	  this._id = null
 
-	  this._prepareFunction = false
-	  this._finalizeFunction = false
-
 	  /**
 	   * Array of registered reducers
 	   *
@@ -9560,6 +9568,7 @@ var alo =
 	   */
 	  this._storeRelations = null
 
+	  customizer.constructParent(this)
 	  storeRelation.constructParent(this)
 	  reducerRelation.constructParent(this)
 	  parentReducerRelation.constructParent(this)
@@ -9569,22 +9578,22 @@ var alo =
 	var reducer = u.createPolymorphic()
 	reducer.signature('', function () {})
 	reducer.signature('function', function (prepareFunction) {
-	  this.set('prepare', prepareFunction)
+	  this.setCustomizer(prepareFunction, 'prepare')
 	})
 	reducer.signature('array', function (reducers) {
 	  this.addReducer(reducers)
 	})
 	reducer.signature('function, function', function (prepareFunction, finalizeFunction) {
-	  this.set('prepare', prepareFunction)
-	  this.set(finalizeFunction)
+	  this.setCustomizer(prepareFunction, 'prepare')
+	  this.setCustomizer(finalizeFunction)
 	})
 	reducer.signature('function, array', function (prepareFunction, reducers) {
-	  this.set('prepare', prepareFunction)
+	  this.setCustomizer(prepareFunction, 'prepare')
 	  this.addReducer(reducers)
 	})
 	reducer.signature('function, function, array', function (prepareFunction, finalizeFunction, reducers) {
-	  this.set('prepare', prepareFunction)
-	  this.set(finalizeFunction)
+	  this.setCustomizer(prepareFunction, 'prepare')
+	  this.setCustomizer(finalizeFunction)
 	  this.addReducer(reducers)
 	})
 
@@ -9619,70 +9628,10 @@ var alo =
 	 */
 	Reducer.prototype.removeStore = null
 
+	customizer.registerParentPrototype(Reducer.prototype)
 	storeRelation.registerParentPrototype(Reducer.prototype)
 	reducerRelation.registerParentPrototype(Reducer.prototype)
 	parentReducerRelation.registerParentPrototype(Reducer.prototype)
-
-	/**
-	 *
-	 */
-	Reducer.prototype.set = u.createPolymorphic()
-	var set = Reducer.prototype.set
-	set.signature('string a=finalize, function', function (type, func) {
-	  switch (type) {
-	    case 'prepare':
-	      this._prepareFunction = func
-	      break
-	    case 'finalize':
-	      this._finalizeFunction = func
-	      break
-	    default:
-	      throw new Error('Argument for type should be prepare or finalize')
-	  }
-
-	  return this
-	})
-
-	Reducer.prototype.has = u.createPolymorphic()
-	var has = Reducer.prototype.has
-	has.signature('string a=finalize', function (type) {
-	  switch (type) {
-	    case 'prepare':
-	      return u.isFunction(this.get(type))
-	    case 'finalize':
-	      return u.isFunction(this.get(type))
-	    default:
-	      throw new Error('Argument for type should be prepare or finalize')
-	  }
-	})
-
-	Reducer.prototype.get = u.createPolymorphic()
-	var get = Reducer.prototype.get
-	get.signature('string a=finalize', function get (type) {
-	  switch (type) {
-	    case 'prepare':
-	      return this._prepareFunction
-	    case 'finalize':
-	      return this._finalizeFunction
-	    default:
-	      throw new Error('Argument for type should be prepare or finalize')
-	  }
-	})
-
-	Reducer.prototype.unset = function (type) {
-	  if (type !== undefined && ['prepare', 'finalize'].indexOf(type) === -1) {
-	    throw new Error('Argument for type should be prepare or finalize')
-	  } else {
-	    if (type === undefined || type === 'prepare') {
-	      this._prepareFunction = false
-	    }
-	    if (type === undefined || type === 'finalize') {
-	      this._finalizeFunction = false
-	    }
-	  }
-
-	  return this
-	}
 
 	/**
 	 * Calls the registered reducers with the provided state and action
@@ -9697,16 +9646,16 @@ var alo =
 	 */
 	Reducer.prototype.reduce = function reduce (state, action) {
 	  if (this.isEnabled()) {
-	    var preparer = this.get('prepare')
-	    if (u.isFunction(preparer)) {
-	      state = preparer(u.cloneDeep(state), action)
+	    var customizerResult = this.callCustomizer('prepare', u.cloneDeep(state), action)
+	    if (customizerResult !== undefined) {
+	      state = customizerResult
 	    }
 	    u.forEach(this.getReducer(false), function (item) {
 	      state = item.reduce(u.cloneDeep(state), action)
 	    })
-	    var finalizer = this.get('finalize')
-	    if (u.isFunction(finalizer)) {
-	      state = finalizer(u.cloneDeep(state), action)
+	    customizerResult = this.callCustomizer('finalize', u.cloneDeep(state), action)
+	    if (customizerResult !== undefined) {
+	      state = customizerResult
 	    }
 	  }
 
@@ -9755,6 +9704,121 @@ var alo =
 
 /***/ },
 /* 202 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Util = __webpack_require__(2)
+	var u = new Util()
+	var ObjectRelation = __webpack_require__(197)
+
+	var functions = {
+	  getCustomizer: {},
+	  setCustomizer: {},
+	  unsetCustomizer: {},
+	  callCustomizer: {}
+	}
+
+	var customizerTypes = ['prepare', 'finalize']
+
+	var Customizer = function (async) {
+	  var self = this
+
+	  this.async = (async === true)
+
+	  this.functions = {}
+	  u.forEach(functions, function (func, funcName) {
+	    self.functions[funcName] = {
+	      after: []
+	    }
+	  })
+	}
+
+	Customizer.prototype.constructParent = function (parent) {
+	  parent._customizers = {}
+	  u.forEach(customizerTypes, function (type) {
+	    parent._customizers[type] = false
+	  })
+	}
+
+	Customizer.prototype.registerParentPrototype = function (proto) {
+	  return ObjectRelation.prototype.registerParentPrototype.call(this, proto)
+	}
+
+	/**
+	 *
+	 */
+	Customizer.prototype.setCustomizerFunction = u.createPolymorphic()
+	var set = Customizer.prototype.setCustomizerFunction
+	set.signature('object, function, string b=finalize', function (config, func, type) {
+	  if (customizerTypes.indexOf(type) === -1) {
+	    throw new Error('Argument for type is invalid')
+	  } else {
+	    this._customizers[type] = func
+	  }
+
+	  return this
+	})
+
+	Customizer.prototype.unsetCustomizerFunction = function (config, type) {
+	  var self = this
+
+	  if (type !== undefined && customizerTypes.indexOf(type) === -1) {
+	    throw new Error('Argument for type should be prepare or finalize')
+	  } else {
+	    if (type === undefined) {
+	      u.forEach(this._customizers, function (func, type) {
+	        self.unsetCustomizer(type)
+	      })
+	    } else {
+	      this._customizers[type] = false
+	    }
+	  }
+
+	  return this
+	}
+
+	Customizer.prototype.getCustomizerFunction = u.createPolymorphic()
+	var get = Customizer.prototype.getCustomizerFunction
+	get.signature('object, string a=finalize', function (config, type) {
+	  if (customizerTypes.indexOf(type) === -1) {
+	    throw new Error('Argument for type is invalid')
+	  } else {
+	    return this._customizers[type]
+	  }
+	})
+
+	Customizer.prototype.callCustomizerFunction = function (config, type) {
+	  if (!u.isString(type)) {
+	    throw new Error('Argument for type should be a string')
+	  } else {
+	    var func = this.getCustomizer(type)
+	    if (!u.isFunction(func)) {
+	      return undefined
+	    } else {
+	      var args = u.values(arguments)
+	      /*
+	       * The config argument is prepended to the function by the customizer - not by the user
+	       * This error is done for the enduser which doenst know about config
+	       */
+	      if (args.length <= 2) {
+	        throw new Error('Atleast two arguments are required')
+	      }
+	      args = args.slice(2)
+	      if (config.async === true) {
+	        return u.Promise.resolve().then(function () {
+	          return func.apply(null, args)
+	        })
+	      } else {
+	        return func.apply(null, args)
+	      }
+	    }
+	  }
+	}
+
+	module.exports = Customizer
+
+
+/***/ },
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
@@ -10007,7 +10071,7 @@ var alo =
 	 */
 	Store.prototype.dispatch = function () {
 	  var self = this
-	  var dispatchArguments = arguments
+	  var dispatchArguments = u.values(arguments)
 
 	  var formatAction = function (action) {
 	    // Set the type to null if it is undefined
@@ -10025,32 +10089,17 @@ var alo =
 	     * Start with middleware logic
 	     */
 	    var middlewares = self.getMiddleware(false)
-	    if (middlewares.length > 0) {
-	      /*
-	       * The middleware handling is done in a recursive manner
-	       */
-	      var idx = 0
-	      var walker = function () {
-	        if (middlewares[idx] !== undefined) {
-	          if (alo.isMiddleware(middlewares[idx])) {
-	            return u.Promise.resolve().then(function () {
-	              var args = u.values(dispatchArguments)
-	              args.unshift(self)
-	              return middlewares[idx]._apply(null, args)
-	            }).then(function () {
-	              dispatchArguments = arguments
-	              idx++
-	              return walker()
-	            })
-	          } else {
-	            idx++
-	            return walker()
-	          }
+	    if (middlewares.length > 0 && alo.isMiddleware(middlewares[0])) {
+	      dispatchArguments.unshift(self)
+	      return u.Promise.resolve().then(function () {
+	        return middlewares[0].meddleRecursive(middlewares, dispatchArguments)
+	      }).then(function (resultArgs) {
+	        if (u.isArray(resultArgs)) {
+	          return resultArgs[0]
 	        } else {
-	          return dispatchArguments[0]
+	          return resultArgs
 	        }
-	      }
-	      return walker()
+	      })
 	    } else {
 	      return dispatchArguments[0]
 	    }
@@ -10148,11 +10197,105 @@ var alo =
 
 
 /***/ },
-/* 203 */
-/***/ function(module, exports) {
+/* 204 */
+/***/ function(module, exports, __webpack_require__) {
 
-	var Middleware = function Middleware () {}
+	var Alo = __webpack_require__(1)
+	var Customizer = __webpack_require__(202)
 
+	var alo = new Alo()
+	var u = alo.util
+
+	var customizer = new Customizer(true)
+	var middlewareRelation = u.createObjectRelation('middleware', 'parentMiddleware', alo.isMiddleware)
+	var parentMiddlewareRelation = u.createObjectRelation('parentMiddleware', 'middleware', alo.isMiddleware)
+	var storeRelation = u.createObjectRelation('middleware', 'store', alo.isStore)
+
+	// Add a better constructor
+	var Middleware = function Middleware () {
+	  customizer.constructParent(this)
+	  middlewareRelation.constructParent(this)
+	  parentMiddlewareRelation.constructParent(this)
+	  storeRelation.constructParent(this)
+	  customizer.constructParent(this)
+	}
+
+	customizer.registerParentPrototype(Middleware.prototype)
+	middlewareRelation.registerParentPrototype(Middleware.prototype)
+	parentMiddlewareRelation.registerParentPrototype(Middleware.prototype)
+	storeRelation.registerParentPrototype(Middleware.prototype)
+
+	/*
+	 * The middleware handling is done in a recursive manner
+	 */
+	Middleware.prototype.meddleRecursive = function meddleRecursive (middlewares, args) {
+	  var self = this
+	  args = u.values(args)
+	  // First argument is always the store
+	  var store = args[0]
+
+	  if (!u.isArray(middlewares)) {
+	    throw new Error('Argument given should be an array')
+	  } else if (middlewares.length === 0) {
+	    // store needs to be removed at the end of the recursion
+	    return args.slice(1)
+	  } else {
+	    return u.Promise.resolve().then(function () {
+	      if (alo.isMiddleware(middlewares[0])) {
+	        return middlewares[0].meddle(args)
+	      } else {
+	        return args.slice(1)
+	      }
+	    }).then(function (resultArgs) {
+	      resultArgs = u.values(resultArgs)
+	      if (resultArgs[0] === undefined) {
+	        resultArgs = args
+	      } else {
+	        resultArgs.unshift(store)
+	      }
+	      args = resultArgs
+	      middlewares = middlewares.slice(1)
+	      return self.meddleRecursive(middlewares, resultArgs)
+	    })
+	  }
+	}
+
+	Middleware.prototype.meddle = function meddle (args) {
+	  var self = this
+	  args = u.values(args)
+	  var store = args[0]
+	  args = args.slice(1)
+
+	  var argsToArray = function (resultArgs) {
+	    if (resultArgs === undefined) {
+	      resultArgs = args
+	    } else if (!u.isArray(resultArgs)) {
+	      resultArgs = [resultArgs]
+	    }
+	    args = u.cloneDeep(resultArgs)
+
+	    return resultArgs
+	  }
+
+	  return u.Promise.resolve().then(function () {
+	    var newArgs = u.cloneDeep(args)
+	    newArgs.unshift(store)
+	    newArgs.unshift('prepare')
+	    return self.callCustomizer.apply(self, newArgs)
+	  }).then(function (resultArgs) {
+	    resultArgs = argsToArray(resultArgs)
+	    resultArgs.unshift(store)
+	    return self.meddleRecursive(self.getMiddleware(false), resultArgs)
+	  }).then(function (resultArgs) {
+	    resultArgs = argsToArray(resultArgs)
+	    resultArgs.unshift(store)
+	    resultArgs.unshift('finalize')
+	    return self.callCustomizer.apply(self, resultArgs)
+	  }).then(function (resultArgs) {
+	    resultArgs = argsToArray(resultArgs)
+	    return resultArgs
+	  })
+	}
 	module.exports = Middleware
 
 
