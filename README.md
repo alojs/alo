@@ -1,4 +1,8 @@
-# Welcome to Alo
+<div>
+<img width="150px" src="https://cdn.rawgit.com/alojs/alo/e512ce4ef2fca64120d74942519b4a9cea8959de/logo/logo.png" />
+<h1 style="display: inline; border-width: 0px;">Welcome to Alo</h1>
+</div>
+---
 
 [![license](https://img.shields.io/github/license/alojs/alo.svg)](https://github.com/alojs/alo/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/v/alo.svg)](https://www.npmjs.com/package/alo)
