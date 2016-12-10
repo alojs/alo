@@ -29,7 +29,7 @@ The files are constructed with a combination of these postfixes:
 ## CDN's
 You can use Alo with NPM or Bower or even straight from a CDN. There are couple browser builds available in the dist folder
 
-### Development (unminified and with devtools) (see <a href="#Versions">Versions</a>)
+### Development (unminified and with devtools) (see <a href="#versions">Versions</a>)
 
 * Core: https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/alo.dev.js
 * Full: https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/alo.full.dev.js
