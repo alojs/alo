@@ -43,4 +43,16 @@ describe('ObjectRelation', function () {
       })
     })
   })
+  describe('isRelatedToFunction', function () {
+    it('should return true for related objects', function () {
+      var store = alo.createStore()
+      var sub = store.createSubscription()
+      assert.equal(true, store.isRelatedToSubscription(sub))
+    })
+    it('should return false for unrelated objects', function () {
+      var store = alo.createStore()
+      var sub = alo.createSubscription()
+      assert.equal(false, store.isRelatedToSubscription(sub))
+    })
+  })
 })
