@@ -57,4 +57,28 @@ describe('ObjectRelation', function () {
       assert.equal(false, store.relatedToSubscription(sub.getId()))
     })
   })
+  describe('index functions', function () {
+    describe('indexOf', function () {
+      it('should return the correct index', function () {
+        var store = alo.createStore()
+        var sub1 = store.createSubscription()
+        var sub2 = store.createSubscription()
+        var sub3 = store.createSubscription()
+        assert.equal(1, store.indexOfSubscription(sub2.getId()))
+        assert.equal(2, store.indexOfSubscription(sub3))
+      })
+    })
+    describe('setIndexOf', function () {
+      it('should set a new index', function () {
+        var store = alo.createStore()
+        var sub1 = store.createSubscription()
+        var sub2 = store.createSubscription()
+        var sub3 = store.createSubscription()
+        store.setIndexOfSubscription(sub3, 1)
+        assert.equal(1, store.indexOfSubscription(sub3))
+        assert.equal(2, store.indexOfSubscription(sub2.getId()))
+        assert.equal(-1, store.indexOfSubscription('test'))
+      })
+    })
+  })
 })
