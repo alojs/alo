@@ -46,7 +46,7 @@ var alo =
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
-	var addExtras = __webpack_require__(206)
+	var addExtras = __webpack_require__(210)
 
 	module.exports = addExtras(Alo)
 
@@ -68,38 +68,38 @@ var alo =
 	}
 
 	Alo.prototype.createSubscription = function createSubscription () {
-	  var Subscription = __webpack_require__(198)
+	  var Subscription = __webpack_require__(202)
 	  var subscription = Object.create(Subscription.prototype)
 	  Subscription.apply(subscription, arguments)
 	  return subscription
 	}
 
 	Alo.prototype.isSubscription = function isSubscription (subscription) {
-	  var Subscription = __webpack_require__(198)
+	  var Subscription = __webpack_require__(202)
 	  return (subscription instanceof Subscription)
 	}
 
 	Alo.prototype.createDependency = function createDependency () {
-	  var Dependency = __webpack_require__(199)
+	  var Dependency = __webpack_require__(203)
 	  var dependency = Object.create(Dependency.prototype)
 	  Dependency.apply(dependency, arguments)
 	  return dependency
 	}
 
 	Alo.prototype.isDependency = function isDependency (dependency) {
-	  var Dependency = __webpack_require__(199)
+	  var Dependency = __webpack_require__(203)
 	  return (dependency instanceof Dependency)
 	}
 
 	Alo.prototype.createMember = function createMember () {
-	  var Member = __webpack_require__(200)
+	  var Member = __webpack_require__(204)
 	  var member = Object.create(Member.prototype)
 	  Member.apply(member, arguments)
 	  return member
 	}
 
 	Alo.prototype.isMember = function isMember (member) {
-	  var Member = __webpack_require__(200)
+	  var Member = __webpack_require__(204)
 	  return (member instanceof Member)
 	}
 
@@ -127,7 +127,7 @@ var alo =
 	 * @see Reducer
 	 */
 	Alo.prototype.createReducer = function createReducer () {
-	  var Reducer = __webpack_require__(201)
+	  var Reducer = __webpack_require__(205)
 	  var reducer = Object.create(Reducer.prototype)
 	  Reducer.apply(reducer, arguments)
 	  return reducer
@@ -141,7 +141,7 @@ var alo =
 	 * @return {boolean} true of it is a reducer, false in the other case
 	 */
 	Alo.prototype.isReducer = function isReducer (reducer) {
-	  var Reducer = __webpack_require__(201)
+	  var Reducer = __webpack_require__(205)
 	  return (reducer instanceof Reducer)
 	}
 
@@ -150,7 +150,7 @@ var alo =
 	 * @see Store
 	 */
 	Alo.prototype.createStore = function createStore () {
-	  var Store = __webpack_require__(203)
+	  var Store = __webpack_require__(207)
 	  var store = Object.create(Store.prototype)
 	  Store.apply(store, arguments)
 	  store._alo = this
@@ -166,19 +166,19 @@ var alo =
 	 */
 	Alo.prototype.isStore = function isStore (store, validateId) {
 	  validateId = (validateId === true)
-	  var Store = __webpack_require__(203)
+	  var Store = __webpack_require__(207)
 	  var isStore = (store instanceof Store)
 	  var idValid = !validateId || (store._alo && store._alo._id === this._id)
 	  return isStore && idValid
 	}
 
 	Alo.prototype.isMiddleware = function isMiddleware (middleware) {
-	  var Middleware = __webpack_require__(204)
+	  var Middleware = __webpack_require__(208)
 	  return (middleware instanceof Middleware)
 	}
 
 	Alo.prototype.createMiddleware = function createMiddleware () {
-	  var Middleware = __webpack_require__(204)
+	  var Middleware = __webpack_require__(208)
 	  var middleware = Object.create(Middleware.prototype)
 	  Middleware.apply(middleware, arguments)
 	  return middleware
@@ -277,16 +277,18 @@ var alo =
 	 */
 	Util.prototype.isBoolean = __webpack_require__(182)
 
+	Util.prototype.isInteger = __webpack_require__(183)
+
 	/**
 	 * Lodash uniqueId, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.uniqueId = __webpack_require__(183)
+	Util.prototype.uniqueId = __webpack_require__(187)
 
-	Util.prototype.toPairs = __webpack_require__(184)
+	Util.prototype.toPairs = __webpack_require__(188)
 
-	var flyd = __webpack_require__(188)
+	var flyd = __webpack_require__(192)
 	/**
 	 * Flyd stream: Might change!
 	 *
@@ -358,20 +360,13 @@ var alo =
 	Util.prototype.transduceStream = flyd.transduce
 
 	/**
-	 * Flyd curryN: Might change!
-	 *
-	 * @function
-	 */
-	Util.prototype.curryN = flyd.curryN
-
-	/**
 	 * Polymorphic helper: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.createPolymorphic = __webpack_require__(195)
+	Util.prototype.createPolymorphic = __webpack_require__(199)
 
-	Util.prototype.Promise = __webpack_require__(196)
+	Util.prototype.Promise = __webpack_require__(200)
 
 	Util.prototype.createPromise = function createPromise (resolve, reject) {
 	  return new this.Promise(resolve, reject)
@@ -389,7 +384,7 @@ var alo =
 	}
 
 	Util.prototype.createObjectRelation = function createObjectRelation () {
-	  var ObjectRelation = __webpack_require__(197)
+	  var ObjectRelation = __webpack_require__(201)
 	  var objectRelation = Object.create(ObjectRelation.prototype)
 	  ObjectRelation.apply(objectRelation, arguments)
 	  return objectRelation
@@ -6393,6 +6388,207 @@ var alo =
 /* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var toInteger = __webpack_require__(184);
+
+	/**
+	 * Checks if `value` is an integer.
+	 *
+	 * **Note:** This method is based on
+	 * [`Number.isInteger`](https://mdn.io/Number/isInteger).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an integer, else `false`.
+	 * @example
+	 *
+	 * _.isInteger(3);
+	 * // => true
+	 *
+	 * _.isInteger(Number.MIN_VALUE);
+	 * // => false
+	 *
+	 * _.isInteger(Infinity);
+	 * // => false
+	 *
+	 * _.isInteger('3');
+	 * // => false
+	 */
+	function isInteger(value) {
+	  return typeof value == 'number' && value == toInteger(value);
+	}
+
+	module.exports = isInteger;
+
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var toFinite = __webpack_require__(185);
+
+	/**
+	 * Converts `value` to an integer.
+	 *
+	 * **Note:** This method is loosely based on
+	 * [`ToInteger`](http://www.ecma-international.org/ecma-262/7.0/#sec-tointeger).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to convert.
+	 * @returns {number} Returns the converted integer.
+	 * @example
+	 *
+	 * _.toInteger(3.2);
+	 * // => 3
+	 *
+	 * _.toInteger(Number.MIN_VALUE);
+	 * // => 0
+	 *
+	 * _.toInteger(Infinity);
+	 * // => 1.7976931348623157e+308
+	 *
+	 * _.toInteger('3.2');
+	 * // => 3
+	 */
+	function toInteger(value) {
+	  var result = toFinite(value),
+	      remainder = result % 1;
+
+	  return result === result ? (remainder ? result - remainder : result) : 0;
+	}
+
+	module.exports = toInteger;
+
+
+/***/ },
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var toNumber = __webpack_require__(186);
+
+	/** Used as references for various `Number` constants. */
+	var INFINITY = 1 / 0,
+	    MAX_INTEGER = 1.7976931348623157e+308;
+
+	/**
+	 * Converts `value` to a finite number.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.12.0
+	 * @category Lang
+	 * @param {*} value The value to convert.
+	 * @returns {number} Returns the converted number.
+	 * @example
+	 *
+	 * _.toFinite(3.2);
+	 * // => 3.2
+	 *
+	 * _.toFinite(Number.MIN_VALUE);
+	 * // => 5e-324
+	 *
+	 * _.toFinite(Infinity);
+	 * // => 1.7976931348623157e+308
+	 *
+	 * _.toFinite('3.2');
+	 * // => 3.2
+	 */
+	function toFinite(value) {
+	  if (!value) {
+	    return value === 0 ? value : 0;
+	  }
+	  value = toNumber(value);
+	  if (value === INFINITY || value === -INFINITY) {
+	    var sign = (value < 0 ? -1 : 1);
+	    return sign * MAX_INTEGER;
+	  }
+	  return value === value ? value : 0;
+	}
+
+	module.exports = toFinite;
+
+
+/***/ },
+/* 186 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(29),
+	    isSymbol = __webpack_require__(143);
+
+	/** Used as references for various `Number` constants. */
+	var NAN = 0 / 0;
+
+	/** Used to match leading and trailing whitespace. */
+	var reTrim = /^\s+|\s+$/g;
+
+	/** Used to detect bad signed hexadecimal string values. */
+	var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+	/** Used to detect binary string values. */
+	var reIsBinary = /^0b[01]+$/i;
+
+	/** Used to detect octal string values. */
+	var reIsOctal = /^0o[0-7]+$/i;
+
+	/** Built-in method references without a dependency on `root`. */
+	var freeParseInt = parseInt;
+
+	/**
+	 * Converts `value` to a number.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to process.
+	 * @returns {number} Returns the number.
+	 * @example
+	 *
+	 * _.toNumber(3.2);
+	 * // => 3.2
+	 *
+	 * _.toNumber(Number.MIN_VALUE);
+	 * // => 5e-324
+	 *
+	 * _.toNumber(Infinity);
+	 * // => Infinity
+	 *
+	 * _.toNumber('3.2');
+	 * // => 3.2
+	 */
+	function toNumber(value) {
+	  if (typeof value == 'number') {
+	    return value;
+	  }
+	  if (isSymbol(value)) {
+	    return NAN;
+	  }
+	  if (isObject(value)) {
+	    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+	    value = isObject(other) ? (other + '') : other;
+	  }
+	  if (typeof value != 'string') {
+	    return value === 0 ? value : +value;
+	  }
+	  value = value.replace(reTrim, '');
+	  var isBinary = reIsBinary.test(value);
+	  return (isBinary || reIsOctal.test(value))
+	    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+	    : (reIsBadHex.test(value) ? NAN : +value);
+	}
+
+	module.exports = toNumber;
+
+
+/***/ },
+/* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var toString = __webpack_require__(147);
 
 	/** Used to generate unique IDs. */
@@ -6424,10 +6620,10 @@ var alo =
 
 
 /***/ },
-/* 184 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createToPairs = __webpack_require__(185),
+	var createToPairs = __webpack_require__(189),
 	    keys = __webpack_require__(55);
 
 	/**
@@ -6460,13 +6656,13 @@ var alo =
 
 
 /***/ },
-/* 185 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToPairs = __webpack_require__(186),
+	var baseToPairs = __webpack_require__(190),
 	    getTag = __webpack_require__(92),
 	    mapToArray = __webpack_require__(105),
-	    setToPairs = __webpack_require__(187);
+	    setToPairs = __webpack_require__(191);
 
 	/** `Object#toString` result references. */
 	var mapTag = '[object Map]',
@@ -6496,7 +6692,7 @@ var alo =
 
 
 /***/ },
-/* 186 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayMap = __webpack_require__(149);
@@ -6520,7 +6716,7 @@ var alo =
 
 
 /***/ },
-/* 187 */
+/* 191 */
 /***/ function(module, exports) {
 
 	/**
@@ -6544,12 +6740,12 @@ var alo =
 
 
 /***/ },
-/* 188 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var curryN = __webpack_require__(189);
+	var curryN = __webpack_require__(193);
 
 	// Utility
 	function isFunction(obj) {
@@ -7176,13 +7372,13 @@ var alo =
 
 
 /***/ },
-/* 189 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _arity = __webpack_require__(190);
-	var _curry1 = __webpack_require__(191);
-	var _curry2 = __webpack_require__(193);
-	var _curryN = __webpack_require__(194);
+	var _arity = __webpack_require__(194);
+	var _curry1 = __webpack_require__(195);
+	var _curry2 = __webpack_require__(197);
+	var _curryN = __webpack_require__(198);
 
 
 	/**
@@ -7236,7 +7432,7 @@ var alo =
 
 
 /***/ },
-/* 190 */
+/* 194 */
 /***/ function(module, exports) {
 
 	module.exports = function _arity(n, fn) {
@@ -7259,10 +7455,10 @@ var alo =
 
 
 /***/ },
-/* 191 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _isPlaceholder = __webpack_require__(192);
+	var _isPlaceholder = __webpack_require__(196);
 
 
 	/**
@@ -7285,7 +7481,7 @@ var alo =
 
 
 /***/ },
-/* 192 */
+/* 196 */
 /***/ function(module, exports) {
 
 	module.exports = function _isPlaceholder(a) {
@@ -7296,11 +7492,11 @@ var alo =
 
 
 /***/ },
-/* 193 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _curry1 = __webpack_require__(191);
-	var _isPlaceholder = __webpack_require__(192);
+	var _curry1 = __webpack_require__(195);
+	var _isPlaceholder = __webpack_require__(196);
 
 
 	/**
@@ -7330,11 +7526,11 @@ var alo =
 
 
 /***/ },
-/* 194 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _arity = __webpack_require__(190);
-	var _isPlaceholder = __webpack_require__(192);
+	var _arity = __webpack_require__(194);
+	var _isPlaceholder = __webpack_require__(196);
 
 
 	/**
@@ -7376,7 +7572,7 @@ var alo =
 
 
 /***/ },
-/* 195 */
+/* 199 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7860,11 +8056,11 @@ var alo =
 
 
 /***/ },
-/* 196 */
+/* 200 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*
-	 Yaku v0.16.7
+	 Yaku v0.17.3
 	 (c) 2015 Yad Smood. http://ysmood.org
 	 License MIT
 	*/
@@ -7993,6 +8189,33 @@ var alo =
 	         */
 	        "catch": function (onRejected) {
 	            return this.then($undefined, onRejected);
+	        },
+
+	        /**
+	         * Register a callback to be invoked when a promise is settled (either fulfilled or rejected).
+	         * Similar with the try-catch-finally, it's often used for cleanup.
+	         * @param  {Function} onFinally A Function called when the Promise is settled.
+	         * It will not receive any argument.
+	         * @return {Yaku} A Promise that will reject if onFinally throws an error or returns a rejected promise.
+	         * Else it will resolve previous promise's final state (either fulfilled or rejected).
+	         * @example
+	         * ```js
+	         * var Promise = require('yaku');
+	         * var p = Promise.reject(new Error("ERR"));
+	         *
+	         * p['catch']((v) => {
+	         *     console.log(v);
+	         * });
+	         * ```
+	         */
+	        "finally": function (onFinally) {
+	            function eventually (value) {
+	                return Yaku.resolve(onFinally()).then(function () {
+	                    return value;
+	                });
+	            }
+
+	            return this.then(eventually, eventually);
 	        },
 
 	        // The number of current promises that attach to this Yaku instance.
@@ -8178,7 +8401,7 @@ var alo =
 	     * @example
 	     * ```js
 	     * var Promise = require('yaku');
-	     * Promise.onUnhandledRejection = (reason) => {
+	     * Promise.unhandledRejection = (reason) => {
 	     *     console.error(reason);
 	     * };
 	     *
@@ -8705,7 +8928,7 @@ var alo =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 197 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Util = __webpack_require__(2)
@@ -8719,6 +8942,15 @@ var alo =
 	    relation: true
 	  },
 	  remove: {
+	    relation: true
+	  },
+	  relatedTo: {
+	    relation: true
+	  },
+	  indexOf: {
+	    relation: true
+	  },
+	  setIndexOf: {
 	    relation: true
 	  },
 	  getId: {}
@@ -8829,7 +9061,7 @@ var alo =
 
 	ObjectRelation.prototype.addFunction = u.createPolymorphic()
 	var add = ObjectRelation.prototype.addFunction
-	add.signature('object, object, boolean b=false', function (config, relationObject, fromRelation) {
+	add.signature('object, object, integer a=-1, boolean b=false', function (config, relationObject, index, fromRelation) {
 	  if (!config.isRelationObject(relationObject)) {
 	    throw new Error('Argument given is not a ' + config.relationName)
 	  } else {
@@ -8838,10 +9070,14 @@ var alo =
 	      throw new Error('Id is not a string or empty')
 	    } else {
 	      if (fromRelation !== true) {
-	        relationObject[config.functions.add.parentName](this, true)
+	        relationObject[config.functions.add.parentName](this, -1, true)
 	      }
 	      this[config.relationByIdPropertyName][id] = relationObject
-	      this[config.relationPropertyName].push(id)
+	      if (index >= 0) {
+	        this[config.relationPropertyName].splice(index, 0, id)
+	      } else {
+	        this[config.relationPropertyName].push(id)
+	      }
 	    }
 	  }
 
@@ -8851,7 +9087,7 @@ var alo =
 	  var self = this
 
 	  u.forEach(relationObjects, function (relationObject) {
-	    add.call(self, config, relationObject)
+	    add.call(self, config, relationObject, -1)
 	  })
 
 	  return this
@@ -8859,7 +9095,7 @@ var alo =
 	add.signature('object, object, object, ...', function (config, relationObject1, relationObject2, rest) {
 	  var relationObjects = [relationObject1, relationObject2]
 
-	  return add.call(this, config, relationObjects.concat(rest))
+	  return add.call(this, config, relationObjects.concat(rest), -1)
 	})
 
 	ObjectRelation.prototype.removeFunction = u.createPolymorphic()
@@ -8883,7 +9119,7 @@ var alo =
 	  return this
 	})
 	remove.signature('object, object, boolean b=false', function (config, relationObject, fromRelation) {
-	  if (!config.isRelation(relationObject)) {
+	  if (!config.isRelationObject(relationObject)) {
 	    throw new Error('Argument given is not a ' + config.relationName)
 	  } else {
 	    var id = relationObject.getId()
@@ -8900,6 +9136,49 @@ var alo =
 	  return this
 	})
 
+	ObjectRelation.prototype.relatedToFunction = function (config, relationObj) {
+	  return indexOf.apply(this, arguments) > -1
+	}
+
+	ObjectRelation.prototype.indexOfFunction = function (config, relationObj) {
+	  var id = null
+
+	  if (u.isString(relationObj) || u.isInteger(relationObj)) {
+	    id = relationObj
+	  } else if (!config.isRelationObject(relationObj)) {
+	    throw new Error('Argument given should be an id or a ' + config.relationName)
+	  } else {
+	    id = relationObj.getId()
+	  }
+
+	  return this[config.relationPropertyName].indexOf(id)
+	}
+	var indexOf = ObjectRelation.prototype.indexOfFunction
+
+	ObjectRelation.prototype.setIndexOfFunction = function (config, relationObj, index) {
+	  if (!u.isInteger(index)) {
+	    throw new Error('Argument for index should be an integer')
+	  } else {
+	    var id = null
+
+	    if (u.isString(relationObj) || u.isInteger(relationObj)) {
+	      id = relationObj
+	    } else if (!config.isRelationObject(relationObj)) {
+	      throw new Error('Argument given should be an id or a ' + config.relationName)
+	    } else {
+	      id = relationObj.getId()
+	    }
+
+	    var oldIndex = this[config.relationPropertyName].indexOf(id)
+	    if (oldIndex !== -1 && oldIndex !== index) {
+	      delete this[config.relationPropertyName][oldIndex]
+	      this[config.relationPropertyName].splice(index, 0, id)
+	    }
+
+	    return index
+	  }
+	}
+
 	ObjectRelation.prototype.after = u.createPolymorphic()
 	var after = ObjectRelation.prototype.after
 	after.signature('string, function', function (functionName, func) {
@@ -8910,7 +9189,7 @@ var alo =
 
 
 /***/ },
-/* 198 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
@@ -8956,7 +9235,6 @@ var alo =
 	  subscription.apply(this, arguments)
 	}
 
-	// TODO: Implement additional signatures
 	var subscription = u.createPolymorphic()
 	subscription.signature('', function () {})
 	subscription.signature('object, array', function (dependencies, members) {
@@ -9157,7 +9435,7 @@ var alo =
 
 
 /***/ },
-/* 199 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
@@ -9379,7 +9657,7 @@ var alo =
 
 
 /***/ },
-/* 200 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
@@ -9513,11 +9791,11 @@ var alo =
 
 
 /***/ },
-/* 201 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
-	var Customizer = __webpack_require__(202)
+	var Customizer = __webpack_require__(206)
 
 	var alo = new Alo()
 	var u = alo.util
@@ -9706,12 +9984,12 @@ var alo =
 
 
 /***/ },
-/* 202 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Util = __webpack_require__(2)
 	var u = new Util()
-	var ObjectRelation = __webpack_require__(197)
+	var ObjectRelation = __webpack_require__(201)
 
 	var functions = {
 	  getCustomizer: {},
@@ -9821,7 +10099,7 @@ var alo =
 
 
 /***/ },
-/* 203 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
@@ -10063,6 +10341,7 @@ var alo =
 	  this.addSubscription(subscription)
 	  return subscription
 	}
+	Store.prototype.subscribe = Store.prototype.createSubscription
 
 	/**
 	 * Dispatches an action
@@ -10200,11 +10479,11 @@ var alo =
 
 
 /***/ },
-/* 204 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
-	var Customizer = __webpack_require__(202)
+	var Customizer = __webpack_require__(206)
 
 	var alo = new Alo()
 	var u = alo.util
@@ -10214,14 +10493,36 @@ var alo =
 	var parentMiddlewareRelation = u.createObjectRelation('parentMiddleware', 'middleware', alo.isMiddleware)
 	var storeRelation = u.createObjectRelation('middleware', 'store', alo.isStore)
 
-	// Add a better constructor
 	var Middleware = function Middleware () {
 	  customizer.constructParent(this)
 	  middlewareRelation.constructParent(this)
 	  parentMiddlewareRelation.constructParent(this)
 	  storeRelation.constructParent(this)
 	  customizer.constructParent(this)
+
+	  middleware.apply(this, arguments)
 	}
+	var middleware = u.createPolymorphic()
+	middleware.signature('', function () {})
+	middleware.signature('function', function (prepareFunction) {
+	  this.setCustomizer(prepareFunction, 'prepare')
+	})
+	middleware.signature('array', function (middlewares) {
+	  this.addMiddleware(middlewares)
+	})
+	middleware.signature('function, function', function (prepareFunction, finalizeFunction) {
+	  this.setCustomizer(prepareFunction, 'prepare')
+	  this.setCustomizer(finalizeFunction)
+	})
+	middleware.signature('function, array', function (prepareFunction, middlewares) {
+	  this.setCustomizer(prepareFunction, 'prepare')
+	  this.addMiddleware(middlewares)
+	})
+	middleware.signature('function, function, array', function (prepareFunction, finalizeFunction, middlewares) {
+	  this.setCustomizer(prepareFunction, 'prepare')
+	  this.setCustomizer(finalizeFunction)
+	  this.addMiddleware(middlewares)
+	})
 
 	customizer.registerParentPrototype(Middleware.prototype)
 	middlewareRelation.registerParentPrototype(Middleware.prototype)
@@ -10303,12 +10604,12 @@ var alo =
 
 
 /***/ },
-/* 205 */,
-/* 206 */
+/* 209 */,
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var addExtras = function addExtras (Alo) {
-	  var extras = __webpack_require__(207)
+	  var extras = __webpack_require__(211)
 
 	  /**
 	  * Useful functions
@@ -10325,7 +10626,7 @@ var alo =
 
 
 /***/ },
-/* 207 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10338,13 +10639,13 @@ var alo =
 	/**
 	 * Several included reducer examples
 	 */
-	extras.reducers = __webpack_require__(208)
+	extras.reducers = __webpack_require__(212)
 
 	module.exports = extras
 
 
 /***/ },
-/* 208 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Alo = __webpack_require__(1)
