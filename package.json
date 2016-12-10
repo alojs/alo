@@ -36,7 +36,7 @@
   "bugs": {
     "url": "https://github.com/alojs/alo/issues"
   },
-  "homepage": "https://github.com/alojs/alo#readme",
+  "homepage": "http://www.alojs.com",
   "dependencies": {
     "flyd": "^0.2.2",
     "lodash": "^4.17.2",
@@ -55,7 +55,7 @@
     "standard": "^8.6.0",
     "standard-format": "^2.2.4",
     "uglify-js": "^2.7.5",
-    "webpack": "^1.13.3",
+    "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2",
     "webpack-node-externals": "^1.5.4"
   }

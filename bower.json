@@ -1,0 +1,24 @@
+{
+  "name": "alo",
+  "description": "A minimalist approach to javascript state management",
+  "main": "main/alo.full.js",
+  "authors": [
+    "Katja Lutz"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "minimalist",
+    "javascript",
+    "state",
+    "management",
+    "library"
+  ],
+  "homepage": "http://www.alojs.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
