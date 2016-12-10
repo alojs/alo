@@ -50,7 +50,7 @@ API-wise there are not many open changes planned, however the library is quite y
 I am working on it.
 
 3. *What are your future plans?*
-Trying to add examples, test the software, add more extras, work on the dev-tools. My goal is to ship an as stable as possible 3.0 in the next couple of months (End of Q1(07) / Start of Q2(07))
+Trying to add examples, test the software, add more extras, work on the dev-tools. My goal is to ship an as stable as possible 3.0 in the next couple of months (End of Q1(17) / Start of Q2(17))
 
 
 
