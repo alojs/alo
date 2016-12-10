@@ -5,6 +5,7 @@
   "main": "main/alo.full.js",
   "scripts": {
     "test": "mocha-webpack",
+    "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*",
     "test-watch": "mocha-webpack --watch",
     "build": "npm run build:main && npm run build:min",
     "build:main": "./node_modules/.bin/webpack",
@@ -43,8 +44,10 @@
     "yaku": "^0.16.7"
   },
   "devDependencies": {
+    "coveralls": "^2.11.15",
     "fs-extra": "^0.30.0",
     "ink-docstrap": "^1.3.0",
+    "istanbul": "^0.4.5",
     "jsdoc": "^3.4.3",
     "jsdoc-webpack-plugin": "0.0.1",
     "mocha": "^3.2.0",

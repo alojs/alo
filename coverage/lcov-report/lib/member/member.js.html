@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for lib/member/member.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">lib/member/</a> member.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">79.22% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>61/77</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">63.16% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>12/19</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">70.59% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>12/17</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">79.22% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>61/77</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var Alo = require('./../alo.js')
+var alo = new Alo()
+var u = alo.util
+&nbsp;
+var subscriptionRelation = u.createObjectRelation('member', 'subscription', alo.isSubscription)
+var dependencyRelation = u.createObjectRelation('member', 'dependency', alo.isDependency)
+&nbsp;
+var Member = function Member () {
+  this._dependency = {}
+  this._function = null
+  this._enabled = true
+  this._lastData = null
+&nbsp;
+  subscriptionRelation.constructParent(this)
+  dependencyRelation.constructParent(this)
+  member.apply(this, arguments)
+}
+var member = u.createPolymorphic()
+member.signature('function', function (func) {
+  this.setFunction(func)
+})
+member.signature('object', <span class="fstat-no" title="function not covered" >function (dependencies) {</span>
+<span class="cstat-no" title="statement not covered" >  this.addDependency(dependencies)</span>
+})
+member.signature('object, function', <span class="fstat-no" title="function not covered" >function (dependencies, func) {</span>
+<span class="cstat-no" title="statement not covered" >  this.addDependency(dependencies)</span>
+<span class="cstat-no" title="statement not covered" >  this.setFunction(func)</span>
+})
+&nbsp;
+subscriptionRelation.registerParentPrototype(Member.prototype)
+dependencyRelation.registerParentPrototype(Member.prototype)
+&nbsp;
+Member.prototype._call = function _call (stores, computed) {
+  var self = this
+&nbsp;
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (this.isEnabled()) {
+    var func = self.getFunction()
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (u.isFunction(func)) {
+      return u.Promise.resolve().then(function () {
+        var dependencies = self.getDependency(false)
+        if (dependencies.length &gt; 0) {
+          var idx = 0
+          var depsState = {
+            state: stores,
+            computed: {}
+          }
+          var walker = function () {
+            if (dependencies[idx] !== undefined) {
+              <span class="missing-if-branch" title="else path not taken" >E</span>if (alo.isDependency(dependencies[idx])) {
+                return u.Promise.resolve().then(function () {
+                  return dependencies[idx].reduce(self.getId(), depsState)
+                }).then(function (computed) {
+                  depsState.computed = computed
+                  idx++
+                  return walker()
+                })
+              } else {
+<span class="cstat-no" title="statement not covered" >                idx++</span>
+<span class="cstat-no" title="statement not covered" >                return walker()</span>
+              }
+            } else {
+              return depsState.computed
+            }
+          }
+          return walker()
+        } else {
+          return computed
+        }
+      }).then(function (computed) {
+        var computedLength = u.values(computed).length
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (self._lastData === null ||
+          (computedLength &gt; 0 &amp;&amp; !u.isEqual(self._lastData, computed))
+        ) {
+          self._lastData = computed
+          func(stores, computed)
+        }
+      })
+    }
+<span class="cstat-no" title="statement not covered" >    if (u.isFunction(func)) {</span>
+<span class="cstat-no" title="statement not covered" >      func(stores, computed)</span>
+    }
+  }
+<span class="cstat-no" title="statement not covered" >  return this</span>
+}
+&nbsp;
+Member.prototype.createDependency = function createDependency () {
+  var dependency = alo.createDependency.apply(null, arguments)
+  this.addDependency(dependency)
+&nbsp;
+  return dependency
+}
+&nbsp;
+Member.prototype.disable = <span class="fstat-no" title="function not covered" >function disable () {</span>
+<span class="cstat-no" title="statement not covered" >  this._enabled = false</span>
+<span class="cstat-no" title="statement not covered" >  return this</span>
+}
+&nbsp;
+Member.prototype.enable = <span class="fstat-no" title="function not covered" >function enable () {</span>
+<span class="cstat-no" title="statement not covered" >  this._enabled = true</span>
+<span class="cstat-no" title="statement not covered" >  return this</span>
+}
+&nbsp;
+Member.prototype.isEnabled = function isEnabled () {
+  return this._enabled
+}
+&nbsp;
+Member.prototype.getFunction = function getFunction () {
+  return this._function
+}
+&nbsp;
+Member.prototype.setFunction = function setFunction (func) {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!u.isFunction(func)) {
+<span class="cstat-no" title="statement not covered" >    throw new Error('Argument given needs to be a function')</span>
+  } else {
+    this._function = func
+  }
+&nbsp;
+  return this
+}
+&nbsp;
+Member.prototype.stop = <span class="fstat-no" title="function not covered" >function stop () {</span>
+<span class="cstat-no" title="statement not covered" >  this.disable()</span>
+<span class="cstat-no" title="statement not covered" >  this.removeSubscription()</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return this</span>
+}
+&nbsp;
+module.exports = Member
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 10 2016 16:40:10 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for lib/middleware/middleware.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">lib/middleware/</a> middleware.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">95.31% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>61/64</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">75% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>9/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>10/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">95.31% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>61/64</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">36×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var Alo = require('./../alo.js')
+var Customizer = require('./../util/customizer.js')
+&nbsp;
+var alo = new Alo()
+var u = alo.util
+&nbsp;
+var customizer = new Customizer(true)
+var middlewareRelation = u.createObjectRelation('middleware', 'parentMiddleware', alo.isMiddleware)
+var parentMiddlewareRelation = u.createObjectRelation('parentMiddleware', 'middleware', alo.isMiddleware)
+var storeRelation = u.createObjectRelation('middleware', 'store', alo.isStore)
+&nbsp;
+// Add a better constructor
+var Middleware = function Middleware () {
+  customizer.constructParent(this)
+  middlewareRelation.constructParent(this)
+  parentMiddlewareRelation.constructParent(this)
+  storeRelation.constructParent(this)
+  customizer.constructParent(this)
+}
+&nbsp;
+customizer.registerParentPrototype(Middleware.prototype)
+middlewareRelation.registerParentPrototype(Middleware.prototype)
+parentMiddlewareRelation.registerParentPrototype(Middleware.prototype)
+storeRelation.registerParentPrototype(Middleware.prototype)
+&nbsp;
+/*
+ * The middleware handling is done in a recursive manner
+ */
+Middleware.prototype.meddleRecursive = function meddleRecursive (middlewares, args) {
+  var self = this
+  args = u.values(args)
+  // First argument is always the store
+  var store = args[0]
+&nbsp;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!u.isArray(middlewares)) {
+<span class="cstat-no" title="statement not covered" >    throw new Error('Argument given should be an array')</span>
+  } else if (middlewares.length === 0) {
+    // store needs to be removed at the end of the recursion
+    return args.slice(1)
+  } else {
+    return u.Promise.resolve().then(function () {
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (alo.isMiddleware(middlewares[0])) {
+        return middlewares[0].meddle(args)
+      } else {
+<span class="cstat-no" title="statement not covered" >        return args.slice(1)</span>
+      }
+    }).then(function (resultArgs) {
+      resultArgs = u.values(resultArgs)
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (resultArgs[0] === undefined) {
+<span class="cstat-no" title="statement not covered" >        resultArgs = args</span>
+      } else {
+        resultArgs.unshift(store)
+      }
+      args = resultArgs
+      middlewares = middlewares.slice(1)
+      return self.meddleRecursive(middlewares, resultArgs)
+    })
+  }
+}
+&nbsp;
+Middleware.prototype.meddle = function meddle (args) {
+  var self = this
+  args = u.values(args)
+  var store = args[0]
+  args = args.slice(1)
+&nbsp;
+  var argsToArray = function (resultArgs) {
+    if (resultArgs === undefined) {
+      resultArgs = args
+    } else if (!u.isArray(resultArgs)) {
+      resultArgs = [resultArgs]
+    }
+    args = u.cloneDeep(resultArgs)
+&nbsp;
+    return resultArgs
+  }
+&nbsp;
+  return u.Promise.resolve().then(function () {
+    var newArgs = u.cloneDeep(args)
+    newArgs.unshift(store)
+    newArgs.unshift('prepare')
+    return self.callCustomizer.apply(self, newArgs)
+  }).then(function (resultArgs) {
+    resultArgs = argsToArray(resultArgs)
+    resultArgs.unshift(store)
+    return self.meddleRecursive(self.getMiddleware(false), resultArgs)
+  }).then(function (resultArgs) {
+    resultArgs = argsToArray(resultArgs)
+    resultArgs.unshift(store)
+    resultArgs.unshift('finalize')
+    return self.callCustomizer.apply(self, resultArgs)
+  }).then(function (resultArgs) {
+    resultArgs = argsToArray(resultArgs)
+    return resultArgs
+  })
+}
+module.exports = Middleware
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 10 2016 16:40:10 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

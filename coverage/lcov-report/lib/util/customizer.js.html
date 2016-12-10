@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for lib/util/customizer.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">lib/util/</a> customizer.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">77.78% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>42/54</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">44.44% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>8/18</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">81.82% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>9/11</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">77.78% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>42/54</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">34×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">44×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">44×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44×</span>
+<span class="cline-any cline-yes">44×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">30×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">30×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">30×</span>
+<span class="cline-any cline-yes">30×</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var Util = require('./util.js')
+var u = new Util()
+var ObjectRelation = require('./object-relation.js')
+&nbsp;
+var functions = {
+  getCustomizer: {},
+  setCustomizer: {},
+  unsetCustomizer: {},
+  callCustomizer: {}
+}
+&nbsp;
+var customizerTypes = ['prepare', 'finalize']
+&nbsp;
+var Customizer = function (async) {
+  var self = this
+&nbsp;
+  this.async = (async === true)
+&nbsp;
+  this.functions = {}
+  u.forEach(functions, function (func, funcName) {
+    self.functions[funcName] = {
+      after: []
+    }
+  })
+}
+&nbsp;
+Customizer.prototype.constructParent = function (parent) {
+  parent._customizers = {}
+  u.forEach(customizerTypes, function (type) {
+    parent._customizers[type] = false
+  })
+}
+&nbsp;
+Customizer.prototype.registerParentPrototype = function (proto) {
+  return ObjectRelation.prototype.registerParentPrototype.call(this, proto)
+}
+&nbsp;
+/**
+ *
+ */
+Customizer.prototype.setCustomizerFunction = u.createPolymorphic()
+var set = Customizer.prototype.setCustomizerFunction
+set.signature('object, function, string b=finalize', function (config, func, type) {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (customizerTypes.indexOf(type) === -1) {
+<span class="cstat-no" title="statement not covered" >    throw new Error('Argument for type is invalid')</span>
+  } else {
+    this._customizers[type] = func
+  }
+&nbsp;
+  return this
+})
+&nbsp;
+Customizer.prototype.unsetCustomizerFunction = <span class="fstat-no" title="function not covered" >function (config, type) {</span>
+<span class="cstat-no" title="statement not covered" >  var self = this</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (type !== undefined &amp;&amp; customizerTypes.indexOf(type) === -1) {</span>
+<span class="cstat-no" title="statement not covered" >    throw new Error('Argument for type should be prepare or finalize')</span>
+  } else {
+<span class="cstat-no" title="statement not covered" >    if (type === undefined) {</span>
+<span class="cstat-no" title="statement not covered" >      u.forEach(this._customizers, <span class="fstat-no" title="function not covered" >function (func, type) {</span></span>
+<span class="cstat-no" title="statement not covered" >        self.unsetCustomizer(type)</span>
+      })
+    } else {
+<span class="cstat-no" title="statement not covered" >      this._customizers[type] = false</span>
+    }
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return this</span>
+}
+&nbsp;
+Customizer.prototype.getCustomizerFunction = u.createPolymorphic()
+var get = Customizer.prototype.getCustomizerFunction
+get.signature('object, string a=finalize', function (config, type) {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (customizerTypes.indexOf(type) === -1) {
+<span class="cstat-no" title="statement not covered" >    throw new Error('Argument for type is invalid')</span>
+  } else {
+    return this._customizers[type]
+  }
+})
+&nbsp;
+Customizer.prototype.callCustomizerFunction = function (config, type) {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!u.isString(type)) {
+<span class="cstat-no" title="statement not covered" >    throw new Error('Argument for type should be a string')</span>
+  } else {
+    var func = this.getCustomizer(type)
+    if (!u.isFunction(func)) {
+      return undefined
+    } else {
+      var args = u.values(arguments)
+      /*
+       * The config argument is prepended to the function by the customizer - not by the user
+       * This error is done for the enduser which doenst know about config
+       */
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (args.length &lt;= 2) {
+<span class="cstat-no" title="statement not covered" >        throw new Error('Atleast two arguments are required')</span>
+      }
+      args = args.slice(2)
+      if (config.async === true) {
+        return u.Promise.resolve().then(function () {
+          return func.apply(null, args)
+        })
+      } else {
+        return func.apply(null, args)
+      }
+    }
+  }
+}
+&nbsp;
+module.exports = Customizer
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 10 2016 16:40:10 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>
