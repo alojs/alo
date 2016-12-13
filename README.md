@@ -24,7 +24,7 @@ http://www.alojs.com/docs/api/ Currently in the works!
 * NPM: `npm install --save-dev alo`    
 * Bower: `bower install --save-dev alo`
 
-## Use
+### Use
 
 * Core: `require('alo')`
 * Core *Dev*: `require('alo.dev.js')`
