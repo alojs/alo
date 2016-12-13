@@ -5,6 +5,7 @@
 
 [![license](https://img.shields.io/github/license/alojs/alo.svg)](https://github.com/alojs/alo/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/v/alo.svg)](https://www.npmjs.com/package/alo)
+[![Bower](https://img.shields.io/bower/v/alo.svg)](https://bower.io/search/?q=alo)
 [![Travis](https://img.shields.io/travis/alojs/alo.svg)](https://travis-ci.org/alojs/alo)
 [![Coveralls](https://img.shields.io/coveralls/alojs/alo.svg)](https://coveralls.io/github/alojs/alo)
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
@@ -18,7 +19,17 @@ Currently in the works...
 ## API
 http://www.alojs.com/docs/api/ Currently in the works!
 
-## Versions
+## Installation
+
+- NPM: `npm install --save-dev alo`
+    - Alo: `require('alo')`
+    - Alo *Dev*: `require('alo.dev.js')`
+    - Alo Full: `require('alo/main/alo.full.js')`
+    - Alo Full *Dev*: `require('alo/main/alo.full.dev.js')`    
+- Bower: `bower install --save-dev alo`
+
+
+### Versions
 There are different main files available for use in the [main](https://github.com/alojs/alo/tree/master/main) folder.
 
 The files are constructed with a combination of these postfixes:
@@ -26,20 +37,20 @@ The files are constructed with a combination of these postfixes:
 * full: includes extras (helpers like some basic reducers and middleware)
 * dev: enables long stacktraces in promises and will (as of 3.0) add the debug console to the Alo class
 
-## CDN's
+### CDN's
 You can use Alo with NPM or Bower or even straight from a CDN. There are couple browser builds available in the dist folder
 
-### Development (unminified and with devtools) (see <a href="#versions">Versions</a>)
+#### Development (unminified and with devtools) (see <a href="#versions">Versions</a>)
 
 * Core: https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/alo.dev.js
 * Full: https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/alo.full.dev.js
 
-### Production (minified)
+#### Production (minified)
 
 * Core: https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/alo.min.js
 * Full: https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/alo.full.min.js
 
-### More?
+#### More?
 Please have a look at [RawGit](https://rawgit.com). It allows you to use basically any file from Github repos (and therefore also all the files from https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/)
 
 ## FAQ
