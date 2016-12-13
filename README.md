@@ -21,13 +21,15 @@ http://www.alojs.com/docs/api/ Currently in the works!
 
 ## Installation
 
-- NPM: `npm install --save-dev alo`
-    - Alo: `require('alo')`
-    - Alo *Dev*: `require('alo.dev.js')`
-    - Alo Full: `require('alo/main/alo.full.js')`
-    - Alo Full *Dev*: `require('alo/main/alo.full.dev.js')`    
-- Bower: `bower install --save-dev alo`
+* NPM: `npm install --save-dev alo`    
+* Bower: `bower install --save-dev alo`
 
+## Use
+
+* Core: `require('alo')`
+* Core *Dev*: `require('alo.dev.js')`
+* Full: `require('alo/main/alo.full.js')`
+* Full *Dev*: `require('alo/main/alo.full.dev.js')` 
 
 ### Versions
 There are different main files available for use in the [main](https://github.com/alojs/alo/tree/master/main) folder.
