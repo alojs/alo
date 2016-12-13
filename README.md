@@ -13,6 +13,22 @@
 [![David](https://img.shields.io/david/alojs/alo.svg)](https://github.com/alojs/alo)
 [![David](https://img.shields.io/david/dev/alojs/alo.svg)](https://github.com/alojs/alo)
 
+## Intro
+There are many libraries to manage state: [Redux](https://github.com/reactjs/redux), [Mobx](https://github.com/mobxjs/mobx), [Vuex](https://github.com/vuejs/vuex), and a countless number more. Although I like the ideas behind them, I wasnt quite happy how they introduce many necessary extra steps to get started, require dozens of extra plugins do get you your job done, or introduce new babel build tools, just to write usable code. As an example, i just can't stand the magic behind code like this:
+
+```
+class Todo {
+    id = Math.random();
+    @observable title = "";
+    @observable finished = false;
+}
+```
+
+Yeah its readable and one can probably guess, what this code is doing. But is it *really* a benefit to a plain ES5 solution? I am not that sure. But I am maybe just a little bit oldscool. Know I am not here to prove you my point and to *sell* you Alo. But surely I would love to see that you and others enjoy Alo. But at the end everyone must choose the tools which work best for him and her.
+
+### But what is Alo?
+Now I actually need to work on this paragraph AWWW!
+
 ## Getting started
 Currently in the works...
 
