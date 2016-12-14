@@ -104,7 +104,7 @@ describe('Store', function () {
     })
     describe('with object', function () {
       it('should call the subscriptions', function () {
-        var store = alo.createStore()
+        var store = alo.createStore({})
         var status = 0
 
         var sub = store.createSubscription()
@@ -113,9 +113,13 @@ describe('Store', function () {
         })
 
         return store.dispatch({}).then(function () {
-          return setTimeout(function () {
-            assert.equal(1, status)
-          }, 100)
+          return u.createPromise(function (resolve) {
+            setTimeout(function () {
+              resolve()
+            }, 100)
+          })
+        }).then(function () {
+          assert.equal(1, status)
         })
       })
     })

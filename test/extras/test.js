@@ -1,8 +1,6 @@
-/* global describe, it */
-
-var alo = require('./../../main/alo.js')
-var assert = require('assert')
+/* global describe */
 
 describe('extras', function () {
   require('./reducers.js')
+  require('./middlewares.js')
 })
