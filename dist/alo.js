@@ -8979,6 +8979,7 @@ var alo =
 	    this.functions = {}
 	    u.forEach(functions, function (func, funcName) {
 	      self.functions[funcName] = {
+	        before: [],
 	        after: []
 	      }
 	      if (func.relation === true) {
@@ -9008,6 +9009,9 @@ var alo =
 	      var parent = this
 	      var args = u.values(arguments)
 	      args.unshift(self)
+	      u.forEach(self.functions[funcName].before, function (beforeFunc) {
+	        beforeFunc.call(parent)
+	      })
 	      var result = func.apply(parent, args)
 	      u.forEach(self.functions[funcName].after, function (afterFunc) {
 	        afterFunc.call(parent)
@@ -9176,6 +9180,12 @@ var alo =
 	  }
 	}
 
+	ObjectRelation.prototype.before = u.createPolymorphic()
+	var before = ObjectRelation.prototype.before
+	before.signature('string, function', function (functionName, func) {
+	  this.functions[functionName].before.push(func)
+	})
+
 	ObjectRelation.prototype.after = u.createPolymorphic()
 	var after = ObjectRelation.prototype.after
 	after.signature('string, function', function (functionName, func) {
@@ -9282,26 +9292,7 @@ var alo =
 	          state: streamState,
 	          computed: {}
 	        }
-	        var idx = 0
-	        var walker = function () {
-	          if (dependencies[idx] !== undefined) {
-	            if (alo.isDependency(dependencies[idx])) {
-	              return u.Promise.resolve().then(function () {
-	                return dependencies[idx].reduce(self.getId(), depsState)
-	              }).then(function (computed) {
-	                depsState.computed = computed
-	                idx++
-	                return walker()
-	              })
-	            } else {
-	              idx++
-	              return walker()
-	            }
-	          } else {
-	            return depsState.computed
-	          }
-	        }
-	        return walker()
+	        return dependencies[0].reduceRecursive(self.getId(), dependencies, depsState)
 	      } else {
 	        return {}
 	      }
@@ -9352,6 +9343,7 @@ var alo =
 	    var promise = u.Promise.resolve().then(function () {
 	      return self._callEvent('beforePublish', state)
 	    }).then(function (runPublish) {
+	      self._muted = false
 	      if (runPublish !== false) {
 	        var state = self.getData()
 	        var promises = []
@@ -9364,6 +9356,7 @@ var alo =
 	      }
 	    }).then(function (runPublish) {
 	      if (runPublish !== false) {
+	        self._muted = true
 	        return self._callEvent('afterPublish', state)
 	      }
 	    }).then(function () {
@@ -9536,6 +9529,35 @@ var alo =
 	  return this
 	}
 
+	Dependency.prototype.reduceRecursive = function reduceRecursive (id, dependencies, data) {
+	  return u.Promise.resolve().then(function () {
+	    if (dependencies.length > 0) {
+	      var idx = 0
+	      var walker = function () {
+	        if (dependencies[idx] !== undefined) {
+	          if (alo.isDependency(dependencies[idx])) {
+	            return u.Promise.resolve().then(function () {
+	              return dependencies[idx].reduce(id, data)
+	            }).then(function (computed) {
+	              data.computed = computed
+	              idx++
+	              return walker()
+	            })
+	          } else {
+	            idx++
+	            return walker()
+	          }
+	        } else {
+	          return data.computed
+	        }
+	      }
+	      return walker()
+	    } else {
+	      return {}
+	    }
+	  })
+	}
+
 	Dependency.prototype.reduce = function reduce (id, data) {
 	  var self = this
 	  self._cache[id] = self._cache[id] || {}
@@ -9691,52 +9713,30 @@ var alo =
 
 	Member.prototype._call = function _call (stores, computed) {
 	  var self = this
-
 	  if (this.isEnabled()) {
 	    var func = self.getFunction()
 	    if (u.isFunction(func)) {
 	      return u.Promise.resolve().then(function () {
 	        var dependencies = self.getDependency(false)
 	        if (dependencies.length > 0) {
-	          var idx = 0
 	          var depsState = {
 	            state: stores,
 	            computed: {}
 	          }
-	          var walker = function () {
-	            if (dependencies[idx] !== undefined) {
-	              if (alo.isDependency(dependencies[idx])) {
-	                return u.Promise.resolve().then(function () {
-	                  return dependencies[idx].reduce(self.getId(), depsState)
-	                }).then(function (computed) {
-	                  depsState.computed = computed
-	                  idx++
-	                  return walker()
-	                })
-	              } else {
-	                idx++
-	                return walker()
-	              }
-	            } else {
-	              return depsState.computed
-	            }
-	          }
-	          return walker()
+	          return dependencies[0].reduceRecursive(self.getId(), dependencies, depsState)
 	        } else {
 	          return computed
 	        }
 	      }).then(function (computed) {
 	        var computedLength = u.values(computed).length
 	        if (self._lastData === null ||
+	          (computedLength === 0) ||
 	          (computedLength > 0 && !u.isEqual(self._lastData, computed))
 	        ) {
 	          self._lastData = computed
 	          func(stores, computed)
 	        }
 	      })
-	    }
-	    if (u.isFunction(func)) {
-	      func(stores, computed)
 	    }
 	  }
 	  return this
@@ -9910,6 +9910,13 @@ var alo =
 	storeRelation.registerParentPrototype(Reducer.prototype)
 	reducerRelation.registerParentPrototype(Reducer.prototype)
 	parentReducerRelation.registerParentPrototype(Reducer.prototype)
+
+	Reducer.prototype.createReducer = function () {
+	  var reducer = alo.createReducer.apply(null, arguments)
+	  this.addReducer(reducer)
+
+	  return reducer
+	}
 
 	/**
 	 * Calls the registered reducers with the provided state and action
@@ -10121,8 +10128,8 @@ var alo =
 	  }
 	  state = {
 	    state: state,
-	    computed: state,
-	    action: null
+	    computed: {},
+	    action: { type: null, payload: null }
 	  }
 
 	  /**
@@ -10526,6 +10533,13 @@ var alo =
 	parentMiddlewareRelation.registerParentPrototype(Middleware.prototype)
 	storeRelation.registerParentPrototype(Middleware.prototype)
 
+	Middleware.prototype.createMiddleware = function createMiddleware () {
+	  var middleware = alo.createMiddleware.apply(null, arguments)
+	  this.addMiddleware(middleware)
+
+	  return middleware
+	}
+
 	/*
 	 * The middleware handling is done in a recursive manner
 	 */
@@ -10584,16 +10598,19 @@ var alo =
 	    newArgs.unshift('prepare')
 	    return self.callCustomizer.apply(self, newArgs)
 	  }).then(function (resultArgs) {
-	    resultArgs = argsToArray(resultArgs)
+	    return u.Promise.all(argsToArray(resultArgs))
+	  }).then(function (resultArgs) {
 	    resultArgs.unshift(store)
 	    return self.meddleRecursive(self.getMiddleware(false), resultArgs)
 	  }).then(function (resultArgs) {
-	    resultArgs = argsToArray(resultArgs)
+	    return u.Promise.all(argsToArray(resultArgs))
+	  }).then(function (resultArgs) {
 	    resultArgs.unshift(store)
 	    resultArgs.unshift('finalize')
 	    return self.callCustomizer.apply(self, resultArgs)
 	  }).then(function (resultArgs) {
-	    resultArgs = argsToArray(resultArgs)
+	    return u.Promise.all(argsToArray(resultArgs))
+	  }).then(function (resultArgs) {
 	    return resultArgs
 	  })
 	}
