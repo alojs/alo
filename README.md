@@ -27,7 +27,35 @@ class Todo {
 Yeah its readable and one can probably guess, what this code is doing. But is it *really* a benefit to a plain ES5 solution? I am not that sure. But I am maybe just a little bit oldscool. Know I am not here to prove you my point and to *sell* you Alo. But surely I would love to see that you and others enjoy Alo. But at the end everyone must choose the tools which work best for him and her.
 
 ### But what is Alo?
-Now I actually need to work on this paragraph AWWW!
+Now I actually need to work on this paragraph AWWW! But here is a small code snippet, just introducing the basics:
+
+```
+var Alo = require('alo')
+var alo = new Alo();
+
+// Stores are objects on top of flyd streams https://github.com/paldepind/flyd
+var myCoolStore = alo.createStore({test: 'tired string :('}, 'coolStore')
+
+// Reducers are actually objects too!
+var myReducer = myCoolStore.createReducer(function(state, action) {
+  if (action.type === "hello") {
+      state.test = "FANCY STRING! Wohoo lets dance!"
+  }
+  // I will change the state
+  return state
+})
+
+// This is a subscription, it can be subscribed to multible stores!
+var sub = myCoolStore.subscribe(function(stores) {
+  console.log('message', stores.coolStore.state)
+})
+
+var promise = myCoolStore.dispatch({ type: 'hello' });
+// A dispatch always returns a promise
+promise.then(function() {
+  console.log('dispatch done, yeah!');
+})
+```
 
 ## Getting started
 Currently in the works...
