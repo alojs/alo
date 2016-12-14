@@ -5,6 +5,7 @@
 
 [![license](https://img.shields.io/github/license/alojs/alo.svg)](https://github.com/alojs/alo/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/v/alo.svg)](https://www.npmjs.com/package/alo)
+[![Bower](https://img.shields.io/bower/v/alo.svg)](https://bower.io/search/?q=alo)
 [![Travis](https://img.shields.io/travis/alojs/alo.svg)](https://travis-ci.org/alojs/alo)
 [![Coveralls](https://img.shields.io/coveralls/alojs/alo.svg)](https://coveralls.io/github/alojs/alo)
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
@@ -12,13 +13,41 @@
 [![David](https://img.shields.io/david/alojs/alo.svg)](https://github.com/alojs/alo)
 [![David](https://img.shields.io/david/dev/alojs/alo.svg)](https://github.com/alojs/alo)
 
+## Intro
+There are many libraries to manage state: [Redux](https://github.com/reactjs/redux), [Mobx](https://github.com/mobxjs/mobx), [Vuex](https://github.com/vuejs/vuex), and a countless number more. Although I like the ideas behind them, I wasnt quite happy how they introduce many necessary extra steps to get started, require dozens of extra plugins do get you your job done, or introduce new babel build tools, just to write usable code. As an example, i just can't stand the magic behind code like this:
+
+```
+class Todo {
+    id = Math.random();
+    @observable title = "";
+    @observable finished = false;
+}
+```
+
+Yeah its readable and one can probably guess, what this code is doing. But is it *really* a benefit to a plain ES5 solution? I am not that sure. But I am maybe just a little bit oldscool. Know I am not here to prove you my point and to *sell* you Alo. But surely I would love to see that you and others enjoy Alo. But at the end everyone must choose the tools which work best for him and her.
+
+### But what is Alo?
+Now I actually need to work on this paragraph AWWW!
+
 ## Getting started
 Currently in the works...
 
 ## API
 http://www.alojs.com/docs/api/ Currently in the works!
 
-## Versions
+## Installation
+
+* NPM: `npm install --save-dev alo`    
+* Bower: `bower install --save-dev alo`
+
+### Use
+
+* Core: `require('alo')`
+* Core *Dev*: `require('alo.dev.js')`
+* Full: `require('alo/main/alo.full.js')`
+* Full *Dev*: `require('alo/main/alo.full.dev.js')` 
+
+### Versions
 There are different main files available for use in the [main](https://github.com/alojs/alo/tree/master/main) folder.
 
 The files are constructed with a combination of these postfixes:
@@ -26,20 +55,20 @@ The files are constructed with a combination of these postfixes:
 * full: includes extras (helpers like some basic reducers and middleware)
 * dev: enables long stacktraces in promises and will (as of 3.0) add the debug console to the Alo class
 
-## CDN's
+### CDN's
 You can use Alo with NPM or Bower or even straight from a CDN. There are couple browser builds available in the dist folder
 
-### Development (unminified and with devtools) (see <a href="#versions">Versions</a>)
+#### Development (unminified and with devtools) (see <a href="#versions">Versions</a>)
 
 * Core: https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/alo.dev.js
 * Full: https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/alo.full.dev.js
 
-### Production (minified)
+#### Production (minified)
 
 * Core: https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/alo.min.js
 * Full: https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/alo.full.min.js
 
-### More?
+#### More?
 Please have a look at [RawGit](https://rawgit.com). It allows you to use basically any file from Github repos (and therefore also all the files from https://cdn.rawgit.com/alojs/alo/v2.3.0/dist/)
 
 ## FAQ
