@@ -1,1 +1,1 @@
-docs/**/*.html linguist-vendored
+docs/api/* linguist-vendored
