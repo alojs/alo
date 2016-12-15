@@ -7,6 +7,22 @@ var u = alo.util
 var assert = require('assert')
 
 describe('Subscription', function () {
+  describe('remember', function () {
+    it('should call the subscription with the last data', function () {
+      var store = alo.createStore('old', 'store')
+      store.addReducer(alo.extras.reducers.createUntypedReplace())
+      return u.createPromise(function (resolve) {
+        store.dispatch({ payload: 'new' }).then(function () {
+          store.subscribe(function (stores) {
+            resolve(stores.store.state)
+          }).remember()
+        })
+      }).then(function (result) {
+        assert.equal('new', result)
+      })
+    })
+  })
+
   var store = alo.createStore({test: 'wrong string'}, 'store')
 
   store.createReducer(function (state, action) {
