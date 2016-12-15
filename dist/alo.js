@@ -9292,7 +9292,7 @@ var alo =
 	          state: streamState,
 	          computed: {}
 	        }
-	        return dependencies[0].reduceRecursive(self.getId(), dependencies, depsState)
+	        return dependencies[0].reduceRecursive(dependencies, self.getId(), depsState)
 	      } else {
 	        return {}
 	      }
@@ -9370,17 +9370,12 @@ var alo =
 	Subscription.prototype.enable = null
 	Subscription.prototype.disable = null
 
-	// TODO: Rewrite
 	Subscription.prototype.remember = function remember () {
 	  var self = this
 
-	  var promises = []
+	  var data = self.getData()
 
-	  u.forEach(this.getStore(), function (store) {
-	    promises.push(self._publish(store, store.getData()))
-	  })
-
-	  return u.Promise.all(promises)
+	  return self._publish(data)
 	}
 
 	Subscription.prototype.stop = function stop () {
@@ -9529,7 +9524,7 @@ var alo =
 	  return this
 	}
 
-	Dependency.prototype.reduceRecursive = function reduceRecursive (id, dependencies, data) {
+	Dependency.prototype.reduceRecursive = function reduceRecursive (dependencies, id, data) {
 	  return u.Promise.resolve().then(function () {
 	    if (dependencies.length > 0) {
 	      var idx = 0
@@ -9723,7 +9718,7 @@ var alo =
 	            state: stores,
 	            computed: {}
 	          }
-	          return dependencies[0].reduceRecursive(self.getId(), dependencies, depsState)
+	          return dependencies[0].reduceRecursive(dependencies, self.getId(), depsState)
 	        } else {
 	          return computed
 	        }
@@ -10417,30 +10412,13 @@ var alo =
 	         */
 	        var computedProperties = self.getComputedProperty(false)
 	        if (computedProperties.length > 0) {
-	          var idx = 0
-	          var walker = function () {
-	            if (computedProperties[idx] !== undefined) {
-	              if (alo.isDependency(computedProperties[idx])) {
-	                return u.Promise.resolve().then(function () {
-	                  return computedProperties[idx].reduce(self.getId(), u.cloneDeep(newState))
-	                }).then(function (computed) {
-	                  newState.computed = computed
-	                  idx++
-	                  return walker()
-	                })
-	              } else {
-	                idx++
-	                return walker()
-	              }
-	            } else {
-	              return newState
-	            }
-	          }
-	          return walker()
+	          return computedProperties[0].reduceRecursive(computedProperties, self.getId(), u.cloneDeep(newState))
 	        } else {
-	          return newState
+	          return newState.computed
 	        }
-	      }).then(function (newState) {
+	      }).then(function (computed) {
+	        newState.computed = computed
+
 	        // Apply the changed state
 	        var stream = self.getStream()
 	        stream(newState)
