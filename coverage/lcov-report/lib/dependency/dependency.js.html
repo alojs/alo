@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">87.97% </span>
+        <span class="strong">87.33% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>117/133</span>
+        <span class='fraction'>131/150</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">60% </span>
+        <span class="strong">60.71% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>30/50</span>
+        <span class='fraction'>34/56</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">92.86% </span>
+        <span class="strong">93.94% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>26/28</span>
+        <span class='fraction'>31/33</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">87.97% </span>
+        <span class="strong">87.33% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>117/133</span>
+        <span class='fraction'>131/150</span>
       </div>
     </div>
   </div>
@@ -259,7 +259,36 @@
 214
 215
 216
-217</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -358,6 +387,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
@@ -576,6 +634,35 @@ Dependency.prototype.remove = <span class="fstat-no" title="function not covered
 <span class="cstat-no" title="statement not covered" >  return this</span>
 }
 &nbsp;
+Dependency.prototype.reduceRecursive = function reduceRecursive (id, dependencies, data) {
+  return u.Promise.resolve().then(function () {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (dependencies.length &gt; 0) {
+      var idx = 0
+      var walker = function () {
+        if (dependencies[idx] !== undefined) {
+          <span class="missing-if-branch" title="else path not taken" >E</span>if (alo.isDependency(dependencies[idx])) {
+            return u.Promise.resolve().then(function () {
+              return dependencies[idx].reduce(id, data)
+            }).then(function (computed) {
+              data.computed = computed
+              idx++
+              return walker()
+            })
+          } else {
+<span class="cstat-no" title="statement not covered" >            idx++</span>
+<span class="cstat-no" title="statement not covered" >            return walker()</span>
+          }
+        } else {
+          return data.computed
+        }
+      }
+      return walker()
+    } else {
+<span class="cstat-no" title="statement not covered" >      return {}</span>
+    }
+  })
+}
+&nbsp;
 Dependency.prototype.reduce = function reduce (id, data) {
   var self = this
   self._cache[id] = self._cache[id] || {}
@@ -697,7 +784,7 @@ module.exports = Dependency
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 10 2016 16:40:10 GMT+0100 (CET)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 15 2016 12:11:54 GMT+0100 (CET)
 </div>
 </div>
 <script src="../../prettify.js"></script>

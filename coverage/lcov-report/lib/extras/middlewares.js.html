@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for lib/extras/reducers.js</title>
+    <title>Code coverage report for lib/extras/middlewares.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -16,28 +16,28 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../../index.html">all files</a> / <a href="index.html">lib/extras/</a> reducers.js
+      <a href="../../index.html">all files</a> / <a href="index.html">lib/extras/</a> middlewares.js
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
         <span class="strong">91.67% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>11/12</span>
+        <span class='fraction'>22/24</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">57.14% </span>
+        <span class="strong">75% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>4/7</span>
+        <span class='fraction'>3/4</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>2/2</span>
+        <span class='fraction'>5/5</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">91.67% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>11/12</span>
+        <span class='fraction'>22/24</span>
       </div>
     </div>
   </div>
@@ -68,28 +68,60 @@
 23
 24
 25
-26</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
@@ -97,27 +129,43 @@
 var alo = new Alo()
 var u = alo.util
 &nbsp;
-var reducers = {}
-&nbsp;
 /**
- * A basic reducer which just replaces state with payload of untyped actions
- *
  * @memberof extras
  */
-reducers.createUntypedReplace = function () {
-  var reduce = function (state, action) {
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (action.type === undefined || action.type === null || <span class="branch-2 cbranch-no" title="branch not covered" >action.type === '')</span> {
-      <span class="missing-if-branch" title="else path not taken" >E</span>if (action.payload !== undefined) {
-        return action.payload
-      }
-    }
-<span class="cstat-no" title="statement not covered" >    return state</span>
-  }
+var middlewares = {}
 &nbsp;
-  return alo.createReducer(reduce)
+middlewares.createThunk = function createThunk () {
+  var middleware = alo.createMiddleware(function () {
+    var args = u.values(arguments)
+    var arg = args[1]
+    var walk = function (args) {
+      var arg = args[1]
+      args.splice(1, 1)
+      return u.Promise.resolve().then(function () {
+        return arg.apply(null, args)
+      }).then(function (arg) {
+        if (u.isFunction(arg)) {
+          args.splice(1, 0, arg)
+          return walk(args)
+        } else {
+          args.splice(0, 1, arg)
+          return args
+        }
+      })
+    }
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (u.isFunction(arg)) {
+      return walk(args)
+    } else {
+<span class="cstat-no" title="statement not covered" >      args.splice(0, 1)</span>
+<span class="cstat-no" title="statement not covered" >      return args</span>
+    }
+  })
+&nbsp;
+  return middleware
 }
 &nbsp;
-module.exports = reducers
+module.exports = middlewares
 &nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
