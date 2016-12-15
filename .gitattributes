@@ -1,3 +1,4 @@
 docs/api/* linguist-vendored
 coverage/* linguist-vendored
 test/* linguist-vendored
+build/* linguist-vendored

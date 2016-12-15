@@ -8,13 +8,15 @@
     "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*",
     "test-watch": "mocha-webpack --watch",
     "build": "npm run build:main && npm run build:min",
+    "build:readme": "node ./build/readme.js",
     "build:main": "./node_modules/.bin/webpack",
     "build:min": "npm run build:min:core && npm run build:min:full",
     "build:min:core": "./node_modules/.bin/uglifyjs ./dist/alo.js -c -m -o ./dist/alo.min.js --source-map ./dist/alo.min.js.map && npm run build:min:core:dev",
     "build:min:core:dev": "./node_modules/.bin/uglifyjs ./dist/alo.dev.js -c -m -o ./dist/alo.dev.min.js --source-map ./dist/alo.dev.min.js.map",
     "build:min:full": "./node_modules/.bin/uglifyjs ./dist/alo.full.js -c -m -o ./dist/alo.full.min.js --source-map ./dist/alo.full.min.js.map && npm run build:min:full:dev",
     "build:min:full:dev": "./node_modules/.bin/uglifyjs ./dist/alo.full.dev.js -c -m -o ./dist/alo.full.dev.min.js --source-map ./dist/alo.full.dev.min.js.map",
-    "dev-server": "./node_modules/.bin/webpack-dev-server"
+    "dev-server": "./node_modules/.bin/webpack-dev-server",
+    "version": "npm run build:readme"
   },
   "repository": {
     "type": "git",
