@@ -88,16 +88,16 @@ You can use Alo with NPM or Bower or even straight from a CDN. There are couple 
 
 #### Development (unminified and with devtools) (see <a href="#versions">Versions</a>)
 
-* Core: https://cdn.rawgit.com/alojs/alo/v2.4.0/dist/alo.dev.js
-* Full: https://cdn.rawgit.com/alojs/alo/v2.4.0/dist/alo.full.dev.js
+* Core: https://cdn.rawgit.com/alojs/alo/v2.4.1/dist/alo.dev.js
+* Full: https://cdn.rawgit.com/alojs/alo/v2.4.1/dist/alo.full.dev.js
 
 #### Production (minified)
 
-* Core: https://cdn.rawgit.com/alojs/alo/v2.4.0/dist/alo.min.js
-* Full: https://cdn.rawgit.com/alojs/alo/v2.4.0/dist/alo.full.min.js
+* Core: https://cdn.rawgit.com/alojs/alo/v2.4.1/dist/alo.min.js
+* Full: https://cdn.rawgit.com/alojs/alo/v2.4.1/dist/alo.full.min.js
 
 #### More?
-Please have a look at [RawGit](https://rawgit.com). It allows you to use basically any file from Github repos (and therefore also all the files from https://cdn.rawgit.com/alojs/alo/v2.4.0/dist/)
+Please have a look at [RawGit](https://rawgit.com). It allows you to use basically any file from Github repos (and therefore also all the files from https://cdn.rawgit.com/alojs/alo/v2.4.1/dist/)
 
 ## FAQ
 1. *Is this library ready to use for production?*
