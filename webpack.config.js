@@ -16,7 +16,12 @@ module.exports = {
     library: 'alo',
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
-  },
+  }
+  preLoaders: [{
+    test: /\.js?$/,
+    loader: "remove-flow-types",
+    include: path.join(__dirname, "lib")
+  }],
   plugins: [
     new JsDocPlugin({
       conf: './jsdoc.conf'
