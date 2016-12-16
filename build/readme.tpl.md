@@ -14,9 +14,9 @@
 [![David](https://img.shields.io/david/dev/alojs/alo.svg)](https://github.com/alojs/alo)
 
 ## Intro
-There are many libraries to manage state: [Redux](https://github.com/reactjs/redux), [Mobx](https://github.com/mobxjs/mobx), [Vuex](https://github.com/vuejs/vuex), and a countless number more. Although I like the ideas behind them, I wasnt quite happy how they introduce many necessary extra steps to get started, require dozens of extra plugins do get you your job done, or introduce new babel build tools, just to write usable code. As an example, i just can't stand the magic behind code like this:
+Alo is a state management library, helping you to organize frontend application state in a productive way, giving you ways to handle side effects, and allowing you, to stay in control of whats going on. There are many libraries to manage state: [Redux](https://github.com/reactjs/redux), [Mobx](https://github.com/mobxjs/mobx), [Vuex](https://github.com/vuejs/vuex), and a countless number more. Although I like the ideas behind them, I wasnt quite happy how they introduce many necessary extra steps to get started, require dozens of extra plugins do get you your job done, or introduce new babel build tools, just to write usable code. As an example, i just can't stand the magic behind code like this (code from mobx):
 
-```
+```js
 class Todo {
     id = Math.random();
     @observable title = "";
@@ -26,10 +26,20 @@ class Todo {
 
 Yeah its readable and one can probably guess, what this code is doing. But is it *really* a benefit to a plain ES5 solution? I am not that sure. But I am maybe just a little bit oldscool. Know I am not here to prove you my point and to *sell* you Alo. But surely I would love to see that you and others enjoy Alo. But at the end everyone must choose the tools which work best for him and her.
 
+### Features
+
+* State managed with [flyd](https://github.com/paldepind/flyd) streams (therefore being able to access the state stream direcly if needed)
+* All the features of a basic state management library (stores, dispatch, subscriptions, middleware)
+* Computed properties with dependencies on the state (only computed if dependencies change)
+* Dependency-handling for subscriptions (allowing to call subscriptions only if specific dependencies change)
+* Before and after events for subscriptions
+* Flexible object oriented classes for stores, subscriptions, reducers, etc.
+* Promise Support for dispatches, dependencies and middleware
+
 ### But what is Alo?
 Now I actually need to work on this paragraph AWWW! But here is a small code snippet, just introducing the basics:
 
-```
+```js
 var Alo = require('alo')
 var alo = new Alo();
 
@@ -65,7 +75,7 @@ http://www.alojs.com/docs/api/ Currently in the works!
 
 ## Installation
 
-* NPM: `npm install --save-dev alo`    
+* NPM: `npm install --save-dev alo`
 * Bower: `bower install --save-dev alo`
 
 ### Use
@@ -73,7 +83,7 @@ http://www.alojs.com/docs/api/ Currently in the works!
 * Core: `require('alo')`
 * Core *Dev*: `require('alo.dev.js')`
 * Full: `require('alo/main/alo.full.js')`
-* Full *Dev*: `require('alo/main/alo.full.dev.js')` 
+* Full *Dev*: `require('alo/main/alo.full.dev.js')`
 
 ### Versions
 There are different main files available for use in the [main](https://github.com/alojs/alo/tree/master/main) folder.
