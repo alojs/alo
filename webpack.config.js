@@ -11,26 +11,30 @@ module.exports = {
     'alo.full': './alo.full.js',
     'alo.full.dev': './alo.full.dev.js'
   },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+      }
+    ],
+  },
   output: {
     publicPath: '/dist/',
     library: 'alo',
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
-  }
-  preLoaders: [{
-    test: /\.js?$/,
-    loader: "remove-flow-types",
-    include: path.join(__dirname, "lib")
-  }],
+  },
   plugins: [
-    new JsDocPlugin({
+    /*new JsDocPlugin({
       conf: './jsdoc.conf'
-    }),
-    new webpack.DefinePlugin({
+    }),*/
+    /*new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
         APP_ENV: JSON.stringify('browser')
       }
-    })
+    })*/
   ]
 }

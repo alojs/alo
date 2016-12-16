@@ -45,64 +45,67 @@ var alo =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = __webpack_require__(1)
-	var addExtras = __webpack_require__(210)
-	var addDev = __webpack_require__(209)
+	'use strict';
 
-	module.exports = addDev(addExtras(Alo))
+	var Alo = __webpack_require__(1);
+	var addExtras = __webpack_require__(210);
+	var addDev = __webpack_require__(209);
 
+	module.exports = addDev(addExtras(Alo));
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = function Alo (id) {
-	  var Util = __webpack_require__(2)
+	'use strict';
+
+	var Alo = function Alo(id) {
+	  var Util = __webpack_require__(2);
 
 	  /**
 	   * Access to the util namespace
 	   *
 	   * @see util
 	   */
-	  this.util = new Util()
-	  this._id = (this.util.isString(id) && id !== '') ? id : this.util.uniqueId()
-	}
+	  this.util = new Util();
+	  this._id = this.util.isString(id) && id !== '' ? id : this.util.uniqueId();
+	};
 
-	Alo.prototype.createSubscription = function createSubscription () {
-	  var Subscription = __webpack_require__(202)
-	  var subscription = Object.create(Subscription.prototype)
-	  Subscription.apply(subscription, arguments)
-	  return subscription
-	}
+	Alo.prototype.createSubscription = function createSubscription() {
+	  var Subscription = __webpack_require__(202);
+	  var subscription = Object.create(Subscription.prototype);
+	  Subscription.apply(subscription, arguments);
+	  return subscription;
+	};
 
-	Alo.prototype.isSubscription = function isSubscription (subscription) {
-	  var Subscription = __webpack_require__(202)
-	  return (subscription instanceof Subscription)
-	}
+	Alo.prototype.isSubscription = function isSubscription(subscription) {
+	  var Subscription = __webpack_require__(202);
+	  return subscription instanceof Subscription;
+	};
 
-	Alo.prototype.createDependency = function createDependency () {
-	  var Dependency = __webpack_require__(203)
-	  var dependency = Object.create(Dependency.prototype)
-	  Dependency.apply(dependency, arguments)
-	  return dependency
-	}
+	Alo.prototype.createDependency = function createDependency() {
+	  var Dependency = __webpack_require__(203);
+	  var dependency = Object.create(Dependency.prototype);
+	  Dependency.apply(dependency, arguments);
+	  return dependency;
+	};
 
-	Alo.prototype.isDependency = function isDependency (dependency) {
-	  var Dependency = __webpack_require__(203)
-	  return (dependency instanceof Dependency)
-	}
+	Alo.prototype.isDependency = function isDependency(dependency) {
+	  var Dependency = __webpack_require__(203);
+	  return dependency instanceof Dependency;
+	};
 
-	Alo.prototype.createMember = function createMember () {
-	  var Member = __webpack_require__(204)
-	  var member = Object.create(Member.prototype)
-	  Member.apply(member, arguments)
-	  return member
-	}
+	Alo.prototype.createMember = function createMember() {
+	  var Member = __webpack_require__(204);
+	  var member = Object.create(Member.prototype);
+	  Member.apply(member, arguments);
+	  return member;
+	};
 
-	Alo.prototype.isMember = function isMember (member) {
-	  var Member = __webpack_require__(204)
-	  return (member instanceof Member)
-	}
+	Alo.prototype.isMember = function isMember(member) {
+	  var Member = __webpack_require__(204);
+	  return member instanceof Member;
+	};
 
 	/**
 	 * Access to the handler constructor
@@ -127,12 +130,12 @@ var alo =
 	 * Same as new Reducer
 	 * @see Reducer
 	 */
-	Alo.prototype.createReducer = function createReducer () {
-	  var Reducer = __webpack_require__(205)
-	  var reducer = Object.create(Reducer.prototype)
-	  Reducer.apply(reducer, arguments)
-	  return reducer
-	}
+	Alo.prototype.createReducer = function createReducer() {
+	  var Reducer = __webpack_require__(205);
+	  var reducer = Object.create(Reducer.prototype);
+	  Reducer.apply(reducer, arguments);
+	  return reducer;
+	};
 
 	/**
 	 * Instanceof check for reducers
@@ -141,22 +144,22 @@ var alo =
 	 *
 	 * @return {boolean} true of it is a reducer, false in the other case
 	 */
-	Alo.prototype.isReducer = function isReducer (reducer) {
-	  var Reducer = __webpack_require__(205)
-	  return (reducer instanceof Reducer)
-	}
+	Alo.prototype.isReducer = function isReducer(reducer) {
+	  var Reducer = __webpack_require__(205);
+	  return reducer instanceof Reducer;
+	};
 
 	/**
 	 * Same as new Store
 	 * @see Store
 	 */
-	Alo.prototype.createStore = function createStore () {
-	  var Store = __webpack_require__(207)
-	  var store = Object.create(Store.prototype)
-	  Store.apply(store, arguments)
-	  store._alo = this
-	  return store
-	}
+	Alo.prototype.createStore = function createStore() {
+	  var Store = __webpack_require__(207);
+	  var store = Object.create(Store.prototype);
+	  Store.apply(store, arguments);
+	  store._alo = this;
+	  return store;
+	};
 
 	/**
 	 * Instanceof check for stores
@@ -165,32 +168,33 @@ var alo =
 	 *
 	 * @return {boolean} true of it is a store, false in the other case
 	 */
-	Alo.prototype.isStore = function isStore (store, validateId) {
-	  validateId = (validateId === true)
-	  var Store = __webpack_require__(207)
-	  var isStore = (store instanceof Store)
-	  var idValid = !validateId || (store._alo && store._alo._id === this._id)
-	  return isStore && idValid
-	}
+	Alo.prototype.isStore = function isStore(store, validateId) {
+	  validateId = validateId === true;
+	  var Store = __webpack_require__(207);
+	  var isStore = store instanceof Store;
+	  var idValid = !validateId || store._alo && store._alo._id === this._id;
+	  return isStore && idValid;
+	};
 
-	Alo.prototype.isMiddleware = function isMiddleware (middleware) {
-	  var Middleware = __webpack_require__(208)
-	  return (middleware instanceof Middleware)
-	}
+	Alo.prototype.isMiddleware = function isMiddleware(middleware) {
+	  var Middleware = __webpack_require__(208);
+	  return middleware instanceof Middleware;
+	};
 
-	Alo.prototype.createMiddleware = function createMiddleware () {
-	  var Middleware = __webpack_require__(208)
-	  var middleware = Object.create(Middleware.prototype)
-	  Middleware.apply(middleware, arguments)
-	  return middleware
-	}
+	Alo.prototype.createMiddleware = function createMiddleware() {
+	  var Middleware = __webpack_require__(208);
+	  var middleware = Object.create(Middleware.prototype);
+	  Middleware.apply(middleware, arguments);
+	  return middleware;
+	};
 
-	module.exports = Alo
-
+	module.exports = Alo;
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
 
 	/**
 	 * Several utility functions / libs used by alo
@@ -198,7 +202,7 @@ var alo =
 	 * Some of this functions / libs might change over time: Please read the description of the specific function / lib.
 	 *
 	 */
-	var Util = function () {}
+	var Util = function Util() {};
 
 	// Library functions
 	// Lodash
@@ -207,192 +211,191 @@ var alo =
 	 *
 	 * @function
 	 */
-	Util.prototype.cloneDeep = __webpack_require__(3)
+	Util.prototype.cloneDeep = __webpack_require__(3);
 
-	Util.prototype.filter = __webpack_require__(114)
+	Util.prototype.filter = __webpack_require__(114);
 
 	/**
 	 * Lodash values, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.values = __webpack_require__(158)
+	Util.prototype.values = __webpack_require__(158);
 
 	/**
 	 * Lodash forEach, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.forEach = __webpack_require__(160)
+	Util.prototype.forEach = __webpack_require__(160);
 
 	/**
 	 * Lodash isFunction, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.isFunction = __webpack_require__(22)
+	Util.prototype.isFunction = __webpack_require__(22);
 
 	/**
 	 * Lodash isString, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.isString = __webpack_require__(162)
+	Util.prototype.isString = __webpack_require__(162);
 
 	/**
 	 * Lodash isObject, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.isObject = __webpack_require__(29)
+	Util.prototype.isObject = __webpack_require__(29);
 
-	Util.prototype.merge = __webpack_require__(163)
+	Util.prototype.merge = __webpack_require__(163);
 
 	/**
 	 * Lodash isEqual, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.isEqual = __webpack_require__(179)
+	Util.prototype.isEqual = __webpack_require__(179);
 
 	/**
 	 * Lodash isPlainObject, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.isPlainObject = __webpack_require__(168)
+	Util.prototype.isPlainObject = __webpack_require__(168);
 
 	/**
 	 * Lodash isArray, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.isArray = __webpack_require__(61)
+	Util.prototype.isArray = __webpack_require__(61);
 
-	Util.prototype.map = __webpack_require__(180)
+	Util.prototype.map = __webpack_require__(180);
 
 	/**
 	 * Lodash isBoolean, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.isBoolean = __webpack_require__(182)
+	Util.prototype.isBoolean = __webpack_require__(182);
 
-	Util.prototype.isInteger = __webpack_require__(183)
+	Util.prototype.isInteger = __webpack_require__(183);
 
 	/**
 	 * Lodash uniqueId, can be used
 	 *
 	 * @function
 	 */
-	Util.prototype.uniqueId = __webpack_require__(187)
+	Util.prototype.uniqueId = __webpack_require__(187);
 
-	Util.prototype.toPairs = __webpack_require__(188)
+	Util.prototype.toPairs = __webpack_require__(188);
 
-	var flyd = __webpack_require__(192)
+	var flyd = __webpack_require__(192);
 	/**
 	 * Flyd stream: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.createStream = flyd.stream
+	Util.prototype.createStream = flyd.stream;
 
 	/**
 	 * Flyd stream: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.combineStreams = flyd.combine
+	Util.prototype.combineStreams = flyd.combine;
 
 	/**
 	 * Flyd isStream: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.isStream = flyd.isStream
+	Util.prototype.isStream = flyd.isStream;
 
 	/**
 	 * Flyd immediate: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.immediateStream = flyd.immediate
+	Util.prototype.immediateStream = flyd.immediate;
 
 	/**
 	 * Flyd endsOn: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.streamEndsOn = flyd.endsOn
+	Util.prototype.streamEndsOn = flyd.endsOn;
 
 	/**
 	 * Flyd map: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.mapStream = flyd.map
+	Util.prototype.mapStream = flyd.map;
 
 	/**
 	 * Flyd on: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.streamOn = flyd.on
+	Util.prototype.streamOn = flyd.on;
 
 	/**
 	 * Flyd scan: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.scanStream = flyd.scan
+	Util.prototype.scanStream = flyd.scan;
 
 	/**
 	 * Flyd merge: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.mergeStream = flyd.merge
+	Util.prototype.mergeStream = flyd.merge;
 
 	/**
 	 * Flyd transduce: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.transduceStream = flyd.transduce
+	Util.prototype.transduceStream = flyd.transduce;
 
 	/**
 	 * Polymorphic helper: Might change!
 	 *
 	 * @function
 	 */
-	Util.prototype.createPolymorphic = __webpack_require__(199)
+	Util.prototype.createPolymorphic = __webpack_require__(199);
 
-	Util.prototype.Promise = __webpack_require__(200)
+	Util.prototype.Promise = __webpack_require__(200);
 
-	Util.prototype.createPromise = function createPromise (resolve, reject) {
-	  return new this.Promise(resolve, reject)
-	}
+	Util.prototype.createPromise = function createPromise(resolve, reject) {
+	  return new this.Promise(resolve, reject);
+	};
 
 	/**
 	 * Same as new Alo
 	 * @see Alo
 	 */
-	Util.prototype.createAlo = function createAlo () {
-	  var Alo = __webpack_require__(1)
-	  var alo = Object.create(Alo.prototype)
-	  Alo.apply(alo, arguments)
-	  return alo
-	}
+	Util.prototype.createAlo = function createAlo() {
+	  var Alo = __webpack_require__(1);
+	  var alo = Object.create(Alo.prototype);
+	  Alo.apply(alo, arguments);
+	  return alo;
+	};
 
-	Util.prototype.createObjectRelation = function createObjectRelation () {
-	  var ObjectRelation = __webpack_require__(201)
-	  var objectRelation = Object.create(ObjectRelation.prototype)
-	  ObjectRelation.apply(objectRelation, arguments)
-	  return objectRelation
-	}
+	Util.prototype.createObjectRelation = function createObjectRelation() {
+	  var ObjectRelation = __webpack_require__(201);
+	  var objectRelation = Object.create(ObjectRelation.prototype);
+	  ObjectRelation.apply(objectRelation, arguments);
+	  return objectRelation;
+	};
 
-	module.exports = Util
-
+	module.exports = Util;
 
 /***/ },
 /* 3 */
@@ -8932,8 +8935,10 @@ var alo =
 /* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Util = __webpack_require__(2)
-	var u = new Util()
+	'use strict';
+
+	var Util = __webpack_require__(2);
+	var u = new Util();
 
 	var functions = {
 	  get: {
@@ -8955,261 +8960,262 @@ var alo =
 	    relation: true
 	  },
 	  getId: {}
-	}
+	};
 
-	var formatFunctionName = function (action, name) {
-	  name = name.split('')
-	  name[0] = name[0].toUpperCase()
-	  name = name.join('')
-	  return action + name
-	}
+	var formatFunctionName = function formatFunctionName(action, name) {
+	  name = name.split('');
+	  name[0] = name[0].toUpperCase();
+	  name = name.join('');
+	  return action + name;
+	};
 
-	var ObjectRelation = function ObjectRelation () {
-	  objectRelation.apply(this, arguments)
-	}
-	var objectRelation = u.createPolymorphic()
+	var ObjectRelation = function ObjectRelation() {
+	  objectRelation.apply(this, arguments);
+	};
+	var objectRelation = u.createPolymorphic();
 	objectRelation.signature('string, string, function', function (parentName, relationName, isRelationObject) {
-	  var self = this
+	  var self = this;
 	  if (parentName === '' || relationName === '') {
-	    throw new Error('Argument given should not be empty')
+	    throw new Error('Argument given should not be empty');
 	  } else {
-	    this.idPropertyName = '_id'
-	    this.parentName = parentName
-	    this.relationName = relationName
-	    this.relationByIdPropertyName = '_' + relationName + 'RelationsById'
-	    this.relationPropertyName = '_' + relationName + 'Relations'
-	    this.isRelationObject = isRelationObject
+	    this.idPropertyName = '_id';
+	    this.parentName = parentName;
+	    this.relationName = relationName;
+	    this.relationByIdPropertyName = '_' + relationName + 'RelationsById';
+	    this.relationPropertyName = '_' + relationName + 'Relations';
+	    this.isRelationObject = isRelationObject;
 
-	    this.functions = {}
+	    this.functions = {};
 	    u.forEach(functions, function (func, funcName) {
 	      self.functions[funcName] = {
 	        before: [],
 	        after: []
-	      }
+	      };
 	      if (func.relation === true) {
-	        self.functions[funcName].parentName = formatFunctionName(funcName, parentName)
-	        self.functions[funcName].relationName = formatFunctionName(funcName, relationName)
+	        self.functions[funcName].parentName = formatFunctionName(funcName, parentName);
+	        self.functions[funcName].relationName = formatFunctionName(funcName, relationName);
 	      }
-	    })
+	    });
 	  }
-	})
+	});
 
 	/**
 	 * Should be called in the constructor of the parent
 	 */
 	ObjectRelation.prototype.constructParent = function (parentObject) {
 	  if (parentObject[this.idPropertyName] === null || parentObject[this.idPropertyName] === undefined) {
-	    var id = u.uniqueId()
-	    parentObject[this.idPropertyName] = id
+	    var id = u.uniqueId();
+	    parentObject[this.idPropertyName] = id;
 	  }
-	  parentObject[this.relationByIdPropertyName] = {}
-	  parentObject[this.relationPropertyName] = []
-	}
+	  parentObject[this.relationByIdPropertyName] = {};
+	  parentObject[this.relationPropertyName] = [];
+	};
 
 	ObjectRelation.prototype.registerParentPrototype = function (prototype) {
-	  var self = this
-	  var createCaller = function (funcName, func) {
+	  var self = this;
+	  var createCaller = function createCaller(funcName, func) {
 	    return function () {
-	      var parent = this
-	      var args = u.values(arguments)
-	      args.unshift(self)
+	      var parent = this;
+	      var args = u.values(arguments);
+	      args.unshift(self);
 	      u.forEach(self.functions[funcName].before, function (beforeFunc) {
-	        beforeFunc.call(parent)
-	      })
-	      var result = func.apply(parent, args)
+	        beforeFunc.call(parent);
+	      });
+	      var result = func.apply(parent, args);
 	      u.forEach(self.functions[funcName].after, function (afterFunc) {
-	        afterFunc.call(parent)
-	      })
-	      return result
-	    }
-	  }
+	        afterFunc.call(parent);
+	      });
+	      return result;
+	    };
+	  };
 
 	  u.forEach(self.functions, function (func, funcName) {
-	    var prototypeFunctionName = funcName
+	    var prototypeFunctionName = funcName;
 	    if (u.isString(func.relationName) && func.relationName !== '') {
-	      prototypeFunctionName = func.relationName
+	      prototypeFunctionName = func.relationName;
 	    }
-	    prototype[prototypeFunctionName] = createCaller(funcName, self[funcName + 'Function'])
-	  })
-	}
+	    prototype[prototypeFunctionName] = createCaller(funcName, self[funcName + 'Function']);
+	  });
+	};
 
-	ObjectRelation.prototype.getIdFunction = function getId (config) {
-	  return this[config.idPropertyName]
-	}
+	ObjectRelation.prototype.getIdFunction = function getId(config) {
+	  return this[config.idPropertyName];
+	};
 
-	ObjectRelation.prototype.getFunction = u.createPolymorphic()
-	var get = ObjectRelation.prototype.getFunction
+	ObjectRelation.prototype.getFunction = u.createPolymorphic();
+	var get = ObjectRelation.prototype.getFunction;
 	get.signature('object, boolean b=true', function (config, byId) {
-	  var self = this
+	  var self = this;
 
 	  if (byId) {
-	    return this[config.relationByIdPropertyName]
+	    return this[config.relationByIdPropertyName];
 	  } else {
-	    var result = []
+	    var result = [];
 	    u.forEach(this[config.relationPropertyName], function (item) {
-	      result.push(get.call(self, config, item))
-	    })
-	    return result
+	      result.push(get.call(self, config, item));
+	    });
+	    return result;
 	  }
-	})
+	});
 	get.signature('object, string', function (config, id) {
 	  if (id === '') {
-	    throw new Error('Argument given should not be an empty string')
+	    throw new Error('Argument given should not be an empty string');
 	  } else {
 	    if (this[config.relationByIdPropertyName][id] !== null) {
-	      return this[config.relationByIdPropertyName][id]
+	      return this[config.relationByIdPropertyName][id];
 	    } else {
-	      return false
+	      return false;
 	    }
 	  }
-	})
+	});
 
-	ObjectRelation.prototype.addFunction = u.createPolymorphic()
-	var add = ObjectRelation.prototype.addFunction
+	ObjectRelation.prototype.addFunction = u.createPolymorphic();
+	var add = ObjectRelation.prototype.addFunction;
 	add.signature('object, object, integer a=-1, boolean b=false', function (config, relationObject, index, fromRelation) {
 	  if (!config.isRelationObject(relationObject)) {
-	    throw new Error('Argument given is not a ' + config.relationName)
+	    throw new Error('Argument given is not a ' + config.relationName);
 	  } else {
-	    var id = relationObject.getId()
+	    var id = relationObject.getId();
 	    if (!u.isString(id) || id === '') {
-	      throw new Error('Id is not a string or empty')
+	      throw new Error('Id is not a string or empty');
 	    } else {
 	      if (fromRelation !== true) {
-	        relationObject[config.functions.add.parentName](this, -1, true)
+	        relationObject[config.functions.add.parentName](this, -1, true);
 	      }
-	      this[config.relationByIdPropertyName][id] = relationObject
+	      this[config.relationByIdPropertyName][id] = relationObject;
 	      if (index >= 0) {
-	        this[config.relationPropertyName].splice(index, 0, id)
+	        this[config.relationPropertyName].splice(index, 0, id);
 	      } else {
-	        this[config.relationPropertyName].push(id)
+	        this[config.relationPropertyName].push(id);
 	      }
 	    }
 	  }
 
-	  return this
-	})
+	  return this;
+	});
 	add.signature('object, array', function (config, relationObjects) {
-	  var self = this
+	  var self = this;
 
 	  u.forEach(relationObjects, function (relationObject) {
-	    add.call(self, config, relationObject, -1)
-	  })
+	    add.call(self, config, relationObject, -1);
+	  });
 
-	  return this
-	})
+	  return this;
+	});
 	add.signature('object, object, object, ...', function (config, relationObject1, relationObject2, rest) {
-	  var relationObjects = [relationObject1, relationObject2]
+	  var relationObjects = [relationObject1, relationObject2];
 
-	  return add.call(this, config, relationObjects.concat(rest), -1)
-	})
+	  return add.call(this, config, relationObjects.concat(rest), -1);
+	});
 
-	ObjectRelation.prototype.removeFunction = u.createPolymorphic()
-	var remove = ObjectRelation.prototype.removeFunction
+	ObjectRelation.prototype.removeFunction = u.createPolymorphic();
+	var remove = ObjectRelation.prototype.removeFunction;
 	remove.signature('object, string, boolean b=false', function (config, id, fromRelation) {
 	  if (id === '') {
-	    throw new Error('Argument given should not be empty')
+	    throw new Error('Argument given should not be empty');
 	  } else {
 	    if (!u.isBoolean(fromRelation) || fromRelation !== true) {
 	      if (config.isRelationObject(this[config.relationPropertyName][id])) {
-	        this[config.relationByIdPropertyName][id][config.functions.remove.parentName](this.getId(), true)
+	        this[config.relationByIdPropertyName][id][config.functions.remove.parentName](this.getId(), true);
 	      }
 	    }
-	    delete this[config.relationByIdPropertyName][id]
-	    var position = this[config.relationPropertyName].indexOf(id)
+	    delete this[config.relationByIdPropertyName][id];
+	    var position = this[config.relationPropertyName].indexOf(id);
 	    if (position > -1) {
-	      this[config.relationPropertyName].splice(position, 1)
+	      this[config.relationPropertyName].splice(position, 1);
 	    }
 	  }
 
-	  return this
-	})
+	  return this;
+	});
 	remove.signature('object, object, boolean b=false', function (config, relationObject, fromRelation) {
 	  if (!config.isRelationObject(relationObject)) {
-	    throw new Error('Argument given is not a ' + config.relationName)
+	    throw new Error('Argument given is not a ' + config.relationName);
 	  } else {
-	    var id = relationObject.getId()
-	    return remove.call(this, config, id, fromRelation)
+	    var id = relationObject.getId();
+	    return remove.call(this, config, id, fromRelation);
 	  }
-	})
+	});
 	remove.signature('object', function (config) {
-	  var self = this
+	  var self = this;
 
 	  u.forEach(this[config.relationPropertyName], function (id) {
-	    remove.call(self, config, id)
-	  })
+	    remove.call(self, config, id);
+	  });
 
-	  return this
-	})
+	  return this;
+	});
 
 	ObjectRelation.prototype.relatedToFunction = function (config, relationObj) {
-	  return indexOf.apply(this, arguments) > -1
-	}
+	  return indexOf.apply(this, arguments) > -1;
+	};
 
 	ObjectRelation.prototype.indexOfFunction = function (config, relationObj) {
-	  var id = null
+	  var id = null;
 
 	  if (u.isString(relationObj) || u.isInteger(relationObj)) {
-	    id = relationObj
+	    id = relationObj;
 	  } else if (!config.isRelationObject(relationObj)) {
-	    throw new Error('Argument given should be an id or a ' + config.relationName)
+	    throw new Error('Argument given should be an id or a ' + config.relationName);
 	  } else {
-	    id = relationObj.getId()
+	    id = relationObj.getId();
 	  }
 
-	  return this[config.relationPropertyName].indexOf(id)
-	}
-	var indexOf = ObjectRelation.prototype.indexOfFunction
+	  return this[config.relationPropertyName].indexOf(id);
+	};
+	var indexOf = ObjectRelation.prototype.indexOfFunction;
 
 	ObjectRelation.prototype.setIndexOfFunction = function (config, relationObj, index) {
 	  if (!u.isInteger(index)) {
-	    throw new Error('Argument for index should be an integer')
+	    throw new Error('Argument for index should be an integer');
 	  } else {
-	    var id = null
+	    var id = null;
 
 	    if (u.isString(relationObj) || u.isInteger(relationObj)) {
-	      id = relationObj
+	      id = relationObj;
 	    } else if (!config.isRelationObject(relationObj)) {
-	      throw new Error('Argument given should be an id or a ' + config.relationName)
+	      throw new Error('Argument given should be an id or a ' + config.relationName);
 	    } else {
-	      id = relationObj.getId()
+	      id = relationObj.getId();
 	    }
 
-	    var oldIndex = this[config.relationPropertyName].indexOf(id)
+	    var oldIndex = this[config.relationPropertyName].indexOf(id);
 	    if (oldIndex !== -1 && oldIndex !== index) {
-	      delete this[config.relationPropertyName][oldIndex]
-	      this[config.relationPropertyName].splice(index, 0, id)
+	      delete this[config.relationPropertyName][oldIndex];
+	      this[config.relationPropertyName].splice(index, 0, id);
 	    }
 
-	    return index
+	    return index;
 	  }
-	}
+	};
 
-	ObjectRelation.prototype.before = u.createPolymorphic()
-	var before = ObjectRelation.prototype.before
+	ObjectRelation.prototype.before = u.createPolymorphic();
+	var before = ObjectRelation.prototype.before;
 	before.signature('string, function', function (functionName, func) {
-	  this.functions[functionName].before.push(func)
-	})
+	  this.functions[functionName].before.push(func);
+	});
 
-	ObjectRelation.prototype.after = u.createPolymorphic()
-	var after = ObjectRelation.prototype.after
+	ObjectRelation.prototype.after = u.createPolymorphic();
+	var after = ObjectRelation.prototype.after;
 	after.signature('string, function', function (functionName, func) {
-	  this.functions[functionName].after.push(func)
-	})
+	  this.functions[functionName].after.push(func);
+	});
 
-	module.exports = ObjectRelation
-
+	module.exports = ObjectRelation;
 
 /***/ },
 /* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = __webpack_require__(1)
-	var alo = new Alo()
-	var u = alo.util
+	'use strict';
 
-	var storeRelation = u.createObjectRelation('subscription', 'store', alo.isStore)
-	var memberRelation = u.createObjectRelation('subscription', 'member', alo.isMember)
-	var dependencyRelation = u.createObjectRelation('subscription', 'dependency', alo.isDependency)
+	var Alo = __webpack_require__(1);
+	var alo = new Alo();
+	var u = alo.util;
+
+	var storeRelation = u.createObjectRelation('subscription', 'store', alo.isStore);
+	var memberRelation = u.createObjectRelation('subscription', 'member', alo.isMember);
+	var dependencyRelation = u.createObjectRelation('subscription', 'dependency', alo.isDependency);
 
 	/**
 	 * Subscription Constructor, is used in the Store Class to create Subscriptions to state
@@ -9221,586 +9227,583 @@ var alo =
 	 * @param {Object} storeProtected
 	 * @param {string | Array} namespace
 	 */
-	var Subscription = function Subscription () {
-	  this._id = null
+	var Subscription = function Subscription() {
+	  this._id = null;
 
-	  this._storeRelations = null
-	  this._memberRelations = null
-	  this._dependencyRelations = null
+	  this._storeRelations = null;
+	  this._memberRelations = null;
+	  this._dependencyRelations = null;
 
 	  this._events = {
 	    'beforePublish': [],
 	    'afterPublish': []
-	  }
+	  };
 
-	  this._subscriptionStream = null
-	  this._stream = null
-	  this._lastData = null
+	  this._subscriptionStream = null;
+	  this._stream = null;
+	  this._lastData = null;
 
-	  this._muted = false
+	  this._muted = false;
 
-	  storeRelation.constructParent(this)
-	  memberRelation.constructParent(this)
-	  dependencyRelation.constructParent(this)
+	  storeRelation.constructParent(this);
+	  memberRelation.constructParent(this);
+	  dependencyRelation.constructParent(this);
 
-	  subscription.apply(this, arguments)
-	}
+	  subscription.apply(this, arguments);
+	};
 
-	var subscription = u.createPolymorphic()
-	subscription.signature('', function () {})
+	var subscription = u.createPolymorphic();
+	subscription.signature('', function () {});
 	subscription.signature('object, array', function (dependencies, members) {
-	  this.setDependency(dependencies)
-	  this.addMember(members)
-	})
+	  this.setDependency(dependencies);
+	  this.addMember(members);
+	});
 	subscription.signature('object', function (dependencies) {
-	  this.setDependency(dependencies)
-	})
+	  this.setDependency(dependencies);
+	});
 	subscription.signature('array', function (members) {
-	  this.addMember(members)
-	})
+	  this.addMember(members);
+	});
 	subscription.signature('function', function (func) {
-	  this.createMember(func)
-	})
+	  this.createMember(func);
+	});
 
-	Subscription.prototype.addMember = null
-	Subscription.prototype.getMember = null
+	Subscription.prototype.addMember = null;
+	Subscription.prototype.getMember = null;
 
-	var afterChange = function () {
-	  var self = this
+	var afterChange = function afterChange() {
+	  var self = this;
 
 	  if (u.isStream(this._stream)) {
-	    this._stream.end(true)
-	    this._stream = null
+	    this._stream.end(true);
+	    this._stream = null;
 	  }
 	  if (u.isStream(this._subscriptionStream)) {
-	    this._subscriptionStream.end(true)
-	    this._subscriptionStream = null
+	    this._subscriptionStream.end(true);
+	    this._subscriptionStream = null;
 	  }
 
-	  var streams = []
-	  var stores = u.values(this.getStore())
+	  var streams = [];
+	  var stores = u.values(this.getStore());
 	  u.forEach(stores, function (store) {
-	    streams.push(store.getStream())
-	  })
+	    streams.push(store.getStream());
+	  });
 	  this._stream = u.combineStreams(function () {
-	    var streamState = {}
+	    var streamState = {};
 	    u.forEach(u.values(arguments), function (stream, idx) {
 	      if (alo.isStore(stores[idx])) {
-	        streamState[stores[idx].getId()] = stream()
+	        streamState[stores[idx].getId()] = stream();
 	      }
-	    })
+	    });
 	    return u.Promise.resolve().then(function () {
-	      var dependencies = self.getDependency(false)
+	      var dependencies = self.getDependency(false);
 	      if (dependencies.length > 0) {
 	        var depsState = {
 	          state: streamState,
 	          computed: {}
-	        }
-	        return dependencies[0].reduceRecursive(dependencies, self.getId(), depsState)
+	        };
+	        return dependencies[0].reduceRecursive(dependencies, self.getId(), depsState);
 	      } else {
-	        return {}
+	        return {};
 	      }
 	    }).then(function (computed) {
-	      return {stores: streamState, computed: computed}
-	    })
-	  }, streams)
+	      return { stores: streamState, computed: computed };
+	    });
+	  }, streams);
 	  this._subscriptionStream = u.streamOn(function (data) {
-	    var computedLength = u.values(data.computed).length
-	    if (self._lastData === null ||
-	      (computedLength === 0 && !u.isEqual(self._lastData.stores, data.stores)) ||
-	      (computedLength > 0 && !u.isEqual(self._lastData.computed, data.computed))
-	    ) {
-	      self._lastData = data
-	      self._publish(data)
+	    var computedLength = u.values(data.computed).length;
+	    if (self._lastData === null || computedLength === 0 && !u.isEqual(self._lastData.stores, data.stores) || computedLength > 0 && !u.isEqual(self._lastData.computed, data.computed)) {
+	      self._lastData = data;
+	      self._publish(data);
 	    }
-	  }, this._stream)
-	}
+	  }, this._stream);
+	};
 
-	storeRelation.after('add', afterChange)
-	storeRelation.after('remove', afterChange)
+	storeRelation.after('add', afterChange);
+	storeRelation.after('remove', afterChange);
 
-	storeRelation.registerParentPrototype(Subscription.prototype)
-	memberRelation.registerParentPrototype(Subscription.prototype)
-	dependencyRelation.registerParentPrototype(Subscription.prototype)
+	storeRelation.registerParentPrototype(Subscription.prototype);
+	memberRelation.registerParentPrototype(Subscription.prototype);
+	dependencyRelation.registerParentPrototype(Subscription.prototype);
 
-	Subscription.prototype.createMember = function createMember () {
-	  var member = alo.createMember.apply(null, arguments)
-	  this.addMember(member)
+	Subscription.prototype.createMember = function createMember() {
+	  var member = alo.createMember.apply(null, arguments);
+	  this.addMember(member);
 
-	  return member
-	}
+	  return member;
+	};
 
 	Subscription.prototype._callEvent = function (name, state) {
 	  var promises = this._events[name].map(function (func) {
-	    return u.Promise.resolve(state).then(func)
-	  })
+	    return u.Promise.resolve(state).then(func);
+	  });
 	  return u.Promise.all(promises).then(function (results) {
-	    var result = (results.indexOf(false) === -1)
-	    return result
-	  })
-	}
+	    var result = results.indexOf(false) === -1;
+	    return result;
+	  });
+	};
 
 	Subscription.prototype._publish = function (state) {
-	  var self = this
+	  var self = this;
 	  if (self._muted === false) {
-	    self._muted = true
+	    self._muted = true;
 	    var promise = u.Promise.resolve().then(function () {
-	      return self._callEvent('beforePublish', state)
+	      return self._callEvent('beforePublish', state);
 	    }).then(function (runPublish) {
-	      self._muted = false
+	      self._muted = false;
 	      if (runPublish !== false) {
-	        var state = self.getData()
-	        var promises = []
+	        var state = self.getData();
+	        var promises = [];
 	        u.forEach(self.getMember(false), function (member) {
-	          promises.push(member._call(state.stores, state.computed))
-	        })
-	        return u.Promise.all(promises)
+	          promises.push(member._call(state.stores, state.computed));
+	        });
+	        return u.Promise.all(promises);
 	      } else {
-	        return false
+	        return false;
 	      }
 	    }).then(function (runPublish) {
 	      if (runPublish !== false) {
-	        self._muted = true
-	        return self._callEvent('afterPublish', state)
+	        self._muted = true;
+	        return self._callEvent('afterPublish', state);
 	      }
 	    }).then(function () {
-	      self._muted = false
-	      return null
-	    })
-	    return promise
+	      self._muted = false;
+	      return null;
+	    });
+	    return promise;
 	  }
-	}
+	};
 
-	Subscription.prototype.enable = null
-	Subscription.prototype.disable = null
+	Subscription.prototype.enable = null;
+	Subscription.prototype.disable = null;
 
-	Subscription.prototype.remember = function remember () {
-	  var self = this
+	Subscription.prototype.remember = function remember() {
+	  var self = this;
 
-	  var data = self.getData()
+	  var data = self.getData();
 
-	  return self._publish(data)
-	}
+	  return self._publish(data);
+	};
 
-	Subscription.prototype.stop = function stop () {
-	  this.disable()
-	  this.removeStore()
+	Subscription.prototype.stop = function stop() {
+	  this.disable();
+	  this.removeStore();
 
-	  return this
-	}
+	  return this;
+	};
 
-	Subscription.prototype.getStream = function getStream () {
-	  return this._stream
-	}
+	Subscription.prototype.getStream = function getStream() {
+	  return this._stream;
+	};
 
-	Subscription.prototype.getData = function getData () {
-	  return u.cloneDeep(this.getStream()())
-	}
+	Subscription.prototype.getData = function getData() {
+	  return u.cloneDeep(this.getStream()());
+	};
 
-	Subscription.prototype.createDependency = function createDependency () {
-	  var dependency = alo.createDependency.apply(null, arguments)
-	  this.addDependency(dependency)
+	Subscription.prototype.createDependency = function createDependency() {
+	  var dependency = alo.createDependency.apply(null, arguments);
+	  this.addDependency(dependency);
 
-	  return dependency
-	}
+	  return dependency;
+	};
 
-	Subscription.prototype.on = u.createPolymorphic()
-	var on = Subscription.prototype.on
+	Subscription.prototype.on = u.createPolymorphic();
+	var on = Subscription.prototype.on;
 	on.signature('string, function', function (type, func) {
 	  if (!u.isArray(this._events[type])) {
-	    throw new Error('Argument type is not a valid type')
+	    throw new Error('Argument type is not a valid type');
 	  } else {
-	    var idx = this._events[type].length
-	    this._events[type].push(func)
+	    var idx = this._events[type].length;
+	    this._events[type].push(func);
 	  }
 	  return {
-	    stop: function () {
-	      delete this._events[type][idx]
+	    stop: function stop() {
+	      delete this._events[type][idx];
 	    }
-	  }
-	})
+	  };
+	});
 
-	module.exports = Subscription
-
+	module.exports = Subscription;
 
 /***/ },
 /* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = __webpack_require__(1)
-	var alo = new Alo()
-	var u = alo.util
+	'use strict';
 
-	var dependencyRelation = u.createObjectRelation('dependency', 'parentDependency', alo.isDependency)
-	var parentDependencyRelation = u.createObjectRelation('parentDependency', 'dependency', alo.isDependency)
-	var storeRelation = u.createObjectRelation('dependency', 'store', alo.isStore)
-	var subscriptionRelation = u.createObjectRelation('dependency', 'subscription', alo.isSubscription)
-	var memberRelation = u.createObjectRelation('dependency', 'member', alo.isMember)
+	var Alo = __webpack_require__(1);
+	var alo = new Alo();
+	var u = alo.util;
 
-	var Dependency = function Dependency () {
-	  this._beforeDependencies = {}
-	  this._afterDependencies = {}
+	var dependencyRelation = u.createObjectRelation('dependency', 'parentDependency', alo.isDependency);
+	var parentDependencyRelation = u.createObjectRelation('parentDependency', 'dependency', alo.isDependency);
+	var storeRelation = u.createObjectRelation('dependency', 'store', alo.isStore);
+	var subscriptionRelation = u.createObjectRelation('dependency', 'subscription', alo.isSubscription);
+	var memberRelation = u.createObjectRelation('dependency', 'member', alo.isMember);
 
-	  this._cache = {}
+	var Dependency = function Dependency() {
+	  this._beforeDependencies = {};
+	  this._afterDependencies = {};
 
-	  dependencyRelation.constructParent(this)
-	  parentDependencyRelation.constructParent(this)
-	  storeRelation.constructParent(this)
-	  subscriptionRelation.constructParent(this)
-	  memberRelation.constructParent(this)
+	  this._cache = {};
 
-	  this.add.apply(this, arguments)
-	}
+	  dependencyRelation.constructParent(this);
+	  parentDependencyRelation.constructParent(this);
+	  storeRelation.constructParent(this);
+	  subscriptionRelation.constructParent(this);
+	  memberRelation.constructParent(this);
 
-	dependencyRelation.registerParentPrototype(Dependency.prototype)
-	parentDependencyRelation.registerParentPrototype(Dependency.prototype)
-	storeRelation.registerParentPrototype(Dependency.prototype)
-	subscriptionRelation.registerParentPrototype(Dependency.prototype)
-	memberRelation.registerParentPrototype(Dependency.prototype)
+	  this.add.apply(this, arguments);
+	};
 
-	Dependency.prototype.get = u.createPolymorphic()
-	var get = Dependency.prototype.get
+	dependencyRelation.registerParentPrototype(Dependency.prototype);
+	parentDependencyRelation.registerParentPrototype(Dependency.prototype);
+	storeRelation.registerParentPrototype(Dependency.prototype);
+	subscriptionRelation.registerParentPrototype(Dependency.prototype);
+	memberRelation.registerParentPrototype(Dependency.prototype);
+
+	Dependency.prototype.get = u.createPolymorphic();
+	var get = Dependency.prototype.get;
 	get.signature('string a=after', function (type) {
 	  switch (type) {
 	    case 'before':
-	      return this._beforeDependencies
+	      return this._beforeDependencies;
 	    case 'after':
-	      return this._afterDependencies
+	      return this._afterDependencies;
 	    default:
-	      throw new Error('Argument for type should be before or after')
+	      throw new Error('Argument for type should be before or after');
 	  }
-	})
+	});
 
-	Dependency.prototype.add = u.createPolymorphic()
-	var add = Dependency.prototype.add
-	add.signature('', function () {})
+	Dependency.prototype.add = u.createPolymorphic();
+	var add = Dependency.prototype.add;
+	add.signature('', function () {});
 	add.signature('object, string b=after', function (dependencies, type) {
-	  var self = this
+	  var self = this;
 	  if (['before', 'after'].indexOf(type) === -1) {
-	    throw new Error('Argument type should be before or after')
+	    throw new Error('Argument type should be before or after');
 	  } else {
 	    u.forEach(dependencies, function (dependency, name) {
 	      if (u.isArray(dependency)) {
-	        self.add(name, dependency[0], dependency[1], type)
+	        self.add(name, dependency[0], dependency[1], type);
 	      } else {
-	        self.add(name, dependency, type)
+	        self.add(name, dependency, type);
 	      }
-	    })
+	    });
 	  }
 
-	  return this
-	})
+	  return this;
+	});
 	add.signature('string, array, function, string a=after', function (name, dependencies, func, type) {
 	  u.forEach(dependencies, function (dependency) {
 	    if (!u.isString(dependency) || dependency === '') {
-	      throw new Error('Dependency should be a string and not empty')
+	      throw new Error('Dependency should be a string and not empty');
 	    }
-	  })
+	  });
 	  switch (type) {
 	    case 'before':
-	      this._beforeDependencies[name] = [dependencies, func]
-	      break
+	      this._beforeDependencies[name] = [dependencies, func];
+	      break;
 	    case 'after':
-	      this._afterDependencies[name] = [dependencies, func]
-	      break
+	      this._afterDependencies[name] = [dependencies, func];
+	      break;
 	    default:
-	      throw new Error('Type should be before or after')
+	      throw new Error('Type should be before or after');
 	  }
 
-	  return this
-	})
+	  return this;
+	});
 	add.signature('string, function, string a=after', function (name, func, type) {
-	  return add.call(this, name, [], func, type)
-	})
+	  return add.call(this, name, [], func, type);
+	});
 
-	Dependency.prototype.remove = function remove (name, type) {
+	Dependency.prototype.remove = function remove(name, type) {
 	  if (type !== undefined && ['before', 'after'].indexOf(type) === -1) {
-	    throw new Error('Argument for type should be before or after')
+	    throw new Error('Argument for type should be before or after');
 	  } else {
 	    if (type === undefined || type === 'before') {
-	      this._beforeDependencies = false
+	      this._beforeDependencies = false;
 	    }
 	    if (type === undefined || type === 'after') {
-	      this._afterDependencies = false
+	      this._afterDependencies = false;
 	    }
 	  }
 
-	  return this
-	}
+	  return this;
+	};
 
-	Dependency.prototype.reduceRecursive = function reduceRecursive (dependencies, id, data) {
+	Dependency.prototype.reduceRecursive = function reduceRecursive(dependencies, id, data) {
 	  return u.Promise.resolve().then(function () {
 	    if (dependencies.length > 0) {
-	      var idx = 0
-	      var walker = function () {
+	      var idx = 0;
+	      var walker = function walker() {
 	        if (dependencies[idx] !== undefined) {
 	          if (alo.isDependency(dependencies[idx])) {
 	            return u.Promise.resolve().then(function () {
-	              return dependencies[idx].reduce(id, data)
+	              return dependencies[idx].reduce(id, data);
 	            }).then(function (computed) {
-	              data.computed = computed
-	              idx++
-	              return walker()
-	            })
+	              data.computed = computed;
+	              idx++;
+	              return walker();
+	            });
 	          } else {
-	            idx++
-	            return walker()
+	            idx++;
+	            return walker();
 	          }
 	        } else {
-	          return data.computed
+	          return data.computed;
 	        }
-	      }
-	      return walker()
+	      };
+	      return walker();
 	    } else {
-	      return {}
+	      return {};
 	    }
-	  })
-	}
+	  });
+	};
 
-	Dependency.prototype.reduce = function reduce (id, data) {
-	  var self = this
-	  self._cache[id] = self._cache[id] || {}
+	Dependency.prototype.reduce = function reduce(id, data) {
+	  var self = this;
+	  self._cache[id] = self._cache[id] || {};
 
-	  var walkDependencies = function (dependencies, called) {
-	    var pairs = u.toPairs(dependencies)
+	  var walkDependencies = function walkDependencies(dependencies, called) {
+	    var pairs = u.toPairs(dependencies);
 	    if (called === undefined) {
-	      called = []
+	      called = [];
 	    }
-	    var idx = 0
-	    var walker = function () {
+	    var idx = 0;
+	    var walker = function walker() {
 	      if (pairs[idx] !== undefined) {
 	        return u.Promise.resolve().then(function () {
-	          return walkDependency(called, pairs[idx], dependencies)
+	          return walkDependency(called, pairs[idx], dependencies);
 	        }).then(function (newCalled) {
-	          called = newCalled
-	          idx++
-	          return walker()
-	        })
+	          called = newCalled;
+	          idx++;
+	          return walker();
+	        });
 	      } else {
-	        return called
+	        return called;
 	      }
-	    }
-	    return walker()
-	  }
+	    };
+	    return walker();
+	  };
 
-	  var walkDependency = function (called, properties, dependencies) {
-	    var name = properties[0]
-	    var deps = properties[1][0]
-	    var func = properties[1][1]
+	  var walkDependency = function walkDependency(called, properties, dependencies) {
+	    var name = properties[0];
+	    var deps = properties[1][0];
+	    var func = properties[1][1];
 	    if (called.indexOf(name) === -1) {
 	      return u.Promise.resolve().then(function () {
 	        if (deps.length > 0) {
 	          var filteredDeps = u.filter(deps, function (name) {
-	            return (data.computed[name] === undefined)
-	          })
-	          var preparedDeps = {}
+	            return data.computed[name] === undefined;
+	          });
+	          var preparedDeps = {};
 	          u.forEach(filteredDeps, function (name) {
-	            preparedDeps[name] = dependencies[name]
-	          })
-	          return walkDependencies(preparedDeps, called)
+	            preparedDeps[name] = dependencies[name];
+	          });
+	          return walkDependencies(preparedDeps, called);
 	        } else {
-	          return called
+	          return called;
 	        }
 	      }).then(function (called) {
-	        var recalculate = true
+	        var recalculate = true;
 	        if (deps.length > 0) {
-	          recalculate = false
+	          recalculate = false;
 	          u.forEach(deps, function (name) {
 	            if (!u.isEqual(data.computed[name], self._cache[id][name])) {
-	              recalculate = true
-	              return false
+	              recalculate = true;
+	              return false;
 	            }
-	          })
+	          });
 	        }
 	        if (recalculate) {
 	          if (u.isFunction(func)) {
-	            return func(data.state, data.computed, data.action)
+	            return func(data.state, data.computed, data.action);
 	          } else {
-	            return null
+	            return null;
 	          }
 	        } else {
-	          return self._cache[id][name]
+	          return self._cache[id][name];
 	        }
 	      }).then(function (result) {
 	        if (result === undefined) {
-	          result = null
+	          result = null;
 	        }
-	        data.computed[name] = result
-	        called.push(name)
-	        return called
-	      })
+	        data.computed[name] = result;
+	        called.push(name);
+	        return called;
+	      });
 	    } else {
-	      return called
+	      return called;
 	    }
-	  }
+	  };
 
 	  var nextDependencies = {
 	    before: this.get('before'),
 	    after: this.get('after')
-	  }
+	  };
 
 	  return u.Promise.resolve().then(function () {
-	    return walkDependencies(nextDependencies.before, [])
+	    return walkDependencies(nextDependencies.before, []);
 	  }).then(function (called) {
-	    var idx = 0
-	    var relationDependencies = self.getDependency(false)
-	    var walker = function () {
+	    var idx = 0;
+	    var relationDependencies = self.getDependency(false);
+	    var walker = function walker() {
 	      if (relationDependencies[idx] !== undefined) {
 	        if (alo.isDependency(relationDependencies[idx])) {
 	          return u.Promise.resolve().then(function () {
-	            return relationDependencies[idx].reduce(self.getId(), data)
+	            return relationDependencies[idx].reduce(self.getId(), data);
 	          }).then(function (computed, called) {
-	            data.computed = computed
-	            idx++
-	            return walker()
-	          })
+	            data.computed = computed;
+	            idx++;
+	            return walker();
+	          });
 	        } else {
-	          idx++
-	          return walker()
+	          idx++;
+	          return walker();
 	        }
 	      } else {
-	        return true
+	        return true;
 	      }
-	    }
-	    return walker()
+	    };
+	    return walker();
 	  }).then(function () {
-	    return walkDependencies(nextDependencies.after, [])
+	    return walkDependencies(nextDependencies.after, []);
 	  }).then(function () {
-	    self._cache[id] = data.computed
-	    return data.computed
-	  })
-	}
+	    self._cache[id] = data.computed;
+	    return data.computed;
+	  });
+	};
 
-	module.exports = Dependency
-
+	module.exports = Dependency;
 
 /***/ },
 /* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = __webpack_require__(1)
-	var alo = new Alo()
-	var u = alo.util
+	'use strict';
 
-	var subscriptionRelation = u.createObjectRelation('member', 'subscription', alo.isSubscription)
-	var dependencyRelation = u.createObjectRelation('member', 'dependency', alo.isDependency)
+	var Alo = __webpack_require__(1);
+	var alo = new Alo();
+	var u = alo.util;
 
-	var Member = function Member () {
-	  this._dependency = {}
-	  this._function = null
-	  this._enabled = true
-	  this._lastData = null
+	var subscriptionRelation = u.createObjectRelation('member', 'subscription', alo.isSubscription);
+	var dependencyRelation = u.createObjectRelation('member', 'dependency', alo.isDependency);
 
-	  subscriptionRelation.constructParent(this)
-	  dependencyRelation.constructParent(this)
-	  member.apply(this, arguments)
-	}
-	var member = u.createPolymorphic()
+	var Member = function Member() {
+	  this._dependency = {};
+	  this._function = null;
+	  this._enabled = true;
+	  this._lastData = null;
+
+	  subscriptionRelation.constructParent(this);
+	  dependencyRelation.constructParent(this);
+	  member.apply(this, arguments);
+	};
+	var member = u.createPolymorphic();
 	member.signature('function', function (func) {
-	  this.setFunction(func)
-	})
+	  this.setFunction(func);
+	});
 	member.signature('object', function (dependencies) {
-	  this.addDependency(dependencies)
-	})
+	  this.addDependency(dependencies);
+	});
 	member.signature('object, function', function (dependencies, func) {
-	  this.addDependency(dependencies)
-	  this.setFunction(func)
-	})
+	  this.addDependency(dependencies);
+	  this.setFunction(func);
+	});
 
-	subscriptionRelation.registerParentPrototype(Member.prototype)
-	dependencyRelation.registerParentPrototype(Member.prototype)
+	subscriptionRelation.registerParentPrototype(Member.prototype);
+	dependencyRelation.registerParentPrototype(Member.prototype);
 
-	Member.prototype._call = function _call (stores, computed) {
-	  var self = this
+	Member.prototype._call = function _call(stores, computed) {
+	  var self = this;
 	  if (this.isEnabled()) {
-	    var func = self.getFunction()
+	    var func = self.getFunction();
 	    if (u.isFunction(func)) {
 	      return u.Promise.resolve().then(function () {
-	        var dependencies = self.getDependency(false)
+	        var dependencies = self.getDependency(false);
 	        if (dependencies.length > 0) {
 	          var depsState = {
 	            state: stores,
 	            computed: {}
-	          }
-	          return dependencies[0].reduceRecursive(dependencies, self.getId(), depsState)
+	          };
+	          return dependencies[0].reduceRecursive(dependencies, self.getId(), depsState);
 	        } else {
-	          return computed
+	          return computed;
 	        }
 	      }).then(function (computed) {
-	        var computedLength = u.values(computed).length
-	        if (self._lastData === null ||
-	          (computedLength === 0) ||
-	          (computedLength > 0 && !u.isEqual(self._lastData, computed))
-	        ) {
-	          self._lastData = computed
-	          func(stores, computed)
+	        var computedLength = u.values(computed).length;
+	        if (self._lastData === null || computedLength === 0 || computedLength > 0 && !u.isEqual(self._lastData, computed)) {
+	          self._lastData = computed;
+	          func(stores, computed);
 	        }
-	      })
+	      });
 	    }
 	  }
-	  return this
-	}
+	  return this;
+	};
 
-	Member.prototype.createDependency = function createDependency () {
-	  var dependency = alo.createDependency.apply(null, arguments)
-	  this.addDependency(dependency)
+	Member.prototype.createDependency = function createDependency() {
+	  var dependency = alo.createDependency.apply(null, arguments);
+	  this.addDependency(dependency);
 
-	  return dependency
-	}
+	  return dependency;
+	};
 
-	Member.prototype.disable = function disable () {
-	  this._enabled = false
-	  return this
-	}
+	Member.prototype.disable = function disable() {
+	  this._enabled = false;
+	  return this;
+	};
 
-	Member.prototype.enable = function enable () {
-	  this._enabled = true
-	  return this
-	}
+	Member.prototype.enable = function enable() {
+	  this._enabled = true;
+	  return this;
+	};
 
-	Member.prototype.isEnabled = function isEnabled () {
-	  return this._enabled
-	}
+	Member.prototype.isEnabled = function isEnabled() {
+	  return this._enabled;
+	};
 
-	Member.prototype.getFunction = function getFunction () {
-	  return this._function
-	}
+	Member.prototype.getFunction = function getFunction() {
+	  return this._function;
+	};
 
-	Member.prototype.setFunction = function setFunction (func) {
+	Member.prototype.setFunction = function setFunction(func) {
 	  if (!u.isFunction(func)) {
-	    throw new Error('Argument given needs to be a function')
+	    throw new Error('Argument given needs to be a function');
 	  } else {
-	    this._function = func
+	    this._function = func;
 	  }
 
-	  return this
-	}
+	  return this;
+	};
 
-	Member.prototype.stop = function stop () {
-	  this.disable()
-	  this.removeSubscription()
+	Member.prototype.stop = function stop() {
+	  this.disable();
+	  this.removeSubscription();
 
-	  return this
-	}
+	  return this;
+	};
 
-	module.exports = Member
-
+	module.exports = Member;
 
 /***/ },
 /* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = __webpack_require__(1)
-	var Customizer = __webpack_require__(206)
+	'use strict';
 
-	var alo = new Alo()
-	var u = alo.util
+	var Alo = __webpack_require__(1);
+	var Customizer = __webpack_require__(206);
 
-	var customizer = new Customizer(false)
+	var alo = new Alo();
+	var u = alo.util;
 
-	var storeRelation = u.createObjectRelation('reducer', 'store', alo.isStore)
-	var reducerRelation = u.createObjectRelation('reducer', 'parentReducer', alo.isReducer)
-	var parentReducerRelation = u.createObjectRelation('parentReducer', 'reducer', alo.isReducer)
+	var customizer = new Customizer(false);
+
+	var storeRelation = u.createObjectRelation('reducer', 'store', alo.isStore);
+	var reducerRelation = u.createObjectRelation('reducer', 'parentReducer', alo.isReducer);
+	var parentReducerRelation = u.createObjectRelation('parentReducer', 'reducer', alo.isReducer);
 
 	/**
 	 * Reducer class
@@ -9808,7 +9811,7 @@ var alo =
 	 *
 	 * @class
 	 */
-	var Reducer = function Reducer () {
+	var Reducer = function Reducer() {
 	  /**
 	   * Is this reducer enabled?
 	   *
@@ -9816,7 +9819,7 @@ var alo =
 	   * @memberof Reducer
 	   * @private
 	   */
-	  this._enabled = true
+	  this._enabled = true;
 
 	  /**
 	   * Unique ID of this reducer
@@ -9825,7 +9828,7 @@ var alo =
 	   * @memberof Reducer
 	   * @private
 	   */
-	  this._id = null
+	  this._id = null;
 
 	  /**
 	   * Array of registered reducers
@@ -9834,7 +9837,7 @@ var alo =
 	   * @memberof Reducer
 	   * @private
 	   */
-	  this._reducerRelations = null
+	  this._reducerRelations = null;
 
 	  /**
 	   * Object of registered stores
@@ -9843,43 +9846,43 @@ var alo =
 	   * @memberof Reducer
 	   * @private
 	   */
-	  this._storeRelations = null
+	  this._storeRelations = null;
 
-	  customizer.constructParent(this)
-	  storeRelation.constructParent(this)
-	  reducerRelation.constructParent(this)
-	  parentReducerRelation.constructParent(this)
+	  customizer.constructParent(this);
+	  storeRelation.constructParent(this);
+	  reducerRelation.constructParent(this);
+	  parentReducerRelation.constructParent(this);
 
-	  reducer.apply(this, arguments)
-	}
-	var reducer = u.createPolymorphic()
-	reducer.signature('', function () {})
+	  reducer.apply(this, arguments);
+	};
+	var reducer = u.createPolymorphic();
+	reducer.signature('', function () {});
 	reducer.signature('function', function (prepareFunction) {
-	  this.setCustomizer(prepareFunction, 'prepare')
-	})
+	  this.setCustomizer(prepareFunction, 'prepare');
+	});
 	reducer.signature('array', function (reducers) {
-	  this.addReducer(reducers)
-	})
+	  this.addReducer(reducers);
+	});
 	reducer.signature('function, function', function (prepareFunction, finalizeFunction) {
-	  this.setCustomizer(prepareFunction, 'prepare')
-	  this.setCustomizer(finalizeFunction)
-	})
+	  this.setCustomizer(prepareFunction, 'prepare');
+	  this.setCustomizer(finalizeFunction);
+	});
 	reducer.signature('function, array', function (prepareFunction, reducers) {
-	  this.setCustomizer(prepareFunction, 'prepare')
-	  this.addReducer(reducers)
-	})
+	  this.setCustomizer(prepareFunction, 'prepare');
+	  this.addReducer(reducers);
+	});
 	reducer.signature('function, function, array', function (prepareFunction, finalizeFunction, reducers) {
-	  this.setCustomizer(prepareFunction, 'prepare')
-	  this.setCustomizer(finalizeFunction)
-	  this.addReducer(reducers)
-	})
+	  this.setCustomizer(prepareFunction, 'prepare');
+	  this.setCustomizer(finalizeFunction);
+	  this.addReducer(reducers);
+	});
 
 	/**
 	 * Get id of this reducer
 	 *
 	 * @return {string} Unique ID of this reducer
 	 */
-	Reducer.prototype.getId = null
+	Reducer.prototype.getId = null;
 
 	/**
 	 * Connect one or multible stores to this reducer
@@ -9891,7 +9894,7 @@ var alo =
 	 *
 	 * @return {Reducer} this
 	 */
-	Reducer.prototype.addStore = null
+	Reducer.prototype.addStore = null;
 
 	/**
 	 * Remove a store or all stores from this reducer
@@ -9903,19 +9906,19 @@ var alo =
 	 *
 	 * @return {Reducer} this
 	 */
-	Reducer.prototype.removeStore = null
+	Reducer.prototype.removeStore = null;
 
-	customizer.registerParentPrototype(Reducer.prototype)
-	storeRelation.registerParentPrototype(Reducer.prototype)
-	reducerRelation.registerParentPrototype(Reducer.prototype)
-	parentReducerRelation.registerParentPrototype(Reducer.prototype)
+	customizer.registerParentPrototype(Reducer.prototype);
+	storeRelation.registerParentPrototype(Reducer.prototype);
+	reducerRelation.registerParentPrototype(Reducer.prototype);
+	parentReducerRelation.registerParentPrototype(Reducer.prototype);
 
 	Reducer.prototype.createReducer = function () {
-	  var reducer = alo.createReducer.apply(null, arguments)
-	  this.addReducer(reducer)
+	  var reducer = alo.createReducer.apply(null, arguments);
+	  this.addReducer(reducer);
 
-	  return reducer
-	}
+	  return reducer;
+	};
 
 	/**
 	 * Calls the registered reducers with the provided state and action
@@ -9928,191 +9931,193 @@ var alo =
 	 *
 	 * @return {object} state Returns the changed state
 	 */
-	Reducer.prototype.reduce = function reduce (state, action) {
+	Reducer.prototype.reduce = function reduce(state, action) {
 	  if (this.isEnabled()) {
-	    var customizerResult = this.callCustomizer('prepare', u.cloneDeep(state), action)
+	    var customizerResult = this.callCustomizer('prepare', u.cloneDeep(state), action);
 	    if (customizerResult !== undefined) {
-	      state = customizerResult
+	      state = customizerResult;
 	    }
 	    u.forEach(this.getReducer(false), function (item) {
-	      state = item.reduce(u.cloneDeep(state), action)
-	    })
-	    customizerResult = this.callCustomizer('finalize', u.cloneDeep(state), action)
+	      state = item.reduce(u.cloneDeep(state), action);
+	    });
+	    customizerResult = this.callCustomizer('finalize', u.cloneDeep(state), action);
 	    if (customizerResult !== undefined) {
-	      state = customizerResult
+	      state = customizerResult;
 	    }
 	  }
 
-	  return state
-	}
+	  return state;
+	};
 
 	/**
 	 * Disables this reducer
 	 *
 	 * @return {Reducer} this
 	 */
-	Reducer.prototype.disable = function disable () {
-	  this._enabled = false
+	Reducer.prototype.disable = function disable() {
+	  this._enabled = false;
 
-	  return this
-	}
+	  return this;
+	};
 
 	/**
 	 * Enables this reducer
 	 *
 	 * @return {Reducer} this
 	 */
-	Reducer.prototype.enable = function enable () {
-	  this._enabled = true
+	Reducer.prototype.enable = function enable() {
+	  this._enabled = true;
 
-	  return this
-	}
+	  return this;
+	};
 
-	Reducer.prototype.isEnabled = function isEnabled () {
-	  return this._enabled
-	}
+	Reducer.prototype.isEnabled = function isEnabled() {
+	  return this._enabled;
+	};
 
 	/**
 	 * Stops this reducer: it will be disabled and removed from all stores
 	 *
 	 * @return {Reducer} this
 	 */
-	Reducer.prototype.stop = function stop () {
-	  this.removeStore()
-	  this.disable()
-	  return this
-	}
+	Reducer.prototype.stop = function stop() {
+	  this.removeStore();
+	  this.disable();
+	  return this;
+	};
 
-	module.exports = Reducer
-
+	module.exports = Reducer;
 
 /***/ },
 /* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Util = __webpack_require__(2)
-	var u = new Util()
-	var ObjectRelation = __webpack_require__(201)
+	'use strict';
+
+	var Util = __webpack_require__(2);
+	var u = new Util();
+	var ObjectRelation = __webpack_require__(201);
 
 	var functions = {
 	  getCustomizer: {},
 	  setCustomizer: {},
 	  unsetCustomizer: {},
 	  callCustomizer: {}
-	}
+	};
 
-	var customizerTypes = ['prepare', 'finalize']
+	var customizerTypes = ['prepare', 'finalize'];
 
-	var Customizer = function (async) {
-	  var self = this
+	var Customizer = function Customizer(async) {
+	  var self = this;
 
-	  this.async = (async === true)
+	  this.async = async === true;
 
-	  this.functions = {}
+	  this.functions = {};
 	  u.forEach(functions, function (func, funcName) {
 	    self.functions[funcName] = {
 	      after: []
-	    }
-	  })
-	}
+	    };
+	  });
+	};
 
 	Customizer.prototype.constructParent = function (parent) {
-	  parent._customizers = {}
+	  parent._customizers = {};
 	  u.forEach(customizerTypes, function (type) {
-	    parent._customizers[type] = false
-	  })
-	}
+	    parent._customizers[type] = false;
+	  });
+	};
 
 	Customizer.prototype.registerParentPrototype = function (proto) {
-	  return ObjectRelation.prototype.registerParentPrototype.call(this, proto)
-	}
+	  return ObjectRelation.prototype.registerParentPrototype.call(this, proto);
+	};
 
 	/**
 	 *
 	 */
-	Customizer.prototype.setCustomizerFunction = u.createPolymorphic()
-	var set = Customizer.prototype.setCustomizerFunction
+	Customizer.prototype.setCustomizerFunction = u.createPolymorphic();
+	var set = Customizer.prototype.setCustomizerFunction;
 	set.signature('object, function, string b=finalize', function (config, func, type) {
 	  if (customizerTypes.indexOf(type) === -1) {
-	    throw new Error('Argument for type is invalid')
+	    throw new Error('Argument for type is invalid');
 	  } else {
-	    this._customizers[type] = func
+	    this._customizers[type] = func;
 	  }
 
-	  return this
-	})
+	  return this;
+	});
 
 	Customizer.prototype.unsetCustomizerFunction = function (config, type) {
-	  var self = this
+	  var self = this;
 
 	  if (type !== undefined && customizerTypes.indexOf(type) === -1) {
-	    throw new Error('Argument for type should be prepare or finalize')
+	    throw new Error('Argument for type should be prepare or finalize');
 	  } else {
 	    if (type === undefined) {
 	      u.forEach(this._customizers, function (func, type) {
-	        self.unsetCustomizer(type)
-	      })
+	        self.unsetCustomizer(type);
+	      });
 	    } else {
-	      this._customizers[type] = false
+	      this._customizers[type] = false;
 	    }
 	  }
 
-	  return this
-	}
+	  return this;
+	};
 
-	Customizer.prototype.getCustomizerFunction = u.createPolymorphic()
-	var get = Customizer.prototype.getCustomizerFunction
+	Customizer.prototype.getCustomizerFunction = u.createPolymorphic();
+	var get = Customizer.prototype.getCustomizerFunction;
 	get.signature('object, string a=finalize', function (config, type) {
 	  if (customizerTypes.indexOf(type) === -1) {
-	    throw new Error('Argument for type is invalid')
+	    throw new Error('Argument for type is invalid');
 	  } else {
-	    return this._customizers[type]
+	    return this._customizers[type];
 	  }
-	})
+	});
 
 	Customizer.prototype.callCustomizerFunction = function (config, type) {
 	  if (!u.isString(type)) {
-	    throw new Error('Argument for type should be a string')
+	    throw new Error('Argument for type should be a string');
 	  } else {
-	    var func = this.getCustomizer(type)
+	    var func = this.getCustomizer(type);
 	    if (!u.isFunction(func)) {
-	      return undefined
+	      return undefined;
 	    } else {
-	      var args = u.values(arguments)
+	      var args = u.values(arguments);
 	      /*
 	       * The config argument is prepended to the function by the customizer - not by the user
 	       * This error is done for the enduser which doenst know about config
 	       */
 	      if (args.length <= 2) {
-	        throw new Error('Atleast two arguments are required')
+	        throw new Error('Atleast two arguments are required');
 	      }
-	      args = args.slice(2)
+	      args = args.slice(2);
 	      if (config.async === true) {
 	        return u.Promise.resolve().then(function () {
-	          return func.apply(null, args)
-	        })
+	          return func.apply(null, args);
+	        });
 	      } else {
-	        return func.apply(null, args)
+	        return func.apply(null, args);
 	      }
 	    }
 	  }
-	}
+	};
 
-	module.exports = Customizer
-
+	module.exports = Customizer;
 
 /***/ },
 /* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = __webpack_require__(1)
-	var alo = new Alo()
-	var u = alo.util
+	'use strict';
 
-	var reducerRelation = u.createObjectRelation('store', 'reducer', alo.isReducer)
-	var subscriptionRelation = u.createObjectRelation('store', 'subscription', alo.isSubscription)
-	var middlewareRelation = u.createObjectRelation('store', 'middleware', alo.isMiddleware)
-	var computedPropertyRelation = u.createObjectRelation('store', 'computedProperty', alo.isDependency)
+	var Alo = __webpack_require__(1);
+	var alo = new Alo();
+	var u = alo.util;
+
+	var reducerRelation = u.createObjectRelation('store', 'reducer', alo.isReducer);
+	var subscriptionRelation = u.createObjectRelation('store', 'subscription', alo.isSubscription);
+	var middlewareRelation = u.createObjectRelation('store', 'middleware', alo.isMiddleware);
+	var computedPropertyRelation = u.createObjectRelation('store', 'computedProperty', alo.isDependency);
 
 	/**
 	 * The core of Alo. A store is the central place for application state
@@ -10121,15 +10126,15 @@ var alo =
 	 *
 	 * @param {Object} state - Optional object to set as a start state
 	 */
-	var Store = function Store (state, id) {
+	var Store = function Store(state, id) {
 	  if (state === undefined || state === null) {
-	    state = {}
+	    state = {};
 	  }
 	  state = {
 	    state: state,
 	    computed: {},
 	    action: { type: null, payload: null }
-	  }
+	  };
 
 	  /**
 	   * @private
@@ -10139,41 +10144,41 @@ var alo =
 	   * TODO: Document members
 	   */
 
-	  this._id = null
+	  this._id = null;
 	  if (u.isString(id)) {
-	    id = id.trim()
+	    id = id.trim();
 	    if (id !== '') {
-	      this._id = id
+	      this._id = id;
 	    }
 	  }
 
 	  /**
 	   * Stream
 	   */
-	  this._stream = u.createStream(state)
+	  this._stream = u.createStream(state);
 
 	  /**
 	   * Reducers
 	   */
-	  this._reducerRelations = null
+	  this._reducerRelations = null;
 
 	  /**
 	   * Middlewares
 	   */
-	  this._middlewareRelations = null
+	  this._middlewareRelations = null;
 
 	  /**
 	   * Subscriptions
 	   */
-	  this._subscriptionRelations = null
+	  this._subscriptionRelations = null;
 
-	  this._computedProperty = {}
+	  this._computedProperty = {};
 
-	  reducerRelation.constructParent(this)
-	  middlewareRelation.constructParent(this)
-	  subscriptionRelation.constructParent(this)
-	  computedPropertyRelation.constructParent(this)
-	}
+	  reducerRelation.constructParent(this);
+	  middlewareRelation.constructParent(this);
+	  subscriptionRelation.constructParent(this);
+	  computedPropertyRelation.constructParent(this);
+	};
 
 	/*
 	 * Setup relations
@@ -10184,7 +10189,7 @@ var alo =
 	 *
 	 * @function
 	 */
-	Store.prototype.getId = null
+	Store.prototype.getId = null;
 
 	/**
 	 * Returns the registered reducers
@@ -10192,7 +10197,7 @@ var alo =
 	 * @function
 	 * @return {array} Array of reducers
 	 */
-	Store.prototype.getReducer = null
+	Store.prototype.getReducer = null;
 
 	/**
 	 * Adds a reducer object to the registered reducers
@@ -10202,7 +10207,7 @@ var alo =
 	 *
 	 * @return {Store} this
 	 */
-	Store.prototype.addReducer = null
+	Store.prototype.addReducer = null;
 
 	/**
 	 * Removes a reducer from the currently registered reducers
@@ -10212,7 +10217,7 @@ var alo =
 	 *
 	 * @return {Store} this
 	 */
-	Store.prototype.removeReducer = null
+	Store.prototype.removeReducer = null;
 
 	/**
 	 * Returns the registered middlewares
@@ -10222,7 +10227,7 @@ var alo =
 	 *
 	 * @return {array|Middleware|false} Array of middlewares, middleware with id, or false if middleware with id wasn't found
 	 */
-	Store.prototype.getMiddleware = null
+	Store.prototype.getMiddleware = null;
 
 	/**
 	 * Registers one or multible middlewares on this store
@@ -10230,7 +10235,7 @@ var alo =
 	 * @function
 	 * @return {Store} this
 	 */
-	Store.prototype.addMiddleware = null
+	Store.prototype.addMiddleware = null;
 
 	/**
 	 * Removes a middleware
@@ -10240,33 +10245,33 @@ var alo =
 	 *
 	 * @return {Store} this
 	 */
-	Store.prototype.removeMiddleware
+	Store.prototype.removeMiddleware;
 
 	/**
 	 * Get a registered subscription by id
 	 *
 	 * @function
 	 */
-	Store.prototype.getSubscription = null
+	Store.prototype.getSubscription = null;
 
 	/**
 	 * Registers a subscription
 	 *
 	 * @function
 	 */
-	Store.prototype.addSubscription = null
+	Store.prototype.addSubscription = null;
 
 	/**
 	 * Removes a subscription
 	 *
 	 * @function
 	 */
-	Store.prototype.removeSubscription = null
+	Store.prototype.removeSubscription = null;
 
-	reducerRelation.registerParentPrototype(Store.prototype)
-	middlewareRelation.registerParentPrototype(Store.prototype)
-	subscriptionRelation.registerParentPrototype(Store.prototype)
-	computedPropertyRelation.registerParentPrototype(Store.prototype)
+	reducerRelation.registerParentPrototype(Store.prototype);
+	middlewareRelation.registerParentPrototype(Store.prototype);
+	subscriptionRelation.registerParentPrototype(Store.prototype);
+	computedPropertyRelation.registerParentPrototype(Store.prototype);
 
 	/**
 	 * Creates and registers one or multible reducers
@@ -10278,73 +10283,73 @@ var alo =
 	 * @return {Reducer}
 	 * @see Reducer
 	 */
-	Store.prototype.createReducer = function createReducer () {
-	  var reducer = alo.createReducer.apply(null, arguments)
-	  this.addReducer(reducer)
+	Store.prototype.createReducer = function createReducer() {
+	  var reducer = alo.createReducer.apply(null, arguments);
+	  this.addReducer(reducer);
 
-	  return reducer
-	}
+	  return reducer;
+	};
 
-	Store.prototype.mapState = function mapState (func) {
+	Store.prototype.mapState = function mapState(func) {
 	  if (!u.isFunction(func)) {
-	    throw new Error('Argument given should be a function')
+	    throw new Error('Argument given should be a function');
 	  } else {
-	    return u.map(this.getState(), func)
+	    return u.map(this.getState(), func);
 	  }
-	}
+	};
 
-	Store.prototype.mapData = function mapData (func) {
+	Store.prototype.mapData = function mapData(func) {
 	  if (!u.isFunction(func)) {
-	    throw new Error('Argument given should be a function')
+	    throw new Error('Argument given should be a function');
 	  } else {
-	    return u.map(this.getData(), func)
+	    return u.map(this.getData(), func);
 	  }
-	}
+	};
 
-	Store.prototype.mapStream = function mapStream (func) {
+	Store.prototype.mapStream = function mapStream(func) {
 	  if (!u.isFunction(func)) {
-	    throw new Error('Argument given should be a function')
+	    throw new Error('Argument given should be a function');
 	  } else {
-	    return u.mapStream(func, this.getStream())
+	    return u.mapStream(func, this.getStream());
 	  }
-	}
+	};
 
 	/**
 	 * Returns the stream of this store
 	 *
 	 * @return {stream} flyd stream
 	 */
-	Store.prototype.getStream = function getStream () {
+	Store.prototype.getStream = function getStream() {
 	  // TODO: Implement Stream Combine
-	  return this._stream
-	}
+	  return this._stream;
+	};
 
 	/**
 	 * Returns the current state
 	 *
 	 * @return {object} current state
 	 */
-	Store.prototype.getData = function getData () {
-	  return u.cloneDeep(this.getStream()())
-	}
+	Store.prototype.getData = function getData() {
+	  return u.cloneDeep(this.getStream()());
+	};
 
-	Store.prototype.getState = function getState () {
-	  return this.getData().state
-	}
+	Store.prototype.getState = function getState() {
+	  return this.getData().state;
+	};
 
-	Store.prototype.createComputedProperty = function createComputedProperty () {
-	  var dependency = alo.createDependency.apply(null, arguments)
-	  this.addComputedProperty(dependency)
+	Store.prototype.createComputedProperty = function createComputedProperty() {
+	  var dependency = alo.createDependency.apply(null, arguments);
+	  this.addComputedProperty(dependency);
 
-	  return dependency
-	}
+	  return dependency;
+	};
 
-	Store.prototype.createSubscription = function createSubscription () {
-	  var subscription = alo.createSubscription.apply(null, arguments)
-	  this.addSubscription(subscription)
-	  return subscription
-	}
-	Store.prototype.subscribe = Store.prototype.createSubscription
+	Store.prototype.createSubscription = function createSubscription() {
+	  var subscription = alo.createSubscription.apply(null, arguments);
+	  this.addSubscription(subscription);
+	  return subscription;
+	};
+	Store.prototype.subscribe = Store.prototype.createSubscription;
 
 	/**
 	 * Dispatches an action
@@ -10355,81 +10360,81 @@ var alo =
 	 * @return {Store} this
 	 */
 	Store.prototype.dispatch = function () {
-	  var self = this
-	  var dispatchArguments = u.values(arguments)
+	  var self = this;
+	  var dispatchArguments = u.values(arguments);
 
-	  var formatAction = function (action) {
+	  var formatAction = function formatAction(action) {
 	    // Set the type to null if it is undefined
 	    if (action.type === undefined) {
-	      action.type = null
+	      action.type = null;
 	    }
 	    if (action.payload === undefined) {
-	      action.payload = null
+	      action.payload = null;
 	    }
-	    return action
-	  }
+	    return action;
+	  };
 
 	  return u.Promise.resolve().then(function () {
 	    /*
 	     * Start with middleware logic
 	     */
-	    var middlewares = self.getMiddleware(false)
+	    var middlewares = self.getMiddleware(false);
 	    if (middlewares.length > 0 && alo.isMiddleware(middlewares[0])) {
-	      dispatchArguments.unshift(self)
+	      dispatchArguments.unshift(self);
 	      return u.Promise.resolve().then(function () {
-	        return middlewares[0].meddleRecursive(middlewares, dispatchArguments)
+	        return middlewares[0].meddleRecursive(middlewares, dispatchArguments);
 	      }).then(function (resultArgs) {
 	        if (u.isArray(resultArgs)) {
-	          return resultArgs[0]
+	          return resultArgs[0];
 	        } else {
-	          return resultArgs
+	          return resultArgs;
 	        }
-	      })
+	      });
 	    } else {
-	      return dispatchArguments[0]
+	      return dispatchArguments[0];
 	    }
 	  }).then(function (action) {
 	    /*
 	     * Here is the final commit part
 	     */
 	    if (!u.isPlainObject(action)) {
-	      return false
+	      return false;
 	    } else {
-	      action = formatAction(action)
-	      var state = self.getData()
-	      var newState = state.state
+	      action = formatAction(action);
+	      var state = self.getData();
+	      var newState = state.state;
 	      u.forEach(self.getReducer(false), function (reducer) {
 	        if (alo.isReducer(reducer)) {
-	          newState = reducer.reduce(u.cloneDeep(newState), action)
+	          newState = reducer.reduce(u.cloneDeep(newState), action);
 	        }
-	      })
+	      });
 
 	      newState = {
 	        state: newState,
 	        computed: {},
 	        action: action
-	      }
+	      };
 
 	      return u.Promise.resolve().then(function () {
 	        /*
 	         * Add the computed properties into the mix
 	         */
-	        var computedProperties = self.getComputedProperty(false)
+	        var computedProperties = self.getComputedProperty(false);
 	        if (computedProperties.length > 0) {
-	          return computedProperties[0].reduceRecursive(computedProperties, self.getId(), u.cloneDeep(newState))
+	          return computedProperties[0].reduceRecursive(computedProperties, self.getId(), u.cloneDeep(newState));
 	        } else {
-	          return newState.computed
+	          return newState.computed;
 	        }
 	      }).then(function (computed) {
-	        newState.computed = computed
+	        newState.computed = computed;
 
 	        // Apply the changed state
-	        var stream = self.getStream()
-	        stream(newState)
-	      })
+	        var stream = self.getStream();
+	        stream(newState);
+	      });
 	    }
-	  })
-	}
+	  });
+	};
 
 	/*
 	var dispatch = Store.prototype.dispatch
@@ -10461,178 +10466,181 @@ var alo =
 	})
 	*/
 
-	module.exports = Store
-
+	module.exports = Store;
 
 /***/ },
 /* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = __webpack_require__(1)
-	var Customizer = __webpack_require__(206)
+	'use strict';
 
-	var alo = new Alo()
-	var u = alo.util
+	var Alo = __webpack_require__(1);
+	var Customizer = __webpack_require__(206);
 
-	var customizer = new Customizer(true)
-	var middlewareRelation = u.createObjectRelation('middleware', 'parentMiddleware', alo.isMiddleware)
-	var parentMiddlewareRelation = u.createObjectRelation('parentMiddleware', 'middleware', alo.isMiddleware)
-	var storeRelation = u.createObjectRelation('middleware', 'store', alo.isStore)
+	var alo = new Alo();
+	var u = alo.util;
 
-	var Middleware = function Middleware () {
-	  customizer.constructParent(this)
-	  middlewareRelation.constructParent(this)
-	  parentMiddlewareRelation.constructParent(this)
-	  storeRelation.constructParent(this)
-	  customizer.constructParent(this)
+	var customizer = new Customizer(true);
+	var middlewareRelation = u.createObjectRelation('middleware', 'parentMiddleware', alo.isMiddleware);
+	var parentMiddlewareRelation = u.createObjectRelation('parentMiddleware', 'middleware', alo.isMiddleware);
+	var storeRelation = u.createObjectRelation('middleware', 'store', alo.isStore);
 
-	  middleware.apply(this, arguments)
-	}
-	var middleware = u.createPolymorphic()
-	middleware.signature('', function () {})
+	var Middleware = function Middleware() {
+	  customizer.constructParent(this);
+	  middlewareRelation.constructParent(this);
+	  parentMiddlewareRelation.constructParent(this);
+	  storeRelation.constructParent(this);
+	  customizer.constructParent(this);
+
+	  middleware.apply(this, arguments);
+	};
+	var middleware = u.createPolymorphic();
+	middleware.signature('', function () {});
 	middleware.signature('function', function (prepareFunction) {
-	  this.setCustomizer(prepareFunction, 'prepare')
-	})
+	  this.setCustomizer(prepareFunction, 'prepare');
+	});
 	middleware.signature('array', function (middlewares) {
-	  this.addMiddleware(middlewares)
-	})
+	  this.addMiddleware(middlewares);
+	});
 	middleware.signature('function, function', function (prepareFunction, finalizeFunction) {
-	  this.setCustomizer(prepareFunction, 'prepare')
-	  this.setCustomizer(finalizeFunction)
-	})
+	  this.setCustomizer(prepareFunction, 'prepare');
+	  this.setCustomizer(finalizeFunction);
+	});
 	middleware.signature('function, array', function (prepareFunction, middlewares) {
-	  this.setCustomizer(prepareFunction, 'prepare')
-	  this.addMiddleware(middlewares)
-	})
+	  this.setCustomizer(prepareFunction, 'prepare');
+	  this.addMiddleware(middlewares);
+	});
 	middleware.signature('function, function, array', function (prepareFunction, finalizeFunction, middlewares) {
-	  this.setCustomizer(prepareFunction, 'prepare')
-	  this.setCustomizer(finalizeFunction)
-	  this.addMiddleware(middlewares)
-	})
+	  this.setCustomizer(prepareFunction, 'prepare');
+	  this.setCustomizer(finalizeFunction);
+	  this.addMiddleware(middlewares);
+	});
 
-	customizer.registerParentPrototype(Middleware.prototype)
-	middlewareRelation.registerParentPrototype(Middleware.prototype)
-	parentMiddlewareRelation.registerParentPrototype(Middleware.prototype)
-	storeRelation.registerParentPrototype(Middleware.prototype)
+	customizer.registerParentPrototype(Middleware.prototype);
+	middlewareRelation.registerParentPrototype(Middleware.prototype);
+	parentMiddlewareRelation.registerParentPrototype(Middleware.prototype);
+	storeRelation.registerParentPrototype(Middleware.prototype);
 
-	Middleware.prototype.createMiddleware = function createMiddleware () {
-	  var middleware = alo.createMiddleware.apply(null, arguments)
-	  this.addMiddleware(middleware)
+	Middleware.prototype.createMiddleware = function createMiddleware() {
+	  var middleware = alo.createMiddleware.apply(null, arguments);
+	  this.addMiddleware(middleware);
 
-	  return middleware
-	}
+	  return middleware;
+	};
 
 	/*
 	 * The middleware handling is done in a recursive manner
 	 */
-	Middleware.prototype.meddleRecursive = function meddleRecursive (middlewares, args) {
-	  var self = this
-	  args = u.values(args)
+	Middleware.prototype.meddleRecursive = function meddleRecursive(middlewares, args) {
+	  var self = this;
+	  args = u.values(args);
 	  // First argument is always the store
-	  var store = args[0]
+	  var store = args[0];
 
 	  if (!u.isArray(middlewares)) {
-	    throw new Error('Argument given should be an array')
+	    throw new Error('Argument given should be an array');
 	  } else if (middlewares.length === 0) {
 	    // store needs to be removed at the end of the recursion
-	    return args.slice(1)
+	    return args.slice(1);
 	  } else {
 	    return u.Promise.resolve().then(function () {
 	      if (alo.isMiddleware(middlewares[0])) {
-	        return middlewares[0].meddle(args)
+	        return middlewares[0].meddle(args);
 	      } else {
-	        return args.slice(1)
+	        return args.slice(1);
 	      }
 	    }).then(function (resultArgs) {
-	      resultArgs = u.values(resultArgs)
+	      resultArgs = u.values(resultArgs);
 	      if (resultArgs[0] === undefined) {
-	        resultArgs = args
+	        resultArgs = args;
 	      } else {
-	        resultArgs.unshift(store)
+	        resultArgs.unshift(store);
 	      }
-	      args = resultArgs
-	      middlewares = middlewares.slice(1)
-	      return self.meddleRecursive(middlewares, resultArgs)
-	    })
+	      args = resultArgs;
+	      middlewares = middlewares.slice(1);
+	      return self.meddleRecursive(middlewares, resultArgs);
+	    });
 	  }
-	}
+	};
 
-	Middleware.prototype.meddle = function meddle (args) {
-	  var self = this
-	  args = u.values(args)
-	  var store = args[0]
-	  args = args.slice(1)
+	Middleware.prototype.meddle = function meddle(args) {
+	  var self = this;
+	  args = u.values(args);
+	  var store = args[0];
+	  args = args.slice(1);
 
-	  var argsToArray = function (resultArgs) {
+	  var argsToArray = function argsToArray(resultArgs) {
 	    if (resultArgs === undefined) {
-	      resultArgs = args
+	      resultArgs = args;
 	    } else if (!u.isArray(resultArgs)) {
-	      resultArgs = [resultArgs]
+	      resultArgs = [resultArgs];
 	    }
-	    args = u.cloneDeep(resultArgs)
+	    args = u.cloneDeep(resultArgs);
 
-	    return resultArgs
-	  }
+	    return resultArgs;
+	  };
 
 	  return u.Promise.resolve().then(function () {
-	    var newArgs = u.cloneDeep(args)
-	    newArgs.unshift(store)
-	    newArgs.unshift('prepare')
-	    return self.callCustomizer.apply(self, newArgs)
+	    var newArgs = u.cloneDeep(args);
+	    newArgs.unshift(store);
+	    newArgs.unshift('prepare');
+	    return self.callCustomizer.apply(self, newArgs);
 	  }).then(function (resultArgs) {
-	    return u.Promise.all(argsToArray(resultArgs))
+	    return u.Promise.all(argsToArray(resultArgs));
 	  }).then(function (resultArgs) {
-	    resultArgs.unshift(store)
-	    return self.meddleRecursive(self.getMiddleware(false), resultArgs)
+	    resultArgs.unshift(store);
+	    return self.meddleRecursive(self.getMiddleware(false), resultArgs);
 	  }).then(function (resultArgs) {
-	    return u.Promise.all(argsToArray(resultArgs))
+	    return u.Promise.all(argsToArray(resultArgs));
 	  }).then(function (resultArgs) {
-	    resultArgs.unshift(store)
-	    resultArgs.unshift('finalize')
-	    return self.callCustomizer.apply(self, resultArgs)
+	    resultArgs.unshift(store);
+	    resultArgs.unshift('finalize');
+	    return self.callCustomizer.apply(self, resultArgs);
 	  }).then(function (resultArgs) {
-	    return u.Promise.all(argsToArray(resultArgs))
+	    return u.Promise.all(argsToArray(resultArgs));
 	  }).then(function (resultArgs) {
-	    return resultArgs
-	  })
-	}
-	module.exports = Middleware
-
+	    return resultArgs;
+	  });
+	};
+	module.exports = Middleware;
 
 /***/ },
 /* 209 */
 /***/ function(module, exports) {
 
-	var addDev = function addDev (AloOld) {
-	  var catchLongStack = function (reason) {
-	    console.error(reason.longStack)
-	  }
+	"use strict";
 
-	  var AloDev = function Alo () {
-	    AloOld.apply(this, arguments)
-	    this.util.Promise.enableLongStackTrace()
-	    this.util.Promise.unhandledRejection = catchLongStack
-	    this.util.createAlo = function createAlo () {
-	      var alo = Object.create(AloDev.prototype)
-	      AloDev.apply(alo, arguments)
-	      return alo
-	    }
-	    this.dev = true
-	  }
-	  AloDev.prototype = AloOld.prototype
-	  AloDev.prototype.catchLongStack = catchLongStack
-	  return AloDev
-	}
+	var addDev = function addDev(AloOld) {
+	  var catchLongStack = function catchLongStack(reason) {
+	    console.error(reason.longStack);
+	  };
 
-	module.exports = addDev
+	  var AloDev = function Alo() {
+	    AloOld.apply(this, arguments);
+	    this.util.Promise.enableLongStackTrace();
+	    this.util.Promise.unhandledRejection = catchLongStack;
+	    this.util.createAlo = function createAlo() {
+	      var alo = Object.create(AloDev.prototype);
+	      AloDev.apply(alo, arguments);
+	      return alo;
+	    };
+	    this.dev = true;
+	  };
+	  AloDev.prototype = AloOld.prototype;
+	  AloDev.prototype.catchLongStack = catchLongStack;
+	  return AloDev;
+	};
 
+	module.exports = addDev;
 
 /***/ },
 /* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var addExtras = function addExtras (Alo) {
-	  var extras = __webpack_require__(211)
+	'use strict';
+
+	var addExtras = function addExtras(Alo) {
+	  var extras = __webpack_require__(211);
 
 	  /**
 	  * Useful functions
@@ -10641,45 +10649,47 @@ var alo =
 	  *
 	  * @see extras
 	  */
-	  Alo.prototype.extras = extras
-	  return Alo
-	}
+	  Alo.prototype.extras = extras;
+	  return Alo;
+	};
 
-	module.exports = addExtras
-
+	module.exports = addExtras;
 
 /***/ },
 /* 211 */
 /***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
 
 	/**
 	 * Extras, but useful stuff
 	 *
 	 * @namespace
 	 */
-	var extras = {}
+	var extras = {};
 
 	/**
 	 * Several included reducer examples
 	 */
-	extras.reducers = __webpack_require__(212)
+	extras.reducers = __webpack_require__(212);
 
 	/**
 	 */
-	extras.middlewares = __webpack_require__(213)
+	extras.middlewares = __webpack_require__(213);
 
-	module.exports = extras
-
+	module.exports = extras;
 
 /***/ },
 /* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = __webpack_require__(1)
-	var alo = new Alo()
-	var u = alo.util
+	'use strict';
 
-	var reducers = {}
+	var Alo = __webpack_require__(1);
+	var alo = new Alo();
+	var u = alo.util;
+
+	var reducers = {};
 
 	/**
 	 * A basic reducer which just replaces state with payload of untyped actions
@@ -10687,67 +10697,67 @@ var alo =
 	 * @memberof extras
 	 */
 	reducers.createUntypedReplace = function () {
-	  var reduce = function (state, action) {
+	  var reduce = function reduce(state, action) {
 	    if (action.type === undefined || action.type === null || action.type === '') {
 	      if (action.payload !== undefined) {
-	        return action.payload
+	        return action.payload;
 	      }
 	    }
-	    return state
-	  }
+	    return state;
+	  };
 
-	  return alo.createReducer(reduce)
-	}
+	  return alo.createReducer(reduce);
+	};
 
-	module.exports = reducers
-
+	module.exports = reducers;
 
 /***/ },
 /* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alo = __webpack_require__(1)
-	var alo = new Alo()
-	var u = alo.util
+	'use strict';
+
+	var Alo = __webpack_require__(1);
+	var alo = new Alo();
+	var u = alo.util;
 
 	/**
 	 * @memberof extras
 	 */
-	var middlewares = {}
+	var middlewares = {};
 
-	middlewares.createThunk = function createThunk () {
+	middlewares.createThunk = function createThunk() {
 	  var middleware = alo.createMiddleware(function () {
-	    var args = u.values(arguments)
-	    var arg = args[1]
-	    var walk = function (args) {
-	      var arg = args[1]
-	      args.splice(1, 1)
+	    var args = u.values(arguments);
+	    var arg = args[1];
+	    var walk = function walk(args) {
+	      var arg = args[1];
+	      args.splice(1, 1);
 	      return u.Promise.resolve().then(function () {
-	        return arg.apply(null, args)
+	        return arg.apply(null, args);
 	      }).then(function (arg) {
 	        if (u.isFunction(arg)) {
-	          args.splice(1, 0, arg)
-	          return walk(args)
+	          args.splice(1, 0, arg);
+	          return walk(args);
 	        } else {
-	          args.splice(0, 1, arg)
-	          return args
+	          args.splice(0, 1, arg);
+	          return args;
 	        }
-	      })
-	    }
+	      });
+	    };
 
 	    if (u.isFunction(arg)) {
-	      return walk(args)
+	      return walk(args);
 	    } else {
-	      args.splice(0, 1)
-	      return args
+	      args.splice(0, 1);
+	      return args;
 	    }
-	  })
+	  });
 
-	  return middleware
-	}
+	  return middleware;
+	};
 
-	module.exports = middlewares
-
+	module.exports = middlewares;
 
 /***/ }
 /******/ ]);
