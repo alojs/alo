@@ -4,7 +4,7 @@
   "description": "A minimalist approach to javascript state management",
   "main": "main/alo.full.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha",
+    "test": "./node_modules/.bin/mocha --reporter list",
     "test-nyc": "./node_modules/.bin/nyc --require babel-core/register ./node_modules/.bin/mocha",
     "coverage-nyc": "./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls",
     "test-watch": "./node_modules/.bin/mocha --watch --reporter min",
