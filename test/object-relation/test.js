@@ -1,15 +1,17 @@
 /* global describe, it */
 
 var Alo = require('./../../main/alo.js')
+import ObjectRelation from './../../lib/util/object-relation.js'
+
 var alo = new Alo()
 var u = alo.util
 var assert = require('assert')
 
 describe('ObjectRelation', function () {
-  var objectRelation1 = u.createObjectRelation('tree', 'leaf', function (leaf) {
+  var objectRelation1 = new ObjectRelation('tree', 'leaf', function (leaf) {
     return (leaf instanceof Leaf)
   })
-  var objectRelation2 = u.createObjectRelation('leaf', 'tree', function (tree) {
+  var objectRelation2 = new ObjectRelation('leaf', 'tree', function (tree) {
     return (tree instanceof Tree)
   })
   var Tree = function Tree () {

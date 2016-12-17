@@ -1,5 +1,7 @@
 [ignore]
 .*node_modules/documentation.*
+.*docs/.*
+.*test/.*
 
 [include]
 
