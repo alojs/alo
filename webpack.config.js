@@ -1,6 +1,5 @@
 var path = require('path')
 var webpack = require('webpack')
-var JsDocPlugin = require('jsdoc-webpack-plugin')
 
 module.exports = {
   context: path.join(__dirname, 'main'),
@@ -13,6 +12,28 @@ module.exports = {
   },
   module: {
     rules: [
+// documentation-loader currently not supported with webpack 2
+/*      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        enforce: 'pre',
+        use: [
+          {
+            loader: 'documentation-loader',
+            options: {
+              documentation: {
+                output: path.join(__dirname, 'docs', 'api'),
+                entry: [
+                  path.join(__dirname, 'main', 'alo.full.dev.js')
+                ],
+                github: true,
+                format: 'html'
+              }
+            }
+          }
+        ]
+      },
+*/
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
@@ -31,14 +52,11 @@ module.exports = {
     filename: '[name].js'
   },
   plugins: [
-    /*new JsDocPlugin({
-      conf: './jsdoc.conf'
-    }),*/
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
         APP_ENV: JSON.stringify('browser')
       }
     })
-  ]
+  ],
 }

@@ -1,336 +1,4435 @@
-<!DOCTYPE html>
-
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
-	<title>Alo Index</title>
-
-	<!--[if lt IE 9]>
-	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
-
-	<link type="text/css" rel="stylesheet" href="styles/site.flatly.css">
-
+  <meta charset='utf-8' />
+  <title>  | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
 </head>
-
-<body>
-
-<div class="navbar navbar-default navbar-fixed-top ">
-<div class="container">
-	<div class="navbar-header">
-		<a class="navbar-brand" href="index.html">Alo</a>
-		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-        </button>
-	</div>
-	<div class="navbar-collapse collapse" id="topNavigation">
-		<ul class="nav navbar-nav">
-			
-			<li class="dropdown">
-				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="extras.html">extras</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="Reducer.html">Reducer</a></li><li><a href="Subscription.html">Subscription</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="global.html#Util">Util</a></li>
-				</ul>
-			</li>
-			
-		</ul>
-        
-            <div class="col-sm-3 col-md-3">
-                <form class="navbar-form" role="search">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        
-	</div>
-
-</div>
-</div>
-
-
-<div class="container" id="toc-content">
-<div class="row">
-
-	
-	<div class="col-md-8">
-	
-		<div id="main">
-			
-
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-
-
-
-
-
-    <section class="readme-section">
-        <article><h1>
-  <img width="100px" src="https://cdn.rawgit.com/alojs/alo/e512ce4ef2fca64120d74942519b4a9cea8959de/logo/logo.png" /> 
-  &nbsp; Welcome to Alo
-</h1>
-
-<p><a href="https://github.com/alojs/alo/blob/master/LICENSE"><img src="https://img.shields.io/github/license/alojs/alo.svg" alt="license"></a>
-<a href="https://www.npmjs.com/package/alo"><img src="https://img.shields.io/npm/v/alo.svg" alt="npm"></a>
-<a href="https://bower.io/search/?q=alo"><img src="https://img.shields.io/bower/v/alo.svg" alt="Bower"></a>
-<a href="https://travis-ci.org/alojs/alo"><img src="https://img.shields.io/travis/alojs/alo.svg" alt="Travis"></a>
-<a href="https://coveralls.io/github/alojs/alo"><img src="https://img.shields.io/coveralls/alojs/alo.svg" alt="Coveralls"></a>
-<a href="http://standardjs.com/"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" alt="JavaScript Style Guide"></a>
-<a href="https://www.npmjs.com/package/alo"><img src="https://img.shields.io/npm/dm/alo.svg" alt="npm"></a>
-<a href="https://github.com/alojs/alo"><img src="https://img.shields.io/david/alojs/alo.svg" alt="David"></a>
-<a href="https://github.com/alojs/alo"><img src="https://img.shields.io/david/dev/alojs/alo.svg" alt="David"></a></p>
-<h2>Intro</h2><p>Alo is a state management library, helping you to organize frontend application state in a productive way, giving you ways to handle side effects, and allowing you, to stay in control of whats going on. There are many libraries to manage state: <a href="https://github.com/reactjs/redux">Redux</a>, <a href="https://github.com/mobxjs/mobx">Mobx</a>, <a href="https://github.com/vuejs/vuex">Vuex</a>, and a countless number more. Although I like the ideas behind them, I wasnt quite happy how they introduce many necessary extra steps to get started, require dozens of extra plugins do get you your job done, or introduce new babel build tools, just to write usable code. As an example, i just can't stand the magic behind code like this (code from mobx):</p>
-<pre class="prettyprint source lang-js"><code>class Todo {
-    id = Math.random();
-    @observable title = &quot;&quot;;
-    @observable finished = false;
-}</code></pre><p>Yeah its readable and one can probably guess, what this code is doing. But is it <em>really</em> a benefit to a plain ES5 solution? I am not that sure. But I am maybe just a little bit oldscool. Know I am not here to prove you my point and to <em>sell</em> you Alo. But surely I would love to see that you and others enjoy Alo. But at the end everyone must choose the tools which work best for him and her.</p>
-<h3>Features</h3><ul>
-<li>State managed with <a href="https://github.com/paldepind/flyd">flyd</a> streams (therefore being able to access the state stream direcly if needed)</li>
-<li>All the features of a basic state management library (stores, dispatch, subscriptions, middleware)</li>
-<li>Computed properties with dependencies on the state (only computed if dependencies change)</li>
-<li>Dependency-handling for subscriptions (allowing to call subscriptions only if specific dependencies change)</li>
-<li>Before and after events for subscriptions</li>
-<li>Flexible object oriented classes for stores, subscriptions, reducers, etc.</li>
-<li>Promise Support for dispatches, dependencies and middleware</li>
-</ul>
-<h3>But what is Alo?</h3><p>Now I actually need to work on this paragraph AWWW! But here is a small code snippet, just introducing the basics:</p>
-<pre class="prettyprint source lang-js"><code>var Alo = require('alo')
-var alo = new Alo();
-
-// Stores are objects on top of flyd streams https://github.com/paldepind/flyd
-var myCoolStore = alo.createStore({test: 'tired string :('}, 'coolStore')
-
-// Reducers are actually objects too!
-var myReducer = myCoolStore.createReducer(function(state, action) {
-  if (action.type === &quot;hello&quot;) {
-      state.test = &quot;FANCY STRING! Wohoo lets dance!&quot;
-  }
-  // I will change the state
-  return state
-})
-
-// This is a subscription, it can be subscribed to multible stores!
-var sub = myCoolStore.subscribe(function(stores) {
-  console.log('message', stores.coolStore.state)
-})
-
-var promise = myCoolStore.dispatch({ type: 'hello' });
-// A dispatch always returns a promise
-promise.then(function() {
-  console.log('dispatch done, yeah!');
-})</code></pre><h2>Getting started</h2><p>Currently in the works...</p>
-<h2>API</h2><p>http://www.alojs.com/docs/api/ Currently in the works!</p>
-<h2>Installation</h2><ul>
-<li>NPM: <code>npm install --save-dev alo</code></li>
-<li>Bower: <code>bower install --save-dev alo</code></li>
-</ul>
-<h3>Use</h3><ul>
-<li>Core: <code>require('alo')</code></li>
-<li>Core <em>Dev</em>: <code>require('alo.dev.js')</code></li>
-<li>Full: <code>require('alo/main/alo.full.js')</code></li>
-<li>Full <em>Dev</em>: <code>require('alo/main/alo.full.dev.js')</code></li>
-</ul>
-<h3>Versions</h3><p>There are different main files available for use in the <a href="https://github.com/alojs/alo/tree/master/main">main</a> folder.</p>
-<p>The files are constructed with a combination of these postfixes:</p>
-<ul>
-<li>full: includes extras (helpers like some basic reducers and middleware)</li>
-<li>dev: enables long stacktraces in promises and will (as of 3.0) add the debug console to the Alo class</li>
-</ul>
-<h3>CDN's</h3><p>You can use Alo with NPM or Bower or even straight from a CDN. There are couple browser builds available in the dist folder</p>
-<h4>Development (unminified and with devtools) (see <a href="#versions">Versions</a>)</h4><ul>
-<li>Core: https://cdn.rawgit.com/alojs/alo/v2.4.1/dist/alo.dev.js</li>
-<li>Full: https://cdn.rawgit.com/alojs/alo/v2.4.1/dist/alo.full.dev.js</li>
-</ul>
-<h4>Production (minified)</h4><ul>
-<li>Core: https://cdn.rawgit.com/alojs/alo/v2.4.1/dist/alo.min.js</li>
-<li>Full: https://cdn.rawgit.com/alojs/alo/v2.4.1/dist/alo.full.min.js</li>
-</ul>
-<h4>More?</h4><p>Please have a look at <a href="https://rawgit.com">RawGit</a>. It allows you to use basically any file from Github repos (and therefore also all the files from https://cdn.rawgit.com/alojs/alo/v2.4.1/dist/)</p>
-<h2>FAQ</h2><ol>
-<li><p><em>Is this library ready to use for production?</em>
-API-wise there are not many open changes planned, however the library is quite young and I don't want to feature freeze the library yet. So if I see a huge optimization potential or get useful feedback I am open for API changes. (But even if that happens I will try to minimize the required changes for users). Then there is also just the chance to find nasty bugs as an early adopter - this chance just can't be eliminated 100%.</p>
-</li>
-<li><p><em>Where is the documentation?</em>
-I am working on it.</p>
-</li>
-<li><p><em>What are your future plans?</em>
-Trying to add examples, test the software, add more extras, work on the dev-tools. My goal is to ship an as stable as possible 3.0 in the next couple of months (End of Q1(17) / Start of Q2(17))</p>
-</li>
-</ol></article>
-    </section>
-
-
-
-
-
-
-
-		</div>
-	</div>
-
-	<div class="clearfix"></div>
-
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
-	
-
-</div>
-</div>
-
-
-    <div class="modal fade" id="searchResults">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Search results</h4>
+<body class='documentation'>
+  <div class='max-width-4 mx-auto'>
+    <div class='clearfix md-mxn2'>
+      <div class='fixed xs-hide fix-3 overflow-auto max-height-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'></h3>
+          <div class='mb1'><code></code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#extras'
+                  class=" toggle-sibling">
+                  extras
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  <ul class='list-reset py1-ul pl1'>
+                    <li class='h5'><span>Static members</span></li>
+                    
+                      <li><a
+                        href='#extras.reducers'
+                        class='regular pre-open'>
+                        .reducers
+                      </a></li>
+                    
+                      <li><a
+                        href='#extras.middlewares'
+                        class='regular pre-open'>
+                        .middlewares
+                      </a></li>
+                    
+                    </ul>
+                  
+                  
+                  
+                </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#util'
+                  class=" toggle-sibling">
+                  Util
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#Util#cloneDeep'
+                        class='regular pre-open'>
+                        #cloneDeep
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#values'
+                        class='regular pre-open'>
+                        #values
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#forEach'
+                        class='regular pre-open'>
+                        #forEach
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#isFunction'
+                        class='regular pre-open'>
+                        #isFunction
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#isString'
+                        class='regular pre-open'>
+                        #isString
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#isObject'
+                        class='regular pre-open'>
+                        #isObject
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#isEqual'
+                        class='regular pre-open'>
+                        #isEqual
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#isPlainObject'
+                        class='regular pre-open'>
+                        #isPlainObject
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#isArray'
+                        class='regular pre-open'>
+                        #isArray
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#isBoolean'
+                        class='regular pre-open'>
+                        #isBoolean
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#uniqueId'
+                        class='regular pre-open'>
+                        #uniqueId
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#createStream'
+                        class='regular pre-open'>
+                        #createStream
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#combineStreams'
+                        class='regular pre-open'>
+                        #combineStreams
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#isStream'
+                        class='regular pre-open'>
+                        #isStream
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#immediateStream'
+                        class='regular pre-open'>
+                        #immediateStream
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#streamEndsOn'
+                        class='regular pre-open'>
+                        #streamEndsOn
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#mapStream'
+                        class='regular pre-open'>
+                        #mapStream
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#streamOn'
+                        class='regular pre-open'>
+                        #streamOn
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#scanStream'
+                        class='regular pre-open'>
+                        #scanStream
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#mergeStream'
+                        class='regular pre-open'>
+                        #mergeStream
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#transduceStream'
+                        class='regular pre-open'>
+                        #transduceStream
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#createPolymorphic'
+                        class='regular pre-open'>
+                        #createPolymorphic
+                      </a></li>
+                      
+                      <li><a
+                        href='#Util#createAlo'
+                        class='regular pre-open'>
+                        #createAlo
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#util'
+                  class="">
+                  util
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#createreducer'
+                  class="">
+                  createReducer
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#createreducer'
+                  class="">
+                  createReducer
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#createreducer'
+                  class="">
+                  createReducer
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#createreducer'
+                  class="">
+                  createReducer
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#isreducer'
+                  class="">
+                  isReducer
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#createstore'
+                  class="">
+                  createStore
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#isstore'
+                  class="">
+                  isStore
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#subscription'
+                  class="">
+                  Subscription
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#store'
+                  class=" toggle-sibling">
+                  Store
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#Store#_stream'
+                        class='regular pre-open'>
+                        #_stream
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#_reducerRelations'
+                        class='regular pre-open'>
+                        #_reducerRelations
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#_middlewareRelations'
+                        class='regular pre-open'>
+                        #_middlewareRelations
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#_subscriptionRelations'
+                        class='regular pre-open'>
+                        #_subscriptionRelations
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#getId'
+                        class='regular pre-open'>
+                        #getId
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#getReducer'
+                        class='regular pre-open'>
+                        #getReducer
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#addReducer'
+                        class='regular pre-open'>
+                        #addReducer
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#removeReducer'
+                        class='regular pre-open'>
+                        #removeReducer
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#getMiddleware'
+                        class='regular pre-open'>
+                        #getMiddleware
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#addMiddleware'
+                        class='regular pre-open'>
+                        #addMiddleware
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#getSubscription'
+                        class='regular pre-open'>
+                        #getSubscription
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#addSubscription'
+                        class='regular pre-open'>
+                        #addSubscription
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#removeSubscription'
+                        class='regular pre-open'>
+                        #removeSubscription
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#createReducer'
+                        class='regular pre-open'>
+                        #createReducer
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#getStream'
+                        class='regular pre-open'>
+                        #getStream
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#getData'
+                        class='regular pre-open'>
+                        #getData
+                      </a></li>
+                      
+                      <li><a
+                        href='#Store#dispatch'
+                        class='regular pre-open'>
+                        #dispatch
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#reducer'
+                  class=" toggle-sibling">
+                  Reducer
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#Reducer#getId'
+                        class='regular pre-open'>
+                        #getId
+                      </a></li>
+                      
+                      <li><a
+                        href='#Reducer#addStore'
+                        class='regular pre-open'>
+                        #addStore
+                      </a></li>
+                      
+                      <li><a
+                        href='#Reducer#removeStore'
+                        class='regular pre-open'>
+                        #removeStore
+                      </a></li>
+                      
+                      <li><a
+                        href='#Reducer#disable'
+                        class='regular pre-open'>
+                        #disable
+                      </a></li>
+                      
+                      <li><a
+                        href='#Reducer#enable'
+                        class='regular pre-open'>
+                        #enable
+                      </a></li>
+                      
+                      <li><a
+                        href='#Reducer#stop'
+                        class='regular pre-open'>
+                        #stop
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setcustomizerfunction'
+                  class="">
+                  setCustomizerFunction
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#constructparent'
+                  class="">
+                  constructParent
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#removemiddleware'
+                  class="">
+                  removeMiddleware
+                  
+                </a>
+                
+                </li>
+              
+            </ul>
           </div>
-          <div class="modal-body"></div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <div class='mt1 h6 quiet'>
+            <a href='http://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
           </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
+        </div>
+      </div>
+      <div class='fix-margin-3'>
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='extras'>
+      extras
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/extras/extras.js#L4-L4'>
+      <span>lib/extras/extras.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Extras, but useful stuff</p>
+
+
+  <div class='pre p1 fill-light mt0'>extras</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='extras.reducers'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>reducers</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/extras/extras.js#L9-L9'>
+      <span>lib/extras/extras.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Several included reducer examples</p>
+
+
+  <div class='pre p1 fill-light mt0'>reducers</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='extras.reducerscreateUntypedReplace'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>createUntypedReplace()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/extras/reducers.js#L12-L23'>
+      <span>lib/extras/reducers.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>A basic reducer which just replaces state with payload of untyped actions</p>
+
+
+  <div class='pre p1 fill-light mt0'>createUntypedReplace()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
     </div>
+  
+</div>
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='extras.middlewares'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>middlewares</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/extras/extras.js#L13-L13'>
+      <span>lib/extras/extras.js</span>
+      </a>
+    
+  </div>
+  
+
+  
+
+  <div class='pre p1 fill-light mt0'>middlewares</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='extras.middlewarescreateThunk'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>createThunk()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/extras/middlewares.js#L12-L41'>
+      <span>lib/extras/middlewares.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>A thunk middleware</p>
 
 
-<footer>
+  <div class='pre p1 fill-light mt0'>createThunk()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='util'>
+      Util
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L7-L7'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Several utility functions / libs used by alo</p>
+<p>Some of this functions / libs might change over time: Please read the description of the specific function / lib.</p>
 
 
-	<span class="copyright">
-	&copy; 2016 Lufrai
-	</span>
+  <div class='pre p1 fill-light mt0'>Util()</div>
+  
+  
 
-<span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
-	
-		on 2016-12-16T20:44:25+01:00
-	
-	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
-</span>
-</footer>
+  
+  
+  
+  
+  
 
-<script src="scripts/docstrap.lib.js"></script>
-<script src="scripts/toc.js"></script>
+  
 
-    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+  
 
+  
 
-<script>
-$( function () {
-	$( "[id*='$']" ).each( function () {
-		var $this = $( this );
+  
 
-		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
-	} );
+  
 
-	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
-		var $this = $( this );
+  
 
-		var example = $this.find( "code" );
-		exampleText = example.html();
-		var lang = /{@lang (.*?)}/.exec( exampleText );
-		if ( lang && lang[1] ) {
-			exampleText = exampleText.replace( lang[0], "" );
-			example.html( exampleText );
-			lang = lang[1];
-		} else {
-			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
-			lang = langClassMatch ? langClassMatch[1] : "javascript";
-		}
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='Util#cloneDeep'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>cloneDeep()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
 
-		if ( lang ) {
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L16-L16'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
 
-			$this
-			.addClass( "sunlight-highlight-" + lang )
-			.addClass( "linenums" )
-			.html( example.html() );
-
-		}
-	} );
-
-	Sunlight.highlightAll( {
-		lineNumbers : true,
-		showMenu : true,
-		enableDoclinks : true
-	} );
-
-	$.catchAnchorLinks( {
-        navbarOffset: 10
-	} );
-	$( "#toc" ).toc( {
-		anchorName  : function ( i, heading, prefix ) {
-			return $( heading ).attr( "id" ) || ( prefix + i );
-		},
-		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
-		showAndHide : false,
-		smoothScrolling: true
-	} );
-
-	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
-	$( '.dropdown-toggle' ).dropdown();
-
-    $( "table" ).each( function () {
-      var $this = $( this );
-      $this.addClass('table');
-    } );
-
-} );
-</script>
+  <p>Lodash cloneDeep, can be used</p>
 
 
+  <div class='pre p1 fill-light mt0'>cloneDeep()</div>
+  
+  
 
-<!--Navigation and Symbol Display-->
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#values'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>values()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L25-L25'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Lodash values, can be used</p>
 
 
-<!--Google Analytics-->
+  <div class='pre p1 fill-light mt0'>values()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#forEach'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>forEach()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L32-L32'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Lodash forEach, can be used</p>
 
 
+  <div class='pre p1 fill-light mt0'>forEach()</div>
+  
+  
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            SearcherDisplay.init();
-        });
-    </script>
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#isFunction'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>isFunction()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L39-L39'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Lodash isFunction, can be used</p>
 
 
+  <div class='pre p1 fill-light mt0'>isFunction()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#isString'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>isString()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L46-L46'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Lodash isString, can be used</p>
+
+
+  <div class='pre p1 fill-light mt0'>isString()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#isObject'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>isObject()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L53-L53'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Lodash isObject, can be used</p>
+
+
+  <div class='pre p1 fill-light mt0'>isObject()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#isEqual'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>isEqual()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L62-L62'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Lodash isEqual, can be used</p>
+
+
+  <div class='pre p1 fill-light mt0'>isEqual()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#isPlainObject'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>isPlainObject()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L69-L69'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Lodash isPlainObject, can be used</p>
+
+
+  <div class='pre p1 fill-light mt0'>isPlainObject()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#isArray'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>isArray()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L76-L76'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Lodash isArray, can be used</p>
+
+
+  <div class='pre p1 fill-light mt0'>isArray()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#isBoolean'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>isBoolean()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L85-L85'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Lodash isBoolean, can be used</p>
+
+
+  <div class='pre p1 fill-light mt0'>isBoolean()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#uniqueId'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>uniqueId()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L94-L94'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Lodash uniqueId, can be used</p>
+
+
+  <div class='pre p1 fill-light mt0'>uniqueId()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#createStream'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>createStream()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L104-L104'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Flyd stream: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>createStream()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#combineStreams'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>combineStreams()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L111-L111'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Flyd stream: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>combineStreams()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#isStream'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>isStream()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L118-L118'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Flyd isStream: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>isStream()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#immediateStream'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>immediateStream()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L125-L125'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Flyd immediate: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>immediateStream()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#streamEndsOn'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>streamEndsOn()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L132-L132'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Flyd endsOn: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>streamEndsOn()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#mapStream'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>mapStream()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L139-L139'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Flyd map: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>mapStream()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#streamOn'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>streamOn()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L146-L146'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Flyd on: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>streamOn()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#scanStream'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>scanStream()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L153-L153'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Flyd scan: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>scanStream()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#mergeStream'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>mergeStream()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L160-L160'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Flyd merge: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>mergeStream()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#transduceStream'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>transduceStream()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L167-L167'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Flyd transduce: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>transduceStream()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#createPolymorphic'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>createPolymorphic()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L174-L174'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Polymorphic helper: Might change!</p>
+
+
+  <div class='pre p1 fill-light mt0'>createPolymorphic()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Util#createAlo'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>createAlo()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/util.js#L186-L191'>
+      <span>lib/util/util.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Same as new Alo</p>
+
+
+  <div class='pre p1 fill-light mt0'>createAlo()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='util'>
+      util
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/alo.js#L9-L9'>
+      <span>lib/alo.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Access to the util namespace</p>
+
+
+  <div class='pre p1 fill-light mt0'>util</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='createreducer'>
+      createReducer
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/alo.js#L72-L77'>
+      <span>lib/alo.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Access to the store constructor</p>
+
+
+  <div class='pre p1 fill-light mt0'>createReducer()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='createreducer'>
+      createReducer
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/alo.js#L72-L77'>
+      <span>lib/alo.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Access to the subscription constructor</p>
+
+
+  <div class='pre p1 fill-light mt0'>createReducer()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='createreducer'>
+      createReducer
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/alo.js#L72-L77'>
+      <span>lib/alo.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Access to the handler constructor</p>
+
+
+  <div class='pre p1 fill-light mt0'>createReducer()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='createreducer'>
+      createReducer
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/alo.js#L72-L77'>
+      <span>lib/alo.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Same as new Reducer</p>
+
+
+  <div class='pre p1 fill-light mt0'>createReducer()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='isreducer'>
+      isReducer
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/alo.js#L86-L89'>
+      <span>lib/alo.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Instanceof check for reducers</p>
+
+
+  <div class='pre p1 fill-light mt0'>isReducer(reducer: any): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>reducer</span> <code class='quiet'>(any)</code>
+	    Argument to check if it is a reducer
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code>:
+        true of it is a reducer, false in the other case
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='createstore'>
+      createStore
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/alo.js#L95-L101'>
+      <span>lib/alo.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Same as new Store</p>
+
+
+  <div class='pre p1 fill-light mt0'>createStore()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='isstore'>
+      isStore
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/alo.js#L110-L116'>
+      <span>lib/alo.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Instanceof check for stores</p>
+
+
+  <div class='pre p1 fill-light mt0'>isStore(store: any, validateId: any): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>store</span> <code class='quiet'>(any)</code>
+	    Argument to check if it is a store
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>validateId</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code>:
+        true of it is a store, false in the other case
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='subscription'>
+      Subscription
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/subscription/subscription.js#L19-L42'>
+      <span>lib/subscription/subscription.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Subscription Constructor, is used in the Store Class to create Subscriptions to state</p>
+
+
+  <div class='pre p1 fill-light mt0'>new Subscription(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, storeProtected: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, namespace: (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>))</div>
+  
+  
+    <p>
+      Extends
+      
+        <a href="#store">Store</a>
+      
+    </p>
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>id</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>storeProtected</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>namespace</span> <code class='quiet'>((<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>))</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='store'>
+      Store
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L19-L71'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>The core of Alo. A store is the central place for application state</p>
+
+
+  <div class='pre p1 fill-light mt0'>new Store(state: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?)</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>state</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    Optional object to set as a start state
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>id</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='Store#_stream'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>_stream</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L48-L48'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Stream</p>
+
+
+  <div class='pre p1 fill-light mt0'>_stream</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#_reducerRelations'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>_reducerRelations</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L53-L53'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Reducers</p>
+
+
+  <div class='pre p1 fill-light mt0'>_reducerRelations</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#_middlewareRelations'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>_middlewareRelations</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L58-L58'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Middlewares</p>
+
+
+  <div class='pre p1 fill-light mt0'>_middlewareRelations</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#_subscriptionRelations'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>_subscriptionRelations</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L63-L63'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Subscriptions</p>
+
+
+  <div class='pre p1 fill-light mt0'>_subscriptionRelations</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#getId'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>getId()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L82-L82'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns the id of the store</p>
+
+
+  <div class='pre p1 fill-light mt0'>getId()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#getReducer'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>getReducer()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L90-L90'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns the registered reducers</p>
+
+
+  <div class='pre p1 fill-light mt0'>getReducer(): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a></code>:
+        Array of reducers
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#addReducer'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addReducer(reducer)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L100-L100'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Adds a reducer object to the registered reducers</p>
+
+
+  <div class='pre p1 fill-light mt0'>addReducer(reducer: <a href="#reducer">Reducer</a>): <a href="#store">Store</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>reducer</span> <code class='quiet'>(<a href="#reducer">Reducer</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#store">Store</a></code>:
+        this
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#removeReducer'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>removeReducer(reducer)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L110-L110'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Removes a reducer from the currently registered reducers</p>
+
+
+  <div class='pre p1 fill-light mt0'>removeReducer(reducer: (int | <a href="#reducer">Reducer</a>)): <a href="#store">Store</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>reducer</span> <code class='quiet'>((int | <a href="#reducer">Reducer</a>))</code>
+	    id or Reducer
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#store">Store</a></code>:
+        this
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#getMiddleware'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>getMiddleware(id?)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L120-L120'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns the registered middlewares</p>
+
+
+  <div class='pre p1 fill-light mt0'>getMiddleware(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?): (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a> | Middleware | <code>false</code>)</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>id</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?)</code>
+	    The id is optional
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a> | Middleware | <code>false</code>)</code>:
+        Array of middlewares, middleware with id, or false if middleware with id wasn't found
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#addMiddleware'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addMiddleware()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L128-L128'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Registers one or multible middlewares on this store</p>
+
+
+  <div class='pre p1 fill-light mt0'>addMiddleware(): <a href="#store">Store</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#store">Store</a></code>:
+        this
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#getSubscription'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>getSubscription()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L145-L145'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Get a registered subscription by id</p>
+
+
+  <div class='pre p1 fill-light mt0'>getSubscription()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#addSubscription'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addSubscription()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L152-L152'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Registers a subscription</p>
+
+
+  <div class='pre p1 fill-light mt0'>addSubscription()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#removeSubscription'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>removeSubscription()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L159-L159'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Removes a subscription</p>
+
+
+  <div class='pre p1 fill-light mt0'>removeSubscription()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#createReducer'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>createReducer()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L176-L181'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Creates and registers one or multible reducers</p>
+
+
+  <div class='pre p1 fill-light mt0'>createReducer(): <a href="#reducer">Reducer</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#reducer">Reducer</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#getStream'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>getStream()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L212-L215'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns the stream of this store</p>
+
+
+  <div class='pre p1 fill-light mt0'>getStream(): <a href="https://nodejs.org/api/stream.html">stream</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://nodejs.org/api/stream.html">stream</a></code>:
+        flyd stream
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#getData'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>getData()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L222-L224'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Returns the current state</p>
+
+
+  <div class='pre p1 fill-light mt0'>getData(): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></code>:
+        current state
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Store#dispatch'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>dispatch(action)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L252-L327'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Dispatches an action</p>
+
+
+  <div class='pre p1 fill-light mt0'>dispatch(action: (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">function</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)): <a href="#store">Store</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>action</span> <code class='quiet'>((<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">function</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>))</code>
+	    An untyped action function that returns payload, or an action object
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#store">Store</a></code>:
+        this
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='reducer'>
+      Reducer
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/reducer/reducer.js#L19-L62'>
+      <span>lib/reducer/reducer.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Reducer class
+TODO: Describe what this class is all about</p>
+
+
+  <div class='pre p1 fill-light mt0'>new Reducer()</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='Reducer#getId'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>getId</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/reducer/reducer.js#L90-L90'>
+      <span>lib/reducer/reducer.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Get id of this reducer</p>
+
+
+  <div class='pre p1 fill-light mt0'>getId</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
+        Unique ID of this reducer
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Reducer#addStore'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addStore(store, fromStore)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/reducer/reducer.js#L102-L102'>
+      <span>lib/reducer/reducer.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Connect one or multible stores to this reducer</p>
+
+
+  <div class='pre p1 fill-light mt0'>addStore(store: (<a href="#store">Store</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>), fromStore: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>): <a href="#reducer">Reducer</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>store</span> <code class='quiet'>((<a href="#store">Store</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>))</code>
+	    One store or array of stores
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>fromStore</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    Was this function called within a store
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#reducer">Reducer</a></code>:
+        this
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Reducer#removeStore'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>removeStore(store, fromStore)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/reducer/reducer.js#L114-L114'>
+      <span>lib/reducer/reducer.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Remove a store or all stores from this reducer</p>
+
+
+  <div class='pre p1 fill-light mt0'>removeStore(store: (integer | <a href="#store">Store</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>), fromStore: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>): <a href="#reducer">Reducer</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>store</span> <code class='quiet'>((integer | <a href="#store">Store</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>))</code>
+	    |fromStore
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>fromStore</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    Was this called within a store?
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#reducer">Reducer</a></code>:
+        this
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Reducer#disable'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>disable()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/reducer/reducer.js#L162-L166'>
+      <span>lib/reducer/reducer.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Disables this reducer</p>
+
+
+  <div class='pre p1 fill-light mt0'>disable(): <a href="#reducer">Reducer</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#reducer">Reducer</a></code>:
+        this
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Reducer#enable'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>enable()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/reducer/reducer.js#L173-L177'>
+      <span>lib/reducer/reducer.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Enables this reducer</p>
+
+
+  <div class='pre p1 fill-light mt0'>enable(): <a href="#reducer">Reducer</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#reducer">Reducer</a></code>:
+        this
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Reducer#stop'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>stop()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/reducer/reducer.js#L188-L192'>
+      <span>lib/reducer/reducer.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Stops this reducer: it will be disabled and removed from all stores</p>
+
+
+  <div class='pre p1 fill-light mt0'>stop(): <a href="#reducer">Reducer</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#reducer">Reducer</a></code>:
+        this
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setcustomizerfunction'>
+      setCustomizerFunction
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/customizer.js#L41-L41'>
+      <span>lib/util/customizer.js</span>
+      </a>
+    
+  </div>
+  
+
+  
+
+  <div class='pre p1 fill-light mt0'>setCustomizerFunction</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='constructparent'>
+      constructParent
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/util/object-relation.js#L66-L73'>
+      <span>lib/util/object-relation.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Should be called in the constructor of the parent</p>
+
+
+  <div class='pre p1 fill-light mt0'>constructParent(parentObject: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>parentObject</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='removemiddleware'>
+      removeMiddleware
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/alojs/alo/blob/0ff368c517b6c7567ffb7e29d24ae93add1cc9db/lib/store/store.js#L138-L138'>
+      <span>lib/store/store.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Removes a middleware</p>
+
+
+  <div class='pre p1 fill-light mt0'>removeMiddleware(id: (id | Middleware)): <a href="#store">Store</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>id</span> <code class='quiet'>((id | Middleware))</code>
+	    of middleware or middleware
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#store">Store</a></code>:
+        this
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+      </div>
+    </div>
+  </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/site.js'></script>
 </body>
 </html>

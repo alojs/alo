@@ -10668,8 +10668,6 @@ module.exports = addExtras;
 
 /**
  * Extras, but useful stuff
- *
- * @namespace
  */
 var extras = {};
 
@@ -10695,11 +10693,13 @@ var Alo = __webpack_require__(3);
 var alo = new Alo();
 var u = alo.util;
 
-/**
- * @memberof extras
- */
 var middlewares = {};
 
+/**
+ * A thunk middleware
+ *
+ * @memberof extras.middlewares
+ */
 middlewares.createThunk = function createThunk() {
   var middleware = alo.createMiddleware(function () {
     var args = u.values(arguments);
@@ -10749,7 +10749,7 @@ var reducers = {};
 /**
  * A basic reducer which just replaces state with payload of untyped actions
  *
- * @memberof extras
+ * @memberof extras.reducers
  */
 reducers.createUntypedReplace = function () {
   var reduce = function reduce(state, action) {

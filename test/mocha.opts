@@ -1,4 +1,4 @@
---growl
 --colors
---webpack-config webpack.config-test.js
+--reporter list
+--compilers js:babel-core/register
 test/**/*test.js
