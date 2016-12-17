@@ -66,8 +66,8 @@
     "mocha-standard": "^1.0.0",
     "standard": "^8.6.0",
     "uglify-js": "^2.7.5",
-    "webpack": "^1.14.0",
-    "webpack-dev-server": "^1.16.2",
+    "webpack": "^2.2.0-rc.1",
+    "webpack-dev-server": "^2.2.0-rc.0",
     "webpack-node-externals": "^1.5.4"
   },
   "standard": {

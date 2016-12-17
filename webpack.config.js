@@ -12,13 +12,17 @@ module.exports = {
     'alo.full.dev': './alo.full.dev.js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'babel-loader',
+        use: [
+          {
+            loader: 'babel-loader'
+          }
+        ]
       }
-    ],
+    ]
   },
   output: {
     publicPath: '/dist/',
@@ -30,11 +34,11 @@ module.exports = {
     /*new JsDocPlugin({
       conf: './jsdoc.conf'
     }),*/
-    /*new webpack.DefinePlugin({
+    new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
         APP_ENV: JSON.stringify('browser')
       }
-    })*/
+    })
   ]
 }
