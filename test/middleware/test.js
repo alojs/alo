@@ -2,7 +2,7 @@
 
 var Alo = require('./../../main/alo.dev.js')
 var alo = new Alo()
-console.log(alo)
+
 var u = alo.util
 var assert = require('assert')
 
