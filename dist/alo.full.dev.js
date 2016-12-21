@@ -9929,7 +9929,7 @@ module.exports = polymorphic;
 /***/ function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/*
- Yaku v0.17.3
+ Yaku v0.17.4
  (c) 2015 Yad Smood. http://ysmood.org
  License MIT
 */
