@@ -80,13 +80,13 @@ http://www.alojs.com/docs/api/ Currently in the works!
 
 ### Use
 
-* Core: `require('alo')`
-* Core *Dev*: `require('alo.dev.js')`
-* Full: `require('alo/main/alo.full.js')`
-* Full *Dev*: `require('alo/main/alo.full.dev.js')`
+* Core: `require('alo/dist/alo.js')`
+* Core *Dev*: `require('alo/dist/alo.dev.js')`
+* Full: `require('alo')`
+* Full *Dev*: `require('alo/dist/alo.full.dev.js')`
 
 ### Versions
-There are different main files available for use in the [main](https://github.com/alojs/alo/tree/master/main) folder.
+There are different main files available for use in the [dist](https://github.com/alojs/alo/tree/master/dist) folder.
 
 The files are constructed with a combination of these postfixes:
 

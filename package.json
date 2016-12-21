@@ -2,7 +2,7 @@
   "name": "alo",
   "version": "2.4.1",
   "description": "A minimalist approach to javascript state management",
-  "main": "main/alo.full.js",
+  "main": "dist/alo.full.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter list",
     "test-nyc": "./node_modules/.bin/nyc --require babel-core/register ./node_modules/.bin/mocha",
