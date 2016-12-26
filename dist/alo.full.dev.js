@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/dist/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 220);
+/******/ 	return __webpack_require__(__webpack_require__.s = 219);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -156,9 +156,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _nextTick = __webpack_require__(206);
+var _bluebirdCoreMin = __webpack_require__(86);
 
-var _nextTick2 = _interopRequireDefault(_nextTick);
+var _bluebirdCoreMin2 = _interopRequireDefault(_bluebirdCoreMin);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -177,23 +177,23 @@ var Util = function Util() {};
  *
  * @function
  */
-Util.prototype.cloneDeep = __webpack_require__(183);
+Util.prototype.cloneDeep = __webpack_require__(184);
 
-Util.prototype.filter = __webpack_require__(185);
+Util.prototype.filter = __webpack_require__(186);
 
 /**
  * Lodash values, can be used
  *
  * @function
  */
-Util.prototype.values = __webpack_require__(205);
+Util.prototype.values = __webpack_require__(206);
 
 /**
  * Lodash forEach, can be used
  *
  * @function
  */
-Util.prototype.forEach = __webpack_require__(186);
+Util.prototype.forEach = __webpack_require__(187);
 
 /**
  * Lodash isFunction, can be used
@@ -207,7 +207,7 @@ Util.prototype.isFunction = __webpack_require__(22);
  *
  * @function
  */
-Util.prototype.isString = __webpack_require__(193);
+Util.prototype.isString = __webpack_require__(194);
 
 /**
  * Lodash isObject, can be used
@@ -216,14 +216,14 @@ Util.prototype.isString = __webpack_require__(193);
  */
 Util.prototype.isObject = __webpack_require__(1);
 
-Util.prototype.merge = __webpack_require__(196);
+Util.prototype.merge = __webpack_require__(197);
 
 /**
  * Lodash isEqual, can be used
  *
  * @function
  */
-Util.prototype.isEqual = __webpack_require__(191);
+Util.prototype.isEqual = __webpack_require__(192);
 
 /**
  * Lodash isPlainObject, can be used
@@ -239,27 +239,27 @@ Util.prototype.isPlainObject = __webpack_require__(79);
  */
 Util.prototype.isArray = __webpack_require__(0);
 
-Util.prototype.map = __webpack_require__(194);
+Util.prototype.map = __webpack_require__(195);
 
 /**
  * Lodash isBoolean, can be used
  *
  * @function
  */
-Util.prototype.isBoolean = __webpack_require__(190);
+Util.prototype.isBoolean = __webpack_require__(191);
 
-Util.prototype.isInteger = __webpack_require__(192);
+Util.prototype.isInteger = __webpack_require__(193);
 
 /**
  * Lodash uniqueId, can be used
  *
  * @function
  */
-Util.prototype.uniqueId = __webpack_require__(204);
+Util.prototype.uniqueId = __webpack_require__(205);
 
-Util.prototype.toPairs = __webpack_require__(202);
+Util.prototype.toPairs = __webpack_require__(203);
 
-var flyd = __webpack_require__(86);
+var flyd = __webpack_require__(87);
 /**
  * Flyd stream: Might change!
  *
@@ -337,13 +337,14 @@ Util.prototype.transduceStream = flyd.transduce;
  */
 Util.prototype.createPolymorphic = __webpack_require__(207);
 
-Util.prototype.Promise = __webpack_require__(213);
+/* Util.prototype.Promise = require('yaku')
 
 // TODO: yaku 0.17.4 uses setTimeout for nextTick in the browser, next-tick is a faster polyfill. Remove the polyfill, if yaku decides to implement/integrate one itsself
+import nextTick from 'next-tick'
+Util.prototype.Promise.nextTick = fn => nextTick(fn)
+*/
 
-Util.prototype.Promise.nextTick = function (fn) {
-  return (0, _nextTick2.default)(fn);
-};
+Util.prototype.Promise = _bluebirdCoreMin2.default;
 
 Util.prototype.createPromise = function createPromise(resolve, reject) {
   return new this.Promise(resolve, reject);
@@ -417,8 +418,8 @@ module.exports = isObjectLike;
 /***/ function(module, exports, __webpack_require__) {
 
 var Symbol = __webpack_require__(10),
-    getRawTag = __webpack_require__(143),
-    objectToString = __webpack_require__(170);
+    getRawTag = __webpack_require__(144),
+    objectToString = __webpack_require__(171);
 
 /** `Object#toString` result references. */
 var nullTag = '[object Null]',
@@ -732,8 +733,8 @@ exports.default = ObjectRelation;
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseIsNative = __webpack_require__(107),
-    getValue = __webpack_require__(144);
+var baseIsNative = __webpack_require__(108),
+    getValue = __webpack_require__(145);
 
 /**
  * Gets the native function at `key` of `object`.
@@ -756,7 +757,7 @@ module.exports = getNative;
 /***/ function(module, exports, __webpack_require__) {
 
 var arrayLikeKeys = __webpack_require__(55),
-    baseKeys = __webpack_require__(109),
+    baseKeys = __webpack_require__(110),
     isArrayLike = __webpack_require__(9);
 
 /**
@@ -938,11 +939,11 @@ module.exports = eq;
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-var listCacheClear = __webpack_require__(156),
-    listCacheDelete = __webpack_require__(157),
-    listCacheGet = __webpack_require__(158),
-    listCacheHas = __webpack_require__(159),
-    listCacheSet = __webpack_require__(160);
+var listCacheClear = __webpack_require__(157),
+    listCacheDelete = __webpack_require__(158),
+    listCacheGet = __webpack_require__(159),
+    listCacheHas = __webpack_require__(160),
+    listCacheSet = __webpack_require__(161);
 
 /**
  * Creates an list cache object.
@@ -977,11 +978,11 @@ module.exports = ListCache;
 /***/ function(module, exports, __webpack_require__) {
 
 var ListCache = __webpack_require__(13),
-    stackClear = __webpack_require__(177),
-    stackDelete = __webpack_require__(178),
-    stackGet = __webpack_require__(179),
-    stackHas = __webpack_require__(180),
-    stackSet = __webpack_require__(181);
+    stackClear = __webpack_require__(178),
+    stackDelete = __webpack_require__(179),
+    stackGet = __webpack_require__(180),
+    stackHas = __webpack_require__(181),
+    stackSet = __webpack_require__(182);
 
 /**
  * Creates a stack cache object to store key-value pairs.
@@ -1063,7 +1064,7 @@ module.exports = assocIndexOf;
 /* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-var isKeyable = __webpack_require__(154);
+var isKeyable = __webpack_require__(155);
 
 /**
  * Gets the data for `map`.
@@ -1154,7 +1155,7 @@ module.exports = identity;
 /***/ function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(3),
-    stubFalse = __webpack_require__(198);
+    stubFalse = __webpack_require__(199);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -1277,7 +1278,7 @@ module.exports = isSymbol;
 /***/ function(module, exports, __webpack_require__) {
 
 var arrayLikeKeys = __webpack_require__(55),
-    baseKeysIn = __webpack_require__(110),
+    baseKeysIn = __webpack_require__(111),
     isArrayLike = __webpack_require__(9);
 
 /**
@@ -1474,11 +1475,11 @@ module.exports = Map;
 /* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-var mapCacheClear = __webpack_require__(161),
-    mapCacheDelete = __webpack_require__(162),
-    mapCacheGet = __webpack_require__(163),
-    mapCacheHas = __webpack_require__(164),
-    mapCacheSet = __webpack_require__(165);
+var mapCacheClear = __webpack_require__(162),
+    mapCacheDelete = __webpack_require__(163),
+    mapCacheGet = __webpack_require__(164),
+    mapCacheHas = __webpack_require__(165),
+    mapCacheSet = __webpack_require__(166);
 
 /**
  * Creates a map cache object to store key-value pairs.
@@ -1543,8 +1544,8 @@ module.exports = baseAssignValue;
 /* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseForOwn = __webpack_require__(102),
-    createBaseEach = __webpack_require__(136);
+var baseForOwn = __webpack_require__(103),
+    createBaseEach = __webpack_require__(137);
 
 /**
  * The base implementation of `_.forEach` without support for iteratee shorthands.
@@ -1563,7 +1564,7 @@ module.exports = baseEach;
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseIsEqualDeep = __webpack_require__(105),
+var baseIsEqualDeep = __webpack_require__(106),
     isObjectLike = __webpack_require__(4);
 
 /**
@@ -1667,11 +1668,11 @@ module.exports = getSymbols;
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-var DataView = __webpack_require__(87),
+var DataView = __webpack_require__(88),
     Map = __webpack_require__(26),
-    Promise = __webpack_require__(89),
-    Set = __webpack_require__(90),
-    WeakMap = __webpack_require__(92),
+    Promise = __webpack_require__(90),
+    Set = __webpack_require__(91),
+    WeakMap = __webpack_require__(93),
     baseGetTag = __webpack_require__(5),
     toSource = __webpack_require__(78);
 
@@ -1842,7 +1843,7 @@ module.exports = mapToArray;
 /* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseIsArguments = __webpack_require__(104),
+var baseIsArguments = __webpack_require__(105),
     isObjectLike = __webpack_require__(4);
 
 /** Used for built-in method references. */
@@ -1925,9 +1926,9 @@ module.exports = isLength;
 /* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseIsTypedArray = __webpack_require__(108),
-    baseUnary = __webpack_require__(123),
-    nodeUtil = __webpack_require__(169);
+var baseIsTypedArray = __webpack_require__(109),
+    baseUnary = __webpack_require__(124),
+    nodeUtil = __webpack_require__(170);
 
 /* Node.js helper references. */
 var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -3570,7 +3571,7 @@ module.exports = arrayFilter;
 /* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseTimes = __webpack_require__(120),
+var baseTimes = __webpack_require__(121),
     isArguments = __webpack_require__(39),
     isArray = __webpack_require__(0),
     isBuffer = __webpack_require__(21),
@@ -3743,7 +3744,7 @@ module.exports = assignValue;
 /* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
-var createBaseFor = __webpack_require__(137);
+var createBaseFor = __webpack_require__(138);
 
 /**
  * The base implementation of `baseForOwn` which iterates over `object`
@@ -3821,11 +3822,11 @@ module.exports = baseGetAllKeys;
 /* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseMatches = __webpack_require__(112),
-    baseMatchesProperty = __webpack_require__(113),
+var baseMatches = __webpack_require__(113),
+    baseMatchesProperty = __webpack_require__(114),
     identity = __webpack_require__(20),
     isArray = __webpack_require__(0),
-    property = __webpack_require__(197);
+    property = __webpack_require__(198);
 
 /**
  * The base implementation of `_.iteratee`.
@@ -3860,7 +3861,7 @@ module.exports = baseIteratee;
 
 var isArray = __webpack_require__(0),
     isKey = __webpack_require__(36),
-    stringToPath = __webpack_require__(182),
+    stringToPath = __webpack_require__(183),
     toString = __webpack_require__(81);
 
 /**
@@ -3992,9 +3993,9 @@ module.exports = defineProperty;
 /* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
-var SetCache = __webpack_require__(91),
-    arraySome = __webpack_require__(96),
-    cacheHas = __webpack_require__(125);
+var SetCache = __webpack_require__(92),
+    arraySome = __webpack_require__(97),
+    cacheHas = __webpack_require__(126);
 
 /** Used to compose bitmasks for value comparisons. */
 var COMPARE_PARTIAL_FLAG = 1,
@@ -4145,7 +4146,7 @@ module.exports = getSymbolsIn;
 /* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseCreate = __webpack_require__(100),
+var baseCreate = __webpack_require__(101),
     getPrototype = __webpack_require__(32),
     isPrototype = __webpack_require__(37);
 
@@ -4390,7 +4391,7 @@ module.exports = stubArray;
 /* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseToString = __webpack_require__(122);
+var baseToString = __webpack_require__(123);
 
 /**
  * Converts `value` to a string. An empty string is returned for `null`
@@ -4703,6 +4704,43 @@ var isArray = exports.isArray = function isArray(value) {
 
 /***/ },
 /* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process, global, setImmediate) {/* @preserve
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) 2013-2015 Petka Antonov
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ */
+/**
+ * bluebird build version 3.4.7
+ * Features enabled: core
+ * Features disabled: race, call_get, generators, map, nodeify, promisify, props, reduce, settle, some, using, timers, filter, any, each
+*/
+!function(t){if(true)module.exports=t();else if("function"==typeof define&&define.amd)define([],t);else{var e;"undefined"!=typeof window?e=window:"undefined"!=typeof global?e=global:"undefined"!=typeof self&&(e=self),e.Promise=t()}}(function(){var t,e,n;return function r(t,e,n){function i(a,s){if(!e[a]){if(!t[a]){var c="function"==typeof _dereq_&&_dereq_;if(!s&&c)return c(a,!0);if(o)return o(a,!0);var l=new Error("Cannot find module '"+a+"'");throw l.code="MODULE_NOT_FOUND",l}var u=e[a]={exports:{}};t[a][0].call(u.exports,function(e){var n=t[a][1][e];return i(n?n:e)},u,u.exports,r,t,e,n)}return e[a].exports}for(var o="function"==typeof _dereq_&&_dereq_,a=0;a<n.length;a++)i(n[a]);return i}({1:[function(t,e,n){"use strict";function r(){this._customScheduler=!1,this._isTickUsed=!1,this._lateQueue=new u(16),this._normalQueue=new u(16),this._haveDrainedQueues=!1,this._trampolineEnabled=!0;var t=this;this.drainQueues=function(){t._drainQueues()},this._schedule=l}function i(t,e,n){this._lateQueue.push(t,e,n),this._queueTick()}function o(t,e,n){this._normalQueue.push(t,e,n),this._queueTick()}function a(t){this._normalQueue._pushOne(t),this._queueTick()}var s;try{throw new Error}catch(c){s=c}var l=t("./schedule"),u=t("./queue"),p=t("./util");r.prototype.setScheduler=function(t){var e=this._schedule;return this._schedule=t,this._customScheduler=!0,e},r.prototype.hasCustomScheduler=function(){return this._customScheduler},r.prototype.enableTrampoline=function(){this._trampolineEnabled=!0},r.prototype.disableTrampolineIfNecessary=function(){p.hasDevTools&&(this._trampolineEnabled=!1)},r.prototype.haveItemsQueued=function(){return this._isTickUsed||this._haveDrainedQueues},r.prototype.fatalError=function(t,e){e?(process.stderr.write("Fatal "+(t instanceof Error?t.stack:t)+"\n"),process.exit(2)):this.throwLater(t)},r.prototype.throwLater=function(t,e){if(1===arguments.length&&(e=t,t=function(){throw e}),"undefined"!=typeof setTimeout)setTimeout(function(){t(e)},0);else try{this._schedule(function(){t(e)})}catch(n){throw new Error("No async scheduler available\n\n    See http://goo.gl/MqrFmX\n")}},p.hasDevTools?(r.prototype.invokeLater=function(t,e,n){this._trampolineEnabled?i.call(this,t,e,n):this._schedule(function(){setTimeout(function(){t.call(e,n)},100)})},r.prototype.invoke=function(t,e,n){this._trampolineEnabled?o.call(this,t,e,n):this._schedule(function(){t.call(e,n)})},r.prototype.settlePromises=function(t){this._trampolineEnabled?a.call(this,t):this._schedule(function(){t._settlePromises()})}):(r.prototype.invokeLater=i,r.prototype.invoke=o,r.prototype.settlePromises=a),r.prototype._drainQueue=function(t){for(;t.length()>0;){var e=t.shift();if("function"==typeof e){var n=t.shift(),r=t.shift();e.call(n,r)}else e._settlePromises()}},r.prototype._drainQueues=function(){this._drainQueue(this._normalQueue),this._reset(),this._haveDrainedQueues=!0,this._drainQueue(this._lateQueue)},r.prototype._queueTick=function(){this._isTickUsed||(this._isTickUsed=!0,this._schedule(this.drainQueues))},r.prototype._reset=function(){this._isTickUsed=!1},e.exports=r,e.exports.firstLineError=s},{"./queue":17,"./schedule":18,"./util":21}],2:[function(t,e,n){"use strict";e.exports=function(t,e,n,r){var i=!1,o=function(t,e){this._reject(e)},a=function(t,e){e.promiseRejectionQueued=!0,e.bindingPromise._then(o,o,null,this,t)},s=function(t,e){0===(50397184&this._bitField)&&this._resolveCallback(e.target)},c=function(t,e){e.promiseRejectionQueued||this._reject(t)};t.prototype.bind=function(o){i||(i=!0,t.prototype._propagateFrom=r.propagateFromFunction(),t.prototype._boundValue=r.boundValueFunction());var l=n(o),u=new t(e);u._propagateFrom(this,1);var p=this._target();if(u._setBoundTo(l),l instanceof t){var f={promiseRejectionQueued:!1,promise:u,target:p,bindingPromise:l};p._then(e,a,void 0,u,f),l._then(s,c,void 0,u,f),u._setOnCancel(l)}else u._resolveCallback(p);return u},t.prototype._setBoundTo=function(t){void 0!==t?(this._bitField=2097152|this._bitField,this._boundTo=t):this._bitField=-2097153&this._bitField},t.prototype._isBound=function(){return 2097152===(2097152&this._bitField)},t.bind=function(e,n){return t.resolve(n).bind(e)}}},{}],3:[function(t,e,n){"use strict";function r(){try{Promise===o&&(Promise=i)}catch(t){}return o}var i;"undefined"!=typeof Promise&&(i=Promise);var o=t("./promise")();o.noConflict=r,e.exports=o},{"./promise":15}],4:[function(t,e,n){"use strict";e.exports=function(e,n,r,i){var o=t("./util"),a=o.tryCatch,s=o.errorObj,c=e._async;e.prototype["break"]=e.prototype.cancel=function(){if(!i.cancellation())return this._warn("cancellation is disabled");for(var t=this,e=t;t._isCancellable();){if(!t._cancelBy(e)){e._isFollowing()?e._followee().cancel():e._cancelBranched();break}var n=t._cancellationParent;if(null==n||!n._isCancellable()){t._isFollowing()?t._followee().cancel():t._cancelBranched();break}t._isFollowing()&&t._followee().cancel(),t._setWillBeCancelled(),e=t,t=n}},e.prototype._branchHasCancelled=function(){this._branchesRemainingToCancel--},e.prototype._enoughBranchesHaveCancelled=function(){return void 0===this._branchesRemainingToCancel||this._branchesRemainingToCancel<=0},e.prototype._cancelBy=function(t){return t===this?(this._branchesRemainingToCancel=0,this._invokeOnCancel(),!0):(this._branchHasCancelled(),this._enoughBranchesHaveCancelled()?(this._invokeOnCancel(),!0):!1)},e.prototype._cancelBranched=function(){this._enoughBranchesHaveCancelled()&&this._cancel()},e.prototype._cancel=function(){this._isCancellable()&&(this._setCancelled(),c.invoke(this._cancelPromises,this,void 0))},e.prototype._cancelPromises=function(){this._length()>0&&this._settlePromises()},e.prototype._unsetOnCancel=function(){this._onCancelField=void 0},e.prototype._isCancellable=function(){return this.isPending()&&!this._isCancelled()},e.prototype.isCancellable=function(){return this.isPending()&&!this.isCancelled()},e.prototype._doInvokeOnCancel=function(t,e){if(o.isArray(t))for(var n=0;n<t.length;++n)this._doInvokeOnCancel(t[n],e);else if(void 0!==t)if("function"==typeof t){if(!e){var r=a(t).call(this._boundValue());r===s&&(this._attachExtraTrace(r.e),c.throwLater(r.e))}}else t._resultCancelled(this)},e.prototype._invokeOnCancel=function(){var t=this._onCancel();this._unsetOnCancel(),c.invoke(this._doInvokeOnCancel,this,t)},e.prototype._invokeInternalOnCancel=function(){this._isCancellable()&&(this._doInvokeOnCancel(this._onCancel(),!0),this._unsetOnCancel())},e.prototype._resultCancelled=function(){this.cancel()}}},{"./util":21}],5:[function(t,e,n){"use strict";e.exports=function(e){function n(t,n,s){return function(c){var l=s._boundValue();t:for(var u=0;u<t.length;++u){var p=t[u];if(p===Error||null!=p&&p.prototype instanceof Error){if(c instanceof p)return o(n).call(l,c)}else if("function"==typeof p){var f=o(p).call(l,c);if(f===a)return f;if(f)return o(n).call(l,c)}else if(r.isObject(c)){for(var h=i(p),_=0;_<h.length;++_){var d=h[_];if(p[d]!=c[d])continue t}return o(n).call(l,c)}}return e}}var r=t("./util"),i=t("./es5").keys,o=r.tryCatch,a=r.errorObj;return n}},{"./es5":10,"./util":21}],6:[function(t,e,n){"use strict";e.exports=function(t){function e(){this._trace=new e.CapturedTrace(r())}function n(){return i?new e:void 0}function r(){var t=o.length-1;return t>=0?o[t]:void 0}var i=!1,o=[];return t.prototype._promiseCreated=function(){},t.prototype._pushContext=function(){},t.prototype._popContext=function(){return null},t._peekContext=t.prototype._peekContext=function(){},e.prototype._pushContext=function(){void 0!==this._trace&&(this._trace._promiseCreated=null,o.push(this._trace))},e.prototype._popContext=function(){if(void 0!==this._trace){var t=o.pop(),e=t._promiseCreated;return t._promiseCreated=null,e}return null},e.CapturedTrace=null,e.create=n,e.deactivateLongStackTraces=function(){},e.activateLongStackTraces=function(){var n=t.prototype._pushContext,o=t.prototype._popContext,a=t._peekContext,s=t.prototype._peekContext,c=t.prototype._promiseCreated;e.deactivateLongStackTraces=function(){t.prototype._pushContext=n,t.prototype._popContext=o,t._peekContext=a,t.prototype._peekContext=s,t.prototype._promiseCreated=c,i=!1},i=!0,t.prototype._pushContext=e.prototype._pushContext,t.prototype._popContext=e.prototype._popContext,t._peekContext=t.prototype._peekContext=r,t.prototype._promiseCreated=function(){var t=this._peekContext();t&&null==t._promiseCreated&&(t._promiseCreated=this)}},e}},{}],7:[function(t,e,n){"use strict";e.exports=function(e,n){function r(t,e){return{promise:e}}function i(){return!1}function o(t,e,n){var r=this;try{t(e,n,function(t){if("function"!=typeof t)throw new TypeError("onCancel must be a function, got: "+I.toString(t));r._attachCancellationCallback(t)})}catch(i){return i}}function a(t){if(!this._isCancellable())return this;var e=this._onCancel();void 0!==e?I.isArray(e)?e.push(t):this._setOnCancel([e,t]):this._setOnCancel(t)}function s(){return this._onCancelField}function c(t){this._onCancelField=t}function l(){this._cancellationParent=void 0,this._onCancelField=void 0}function u(t,e){if(0!==(1&e)){this._cancellationParent=t;var n=t._branchesRemainingToCancel;void 0===n&&(n=0),t._branchesRemainingToCancel=n+1}0!==(2&e)&&t._isBound()&&this._setBoundTo(t._boundTo)}function p(t,e){0!==(2&e)&&t._isBound()&&this._setBoundTo(t._boundTo)}function f(){var t=this._boundTo;return void 0!==t&&t instanceof e?t.isFulfilled()?t.value():void 0:t}function h(){this._trace=new x(this._peekContext())}function _(t,e){if(H(t)){var n=this._trace;if(void 0!==n&&e&&(n=n._parent),void 0!==n)n.attachExtraTrace(t);else if(!t.__stackCleaned__){var r=E(t);I.notEnumerableProp(t,"stack",r.message+"\n"+r.stack.join("\n")),I.notEnumerableProp(t,"__stackCleaned__",!0)}}}function d(t,e,n,r,i){if(void 0===t&&null!==e&&X){if(void 0!==i&&i._returnedNonUndefined())return;if(0===(65535&r._bitField))return;n&&(n+=" ");var o="",a="";if(e._trace){for(var s=e._trace.stack.split("\n"),c=C(s),l=c.length-1;l>=0;--l){var u=c[l];if(!V.test(u)){var p=u.match(Q);p&&(o="at "+p[1]+":"+p[2]+":"+p[3]+" ");break}}if(c.length>0)for(var f=c[0],l=0;l<s.length;++l)if(s[l]===f){l>0&&(a="\n"+s[l-1]);break}}var h="a promise was created in a "+n+"handler "+o+"but was not returned from it, see http://goo.gl/rRqMUw"+a;r._warn(h,!0,e)}}function v(t,e){var n=t+" is deprecated and will be removed in a future version.";return e&&(n+=" Use "+e+" instead."),y(n)}function y(t,n,r){if(ot.warnings){var i,o=new U(t);if(n)r._attachExtraTrace(o);else if(ot.longStackTraces&&(i=e._peekContext()))i.attachExtraTrace(o);else{var a=E(o);o.stack=a.message+"\n"+a.stack.join("\n")}tt("warning",o)||k(o,"",!0)}}function g(t,e){for(var n=0;n<e.length-1;++n)e[n].push("From previous event:"),e[n]=e[n].join("\n");return n<e.length&&(e[n]=e[n].join("\n")),t+"\n"+e.join("\n")}function m(t){for(var e=0;e<t.length;++e)(0===t[e].length||e+1<t.length&&t[e][0]===t[e+1][0])&&(t.splice(e,1),e--)}function b(t){for(var e=t[0],n=1;n<t.length;++n){for(var r=t[n],i=e.length-1,o=e[i],a=-1,s=r.length-1;s>=0;--s)if(r[s]===o){a=s;break}for(var s=a;s>=0;--s){var c=r[s];if(e[i]!==c)break;e.pop(),i--}e=r}}function C(t){for(var e=[],n=0;n<t.length;++n){var r=t[n],i="    (No stack trace)"===r||q.test(r),o=i&&nt(r);i&&!o&&(M&&" "!==r.charAt(0)&&(r="    "+r),e.push(r))}return e}function w(t){for(var e=t.stack.replace(/\s+$/g,"").split("\n"),n=0;n<e.length;++n){var r=e[n];if("    (No stack trace)"===r||q.test(r))break}return n>0&&"SyntaxError"!=t.name&&(e=e.slice(n)),e}function E(t){var e=t.stack,n=t.toString();return e="string"==typeof e&&e.length>0?w(t):["    (No stack trace)"],{message:n,stack:"SyntaxError"==t.name?e:C(e)}}function k(t,e,n){if("undefined"!=typeof console){var r;if(I.isObject(t)){var i=t.stack;r=e+G(i,t)}else r=e+String(t);"function"==typeof L?L(r,n):("function"==typeof console.log||"object"==typeof console.log)&&console.log(r)}}function j(t,e,n,r){var i=!1;try{"function"==typeof e&&(i=!0,"rejectionHandled"===t?e(r):e(n,r))}catch(o){B.throwLater(o)}"unhandledRejection"===t?tt(t,n,r)||i||k(n,"Unhandled rejection "):tt(t,r)}function F(t){var e;if("function"==typeof t)e="[function "+(t.name||"anonymous")+"]";else{e=t&&"function"==typeof t.toString?t.toString():I.toString(t);var n=/\[object [a-zA-Z0-9$_]+\]/;if(n.test(e))try{var r=JSON.stringify(t);e=r}catch(i){}0===e.length&&(e="(empty array)")}return"(<"+T(e)+">, no stack trace)"}function T(t){var e=41;return t.length<e?t:t.substr(0,e-3)+"..."}function P(){return"function"==typeof it}function R(t){var e=t.match(rt);return e?{fileName:e[1],line:parseInt(e[2],10)}:void 0}function S(t,e){if(P()){for(var n,r,i=t.stack.split("\n"),o=e.stack.split("\n"),a=-1,s=-1,c=0;c<i.length;++c){var l=R(i[c]);if(l){n=l.fileName,a=l.line;break}}for(var c=0;c<o.length;++c){var l=R(o[c]);if(l){r=l.fileName,s=l.line;break}}0>a||0>s||!n||!r||n!==r||a>=s||(nt=function(t){if(D.test(t))return!0;var e=R(t);return e&&e.fileName===n&&a<=e.line&&e.line<=s?!0:!1})}}function x(t){this._parent=t,this._promisesCreated=0;var e=this._length=1+(void 0===t?0:t._length);it(this,x),e>32&&this.uncycle()}var O,A,L,N=e._getDomain,B=e._async,U=t("./errors").Warning,I=t("./util"),H=I.canAttachTrace,D=/[\\\/]bluebird[\\\/]js[\\\/](release|debug|instrumented)/,V=/\((?:timers\.js):\d+:\d+\)/,Q=/[\/<\(](.+?):(\d+):(\d+)\)?\s*$/,q=null,G=null,M=!1,W=!(0==I.env("BLUEBIRD_DEBUG")||!I.env("BLUEBIRD_DEBUG")&&"development"!==I.env("NODE_ENV")),$=!(0==I.env("BLUEBIRD_WARNINGS")||!W&&!I.env("BLUEBIRD_WARNINGS")),z=!(0==I.env("BLUEBIRD_LONG_STACK_TRACES")||!W&&!I.env("BLUEBIRD_LONG_STACK_TRACES")),X=0!=I.env("BLUEBIRD_W_FORGOTTEN_RETURN")&&($||!!I.env("BLUEBIRD_W_FORGOTTEN_RETURN"));e.prototype.suppressUnhandledRejections=function(){var t=this._target();t._bitField=-1048577&t._bitField|524288},e.prototype._ensurePossibleRejectionHandled=function(){0===(524288&this._bitField)&&(this._setRejectionIsUnhandled(),B.invokeLater(this._notifyUnhandledRejection,this,void 0))},e.prototype._notifyUnhandledRejectionIsHandled=function(){j("rejectionHandled",O,void 0,this)},e.prototype._setReturnedNonUndefined=function(){this._bitField=268435456|this._bitField},e.prototype._returnedNonUndefined=function(){return 0!==(268435456&this._bitField)},e.prototype._notifyUnhandledRejection=function(){if(this._isRejectionUnhandled()){var t=this._settledValue();this._setUnhandledRejectionIsNotified(),j("unhandledRejection",A,t,this)}},e.prototype._setUnhandledRejectionIsNotified=function(){this._bitField=262144|this._bitField},e.prototype._unsetUnhandledRejectionIsNotified=function(){this._bitField=-262145&this._bitField},e.prototype._isUnhandledRejectionNotified=function(){return(262144&this._bitField)>0},e.prototype._setRejectionIsUnhandled=function(){this._bitField=1048576|this._bitField},e.prototype._unsetRejectionIsUnhandled=function(){this._bitField=-1048577&this._bitField,this._isUnhandledRejectionNotified()&&(this._unsetUnhandledRejectionIsNotified(),this._notifyUnhandledRejectionIsHandled())},e.prototype._isRejectionUnhandled=function(){return(1048576&this._bitField)>0},e.prototype._warn=function(t,e,n){return y(t,e,n||this)},e.onPossiblyUnhandledRejection=function(t){var e=N();A="function"==typeof t?null===e?t:I.domainBind(e,t):void 0},e.onUnhandledRejectionHandled=function(t){var e=N();O="function"==typeof t?null===e?t:I.domainBind(e,t):void 0};var K=function(){};e.longStackTraces=function(){if(B.haveItemsQueued()&&!ot.longStackTraces)throw new Error("cannot enable long stack traces after promises have been created\n\n    See http://goo.gl/MqrFmX\n");if(!ot.longStackTraces&&P()){var t=e.prototype._captureStackTrace,r=e.prototype._attachExtraTrace;ot.longStackTraces=!0,K=function(){if(B.haveItemsQueued()&&!ot.longStackTraces)throw new Error("cannot enable long stack traces after promises have been created\n\n    See http://goo.gl/MqrFmX\n");e.prototype._captureStackTrace=t,e.prototype._attachExtraTrace=r,n.deactivateLongStackTraces(),B.enableTrampoline(),ot.longStackTraces=!1},e.prototype._captureStackTrace=h,e.prototype._attachExtraTrace=_,n.activateLongStackTraces(),B.disableTrampolineIfNecessary()}},e.hasLongStackTraces=function(){return ot.longStackTraces&&P()};var J=function(){try{if("function"==typeof CustomEvent){var t=new CustomEvent("CustomEvent");return I.global.dispatchEvent(t),function(t,e){var n=new CustomEvent(t.toLowerCase(),{detail:e,cancelable:!0});return!I.global.dispatchEvent(n)}}if("function"==typeof Event){var t=new Event("CustomEvent");return I.global.dispatchEvent(t),function(t,e){var n=new Event(t.toLowerCase(),{cancelable:!0});return n.detail=e,!I.global.dispatchEvent(n)}}var t=document.createEvent("CustomEvent");return t.initCustomEvent("testingtheevent",!1,!0,{}),I.global.dispatchEvent(t),function(t,e){var n=document.createEvent("CustomEvent");return n.initCustomEvent(t.toLowerCase(),!1,!0,e),!I.global.dispatchEvent(n)}}catch(e){}return function(){return!1}}(),Y=function(){return I.isNode?function(){return process.emit.apply(process,arguments)}:I.global?function(t){var e="on"+t.toLowerCase(),n=I.global[e];return n?(n.apply(I.global,[].slice.call(arguments,1)),!0):!1}:function(){return!1}}(),Z={promiseCreated:r,promiseFulfilled:r,promiseRejected:r,promiseResolved:r,promiseCancelled:r,promiseChained:function(t,e,n){return{promise:e,child:n}},warning:function(t,e){return{warning:e}},unhandledRejection:function(t,e,n){return{reason:e,promise:n}},rejectionHandled:r},tt=function(t){var e=!1;try{e=Y.apply(null,arguments)}catch(n){B.throwLater(n),e=!0}var r=!1;try{r=J(t,Z[t].apply(null,arguments))}catch(n){B.throwLater(n),r=!0}return r||e};e.config=function(t){if(t=Object(t),"longStackTraces"in t&&(t.longStackTraces?e.longStackTraces():!t.longStackTraces&&e.hasLongStackTraces()&&K()),"warnings"in t){var n=t.warnings;ot.warnings=!!n,X=ot.warnings,I.isObject(n)&&"wForgottenReturn"in n&&(X=!!n.wForgottenReturn)}if("cancellation"in t&&t.cancellation&&!ot.cancellation){if(B.haveItemsQueued())throw new Error("cannot enable cancellation after promises are in use");e.prototype._clearCancellationData=l,e.prototype._propagateFrom=u,e.prototype._onCancel=s,e.prototype._setOnCancel=c,e.prototype._attachCancellationCallback=a,e.prototype._execute=o,et=u,ot.cancellation=!0}return"monitoring"in t&&(t.monitoring&&!ot.monitoring?(ot.monitoring=!0,e.prototype._fireEvent=tt):!t.monitoring&&ot.monitoring&&(ot.monitoring=!1,e.prototype._fireEvent=i)),e},e.prototype._fireEvent=i,e.prototype._execute=function(t,e,n){try{t(e,n)}catch(r){return r}},e.prototype._onCancel=function(){},e.prototype._setOnCancel=function(t){},e.prototype._attachCancellationCallback=function(t){},e.prototype._captureStackTrace=function(){},e.prototype._attachExtraTrace=function(){},e.prototype._clearCancellationData=function(){},e.prototype._propagateFrom=function(t,e){};var et=p,nt=function(){return!1},rt=/[\/<\(]([^:\/]+):(\d+):(?:\d+)\)?\s*$/;I.inherits(x,Error),n.CapturedTrace=x,x.prototype.uncycle=function(){var t=this._length;if(!(2>t)){for(var e=[],n={},r=0,i=this;void 0!==i;++r)e.push(i),i=i._parent;t=this._length=r;for(var r=t-1;r>=0;--r){var o=e[r].stack;void 0===n[o]&&(n[o]=r)}for(var r=0;t>r;++r){var a=e[r].stack,s=n[a];if(void 0!==s&&s!==r){s>0&&(e[s-1]._parent=void 0,e[s-1]._length=1),e[r]._parent=void 0,e[r]._length=1;var c=r>0?e[r-1]:this;t-1>s?(c._parent=e[s+1],c._parent.uncycle(),c._length=c._parent._length+1):(c._parent=void 0,c._length=1);for(var l=c._length+1,u=r-2;u>=0;--u)e[u]._length=l,l++;return}}}},x.prototype.attachExtraTrace=function(t){if(!t.__stackCleaned__){this.uncycle();for(var e=E(t),n=e.message,r=[e.stack],i=this;void 0!==i;)r.push(C(i.stack.split("\n"))),i=i._parent;b(r),m(r),I.notEnumerableProp(t,"stack",g(n,r)),I.notEnumerableProp(t,"__stackCleaned__",!0)}};var it=function(){var t=/^\s*at\s*/,e=function(t,e){return"string"==typeof t?t:void 0!==e.name&&void 0!==e.message?e.toString():F(e)};if("number"==typeof Error.stackTraceLimit&&"function"==typeof Error.captureStackTrace){Error.stackTraceLimit+=6,q=t,G=e;var n=Error.captureStackTrace;return nt=function(t){return D.test(t)},function(t,e){Error.stackTraceLimit+=6,n(t,e),Error.stackTraceLimit-=6}}var r=new Error;if("string"==typeof r.stack&&r.stack.split("\n")[0].indexOf("stackDetection@")>=0)return q=/@/,G=e,M=!0,function(t){t.stack=(new Error).stack};var i;try{throw new Error}catch(o){i="stack"in o}return"stack"in r||!i||"number"!=typeof Error.stackTraceLimit?(G=function(t,e){return"string"==typeof t?t:"object"!=typeof e&&"function"!=typeof e||void 0===e.name||void 0===e.message?F(e):e.toString()},null):(q=t,G=e,function(t){Error.stackTraceLimit+=6;try{throw new Error}catch(e){t.stack=e.stack}Error.stackTraceLimit-=6})}([]);"undefined"!=typeof console&&"undefined"!=typeof console.warn&&(L=function(t){console.warn(t)},I.isNode&&process.stderr.isTTY?L=function(t,e){var n=e?"[33m":"[31m";console.warn(n+t+"[0m\n")}:I.isNode||"string"!=typeof(new Error).stack||(L=function(t,e){console.warn("%c"+t,e?"color: darkorange":"color: red")}));var ot={warnings:$,longStackTraces:!1,cancellation:!1,monitoring:!1};return z&&e.longStackTraces(),{longStackTraces:function(){return ot.longStackTraces},warnings:function(){return ot.warnings},cancellation:function(){return ot.cancellation},monitoring:function(){return ot.monitoring},propagateFromFunction:function(){return et},boundValueFunction:function(){return f},checkForgottenReturns:d,setBounds:S,warn:y,deprecated:v,CapturedTrace:x,fireDomEvent:J,fireGlobalEvent:Y}}},{"./errors":9,"./util":21}],8:[function(t,e,n){"use strict";e.exports=function(t){function e(){return this.value}function n(){throw this.reason}t.prototype["return"]=t.prototype.thenReturn=function(n){return n instanceof t&&n.suppressUnhandledRejections(),this._then(e,void 0,void 0,{value:n},void 0)},t.prototype["throw"]=t.prototype.thenThrow=function(t){return this._then(n,void 0,void 0,{reason:t},void 0)},t.prototype.catchThrow=function(t){if(arguments.length<=1)return this._then(void 0,n,void 0,{reason:t},void 0);var e=arguments[1],r=function(){throw e};return this.caught(t,r)},t.prototype.catchReturn=function(n){if(arguments.length<=1)return n instanceof t&&n.suppressUnhandledRejections(),this._then(void 0,e,void 0,{value:n},void 0);var r=arguments[1];r instanceof t&&r.suppressUnhandledRejections();var i=function(){return r};return this.caught(n,i)}}},{}],9:[function(t,e,n){"use strict";function r(t,e){function n(r){return this instanceof n?(p(this,"message","string"==typeof r?r:e),p(this,"name",t),void(Error.captureStackTrace?Error.captureStackTrace(this,this.constructor):Error.call(this))):new n(r)}return u(n,Error),n}function i(t){return this instanceof i?(p(this,"name","OperationalError"),p(this,"message",t),this.cause=t,this.isOperational=!0,void(t instanceof Error?(p(this,"message",t.message),p(this,"stack",t.stack)):Error.captureStackTrace&&Error.captureStackTrace(this,this.constructor))):new i(t)}var o,a,s=t("./es5"),c=s.freeze,l=t("./util"),u=l.inherits,p=l.notEnumerableProp,f=r("Warning","warning"),h=r("CancellationError","cancellation error"),_=r("TimeoutError","timeout error"),d=r("AggregateError","aggregate error");try{o=TypeError,a=RangeError}catch(v){o=r("TypeError","type error"),a=r("RangeError","range error")}for(var y="join pop push shift unshift slice filter forEach some every map indexOf lastIndexOf reduce reduceRight sort reverse".split(" "),g=0;g<y.length;++g)"function"==typeof Array.prototype[y[g]]&&(d.prototype[y[g]]=Array.prototype[y[g]]);s.defineProperty(d.prototype,"length",{value:0,configurable:!1,writable:!0,enumerable:!0}),d.prototype.isOperational=!0;var m=0;d.prototype.toString=function(){var t=Array(4*m+1).join(" "),e="\n"+t+"AggregateError of:\n";m++,t=Array(4*m+1).join(" ");for(var n=0;n<this.length;++n){for(var r=this[n]===this?"[Circular AggregateError]":this[n]+"",i=r.split("\n"),o=0;o<i.length;++o)i[o]=t+i[o];r=i.join("\n"),e+=r+"\n"}return m--,e},u(i,Error);var b=Error.__BluebirdErrorTypes__;b||(b=c({CancellationError:h,TimeoutError:_,OperationalError:i,RejectionError:i,AggregateError:d}),s.defineProperty(Error,"__BluebirdErrorTypes__",{value:b,writable:!1,enumerable:!1,configurable:!1})),e.exports={Error:Error,TypeError:o,RangeError:a,CancellationError:b.CancellationError,OperationalError:b.OperationalError,TimeoutError:b.TimeoutError,AggregateError:b.AggregateError,Warning:f}},{"./es5":10,"./util":21}],10:[function(t,e,n){var r=function(){"use strict";return void 0===this}();if(r)e.exports={freeze:Object.freeze,defineProperty:Object.defineProperty,getDescriptor:Object.getOwnPropertyDescriptor,keys:Object.keys,names:Object.getOwnPropertyNames,getPrototypeOf:Object.getPrototypeOf,isArray:Array.isArray,isES5:r,propertyIsWritable:function(t,e){var n=Object.getOwnPropertyDescriptor(t,e);return!(n&&!n.writable&&!n.set)}};else{var i={}.hasOwnProperty,o={}.toString,a={}.constructor.prototype,s=function(t){var e=[];for(var n in t)i.call(t,n)&&e.push(n);return e},c=function(t,e){return{value:t[e]}},l=function(t,e,n){return t[e]=n.value,t},u=function(t){return t},p=function(t){try{return Object(t).constructor.prototype}catch(e){return a}},f=function(t){try{return"[object Array]"===o.call(t)}catch(e){return!1}};e.exports={isArray:f,keys:s,names:s,defineProperty:l,getDescriptor:c,freeze:u,getPrototypeOf:p,isES5:r,propertyIsWritable:function(){return!0}}}},{}],11:[function(t,e,n){"use strict";e.exports=function(e,n){function r(t,e,n){this.promise=t,this.type=e,this.handler=n,this.called=!1,this.cancelPromise=null}function i(t){this.finallyHandler=t}function o(t,e){return null!=t.cancelPromise?(arguments.length>1?t.cancelPromise._reject(e):t.cancelPromise._cancel(),t.cancelPromise=null,!0):!1}function a(){return c.call(this,this.promise._target()._settledValue())}function s(t){return o(this,t)?void 0:(p.e=t,p)}function c(t){var r=this.promise,c=this.handler;if(!this.called){this.called=!0;var l=this.isFinallyHandler()?c.call(r._boundValue()):c.call(r._boundValue(),t);if(void 0!==l){r._setReturnedNonUndefined();var f=n(l,r);if(f instanceof e){if(null!=this.cancelPromise){if(f._isCancelled()){var h=new u("late cancellation observer");return r._attachExtraTrace(h),p.e=h,p}f.isPending()&&f._attachCancellationCallback(new i(this))}return f._then(a,s,void 0,this,void 0)}}}return r.isRejected()?(o(this),p.e=t,p):(o(this),t)}var l=t("./util"),u=e.CancellationError,p=l.errorObj;return r.prototype.isFinallyHandler=function(){return 0===this.type},i.prototype._resultCancelled=function(){o(this.finallyHandler)},e.prototype._passThrough=function(t,e,n,i){return"function"!=typeof t?this.then():this._then(n,i,void 0,new r(this,e,t),void 0)},e.prototype.lastly=e.prototype["finally"]=function(t){return this._passThrough(t,0,c,c)},e.prototype.tap=function(t){return this._passThrough(t,1,c)},r}},{"./util":21}],12:[function(t,e,n){"use strict";e.exports=function(e,n,r,i,o,a){var s=t("./util");s.canEvaluate,s.tryCatch,s.errorObj;e.join=function(){var t,e=arguments.length-1;if(e>0&&"function"==typeof arguments[e]){t=arguments[e];var r}var i=[].slice.call(arguments);t&&i.pop();var r=new n(i).promise();return void 0!==t?r.spread(t):r}}},{"./util":21}],13:[function(t,e,n){"use strict";e.exports=function(e,n,r,i,o){var a=t("./util"),s=a.tryCatch;e.method=function(t){if("function"!=typeof t)throw new e.TypeError("expecting a function but got "+a.classString(t));return function(){var r=new e(n);r._captureStackTrace(),r._pushContext();var i=s(t).apply(this,arguments),a=r._popContext();return o.checkForgottenReturns(i,a,"Promise.method",r),r._resolveFromSyncValue(i),r}},e.attempt=e["try"]=function(t){if("function"!=typeof t)return i("expecting a function but got "+a.classString(t));var r=new e(n);r._captureStackTrace(),r._pushContext();var c;if(arguments.length>1){o.deprecated("calling Promise.try with more than 1 argument");var l=arguments[1],u=arguments[2];c=a.isArray(l)?s(t).apply(u,l):s(t).call(u,l)}else c=s(t)();var p=r._popContext();return o.checkForgottenReturns(c,p,"Promise.try",r),r._resolveFromSyncValue(c),r},e.prototype._resolveFromSyncValue=function(t){t===a.errorObj?this._rejectCallback(t.e,!1):this._resolveCallback(t,!0)}}},{"./util":21}],14:[function(t,e,n){"use strict";function r(t){return t instanceof Error&&u.getPrototypeOf(t)===Error.prototype}function i(t){var e;if(r(t)){e=new l(t),e.name=t.name,e.message=t.message,e.stack=t.stack;for(var n=u.keys(t),i=0;i<n.length;++i){var o=n[i];p.test(o)||(e[o]=t[o])}return e}return a.markAsOriginatingFromRejection(t),t}function o(t,e){return function(n,r){if(null!==t){if(n){var o=i(s(n));t._attachExtraTrace(o),t._reject(o)}else if(e){var a=[].slice.call(arguments,1);t._fulfill(a)}else t._fulfill(r);t=null}}}var a=t("./util"),s=a.maybeWrapAsError,c=t("./errors"),l=c.OperationalError,u=t("./es5"),p=/^(?:name|message|stack|cause)$/;e.exports=o},{"./errors":9,"./es5":10,"./util":21}],15:[function(t,e,n){"use strict";e.exports=function(){function n(){}function r(t,e){if("function"!=typeof e)throw new g("expecting a function but got "+h.classString(e));if(t.constructor!==i)throw new g("the promise constructor cannot be invoked directly\n\n    See http://goo.gl/MqrFmX\n")}function i(t){this._bitField=0,this._fulfillmentHandler0=void 0,this._rejectionHandler0=void 0,this._promise0=void 0,this._receiver0=void 0,t!==b&&(r(this,t),this._resolveFromExecutor(t)),this._promiseCreated(),this._fireEvent("promiseCreated",this)}function o(t){this.promise._resolveCallback(t)}function a(t){this.promise._rejectCallback(t,!1)}function s(t){var e=new i(b);e._fulfillmentHandler0=t,e._rejectionHandler0=t,e._promise0=t,e._receiver0=t}var c,l=function(){return new g("circular promise resolution chain\n\n    See http://goo.gl/MqrFmX\n")},u=function(){return new i.PromiseInspection(this._target())},p=function(t){return i.reject(new g(t))},f={},h=t("./util");c=h.isNode?function(){var t=process.domain;return void 0===t&&(t=null),t}:function(){return null},h.notEnumerableProp(i,"_getDomain",c);var _=t("./es5"),d=t("./async"),v=new d;_.defineProperty(i,"_async",{value:v});var y=t("./errors"),g=i.TypeError=y.TypeError;i.RangeError=y.RangeError;var m=i.CancellationError=y.CancellationError;i.TimeoutError=y.TimeoutError,i.OperationalError=y.OperationalError,i.RejectionError=y.OperationalError,i.AggregateError=y.AggregateError;var b=function(){},C={},w={},E=t("./thenables")(i,b),k=t("./promise_array")(i,b,E,p,n),j=t("./context")(i),F=(j.create,t("./debuggability")(i,j)),T=(F.CapturedTrace,t("./finally")(i,E)),P=t("./catch_filter")(w),R=t("./nodeback"),S=h.errorObj,x=h.tryCatch;return i.prototype.toString=function(){return"[object Promise]"},i.prototype.caught=i.prototype["catch"]=function(t){var e=arguments.length;if(e>1){var n,r=new Array(e-1),i=0;for(n=0;e-1>n;++n){var o=arguments[n];if(!h.isObject(o))return p("expecting an object but got A catch statement predicate "+h.classString(o));r[i++]=o}return r.length=i,t=arguments[n],this.then(void 0,P(r,t,this))}return this.then(void 0,t)},i.prototype.reflect=function(){return this._then(u,u,void 0,this,void 0)},i.prototype.then=function(t,e){if(F.warnings()&&arguments.length>0&&"function"!=typeof t&&"function"!=typeof e){var n=".then() only accepts functions but was passed: "+h.classString(t);arguments.length>1&&(n+=", "+h.classString(e)),this._warn(n)}return this._then(t,e,void 0,void 0,void 0)},i.prototype.done=function(t,e){var n=this._then(t,e,void 0,void 0,void 0);n._setIsFinal()},i.prototype.spread=function(t){return"function"!=typeof t?p("expecting a function but got "+h.classString(t)):this.all()._then(t,void 0,void 0,C,void 0)},i.prototype.toJSON=function(){var t={isFulfilled:!1,isRejected:!1,fulfillmentValue:void 0,rejectionReason:void 0};return this.isFulfilled()?(t.fulfillmentValue=this.value(),t.isFulfilled=!0):this.isRejected()&&(t.rejectionReason=this.reason(),t.isRejected=!0),t},i.prototype.all=function(){return arguments.length>0&&this._warn(".all() was passed arguments but it does not take any"),new k(this).promise();
+},i.prototype.error=function(t){return this.caught(h.originatesFromRejection,t)},i.getNewLibraryCopy=e.exports,i.is=function(t){return t instanceof i},i.fromNode=i.fromCallback=function(t){var e=new i(b);e._captureStackTrace();var n=arguments.length>1?!!Object(arguments[1]).multiArgs:!1,r=x(t)(R(e,n));return r===S&&e._rejectCallback(r.e,!0),e._isFateSealed()||e._setAsyncGuaranteed(),e},i.all=function(t){return new k(t).promise()},i.cast=function(t){var e=E(t);return e instanceof i||(e=new i(b),e._captureStackTrace(),e._setFulfilled(),e._rejectionHandler0=t),e},i.resolve=i.fulfilled=i.cast,i.reject=i.rejected=function(t){var e=new i(b);return e._captureStackTrace(),e._rejectCallback(t,!0),e},i.setScheduler=function(t){if("function"!=typeof t)throw new g("expecting a function but got "+h.classString(t));return v.setScheduler(t)},i.prototype._then=function(t,e,n,r,o){var a=void 0!==o,s=a?o:new i(b),l=this._target(),u=l._bitField;a||(s._propagateFrom(this,3),s._captureStackTrace(),void 0===r&&0!==(2097152&this._bitField)&&(r=0!==(50397184&u)?this._boundValue():l===this?void 0:this._boundTo),this._fireEvent("promiseChained",this,s));var p=c();if(0!==(50397184&u)){var f,_,d=l._settlePromiseCtx;0!==(33554432&u)?(_=l._rejectionHandler0,f=t):0!==(16777216&u)?(_=l._fulfillmentHandler0,f=e,l._unsetRejectionIsUnhandled()):(d=l._settlePromiseLateCancellationObserver,_=new m("late cancellation observer"),l._attachExtraTrace(_),f=e),v.invoke(d,l,{handler:null===p?f:"function"==typeof f&&h.domainBind(p,f),promise:s,receiver:r,value:_})}else l._addCallbacks(t,e,s,r,p);return s},i.prototype._length=function(){return 65535&this._bitField},i.prototype._isFateSealed=function(){return 0!==(117506048&this._bitField)},i.prototype._isFollowing=function(){return 67108864===(67108864&this._bitField)},i.prototype._setLength=function(t){this._bitField=-65536&this._bitField|65535&t},i.prototype._setFulfilled=function(){this._bitField=33554432|this._bitField,this._fireEvent("promiseFulfilled",this)},i.prototype._setRejected=function(){this._bitField=16777216|this._bitField,this._fireEvent("promiseRejected",this)},i.prototype._setFollowing=function(){this._bitField=67108864|this._bitField,this._fireEvent("promiseResolved",this)},i.prototype._setIsFinal=function(){this._bitField=4194304|this._bitField},i.prototype._isFinal=function(){return(4194304&this._bitField)>0},i.prototype._unsetCancelled=function(){this._bitField=-65537&this._bitField},i.prototype._setCancelled=function(){this._bitField=65536|this._bitField,this._fireEvent("promiseCancelled",this)},i.prototype._setWillBeCancelled=function(){this._bitField=8388608|this._bitField},i.prototype._setAsyncGuaranteed=function(){v.hasCustomScheduler()||(this._bitField=134217728|this._bitField)},i.prototype._receiverAt=function(t){var e=0===t?this._receiver0:this[4*t-4+3];return e===f?void 0:void 0===e&&this._isBound()?this._boundValue():e},i.prototype._promiseAt=function(t){return this[4*t-4+2]},i.prototype._fulfillmentHandlerAt=function(t){return this[4*t-4+0]},i.prototype._rejectionHandlerAt=function(t){return this[4*t-4+1]},i.prototype._boundValue=function(){},i.prototype._migrateCallback0=function(t){var e=(t._bitField,t._fulfillmentHandler0),n=t._rejectionHandler0,r=t._promise0,i=t._receiverAt(0);void 0===i&&(i=f),this._addCallbacks(e,n,r,i,null)},i.prototype._migrateCallbackAt=function(t,e){var n=t._fulfillmentHandlerAt(e),r=t._rejectionHandlerAt(e),i=t._promiseAt(e),o=t._receiverAt(e);void 0===o&&(o=f),this._addCallbacks(n,r,i,o,null)},i.prototype._addCallbacks=function(t,e,n,r,i){var o=this._length();if(o>=65531&&(o=0,this._setLength(0)),0===o)this._promise0=n,this._receiver0=r,"function"==typeof t&&(this._fulfillmentHandler0=null===i?t:h.domainBind(i,t)),"function"==typeof e&&(this._rejectionHandler0=null===i?e:h.domainBind(i,e));else{var a=4*o-4;this[a+2]=n,this[a+3]=r,"function"==typeof t&&(this[a+0]=null===i?t:h.domainBind(i,t)),"function"==typeof e&&(this[a+1]=null===i?e:h.domainBind(i,e))}return this._setLength(o+1),o},i.prototype._proxy=function(t,e){this._addCallbacks(void 0,void 0,e,t,null)},i.prototype._resolveCallback=function(t,e){if(0===(117506048&this._bitField)){if(t===this)return this._rejectCallback(l(),!1);var n=E(t,this);if(!(n instanceof i))return this._fulfill(t);e&&this._propagateFrom(n,2);var r=n._target();if(r===this)return void this._reject(l());var o=r._bitField;if(0===(50397184&o)){var a=this._length();a>0&&r._migrateCallback0(this);for(var s=1;a>s;++s)r._migrateCallbackAt(this,s);this._setFollowing(),this._setLength(0),this._setFollowee(r)}else if(0!==(33554432&o))this._fulfill(r._value());else if(0!==(16777216&o))this._reject(r._reason());else{var c=new m("late cancellation observer");r._attachExtraTrace(c),this._reject(c)}}},i.prototype._rejectCallback=function(t,e,n){var r=h.ensureErrorObject(t),i=r===t;if(!i&&!n&&F.warnings()){var o="a promise was rejected with a non-error: "+h.classString(t);this._warn(o,!0)}this._attachExtraTrace(r,e?i:!1),this._reject(t)},i.prototype._resolveFromExecutor=function(t){var e=this;this._captureStackTrace(),this._pushContext();var n=!0,r=this._execute(t,function(t){e._resolveCallback(t)},function(t){e._rejectCallback(t,n)});n=!1,this._popContext(),void 0!==r&&e._rejectCallback(r,!0)},i.prototype._settlePromiseFromHandler=function(t,e,n,r){var i=r._bitField;if(0===(65536&i)){r._pushContext();var o;e===C?n&&"number"==typeof n.length?o=x(t).apply(this._boundValue(),n):(o=S,o.e=new g("cannot .spread() a non-array: "+h.classString(n))):o=x(t).call(e,n);var a=r._popContext();i=r._bitField,0===(65536&i)&&(o===w?r._reject(n):o===S?r._rejectCallback(o.e,!1):(F.checkForgottenReturns(o,a,"",r,this),r._resolveCallback(o)))}},i.prototype._target=function(){for(var t=this;t._isFollowing();)t=t._followee();return t},i.prototype._followee=function(){return this._rejectionHandler0},i.prototype._setFollowee=function(t){this._rejectionHandler0=t},i.prototype._settlePromise=function(t,e,r,o){var a=t instanceof i,s=this._bitField,c=0!==(134217728&s);0!==(65536&s)?(a&&t._invokeInternalOnCancel(),r instanceof T&&r.isFinallyHandler()?(r.cancelPromise=t,x(e).call(r,o)===S&&t._reject(S.e)):e===u?t._fulfill(u.call(r)):r instanceof n?r._promiseCancelled(t):a||t instanceof k?t._cancel():r.cancel()):"function"==typeof e?a?(c&&t._setAsyncGuaranteed(),this._settlePromiseFromHandler(e,r,o,t)):e.call(r,o,t):r instanceof n?r._isResolved()||(0!==(33554432&s)?r._promiseFulfilled(o,t):r._promiseRejected(o,t)):a&&(c&&t._setAsyncGuaranteed(),0!==(33554432&s)?t._fulfill(o):t._reject(o))},i.prototype._settlePromiseLateCancellationObserver=function(t){var e=t.handler,n=t.promise,r=t.receiver,o=t.value;"function"==typeof e?n instanceof i?this._settlePromiseFromHandler(e,r,o,n):e.call(r,o,n):n instanceof i&&n._reject(o)},i.prototype._settlePromiseCtx=function(t){this._settlePromise(t.promise,t.handler,t.receiver,t.value)},i.prototype._settlePromise0=function(t,e,n){var r=this._promise0,i=this._receiverAt(0);this._promise0=void 0,this._receiver0=void 0,this._settlePromise(r,t,i,e)},i.prototype._clearCallbackDataAtIndex=function(t){var e=4*t-4;this[e+2]=this[e+3]=this[e+0]=this[e+1]=void 0},i.prototype._fulfill=function(t){var e=this._bitField;if(!((117506048&e)>>>16)){if(t===this){var n=l();return this._attachExtraTrace(n),this._reject(n)}this._setFulfilled(),this._rejectionHandler0=t,(65535&e)>0&&(0!==(134217728&e)?this._settlePromises():v.settlePromises(this))}},i.prototype._reject=function(t){var e=this._bitField;if(!((117506048&e)>>>16))return this._setRejected(),this._fulfillmentHandler0=t,this._isFinal()?v.fatalError(t,h.isNode):void((65535&e)>0?v.settlePromises(this):this._ensurePossibleRejectionHandled())},i.prototype._fulfillPromises=function(t,e){for(var n=1;t>n;n++){var r=this._fulfillmentHandlerAt(n),i=this._promiseAt(n),o=this._receiverAt(n);this._clearCallbackDataAtIndex(n),this._settlePromise(i,r,o,e)}},i.prototype._rejectPromises=function(t,e){for(var n=1;t>n;n++){var r=this._rejectionHandlerAt(n),i=this._promiseAt(n),o=this._receiverAt(n);this._clearCallbackDataAtIndex(n),this._settlePromise(i,r,o,e)}},i.prototype._settlePromises=function(){var t=this._bitField,e=65535&t;if(e>0){if(0!==(16842752&t)){var n=this._fulfillmentHandler0;this._settlePromise0(this._rejectionHandler0,n,t),this._rejectPromises(e,n)}else{var r=this._rejectionHandler0;this._settlePromise0(this._fulfillmentHandler0,r,t),this._fulfillPromises(e,r)}this._setLength(0)}this._clearCancellationData()},i.prototype._settledValue=function(){var t=this._bitField;return 0!==(33554432&t)?this._rejectionHandler0:0!==(16777216&t)?this._fulfillmentHandler0:void 0},i.defer=i.pending=function(){F.deprecated("Promise.defer","new Promise");var t=new i(b);return{promise:t,resolve:o,reject:a}},h.notEnumerableProp(i,"_makeSelfResolutionError",l),t("./method")(i,b,E,p,F),t("./bind")(i,b,E,F),t("./cancel")(i,k,p,F),t("./direct_resolve")(i),t("./synchronous_inspection")(i),t("./join")(i,k,E,b,v,c),i.Promise=i,i.version="3.4.7",h.toFastProperties(i),h.toFastProperties(i.prototype),s({a:1}),s({b:2}),s({c:3}),s(1),s(function(){}),s(void 0),s(!1),s(new i(b)),F.setBounds(d.firstLineError,h.lastLineError),i}},{"./async":1,"./bind":2,"./cancel":4,"./catch_filter":5,"./context":6,"./debuggability":7,"./direct_resolve":8,"./errors":9,"./es5":10,"./finally":11,"./join":12,"./method":13,"./nodeback":14,"./promise_array":16,"./synchronous_inspection":19,"./thenables":20,"./util":21}],16:[function(t,e,n){"use strict";e.exports=function(e,n,r,i,o){function a(t){switch(t){case-2:return[];case-3:return{}}}function s(t){var r=this._promise=new e(n);t instanceof e&&r._propagateFrom(t,3),r._setOnCancel(this),this._values=t,this._length=0,this._totalResolved=0,this._init(void 0,-2)}var c=t("./util");c.isArray;return c.inherits(s,o),s.prototype.length=function(){return this._length},s.prototype.promise=function(){return this._promise},s.prototype._init=function l(t,n){var o=r(this._values,this._promise);if(o instanceof e){o=o._target();var s=o._bitField;if(this._values=o,0===(50397184&s))return this._promise._setAsyncGuaranteed(),o._then(l,this._reject,void 0,this,n);if(0===(33554432&s))return 0!==(16777216&s)?this._reject(o._reason()):this._cancel();o=o._value()}if(o=c.asArray(o),null===o){var u=i("expecting an array or an iterable object but got "+c.classString(o)).reason();return void this._promise._rejectCallback(u,!1)}return 0===o.length?void(-5===n?this._resolveEmptyArray():this._resolve(a(n))):void this._iterate(o)},s.prototype._iterate=function(t){var n=this.getActualLength(t.length);this._length=n,this._values=this.shouldCopyValues()?new Array(n):this._values;for(var i=this._promise,o=!1,a=null,s=0;n>s;++s){var c=r(t[s],i);c instanceof e?(c=c._target(),a=c._bitField):a=null,o?null!==a&&c.suppressUnhandledRejections():null!==a?0===(50397184&a)?(c._proxy(this,s),this._values[s]=c):o=0!==(33554432&a)?this._promiseFulfilled(c._value(),s):0!==(16777216&a)?this._promiseRejected(c._reason(),s):this._promiseCancelled(s):o=this._promiseFulfilled(c,s)}o||i._setAsyncGuaranteed()},s.prototype._isResolved=function(){return null===this._values},s.prototype._resolve=function(t){this._values=null,this._promise._fulfill(t)},s.prototype._cancel=function(){!this._isResolved()&&this._promise._isCancellable()&&(this._values=null,this._promise._cancel())},s.prototype._reject=function(t){this._values=null,this._promise._rejectCallback(t,!1)},s.prototype._promiseFulfilled=function(t,e){this._values[e]=t;var n=++this._totalResolved;return n>=this._length?(this._resolve(this._values),!0):!1},s.prototype._promiseCancelled=function(){return this._cancel(),!0},s.prototype._promiseRejected=function(t){return this._totalResolved++,this._reject(t),!0},s.prototype._resultCancelled=function(){if(!this._isResolved()){var t=this._values;if(this._cancel(),t instanceof e)t.cancel();else for(var n=0;n<t.length;++n)t[n]instanceof e&&t[n].cancel()}},s.prototype.shouldCopyValues=function(){return!0},s.prototype.getActualLength=function(t){return t},s}},{"./util":21}],17:[function(t,e,n){"use strict";function r(t,e,n,r,i){for(var o=0;i>o;++o)n[o+r]=t[o+e],t[o+e]=void 0}function i(t){this._capacity=t,this._length=0,this._front=0}i.prototype._willBeOverCapacity=function(t){return this._capacity<t},i.prototype._pushOne=function(t){var e=this.length();this._checkCapacity(e+1);var n=this._front+e&this._capacity-1;this[n]=t,this._length=e+1},i.prototype.push=function(t,e,n){var r=this.length()+3;if(this._willBeOverCapacity(r))return this._pushOne(t),this._pushOne(e),void this._pushOne(n);var i=this._front+r-3;this._checkCapacity(r);var o=this._capacity-1;this[i+0&o]=t,this[i+1&o]=e,this[i+2&o]=n,this._length=r},i.prototype.shift=function(){var t=this._front,e=this[t];return this[t]=void 0,this._front=t+1&this._capacity-1,this._length--,e},i.prototype.length=function(){return this._length},i.prototype._checkCapacity=function(t){this._capacity<t&&this._resizeTo(this._capacity<<1)},i.prototype._resizeTo=function(t){var e=this._capacity;this._capacity=t;var n=this._front,i=this._length,o=n+i&e-1;r(this,0,this,e,o)},e.exports=i},{}],18:[function(t,e,n){"use strict";var r,i=t("./util"),o=function(){throw new Error("No async scheduler available\n\n    See http://goo.gl/MqrFmX\n")},a=i.getNativePromise();if(i.isNode&&"undefined"==typeof MutationObserver){var s=global.setImmediate,c=process.nextTick;r=i.isRecentNode?function(t){s.call(global,t)}:function(t){c.call(process,t)}}else if("function"==typeof a&&"function"==typeof a.resolve){var l=a.resolve();r=function(t){l.then(t)}}else r="undefined"==typeof MutationObserver||"undefined"!=typeof window&&window.navigator&&(window.navigator.standalone||window.cordova)?"undefined"!=typeof setImmediate?function(t){setImmediate(t)}:"undefined"!=typeof setTimeout?function(t){setTimeout(t,0)}:o:function(){var t=document.createElement("div"),e={attributes:!0},n=!1,r=document.createElement("div"),i=new MutationObserver(function(){t.classList.toggle("foo"),n=!1});i.observe(r,e);var o=function(){n||(n=!0,r.classList.toggle("foo"))};return function(n){var r=new MutationObserver(function(){r.disconnect(),n()});r.observe(t,e),o()}}();e.exports=r},{"./util":21}],19:[function(t,e,n){"use strict";e.exports=function(t){function e(t){void 0!==t?(t=t._target(),this._bitField=t._bitField,this._settledValueField=t._isFateSealed()?t._settledValue():void 0):(this._bitField=0,this._settledValueField=void 0)}e.prototype._settledValue=function(){return this._settledValueField};var n=e.prototype.value=function(){if(!this.isFulfilled())throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\n\n    See http://goo.gl/MqrFmX\n");return this._settledValue()},r=e.prototype.error=e.prototype.reason=function(){if(!this.isRejected())throw new TypeError("cannot get rejection reason of a non-rejected promise\n\n    See http://goo.gl/MqrFmX\n");return this._settledValue()},i=e.prototype.isFulfilled=function(){return 0!==(33554432&this._bitField)},o=e.prototype.isRejected=function(){return 0!==(16777216&this._bitField)},a=e.prototype.isPending=function(){return 0===(50397184&this._bitField)},s=e.prototype.isResolved=function(){return 0!==(50331648&this._bitField)};e.prototype.isCancelled=function(){return 0!==(8454144&this._bitField)},t.prototype.__isCancelled=function(){return 65536===(65536&this._bitField)},t.prototype._isCancelled=function(){return this._target().__isCancelled()},t.prototype.isCancelled=function(){return 0!==(8454144&this._target()._bitField)},t.prototype.isPending=function(){return a.call(this._target())},t.prototype.isRejected=function(){return o.call(this._target())},t.prototype.isFulfilled=function(){return i.call(this._target())},t.prototype.isResolved=function(){return s.call(this._target())},t.prototype.value=function(){return n.call(this._target())},t.prototype.reason=function(){var t=this._target();return t._unsetRejectionIsUnhandled(),r.call(t)},t.prototype._value=function(){return this._settledValue()},t.prototype._reason=function(){return this._unsetRejectionIsUnhandled(),this._settledValue()},t.PromiseInspection=e}},{}],20:[function(t,e,n){"use strict";e.exports=function(e,n){function r(t,r){if(u(t)){if(t instanceof e)return t;var i=o(t);if(i===l){r&&r._pushContext();var c=e.reject(i.e);return r&&r._popContext(),c}if("function"==typeof i){if(a(t)){var c=new e(n);return t._then(c._fulfill,c._reject,void 0,c,null),c}return s(t,i,r)}}return t}function i(t){return t.then}function o(t){try{return i(t)}catch(e){return l.e=e,l}}function a(t){try{return p.call(t,"_promise0")}catch(e){return!1}}function s(t,r,i){function o(t){s&&(s._resolveCallback(t),s=null)}function a(t){s&&(s._rejectCallback(t,p,!0),s=null)}var s=new e(n),u=s;i&&i._pushContext(),s._captureStackTrace(),i&&i._popContext();var p=!0,f=c.tryCatch(r).call(t,o,a);return p=!1,s&&f===l&&(s._rejectCallback(f.e,!0,!0),s=null),u}var c=t("./util"),l=c.errorObj,u=c.isObject,p={}.hasOwnProperty;return r}},{"./util":21}],21:[function(t,e,n){"use strict";function r(){try{var t=R;return R=null,t.apply(this,arguments)}catch(e){return P.e=e,P}}function i(t){return R=t,r}function o(t){return null==t||t===!0||t===!1||"string"==typeof t||"number"==typeof t}function a(t){return"function"==typeof t||"object"==typeof t&&null!==t}function s(t){return o(t)?new Error(v(t)):t}function c(t,e){var n,r=t.length,i=new Array(r+1);for(n=0;r>n;++n)i[n]=t[n];return i[n]=e,i}function l(t,e,n){if(!F.isES5)return{}.hasOwnProperty.call(t,e)?t[e]:void 0;var r=Object.getOwnPropertyDescriptor(t,e);return null!=r?null==r.get&&null==r.set?r.value:n:void 0}function u(t,e,n){if(o(t))return t;var r={value:n,configurable:!0,enumerable:!1,writable:!0};return F.defineProperty(t,e,r),t}function p(t){throw t}function f(t){try{if("function"==typeof t){var e=F.names(t.prototype),n=F.isES5&&e.length>1,r=e.length>0&&!(1===e.length&&"constructor"===e[0]),i=A.test(t+"")&&F.names(t).length>0;if(n||r||i)return!0}return!1}catch(o){return!1}}function h(t){function e(){}e.prototype=t;for(var n=8;n--;)new e;return t}function _(t){return L.test(t)}function d(t,e,n){for(var r=new Array(t),i=0;t>i;++i)r[i]=e+i+n;return r}function v(t){try{return t+""}catch(e){return"[no string representation]"}}function y(t){return null!==t&&"object"==typeof t&&"string"==typeof t.message&&"string"==typeof t.name}function g(t){try{u(t,"isOperational",!0)}catch(e){}}function m(t){return null==t?!1:t instanceof Error.__BluebirdErrorTypes__.OperationalError||t.isOperational===!0}function b(t){return y(t)&&F.propertyIsWritable(t,"stack")}function C(t){return{}.toString.call(t)}function w(t,e,n){for(var r=F.names(t),i=0;i<r.length;++i){var o=r[i];if(n(o))try{F.defineProperty(e,o,F.getDescriptor(t,o))}catch(a){}}}function E(t){return H?{"NODE_ENV":"production","APP_ENV":"browser"}[t]:void 0}function k(){if("function"==typeof Promise)try{var t=new Promise(function(){});if("[object Promise]"==={}.toString.call(t))return Promise}catch(e){}}function j(t,e){return t.bind(e)}var F=t("./es5"),T="undefined"==typeof navigator,P={e:{}},R,S="undefined"!=typeof self?self:"undefined"!=typeof window?window:"undefined"!=typeof global?global:void 0!==this?this:null,x=function(t,e){function n(){this.constructor=t,this.constructor$=e;for(var n in e.prototype)r.call(e.prototype,n)&&"$"!==n.charAt(n.length-1)&&(this[n+"$"]=e.prototype[n])}var r={}.hasOwnProperty;return n.prototype=e.prototype,t.prototype=new n,t.prototype},O=function(){var t=[Array.prototype,Object.prototype,Function.prototype],e=function(e){for(var n=0;n<t.length;++n)if(t[n]===e)return!0;return!1};if(F.isES5){var n=Object.getOwnPropertyNames;return function(t){for(var r=[],i=Object.create(null);null!=t&&!e(t);){var o;try{o=n(t)}catch(a){return r}for(var s=0;s<o.length;++s){var c=o[s];if(!i[c]){i[c]=!0;var l=Object.getOwnPropertyDescriptor(t,c);null!=l&&null==l.get&&null==l.set&&r.push(c)}}t=F.getPrototypeOf(t)}return r}}var r={}.hasOwnProperty;return function(n){if(e(n))return[];var i=[];t:for(var o in n)if(r.call(n,o))i.push(o);else{for(var a=0;a<t.length;++a)if(r.call(t[a],o))continue t;i.push(o)}return i}}(),A=/this\s*\.\s*\S+\s*=/,L=/^[a-z$_][a-z$_0-9]*$/i,N=function(){return"stack"in new Error?function(t){return b(t)?t:new Error(v(t))}:function(t){if(b(t))return t;try{throw new Error(v(t))}catch(e){return e}}}(),B=function(t){return F.isArray(t)?t:null};if("undefined"!=typeof Symbol&&Symbol.iterator){var U="function"==typeof Array.from?function(t){return Array.from(t)}:function(t){for(var e,n=[],r=t[Symbol.iterator]();!(e=r.next()).done;)n.push(e.value);return n};B=function(t){return F.isArray(t)?t:null!=t&&"function"==typeof t[Symbol.iterator]?U(t):null}}var I="undefined"!=typeof process&&"[object process]"===C(process).toLowerCase(),H="undefined"!=typeof process&&"undefined"!="object",D={isClass:f,isIdentifier:_,inheritedDataKeys:O,getDataPropertyOrDefault:l,thrower:p,isArray:F.isArray,asArray:B,notEnumerableProp:u,isPrimitive:o,isObject:a,isError:y,canEvaluate:T,errorObj:P,tryCatch:i,inherits:x,withAppended:c,maybeWrapAsError:s,toFastProperties:h,filledRange:d,toString:v,canAttachTrace:b,ensureErrorObject:N,originatesFromRejection:m,markAsOriginatingFromRejection:g,classString:C,copyDescriptors:w,hasDevTools:"undefined"!=typeof chrome&&chrome&&"function"==typeof chrome.loadTimes,isNode:I,hasEnvVariables:H,env:E,global:S,getNativePromise:k,domainBind:j};D.isRecentNode=D.isNode&&function(){var t=process.versions.node.split(".").map(Number);return 0===t[0]&&t[1]>10||t[0]>0}(),D.isNode&&D.toFastProperties(process);try{throw new Error}catch(V){D.lastLineError=V}e.exports=D},{"./es5":10}]},{},[3])(3)}),"undefined"!=typeof window&&null!==window?window.P=window.Promise:"undefined"!=typeof self&&null!==self&&(self.P=self.Promise);
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(82), __webpack_require__(43), __webpack_require__(212).setImmediate))
+
+/***/ },
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5335,7 +5373,7 @@ module.exports = flyd;
 
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 var getNative = __webpack_require__(7),
@@ -5348,14 +5386,14 @@ module.exports = DataView;
 
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
-var hashClear = __webpack_require__(146),
-    hashDelete = __webpack_require__(147),
-    hashGet = __webpack_require__(148),
-    hashHas = __webpack_require__(149),
-    hashSet = __webpack_require__(150);
+var hashClear = __webpack_require__(147),
+    hashDelete = __webpack_require__(148),
+    hashGet = __webpack_require__(149),
+    hashHas = __webpack_require__(150),
+    hashSet = __webpack_require__(151);
 
 /**
  * Creates a hash object.
@@ -5386,7 +5424,7 @@ module.exports = Hash;
 
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 var getNative = __webpack_require__(7),
@@ -5399,7 +5437,7 @@ module.exports = Promise;
 
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 var getNative = __webpack_require__(7),
@@ -5412,12 +5450,12 @@ module.exports = Set;
 
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 var MapCache = __webpack_require__(27),
-    setCacheAdd = __webpack_require__(172),
-    setCacheHas = __webpack_require__(173);
+    setCacheAdd = __webpack_require__(173),
+    setCacheHas = __webpack_require__(174);
 
 /**
  *
@@ -5445,7 +5483,7 @@ module.exports = SetCache;
 
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 var getNative = __webpack_require__(7),
@@ -5458,7 +5496,7 @@ module.exports = WeakMap;
 
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports) {
 
 /**
@@ -5479,7 +5517,7 @@ module.exports = addMapEntry;
 
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports) {
 
 /**
@@ -5500,7 +5538,7 @@ module.exports = addSetEntry;
 
 
 /***/ },
-/* 95 */
+/* 96 */
 /***/ function(module, exports) {
 
 /**
@@ -5527,7 +5565,7 @@ module.exports = apply;
 
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports) {
 
 /**
@@ -5556,7 +5594,7 @@ module.exports = arraySome;
 
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 var copyObject = __webpack_require__(11),
@@ -5579,7 +5617,7 @@ module.exports = baseAssign;
 
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 var copyObject = __webpack_require__(11),
@@ -5602,23 +5640,23 @@ module.exports = baseAssignIn;
 
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 var Stack = __webpack_require__(14),
     arrayEach = __webpack_require__(53),
     assignValue = __webpack_require__(59),
-    baseAssign = __webpack_require__(97),
-    baseAssignIn = __webpack_require__(98),
+    baseAssign = __webpack_require__(98),
+    baseAssignIn = __webpack_require__(99),
     cloneBuffer = __webpack_require__(65),
     copyArray = __webpack_require__(67),
-    copySymbols = __webpack_require__(132),
-    copySymbolsIn = __webpack_require__(133),
+    copySymbols = __webpack_require__(133),
+    copySymbolsIn = __webpack_require__(134),
     getAllKeys = __webpack_require__(71),
-    getAllKeysIn = __webpack_require__(141),
+    getAllKeysIn = __webpack_require__(142),
     getTag = __webpack_require__(34),
-    initCloneArray = __webpack_require__(151),
-    initCloneByTag = __webpack_require__(152),
+    initCloneArray = __webpack_require__(152),
+    initCloneByTag = __webpack_require__(153),
     initCloneObject = __webpack_require__(73),
     isArray = __webpack_require__(0),
     isBuffer = __webpack_require__(21),
@@ -5761,7 +5799,7 @@ module.exports = baseClone;
 
 
 /***/ },
-/* 100 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(1);
@@ -5797,7 +5835,7 @@ module.exports = baseCreate;
 
 
 /***/ },
-/* 101 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseEach = __webpack_require__(29);
@@ -5824,7 +5862,7 @@ module.exports = baseFilter;
 
 
 /***/ },
-/* 102 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseFor = __webpack_require__(60),
@@ -5846,7 +5884,7 @@ module.exports = baseForOwn;
 
 
 /***/ },
-/* 103 */
+/* 104 */
 /***/ function(module, exports) {
 
 /**
@@ -5865,7 +5903,7 @@ module.exports = baseHasIn;
 
 
 /***/ },
-/* 104 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(5),
@@ -5889,13 +5927,13 @@ module.exports = baseIsArguments;
 
 
 /***/ },
-/* 105 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 var Stack = __webpack_require__(14),
     equalArrays = __webpack_require__(69),
-    equalByTag = __webpack_require__(139),
-    equalObjects = __webpack_require__(140),
+    equalByTag = __webpack_require__(140),
+    equalObjects = __webpack_require__(141),
     getTag = __webpack_require__(34),
     isArray = __webpack_require__(0),
     isBuffer = __webpack_require__(21),
@@ -5978,7 +6016,7 @@ module.exports = baseIsEqualDeep;
 
 
 /***/ },
-/* 106 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 var Stack = __webpack_require__(14),
@@ -6046,11 +6084,11 @@ module.exports = baseIsMatch;
 
 
 /***/ },
-/* 107 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 var isFunction = __webpack_require__(22),
-    isMasked = __webpack_require__(155),
+    isMasked = __webpack_require__(156),
     isObject = __webpack_require__(1),
     toSource = __webpack_require__(78);
 
@@ -6099,7 +6137,7 @@ module.exports = baseIsNative;
 
 
 /***/ },
-/* 108 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(5),
@@ -6165,11 +6203,11 @@ module.exports = baseIsTypedArray;
 
 
 /***/ },
-/* 109 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 var isPrototype = __webpack_require__(37),
-    nativeKeys = __webpack_require__(167);
+    nativeKeys = __webpack_require__(168);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -6201,12 +6239,12 @@ module.exports = baseKeys;
 
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(1),
     isPrototype = __webpack_require__(37),
-    nativeKeysIn = __webpack_require__(168);
+    nativeKeysIn = __webpack_require__(169);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -6240,7 +6278,7 @@ module.exports = baseKeysIn;
 
 
 /***/ },
-/* 111 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseEach = __webpack_require__(29),
@@ -6268,11 +6306,11 @@ module.exports = baseMap;
 
 
 /***/ },
-/* 112 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseIsMatch = __webpack_require__(106),
-    getMatchData = __webpack_require__(142),
+var baseIsMatch = __webpack_require__(107),
+    getMatchData = __webpack_require__(143),
     matchesStrictComparable = __webpack_require__(75);
 
 /**
@@ -6296,12 +6334,12 @@ module.exports = baseMatches;
 
 
 /***/ },
-/* 113 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseIsEqual = __webpack_require__(30),
-    get = __webpack_require__(187),
-    hasIn = __webpack_require__(188),
+    get = __webpack_require__(188),
+    hasIn = __webpack_require__(189),
     isKey = __webpack_require__(36),
     isStrictComparable = __webpack_require__(74),
     matchesStrictComparable = __webpack_require__(75),
@@ -6335,13 +6373,13 @@ module.exports = baseMatchesProperty;
 
 
 /***/ },
-/* 114 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 var Stack = __webpack_require__(14),
     assignMergeValue = __webpack_require__(58),
     baseFor = __webpack_require__(60),
-    baseMergeDeep = __webpack_require__(115),
+    baseMergeDeep = __webpack_require__(116),
     isObject = __webpack_require__(1),
     keysIn = __webpack_require__(24);
 
@@ -6382,7 +6420,7 @@ module.exports = baseMerge;
 
 
 /***/ },
-/* 115 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 var assignMergeValue = __webpack_require__(58),
@@ -6392,13 +6430,13 @@ var assignMergeValue = __webpack_require__(58),
     initCloneObject = __webpack_require__(73),
     isArguments = __webpack_require__(39),
     isArray = __webpack_require__(0),
-    isArrayLikeObject = __webpack_require__(189),
+    isArrayLikeObject = __webpack_require__(190),
     isBuffer = __webpack_require__(21),
     isFunction = __webpack_require__(22),
     isObject = __webpack_require__(1),
     isPlainObject = __webpack_require__(79),
     isTypedArray = __webpack_require__(41),
-    toPlainObject = __webpack_require__(203);
+    toPlainObject = __webpack_require__(204);
 
 /**
  * A specialized version of `baseMerge` for arrays and objects which performs
@@ -6481,7 +6519,7 @@ module.exports = baseMergeDeep;
 
 
 /***/ },
-/* 116 */
+/* 117 */
 /***/ function(module, exports) {
 
 /**
@@ -6501,7 +6539,7 @@ module.exports = baseProperty;
 
 
 /***/ },
-/* 117 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseGet = __webpack_require__(61);
@@ -6523,12 +6561,12 @@ module.exports = basePropertyDeep;
 
 
 /***/ },
-/* 118 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 var identity = __webpack_require__(20),
-    overRest = __webpack_require__(171),
-    setToString = __webpack_require__(175);
+    overRest = __webpack_require__(172),
+    setToString = __webpack_require__(176);
 
 /**
  * The base implementation of `_.rest` which doesn't validate or coerce arguments.
@@ -6546,10 +6584,10 @@ module.exports = baseRest;
 
 
 /***/ },
-/* 119 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
-var constant = __webpack_require__(184),
+var constant = __webpack_require__(185),
     defineProperty = __webpack_require__(68),
     identity = __webpack_require__(20);
 
@@ -6574,7 +6612,7 @@ module.exports = baseSetToString;
 
 
 /***/ },
-/* 120 */
+/* 121 */
 /***/ function(module, exports) {
 
 /**
@@ -6600,7 +6638,7 @@ module.exports = baseTimes;
 
 
 /***/ },
-/* 121 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 var arrayMap = __webpack_require__(15);
@@ -6624,7 +6662,7 @@ module.exports = baseToPairs;
 
 
 /***/ },
-/* 122 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 var Symbol = __webpack_require__(10),
@@ -6667,7 +6705,7 @@ module.exports = baseToString;
 
 
 /***/ },
-/* 123 */
+/* 124 */
 /***/ function(module, exports) {
 
 /**
@@ -6687,7 +6725,7 @@ module.exports = baseUnary;
 
 
 /***/ },
-/* 124 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 var arrayMap = __webpack_require__(15);
@@ -6712,7 +6750,7 @@ module.exports = baseValues;
 
 
 /***/ },
-/* 125 */
+/* 126 */
 /***/ function(module, exports) {
 
 /**
@@ -6731,7 +6769,7 @@ module.exports = cacheHas;
 
 
 /***/ },
-/* 126 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 var identity = __webpack_require__(20);
@@ -6751,7 +6789,7 @@ module.exports = castFunction;
 
 
 /***/ },
-/* 127 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 var cloneArrayBuffer = __webpack_require__(31);
@@ -6773,10 +6811,10 @@ module.exports = cloneDataView;
 
 
 /***/ },
-/* 128 */
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
-var addMapEntry = __webpack_require__(93),
+var addMapEntry = __webpack_require__(94),
     arrayReduce = __webpack_require__(57),
     mapToArray = __webpack_require__(38);
 
@@ -6801,7 +6839,7 @@ module.exports = cloneMap;
 
 
 /***/ },
-/* 129 */
+/* 130 */
 /***/ function(module, exports) {
 
 /** Used to match `RegExp` flags from their coerced string values. */
@@ -6824,10 +6862,10 @@ module.exports = cloneRegExp;
 
 
 /***/ },
-/* 130 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
-var addSetEntry = __webpack_require__(94),
+var addSetEntry = __webpack_require__(95),
     arrayReduce = __webpack_require__(57),
     setToArray = __webpack_require__(77);
 
@@ -6852,7 +6890,7 @@ module.exports = cloneSet;
 
 
 /***/ },
-/* 131 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
 var Symbol = __webpack_require__(10);
@@ -6876,7 +6914,7 @@ module.exports = cloneSymbol;
 
 
 /***/ },
-/* 132 */
+/* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 var copyObject = __webpack_require__(11),
@@ -6898,7 +6936,7 @@ module.exports = copySymbols;
 
 
 /***/ },
-/* 133 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 var copyObject = __webpack_require__(11),
@@ -6920,7 +6958,7 @@ module.exports = copySymbolsIn;
 
 
 /***/ },
-/* 134 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(3);
@@ -6932,11 +6970,11 @@ module.exports = coreJsData;
 
 
 /***/ },
-/* 135 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseRest = __webpack_require__(118),
-    isIterateeCall = __webpack_require__(153);
+var baseRest = __webpack_require__(119),
+    isIterateeCall = __webpack_require__(154);
 
 /**
  * Creates a function like `_.assign`.
@@ -6975,7 +7013,7 @@ module.exports = createAssigner;
 
 
 /***/ },
-/* 136 */
+/* 137 */
 /***/ function(module, exports, __webpack_require__) {
 
 var isArrayLike = __webpack_require__(9);
@@ -7013,7 +7051,7 @@ module.exports = createBaseEach;
 
 
 /***/ },
-/* 137 */
+/* 138 */
 /***/ function(module, exports) {
 
 /**
@@ -7044,13 +7082,13 @@ module.exports = createBaseFor;
 
 
 /***/ },
-/* 138 */
+/* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseToPairs = __webpack_require__(121),
+var baseToPairs = __webpack_require__(122),
     getTag = __webpack_require__(34),
     mapToArray = __webpack_require__(38),
-    setToPairs = __webpack_require__(174);
+    setToPairs = __webpack_require__(175);
 
 /** `Object#toString` result references. */
 var mapTag = '[object Map]',
@@ -7080,7 +7118,7 @@ module.exports = createToPairs;
 
 
 /***/ },
-/* 139 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
 var Symbol = __webpack_require__(10),
@@ -7198,7 +7236,7 @@ module.exports = equalByTag;
 
 
 /***/ },
-/* 140 */
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
 var getAllKeys = __webpack_require__(71);
@@ -7293,7 +7331,7 @@ module.exports = equalObjects;
 
 
 /***/ },
-/* 141 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseGetAllKeys = __webpack_require__(62),
@@ -7316,7 +7354,7 @@ module.exports = getAllKeysIn;
 
 
 /***/ },
-/* 142 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
 var isStrictComparable = __webpack_require__(74),
@@ -7346,7 +7384,7 @@ module.exports = getMatchData;
 
 
 /***/ },
-/* 143 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
 var Symbol = __webpack_require__(10);
@@ -7398,7 +7436,7 @@ module.exports = getRawTag;
 
 
 /***/ },
-/* 144 */
+/* 145 */
 /***/ function(module, exports) {
 
 /**
@@ -7417,7 +7455,7 @@ module.exports = getValue;
 
 
 /***/ },
-/* 145 */
+/* 146 */
 /***/ function(module, exports, __webpack_require__) {
 
 var castPath = __webpack_require__(64),
@@ -7462,7 +7500,7 @@ module.exports = hasPath;
 
 
 /***/ },
-/* 146 */
+/* 147 */
 /***/ function(module, exports, __webpack_require__) {
 
 var nativeCreate = __webpack_require__(18);
@@ -7483,7 +7521,7 @@ module.exports = hashClear;
 
 
 /***/ },
-/* 147 */
+/* 148 */
 /***/ function(module, exports) {
 
 /**
@@ -7506,7 +7544,7 @@ module.exports = hashDelete;
 
 
 /***/ },
-/* 148 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 var nativeCreate = __webpack_require__(18);
@@ -7542,7 +7580,7 @@ module.exports = hashGet;
 
 
 /***/ },
-/* 149 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
 var nativeCreate = __webpack_require__(18);
@@ -7571,7 +7609,7 @@ module.exports = hashHas;
 
 
 /***/ },
-/* 150 */
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
 var nativeCreate = __webpack_require__(18);
@@ -7600,7 +7638,7 @@ module.exports = hashSet;
 
 
 /***/ },
-/* 151 */
+/* 152 */
 /***/ function(module, exports) {
 
 /** Used for built-in method references. */
@@ -7632,15 +7670,15 @@ module.exports = initCloneArray;
 
 
 /***/ },
-/* 152 */
+/* 153 */
 /***/ function(module, exports, __webpack_require__) {
 
 var cloneArrayBuffer = __webpack_require__(31),
-    cloneDataView = __webpack_require__(127),
-    cloneMap = __webpack_require__(128),
-    cloneRegExp = __webpack_require__(129),
-    cloneSet = __webpack_require__(130),
-    cloneSymbol = __webpack_require__(131),
+    cloneDataView = __webpack_require__(128),
+    cloneMap = __webpack_require__(129),
+    cloneRegExp = __webpack_require__(130),
+    cloneSet = __webpack_require__(131),
+    cloneSymbol = __webpack_require__(132),
     cloneTypedArray = __webpack_require__(66);
 
 /** `Object#toString` result references. */
@@ -7718,7 +7756,7 @@ module.exports = initCloneByTag;
 
 
 /***/ },
-/* 153 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 var eq = __webpack_require__(12),
@@ -7754,7 +7792,7 @@ module.exports = isIterateeCall;
 
 
 /***/ },
-/* 154 */
+/* 155 */
 /***/ function(module, exports) {
 
 /**
@@ -7775,10 +7813,10 @@ module.exports = isKeyable;
 
 
 /***/ },
-/* 155 */
+/* 156 */
 /***/ function(module, exports, __webpack_require__) {
 
-var coreJsData = __webpack_require__(134);
+var coreJsData = __webpack_require__(135);
 
 /** Used to detect methods masquerading as native. */
 var maskSrcKey = (function() {
@@ -7801,7 +7839,7 @@ module.exports = isMasked;
 
 
 /***/ },
-/* 156 */
+/* 157 */
 /***/ function(module, exports) {
 
 /**
@@ -7820,7 +7858,7 @@ module.exports = listCacheClear;
 
 
 /***/ },
-/* 157 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 var assocIndexOf = __webpack_require__(16);
@@ -7861,7 +7899,7 @@ module.exports = listCacheDelete;
 
 
 /***/ },
-/* 158 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 var assocIndexOf = __webpack_require__(16);
@@ -7886,7 +7924,7 @@ module.exports = listCacheGet;
 
 
 /***/ },
-/* 159 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 var assocIndexOf = __webpack_require__(16);
@@ -7908,7 +7946,7 @@ module.exports = listCacheHas;
 
 
 /***/ },
-/* 160 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 var assocIndexOf = __webpack_require__(16);
@@ -7940,10 +7978,10 @@ module.exports = listCacheSet;
 
 
 /***/ },
-/* 161 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
-var Hash = __webpack_require__(88),
+var Hash = __webpack_require__(89),
     ListCache = __webpack_require__(13),
     Map = __webpack_require__(26);
 
@@ -7967,7 +8005,7 @@ module.exports = mapCacheClear;
 
 
 /***/ },
-/* 162 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 var getMapData = __webpack_require__(17);
@@ -7991,7 +8029,7 @@ module.exports = mapCacheDelete;
 
 
 /***/ },
-/* 163 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 var getMapData = __webpack_require__(17);
@@ -8013,7 +8051,7 @@ module.exports = mapCacheGet;
 
 
 /***/ },
-/* 164 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 var getMapData = __webpack_require__(17);
@@ -8035,7 +8073,7 @@ module.exports = mapCacheHas;
 
 
 /***/ },
-/* 165 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 var getMapData = __webpack_require__(17);
@@ -8063,10 +8101,10 @@ module.exports = mapCacheSet;
 
 
 /***/ },
-/* 166 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
-var memoize = __webpack_require__(195);
+var memoize = __webpack_require__(196);
 
 /** Used as the maximum memoize cache size. */
 var MAX_MEMOIZE_SIZE = 500;
@@ -8095,7 +8133,7 @@ module.exports = memoizeCapped;
 
 
 /***/ },
-/* 167 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 var overArg = __webpack_require__(76);
@@ -8107,7 +8145,7 @@ module.exports = nativeKeys;
 
 
 /***/ },
-/* 168 */
+/* 169 */
 /***/ function(module, exports) {
 
 /**
@@ -8133,7 +8171,7 @@ module.exports = nativeKeysIn;
 
 
 /***/ },
-/* 169 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(70);
@@ -8162,7 +8200,7 @@ module.exports = nodeUtil;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(44)(module)))
 
 /***/ },
-/* 170 */
+/* 171 */
 /***/ function(module, exports) {
 
 /** Used for built-in method references. */
@@ -8190,10 +8228,10 @@ module.exports = objectToString;
 
 
 /***/ },
-/* 171 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
-var apply = __webpack_require__(95);
+var apply = __webpack_require__(96);
 
 /* Built-in method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
@@ -8232,7 +8270,7 @@ module.exports = overRest;
 
 
 /***/ },
-/* 172 */
+/* 173 */
 /***/ function(module, exports) {
 
 /** Used to stand-in for `undefined` hash values. */
@@ -8257,7 +8295,7 @@ module.exports = setCacheAdd;
 
 
 /***/ },
-/* 173 */
+/* 174 */
 /***/ function(module, exports) {
 
 /**
@@ -8277,7 +8315,7 @@ module.exports = setCacheHas;
 
 
 /***/ },
-/* 174 */
+/* 175 */
 /***/ function(module, exports) {
 
 /**
@@ -8301,11 +8339,11 @@ module.exports = setToPairs;
 
 
 /***/ },
-/* 175 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseSetToString = __webpack_require__(119),
-    shortOut = __webpack_require__(176);
+var baseSetToString = __webpack_require__(120),
+    shortOut = __webpack_require__(177);
 
 /**
  * Sets the `toString` method of `func` to return `string`.
@@ -8321,7 +8359,7 @@ module.exports = setToString;
 
 
 /***/ },
-/* 176 */
+/* 177 */
 /***/ function(module, exports) {
 
 /** Used to detect hot functions by number of calls within a span of milliseconds. */
@@ -8364,7 +8402,7 @@ module.exports = shortOut;
 
 
 /***/ },
-/* 177 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 var ListCache = __webpack_require__(13);
@@ -8385,7 +8423,7 @@ module.exports = stackClear;
 
 
 /***/ },
-/* 178 */
+/* 179 */
 /***/ function(module, exports) {
 
 /**
@@ -8409,7 +8447,7 @@ module.exports = stackDelete;
 
 
 /***/ },
-/* 179 */
+/* 180 */
 /***/ function(module, exports) {
 
 /**
@@ -8429,7 +8467,7 @@ module.exports = stackGet;
 
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports) {
 
 /**
@@ -8449,7 +8487,7 @@ module.exports = stackHas;
 
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 var ListCache = __webpack_require__(13),
@@ -8489,10 +8527,10 @@ module.exports = stackSet;
 
 
 /***/ },
-/* 182 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
-var memoizeCapped = __webpack_require__(166);
+var memoizeCapped = __webpack_require__(167);
 
 /** Used to match property names within property paths. */
 var reLeadingDot = /^\./,
@@ -8523,10 +8561,10 @@ module.exports = stringToPath;
 
 
 /***/ },
-/* 183 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseClone = __webpack_require__(99);
+var baseClone = __webpack_require__(100);
 
 /** Used to compose bitmasks for cloning. */
 var CLONE_DEEP_FLAG = 1,
@@ -8558,7 +8596,7 @@ module.exports = cloneDeep;
 
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports) {
 
 /**
@@ -8590,11 +8628,11 @@ module.exports = constant;
 
 
 /***/ },
-/* 185 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 var arrayFilter = __webpack_require__(54),
-    baseFilter = __webpack_require__(101),
+    baseFilter = __webpack_require__(102),
     baseIteratee = __webpack_require__(63),
     isArray = __webpack_require__(0);
 
@@ -8644,12 +8682,12 @@ module.exports = filter;
 
 
 /***/ },
-/* 186 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 var arrayEach = __webpack_require__(53),
     baseEach = __webpack_require__(29),
-    castFunction = __webpack_require__(126),
+    castFunction = __webpack_require__(127),
     isArray = __webpack_require__(0);
 
 /**
@@ -8691,7 +8729,7 @@ module.exports = forEach;
 
 
 /***/ },
-/* 187 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseGet = __webpack_require__(61);
@@ -8730,11 +8768,11 @@ module.exports = get;
 
 
 /***/ },
-/* 188 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseHasIn = __webpack_require__(103),
-    hasPath = __webpack_require__(145);
+var baseHasIn = __webpack_require__(104),
+    hasPath = __webpack_require__(146);
 
 /**
  * Checks if `path` is a direct or inherited property of `object`.
@@ -8770,7 +8808,7 @@ module.exports = hasIn;
 
 
 /***/ },
-/* 189 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 var isArrayLike = __webpack_require__(9),
@@ -8809,7 +8847,7 @@ module.exports = isArrayLikeObject;
 
 
 /***/ },
-/* 190 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(5),
@@ -8844,7 +8882,7 @@ module.exports = isBoolean;
 
 
 /***/ },
-/* 191 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseIsEqual = __webpack_require__(30);
@@ -8885,10 +8923,10 @@ module.exports = isEqual;
 
 
 /***/ },
-/* 192 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(200);
+var toInteger = __webpack_require__(201);
 
 /**
  * Checks if `value` is an integer.
@@ -8924,7 +8962,7 @@ module.exports = isInteger;
 
 
 /***/ },
-/* 193 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(5),
@@ -8960,12 +8998,12 @@ module.exports = isString;
 
 
 /***/ },
-/* 194 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 var arrayMap = __webpack_require__(15),
     baseIteratee = __webpack_require__(63),
-    baseMap = __webpack_require__(111),
+    baseMap = __webpack_require__(112),
     isArray = __webpack_require__(0);
 
 /**
@@ -9019,7 +9057,7 @@ module.exports = map;
 
 
 /***/ },
-/* 195 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 var MapCache = __webpack_require__(27);
@@ -9098,11 +9136,11 @@ module.exports = memoize;
 
 
 /***/ },
-/* 196 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseMerge = __webpack_require__(114),
-    createAssigner = __webpack_require__(135);
+var baseMerge = __webpack_require__(115),
+    createAssigner = __webpack_require__(136);
 
 /**
  * This method is like `_.assign` except that it recursively merges own and
@@ -9143,11 +9181,11 @@ module.exports = merge;
 
 
 /***/ },
-/* 197 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseProperty = __webpack_require__(116),
-    basePropertyDeep = __webpack_require__(117),
+var baseProperty = __webpack_require__(117),
+    basePropertyDeep = __webpack_require__(118),
     isKey = __webpack_require__(36),
     toKey = __webpack_require__(19);
 
@@ -9181,7 +9219,7 @@ module.exports = property;
 
 
 /***/ },
-/* 198 */
+/* 199 */
 /***/ function(module, exports) {
 
 /**
@@ -9205,10 +9243,10 @@ module.exports = stubFalse;
 
 
 /***/ },
-/* 199 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
-var toNumber = __webpack_require__(201);
+var toNumber = __webpack_require__(202);
 
 /** Used as references for various `Number` constants. */
 var INFINITY = 1 / 0,
@@ -9253,10 +9291,10 @@ module.exports = toFinite;
 
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
-var toFinite = __webpack_require__(199);
+var toFinite = __webpack_require__(200);
 
 /**
  * Converts `value` to an integer.
@@ -9295,7 +9333,7 @@ module.exports = toInteger;
 
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(1),
@@ -9367,10 +9405,10 @@ module.exports = toNumber;
 
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
-var createToPairs = __webpack_require__(138),
+var createToPairs = __webpack_require__(139),
     keys = __webpack_require__(8);
 
 /**
@@ -9403,7 +9441,7 @@ module.exports = toPairs;
 
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 var copyObject = __webpack_require__(11),
@@ -9441,7 +9479,7 @@ module.exports = toPlainObject;
 
 
 /***/ },
-/* 204 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 var toString = __webpack_require__(81);
@@ -9475,10 +9513,10 @@ module.exports = uniqueId;
 
 
 /***/ },
-/* 205 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
-var baseValues = __webpack_require__(124),
+var baseValues = __webpack_require__(125),
     keys = __webpack_require__(8);
 
 /**
@@ -9513,85 +9551,6 @@ function values(object) {
 
 module.exports = values;
 
-
-/***/ },
-/* 206 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process, setImmediate) {
-
-var callable, byObserver;
-
-callable = function (fn) {
-	if (typeof fn !== 'function') throw new TypeError(fn + " is not a function");
-	return fn;
-};
-
-byObserver = function (Observer) {
-	var node = document.createTextNode(''), queue, currentQueue, i = 0;
-	new Observer(function () {
-		var callback;
-		if (!queue) {
-			if (!currentQueue) return;
-			queue = currentQueue;
-		} else if (currentQueue) {
-			queue = currentQueue.concat(queue);
-		}
-		currentQueue = queue;
-		queue = null;
-		if (typeof currentQueue === 'function') {
-			callback = currentQueue;
-			currentQueue = null;
-			callback();
-			return;
-		}
-		node.data = (i = ++i % 2); // Invoke other batch, to handle leftover callbacks in case of crash
-		while (currentQueue) {
-			callback = currentQueue.shift();
-			if (!currentQueue.length) currentQueue = null;
-			callback();
-		}
-	}).observe(node, { characterData: true });
-	return function (fn) {
-		callable(fn);
-		if (queue) {
-			if (typeof queue === 'function') queue = [queue, fn];
-			else queue.push(fn);
-			return;
-		}
-		queue = fn;
-		node.data = (i = ++i % 2);
-	};
-};
-
-module.exports = (function () {
-	// Node.js
-	if ((typeof process === 'object') && process && (typeof process.nextTick === 'function')) {
-		return process.nextTick;
-	}
-
-	// MutationObserver
-	if ((typeof document === 'object') && document) {
-		if (typeof MutationObserver === 'function') return byObserver(MutationObserver);
-		if (typeof WebKitMutationObserver === 'function') return byObserver(WebKitMutationObserver);
-	}
-
-	// W3C Draft
-	// http://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html
-	if (typeof setImmediate === 'function') {
-		return function (cb) { setImmediate(callable(cb)); };
-	}
-
-	// Wide available standard
-	if ((typeof setTimeout === 'function') || (typeof setTimeout === 'object')) {
-		return function (cb) { setTimeout(callable(cb), 0); };
-	}
-
-	return null;
-}());
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(82), __webpack_require__(212).setImmediate))
 
 /***/ },
 /* 207 */
@@ -10474,878 +10433,6 @@ exports.clearImmediate = clearImmediate;
 /* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {/*
- Yaku v0.17.4
- (c) 2015 Yad Smood. http://ysmood.org
- License MIT
-*/
-(function () {
-    "use strict";
-
-    var $undefined
-    , $null = null
-    , root = typeof window === "object" ? window : global
-    , isLongStackTrace = false
-    , process = root.process
-    , Arr = Array
-    , Err = Error
-
-    , $rejected = 0
-    , $resolved = 1
-    , $pending = 2
-
-    , $Symbol = "Symbol"
-    , $iterator = "iterator"
-    , $species = "species"
-    , $speciesKey = $Symbol + "(" + $species + ")"
-    , $return = "return"
-
-    , $unhandled = "_uh"
-    , $promiseTrace = "_pt"
-    , $settlerTrace = "_st"
-
-    , $invalidThis = "Invalid this"
-    , $invalidArgument = "Invalid argument"
-    , $fromPrevious = "\nFrom previous "
-    , $promiseCircularChain = "Chaining cycle detected for promise"
-    , $unhandledRejectionMsg = "Uncaught (in promise)"
-    , $rejectionHandled = "rejectionHandled"
-    , $unhandledRejection = "unhandledRejection"
-
-    , $tryCatchFn
-    , $tryCatchThis
-    , $tryErr = { e: $null }
-    , $noop = function () {}
-    , $cleanStackReg = /^.+\/node_modules\/yaku\/.+\n?/mg
-    ;
-
-    /**
-     * This class follows the [Promises/A+](https://promisesaplus.com) and
-     * [ES6](http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects) spec
-     * with some extra helpers.
-     * @param  {Function} executor Function object with two arguments resolve, reject.
-     * The first argument fulfills the promise, the second argument rejects it.
-     * We can call these functions, once our operation is completed.
-     */
-    var Yaku = module.exports = function Promise (executor) {
-        var self = this,
-            err;
-
-        // "this._s" is the internal state of: pending, resolved or rejected
-        // "this._v" is the internal value
-
-        if (!isObject(self) || self._s !== $undefined)
-            throw genTypeError($invalidThis);
-
-        self._s = $pending;
-
-        if (isLongStackTrace) self[$promiseTrace] = genTraceInfo();
-
-        if (executor !== $noop) {
-            if (!isFunction(executor))
-                throw genTypeError($invalidArgument);
-
-            err = genTryCatcher(executor)(
-                genSettler(self, $resolved),
-                genSettler(self, $rejected)
-            );
-
-            if (err === $tryErr)
-                settlePromise(self, $rejected, err.e);
-        }
-    };
-
-    Yaku["default"] = Yaku;
-
-    extendPrototype(Yaku, {
-        /**
-         * Appends fulfillment and rejection handlers to the promise,
-         * and returns a new promise resolving to the return value of the called handler.
-         * @param  {Function} onFulfilled Optional. Called when the Promise is resolved.
-         * @param  {Function} onRejected  Optional. Called when the Promise is rejected.
-         * @return {Yaku} It will return a new Yaku which will resolve or reject after
-         * @example
-         * the current Promise.
-         * ```js
-         * var Promise = require('yaku');
-         * var p = Promise.resolve(10);
-         *
-         * p.then((v) => {
-         *     console.log(v);
-         * });
-         * ```
-         */
-        then: function then (onFulfilled, onRejected) {
-            if (this._s === undefined) throw genTypeError();
-
-            return addHandler(
-                this,
-                newCapablePromise(Yaku.speciesConstructor(this, Yaku)),
-                onFulfilled,
-                onRejected
-            );
-        },
-
-        /**
-         * The `catch()` method returns a Promise and deals with rejected cases only.
-         * It behaves the same as calling `Promise.prototype.then(undefined, onRejected)`.
-         * @param  {Function} onRejected A Function called when the Promise is rejected.
-         * This function has one argument, the rejection reason.
-         * @return {Yaku} A Promise that deals with rejected cases only.
-         * @example
-         * ```js
-         * var Promise = require('yaku');
-         * var p = Promise.reject(new Error("ERR"));
-         *
-         * p['catch']((v) => {
-         *     console.log(v);
-         * });
-         * ```
-         */
-        "catch": function (onRejected) {
-            return this.then($undefined, onRejected);
-        },
-
-        /**
-         * Register a callback to be invoked when a promise is settled (either fulfilled or rejected).
-         * Similar with the try-catch-finally, it's often used for cleanup.
-         * @param  {Function} onFinally A Function called when the Promise is settled.
-         * It will not receive any argument.
-         * @return {Yaku} A Promise that will reject if onFinally throws an error or returns a rejected promise.
-         * Else it will resolve previous promise's final state (either fulfilled or rejected).
-         * @example
-         * ```js
-         * var Promise = require('yaku');
-         * var p = Promise.reject(new Error("ERR"));
-         *
-         * p['catch']((v) => {
-         *     console.log(v);
-         * });
-         * ```
-         */
-        "finally": function (onFinally) {
-            function eventually (value) {
-                return Yaku.resolve(onFinally()).then(function () {
-                    return value;
-                });
-            }
-
-            return this.then(eventually, eventually);
-        },
-
-        // The number of current promises that attach to this Yaku instance.
-        _pCount: 0,
-
-        // The parent Yaku.
-        _pre: $null,
-
-        // A unique type flag, it helps different versions of Yaku know each other.
-        _Yaku: 1
-    });
-
-    /**
-     * The `Promise.resolve(value)` method returns a Promise object that is resolved with the given value.
-     * If the value is a thenable (i.e. has a then method), the returned promise will "follow" that thenable,
-     * adopting its eventual state; otherwise the returned promise will be fulfilled with the value.
-     * @param  {Any} value Argument to be resolved by this Promise.
-     * Can also be a Promise or a thenable to resolve.
-     * @return {Yaku}
-     * @example
-     * ```js
-     * var Promise = require('yaku');
-     * var p = Promise.resolve(10);
-     * ```
-     */
-    Yaku.resolve = function resolve (val) {
-        return isYaku(val) ? val : settleWithX(newCapablePromise(this), val);
-    };
-
-    /**
-     * The `Promise.reject(reason)` method returns a Promise object that is rejected with the given reason.
-     * @param  {Any} reason Reason why this Promise rejected.
-     * @return {Yaku}
-     * @example
-     * ```js
-     * var Promise = require('yaku');
-     * var p = Promise.reject(new Error("ERR"));
-     * ```
-     */
-    Yaku.reject = function reject (reason) {
-        return settlePromise(newCapablePromise(this), $rejected, reason);
-    };
-
-    /**
-     * The `Promise.race(iterable)` method returns a promise that resolves or rejects
-     * as soon as one of the promises in the iterable resolves or rejects,
-     * with the value or reason from that promise.
-     * @param  {iterable} iterable An iterable object, such as an Array.
-     * @return {Yaku} The race function returns a Promise that is settled
-     * the same way as the first passed promise to settle.
-     * It resolves or rejects, whichever happens first.
-     * @example
-     * ```js
-     * var Promise = require('yaku');
-     * Promise.race([
-     *     123,
-     *     Promise.resolve(0)
-     * ])
-     * .then((value) => {
-     *     console.log(value); // => 123
-     * });
-     * ```
-     */
-    Yaku.race = function race (iterable) {
-        var self = this
-        , p = newCapablePromise(self)
-
-        , resolve = function (val) {
-            settlePromise(p, $resolved, val);
-        }
-
-        , reject = function (val) {
-            settlePromise(p, $rejected, val);
-        }
-
-        , ret = genTryCatcher(each)(iterable, function (v) {
-            self.resolve(v).then(resolve, reject);
-        });
-
-        if (ret === $tryErr) return self.reject(ret.e);
-
-        return p;
-    };
-
-    /**
-     * The `Promise.all(iterable)` method returns a promise that resolves when
-     * all of the promises in the iterable argument have resolved.
-     *
-     * The result is passed as an array of values from all the promises.
-     * If something passed in the iterable array is not a promise,
-     * it's converted to one by Promise.resolve. If any of the passed in promises rejects,
-     * the all Promise immediately rejects with the value of the promise that rejected,
-     * discarding all the other promises whether or not they have resolved.
-     * @param  {iterable} iterable An iterable object, such as an Array.
-     * @return {Yaku}
-     * @example
-     * ```js
-     * var Promise = require('yaku');
-     * Promise.all([
-     *     123,
-     *     Promise.resolve(0)
-     * ])
-     * .then((values) => {
-     *     console.log(values); // => [123, 0]
-     * });
-     * ```
-     * @example
-     * Use with iterable.
-     * ```js
-     * var Promise = require('yaku');
-     * Promise.all((function * () {
-     *     yield 10;
-     *     yield new Promise(function (r) { setTimeout(r, 1000, "OK") });
-     * })())
-     * .then((values) => {
-     *     console.log(values); // => [123, 0]
-     * });
-     * ```
-     */
-    Yaku.all = function all (iterable) {
-        var self = this
-        , p1 = newCapablePromise(self)
-        , res = []
-        , ret
-        ;
-
-        function reject (reason) {
-            settlePromise(p1, $rejected, reason);
-        }
-
-        ret = genTryCatcher(each)(iterable, function (item, i) {
-            self.resolve(item).then(function (value) {
-                res[i] = value;
-                if (!--ret) settlePromise(p1, $resolved, res);
-            }, reject);
-        });
-
-        if (ret === $tryErr) return self.reject(ret.e);
-
-        if (!ret) settlePromise(p1, $resolved, []);
-
-        return p1;
-    };
-
-    /**
-     * The ES6 Symbol object that Yaku should use, by default it will use the
-     * global one.
-     * @type {Object}
-     * @example
-     * ```js
-     * var core = require("core-js/library");
-     * var Promise = require("yaku");
-     * Promise.Symbol = core.Symbol;
-     * ```
-     */
-    Yaku.Symbol = root[$Symbol] || {};
-
-    // To support browsers that don't support `Object.defineProperty`.
-    genTryCatcher(function () {
-        Object.defineProperty(Yaku, getSpecies(), {
-            get: function () { return this; }
-        });
-    })();
-
-    /**
-     * Use this api to custom the species behavior.
-     * https://tc39.github.io/ecma262/#sec-speciesconstructor
-     * @param {Any} O The current this object.
-     * @param {Function} defaultConstructor
-     */
-    Yaku.speciesConstructor = function (O, D) {
-        var C = O.constructor;
-
-        return C ? (C[getSpecies()] || D) : D;
-    };
-
-    /**
-     * Catch all possibly unhandled rejections. If you want to use specific
-     * format to display the error stack, overwrite it.
-     * If it is set, auto `console.error` unhandled rejection will be disabled.
-     * @param {Any} reason The rejection reason.
-     * @param {Yaku} p The promise that was rejected.
-     * @example
-     * ```js
-     * var Promise = require('yaku');
-     * Promise.unhandledRejection = (reason) => {
-     *     console.error(reason);
-     * };
-     *
-     * // The console will log an unhandled rejection error message.
-     * Promise.reject('my reason');
-     *
-     * // The below won't log the unhandled rejection error message.
-     * Promise.reject('v').catch(() => {});
-     * ```
-     */
-    Yaku.unhandledRejection = function (reason, p) {
-        try {
-            root.console.error(
-                $unhandledRejectionMsg,
-                isLongStackTrace ? p.longStack : genStackInfo(reason, p)
-            );
-        } catch (e) {} // eslint-disable-line
-    };
-
-    /**
-     * Emitted whenever a Promise was rejected and an error handler was
-     * attached to it (for example with `.catch()`) later than after an event loop turn.
-     * @param {Any} reason The rejection reason.
-     * @param {Yaku} p The promise that was rejected.
-     */
-    Yaku.rejectionHandled = $noop;
-
-    /**
-     * It is used to enable the long stack trace.
-     * Once it is enabled, it can't be reverted.
-     * While it is very helpful in development and testing environments,
-     * it is not recommended to use it in production. It will slow down
-     * application and eat up memory.
-     * It will add an extra property `longStack` to the Error object.
-     * @example
-     * ```js
-     * var Promise = require('yaku');
-     * Promise.enableLongStackTrace();
-     * Promise.reject(new Error("err")).catch((err) => {
-     *     console.log(err.longStack);
-     * });
-     * ```
-     */
-    Yaku.enableLongStackTrace = function () {
-        isLongStackTrace = true;
-    };
-
-    /**
-     * Only Node has `process.nextTick` function. For browser there are
-     * so many ways to polyfill it. Yaku won't do it for you, instead you
-     * can choose what you prefer. For example, this project
-     * [setImmediate](https://github.com/YuzuJS/setImmediate).
-     * By default, Yaku will use `process.nextTick` on Node, `setTimeout` on browser.
-     * @type {Function}
-     * @example
-     * ```js
-     * var Promise = require('yaku');
-     * Promise.nextTick = fn => window.setImmediate(fn);
-     * ```
-     * @example
-     * You can even use sync resolution if you really know what you are doing.
-     * ```js
-     * var Promise = require('yaku');
-     * Promise.nextTick = fn => fn();
-     * ```
-     */
-    Yaku.nextTick = process ?
-        process.nextTick :
-        function (fn) { setTimeout(fn); };
-
-    // ********************** Private **********************
-
-    Yaku._Yaku = 1;
-
-    /**
-     * All static variable name will begin with `$`. Such as `$rejected`.
-     * @private
-     */
-
-    // ******************************* Utils ********************************
-
-    function getSpecies () {
-        return Yaku[$Symbol][$species] || $speciesKey;
-    }
-
-    function extendPrototype (src, target) {
-        for (var k in target) {
-            src.prototype[k] = target[k];
-        }
-        return src;
-    }
-
-    function isObject (obj) {
-        return obj && typeof obj === "object";
-    }
-
-    function isFunction (obj) {
-        return typeof obj === "function";
-    }
-
-    function isInstanceOf (a, b) {
-        return a instanceof b;
-    }
-
-    function isError (obj) {
-        return isInstanceOf(obj, Err);
-    }
-
-    function ensureType (obj, fn, msg) {
-        if (!fn(obj)) throw genTypeError(msg);
-    }
-
-    /**
-     * Wrap a function into a try-catch.
-     * @private
-     * @return {Any | $tryErr}
-     */
-    function tryCatcher () {
-        try {
-            return $tryCatchFn.apply($tryCatchThis, arguments);
-        } catch (e) {
-            $tryErr.e = e;
-            return $tryErr;
-        }
-    }
-
-    /**
-     * Generate a try-catch wrapped function.
-     * @private
-     * @param  {Function} fn
-     * @return {Function}
-     */
-    function genTryCatcher (fn, self) {
-        $tryCatchFn = fn;
-        $tryCatchThis = self;
-        return tryCatcher;
-    }
-
-    /**
-     * Generate a scheduler.
-     * @private
-     * @param  {Integer}  initQueueSize
-     * @param  {Function} fn `(Yaku, Value) ->` The schedule handler.
-     * @return {Function} `(Yaku, Value) ->` The scheduler.
-     */
-    function genScheduler (initQueueSize, fn) {
-        /**
-         * All async promise will be scheduled in
-         * here, so that they can be execute on the next tick.
-         * @private
-         */
-        var fnQueue = Arr(initQueueSize)
-        , fnQueueLen = 0;
-
-        /**
-         * Run all queued functions.
-         * @private
-         */
-        function flush () {
-            var i = 0;
-            while (i < fnQueueLen) {
-                fn(fnQueue[i], fnQueue[i + 1]);
-                fnQueue[i++] = $undefined;
-                fnQueue[i++] = $undefined;
-            }
-
-            fnQueueLen = 0;
-            if (fnQueue.length > initQueueSize) fnQueue.length = initQueueSize;
-        }
-
-        return function (v, arg) {
-            fnQueue[fnQueueLen++] = v;
-            fnQueue[fnQueueLen++] = arg;
-
-            if (fnQueueLen === 2) Yaku.nextTick(flush);
-        };
-    }
-
-    /**
-     * Generate a iterator
-     * @param  {Any} obj
-     * @private
-     * @return {Object || TypeError}
-     */
-    function each (iterable, fn) {
-        var len
-        , i = 0
-        , iter
-        , item
-        , ret
-        ;
-
-        if (!iterable) throw genTypeError($invalidArgument);
-
-        var gen = iterable[Yaku[$Symbol][$iterator]];
-        if (isFunction(gen))
-            iter = gen.call(iterable);
-        else if (isFunction(iterable.next)) {
-            iter = iterable;
-        }
-        else if (isInstanceOf(iterable, Arr)) {
-            len = iterable.length;
-            while (i < len) {
-                fn(iterable[i], i++);
-            }
-            return i;
-        } else
-            throw genTypeError($invalidArgument);
-
-        while (!(item = iter.next()).done) {
-            ret = genTryCatcher(fn)(item.value, i++);
-            if (ret === $tryErr) {
-                isFunction(iter[$return]) && iter[$return]();
-                throw ret.e;
-            }
-        }
-
-        return i;
-    }
-
-    /**
-     * Generate type error object.
-     * @private
-     * @param  {String} msg
-     * @return {TypeError}
-     */
-    function genTypeError (msg) {
-        return new TypeError(msg);
-    }
-
-    function genTraceInfo (noTitle) {
-        return (noTitle ? "" : $fromPrevious) + new Err().stack;
-    }
-
-
-    // *************************** Promise Helpers ****************************
-
-    /**
-     * Resolve the value returned by onFulfilled or onRejected.
-     * @private
-     * @param {Yaku} p1
-     * @param {Yaku} p2
-     */
-    var scheduleHandler = genScheduler(999, function (p1, p2) {
-        var x, handler;
-
-        // 2.2.2
-        // 2.2.3
-        handler = p1._s ? p2._onFulfilled : p2._onRejected;
-
-        // 2.2.7.3
-        // 2.2.7.4
-        if (handler === $undefined) {
-            settlePromise(p2, p1._s, p1._v);
-            return;
-        }
-
-        // 2.2.7.1
-        x = genTryCatcher(callHanler)(handler, p1._v);
-        if (x === $tryErr) {
-            // 2.2.7.2
-            settlePromise(p2, $rejected, x.e);
-            return;
-        }
-
-        settleWithX(p2, x);
-    });
-
-    var scheduleUnhandledRejection = genScheduler(9, function (p) {
-        if (!hashOnRejected(p)) {
-            p[$unhandled] = 1;
-            emitEvent($unhandledRejection, p);
-        }
-    });
-
-    function emitEvent (name, p) {
-        var browserEventName = "on" + name.toLowerCase()
-            , browserHandler = root[browserEventName];
-
-        if (process && process.listeners(name).length)
-            name === $unhandledRejection ?
-                process.emit(name, p._v, p) : process.emit(name, p);
-        else if (browserHandler)
-            browserHandler({ reason: p._v, promise: p });
-        else
-            Yaku[name](p._v, p);
-    }
-
-    function isYaku (val) { return val && val._Yaku; }
-
-    function newCapablePromise (Constructor) {
-        if (isYaku(Constructor)) return new Constructor($noop);
-
-        var p, r, j;
-        p = new Constructor(function (resolve, reject) {
-            if (p) throw genTypeError();
-
-            r = resolve;
-            j = reject;
-        });
-
-        ensureType(r, isFunction);
-        ensureType(j, isFunction);
-
-        return p;
-    }
-
-    /**
-     * It will produce a settlePromise function to user.
-     * Such as the resolve and reject in this `new Yaku (resolve, reject) ->`.
-     * @private
-     * @param  {Yaku} self
-     * @param  {Integer} state The value is one of `$pending`, `$resolved` or `$rejected`.
-     * @return {Function} `(value) -> undefined` A resolve or reject function.
-     */
-    function genSettler (self, state) {
-        return function (value) {
-            if (isLongStackTrace)
-                self[$settlerTrace] = genTraceInfo(true);
-
-            if (state === $resolved)
-                settleWithX(self, value);
-            else
-                settlePromise(self, state, value);
-        };
-    }
-
-    /**
-     * Link the promise1 to the promise2.
-     * @private
-     * @param {Yaku} p1
-     * @param {Yaku} p2
-     * @param {Function} onFulfilled
-     * @param {Function} onRejected
-     */
-    function addHandler (p1, p2, onFulfilled, onRejected) {
-        // 2.2.1
-        if (isFunction(onFulfilled))
-            p2._onFulfilled = onFulfilled;
-        if (isFunction(onRejected)) {
-            if (p1[$unhandled]) emitEvent($rejectionHandled, p1);
-
-            p2._onRejected = onRejected;
-        }
-
-        if (isLongStackTrace) p2._pre = p1;
-        p1[p1._pCount++] = p2;
-
-        // 2.2.6
-        if (p1._s !== $pending)
-            scheduleHandler(p1, p2);
-
-        // 2.2.7
-        return p2;
-    }
-
-    // iterate tree
-    function hashOnRejected (node) {
-        // A node shouldn't be checked twice.
-        if (node._umark)
-            return true;
-        else
-            node._umark = true;
-
-        var i = 0
-        , len = node._pCount
-        , child;
-
-        while (i < len) {
-            child = node[i++];
-            if (child._onRejected || hashOnRejected(child)) return true;
-        }
-    }
-
-    function genStackInfo (reason, p) {
-        var stackInfo = [];
-
-        function push (trace) {
-            return stackInfo.push(trace.replace(/^\s+|\s+$/g, ""));
-        }
-
-        if (isLongStackTrace) {
-            if (p[$settlerTrace])
-                push(p[$settlerTrace]);
-
-            // Hope you guys could understand how the back trace works.
-            // We only have to iterate through the tree from the bottom to root.
-            (function iter (node) {
-                if (node && $promiseTrace in node) {
-                    iter(node._next);
-                    push(node[$promiseTrace] + "");
-                    iter(node._pre);
-                }
-            })(p);
-        }
-
-        return (reason && reason.stack ? reason.stack : reason) +
-            ("\n" + stackInfo.join("\n")).replace($cleanStackReg, "");
-    }
-
-    function callHanler (handler, value) {
-        // 2.2.5
-        return handler(value);
-    }
-
-    /**
-     * Resolve or reject a promise.
-     * @private
-     * @param  {Yaku} p
-     * @param  {Integer} state
-     * @param  {Any} value
-     */
-    function settlePromise (p, state, value) {
-        var i = 0
-        , len = p._pCount;
-
-        // 2.1.2
-        // 2.1.3
-        if (p._s === $pending) {
-            // 2.1.1.1
-            p._s = state;
-            p._v = value;
-
-            if (state === $rejected) {
-                if (isLongStackTrace && isError(value)) {
-                    value.longStack = genStackInfo(value, p);
-                }
-
-                scheduleUnhandledRejection(p);
-            }
-
-            // 2.2.4
-            while (i < len) {
-                scheduleHandler(p, p[i++]);
-            }
-        }
-
-        return p;
-    }
-
-    /**
-     * Resolve or reject promise with value x. The x can also be a thenable.
-     * @private
-     * @param {Yaku} p
-     * @param {Any | Thenable} x A normal value or a thenable.
-     */
-    function settleWithX (p, x) {
-        // 2.3.1
-        if (x === p && x) {
-            settlePromise(p, $rejected, genTypeError($promiseCircularChain));
-            return p;
-        }
-
-        // 2.3.2
-        // 2.3.3
-        if (x !== $null && (isFunction(x) || isObject(x))) {
-            // 2.3.2.1
-            var xthen = genTryCatcher(getThen)(x);
-
-            if (xthen === $tryErr) {
-                // 2.3.3.2
-                settlePromise(p, $rejected, xthen.e);
-                return p;
-            }
-
-            if (isFunction(xthen)) {
-                if (isLongStackTrace && isYaku(x))
-                    p._next = x;
-
-                // Fix https://bugs.chromium.org/p/v8/issues/detail?id=4162
-                if (isYaku(x))
-                    settleXthen(p, x, xthen);
-                else
-                    Yaku.nextTick(function () {
-                        settleXthen(p, x, xthen);
-                    });
-            } else
-                // 2.3.3.4
-                settlePromise(p, $resolved, x);
-        } else
-            // 2.3.4
-            settlePromise(p, $resolved, x);
-
-        return p;
-    }
-
-    /**
-     * Try to get a promise's then method.
-     * @private
-     * @param  {Thenable} x
-     * @return {Function}
-     */
-    function getThen (x) { return x.then; }
-
-    /**
-     * Resolve then with its promise.
-     * @private
-     * @param  {Yaku} p
-     * @param  {Thenable} x
-     * @param  {Function} xthen
-     */
-    function settleXthen (p, x, xthen) {
-        // 2.3.3.3
-        var err = genTryCatcher(xthen, x)(function (y) {
-            // 2.3.3.3.3
-            // 2.3.3.3.1
-            x && (x = $null, settleWithX(p, y));
-        }, function (r) {
-            // 2.3.3.3.3
-            // 2.3.3.3.2
-            x && (x = $null, settlePromise(p, $rejected, r));
-        });
-
-        // 2.3.3.3.4.1
-        if (err === $tryErr && x) {
-            // 2.3.3.3.4.2
-            settlePromise(p, $rejected, err.e);
-            x = $null;
-        }
-    }
-
-})();
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(43)))
-
-/***/ },
-/* 214 */
-/***/ function(module, exports, __webpack_require__) {
-
 "use strict";
 
 
@@ -11356,7 +10443,7 @@ var addDev = function addDev(AloOld) {
 
   var AloDev = function Alo() {
     AloOld.apply(this, arguments);
-    this.util.Promise.enableLongStackTrace();
+    //    this.util.Promise.enableLongStackTrace()
     this.util.Promise.unhandledRejection = catchLongStack;
     this.util.createAlo = function createAlo() {
       var alo = Object.create(AloDev.prototype);
@@ -11373,14 +10460,14 @@ var addDev = function addDev(AloOld) {
 module.exports = addDev;
 
 /***/ },
-/* 215 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var addExtras = function addExtras(Alo) {
-  var extras = __webpack_require__(216);
+  var extras = __webpack_require__(215);
 
   /**
   * Useful functions
@@ -11396,7 +10483,7 @@ var addExtras = function addExtras(Alo) {
 module.exports = addExtras;
 
 /***/ },
-/* 216 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11410,16 +10497,16 @@ var extras = {};
 /**
  * Several included reducer examples
  */
-extras.reducers = __webpack_require__(218);
+extras.reducers = __webpack_require__(217);
 
 /**
  */
-extras.middlewares = __webpack_require__(217);
+extras.middlewares = __webpack_require__(216);
 
 module.exports = extras;
 
 /***/ },
-/* 217 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11470,7 +10557,7 @@ middlewares.createThunk = function createThunk() {
 module.exports = middlewares;
 
 /***/ },
-/* 218 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11503,16 +10590,16 @@ reducers.createUntypedReplace = function () {
 module.exports = reducers;
 
 /***/ },
-/* 219 */,
-/* 220 */
+/* 218 */,
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var Alo = __webpack_require__(25);
-var addExtras = __webpack_require__(215);
-var addDev = __webpack_require__(214);
+var addExtras = __webpack_require__(214);
+var addDev = __webpack_require__(213);
 
 module.exports = addDev(addExtras(Alo));
 

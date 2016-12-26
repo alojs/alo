@@ -43,6 +43,7 @@
   },
   "homepage": "http://www.alojs.com",
   "dependencies": {
+    "bluebird": "^3.4.7",
     "flyd": "^0.2.2",
     "lodash": "^4.17.2",
     "next-tick": "^1.0.0",

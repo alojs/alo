@@ -5,7 +5,7 @@ var addDev = function addDev (AloOld) {
 
   var AloDev = function Alo () {
     AloOld.apply(this, arguments)
-    this.util.Promise.enableLongStackTrace()
+//    this.util.Promise.enableLongStackTrace()
     this.util.Promise.unhandledRejection = catchLongStack
     this.util.createAlo = function createAlo () {
       var alo = Object.create(AloDev.prototype)
