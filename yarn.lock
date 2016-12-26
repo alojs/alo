@@ -1600,7 +1600,7 @@ documentation-loader@^0.1.1-beta:
   dependencies:
     documentation "^4.0.0-beta2"
 
-documentation@^4.0.0-beta16, documentation@^4.0.0-beta2:
+documentation@^4.0.0-beta17, documentation@^4.0.0-beta2:
   version "4.0.0-beta9"
   resolved "https://registry.yarnpkg.com/documentation/-/documentation-4.0.0-beta9.tgz#8221b25286ce9563c7c9bb7710241255ccd2ee79"
   dependencies:
