@@ -47,7 +47,7 @@ module.exports = {
   },
   output: {
     publicPath: '/dist/',
-    library: 'alo',
+    library: 'Alo',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'

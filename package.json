@@ -45,6 +45,7 @@
   "dependencies": {
     "flyd": "^0.2.2",
     "lodash": "^4.17.2",
+    "next-tick": "^1.0.0",
     "polymorphic": "^1.4.0",
     "yaku": "^0.17.4"
   },
