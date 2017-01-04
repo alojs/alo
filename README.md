@@ -7,9 +7,7 @@
 [![npm](https://img.shields.io/npm/v/alo.svg)](https://www.npmjs.com/package/alo)
 [![Bower](https://img.shields.io/bower/v/alo.svg)](https://bower.io/search/?q=alo)
 [![Travis](https://img.shields.io/travis/alojs/alo.svg)](https://travis-ci.org/alojs/alo)
-<!-- currently wrong, because i couldnt find a way to remove the libs from the coverage (and sourcemaps dont work either)
 [![Coveralls](https://img.shields.io/coveralls/alojs/alo.svg)](https://coveralls.io/github/alojs/alo)
--->
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![npm](https://img.shields.io/npm/dm/alo.svg)](https://www.npmjs.com/package/alo)
 [![David](https://img.shields.io/david/alojs/alo.svg)](https://github.com/alojs/alo)
@@ -100,16 +98,16 @@ You can use Alo with NPM or Bower or even straight from a CDN. There are couple 
 
 #### Development (unminified and with devtools) (see <a href="#versions">Versions</a>)
 
-* Core: https://cdn.rawgit.com/alojs/alo/v2.7.1/dist/alo.dev.js
-* Full: https://cdn.rawgit.com/alojs/alo/v2.7.1/dist/alo.full.dev.js
+* Core: https://cdn.rawgit.com/alojs/alo/v2.8.0/dist/alo.dev.js
+* Full: https://cdn.rawgit.com/alojs/alo/v2.8.0/dist/alo.full.dev.js
 
 #### Production (minified)
 
-* Core: https://cdn.rawgit.com/alojs/alo/v2.7.1/dist/alo.min.js
-* Full: https://cdn.rawgit.com/alojs/alo/v2.7.1/dist/alo.full.min.js
+* Core: https://cdn.rawgit.com/alojs/alo/v2.8.0/dist/alo.min.js
+* Full: https://cdn.rawgit.com/alojs/alo/v2.8.0/dist/alo.full.min.js
 
 #### More?
-Please have a look at [RawGit](https://rawgit.com). It allows you to use basically any file from Github repos (and therefore also all the files from https://cdn.rawgit.com/alojs/alo/v2.7.1/dist/)
+Please have a look at [RawGit](https://rawgit.com). It allows you to use basically any file from Github repos (and therefore also all the files from https://cdn.rawgit.com/alojs/alo/v2.8.0/dist/)
 
 ## FAQ
 1. *Is this library ready to use for production?*
