@@ -1297,10 +1297,10 @@ var root = _root,
     stubFalse = stubFalse_1;
 
 /** Detect free variable `exports`. */
-var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
+var freeExports = 'object' == 'object' && exports && !exports.nodeType && exports;
 
 /** Detect free variable `module`. */
-var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
 
 /** Detect the popular CommonJS extension `module.exports`. */
 var moduleExports = freeModule && freeModule.exports === freeExports;
@@ -1472,10 +1472,10 @@ var _nodeUtil = createCommonjsModule(function (module, exports) {
 var freeGlobal = _freeGlobal;
 
 /** Detect free variable `exports`. */
-var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
+var freeExports = 'object' == 'object' && exports && !exports.nodeType && exports;
 
 /** Detect free variable `module`. */
-var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
 
 /** Detect the popular CommonJS extension `module.exports`. */
 var moduleExports = freeModule && freeModule.exports === freeExports;
@@ -1844,10 +1844,10 @@ var _cloneBuffer = createCommonjsModule(function (module, exports) {
 var root = _root;
 
 /** Detect free variable `exports`. */
-var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
+var freeExports = 'object' == 'object' && exports && !exports.nodeType && exports;
 
 /** Detect free variable `module`. */
-var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
 
 /** Detect the popular CommonJS extension `module.exports`. */
 var moduleExports = freeModule && freeModule.exports === freeExports;
@@ -6697,7 +6697,7 @@ var polymorphic_1 = polymorphic;
 
 var yaku = createCommonjsModule(function (module) {
 /*
- Yaku v0.17.4
+ Yaku v0.17.5
  (c) 2015 Yad Smood. http://ysmood.org
  License MIT
 */
@@ -6712,9 +6712,9 @@ var yaku = createCommonjsModule(function (module) {
     , Arr = Array
     , Err = Error
 
-    , $rejected = 0
-    , $resolved = 1
-    , $pending = 2
+    , $rejected = 1
+    , $resolved = 2
+    , $pending = 3
 
     , $Symbol = "Symbol"
     , $iterator = "iterator"
@@ -6748,7 +6748,7 @@ var yaku = createCommonjsModule(function (module) {
      * The first argument fulfills the promise, the second argument rejects it.
      * We can call these functions, once our operation is completed.
      */
-    var Yaku = module.exports = function Promise (executor) {
+    var Yaku = module.exports = function (executor) {
         var self = this,
             err;
 
@@ -6778,7 +6778,7 @@ var yaku = createCommonjsModule(function (module) {
 
     Yaku["default"] = Yaku;
 
-    extendPrototype(Yaku, {
+    extend(Yaku.prototype, {
         /**
          * Appends fulfillment and rejection handlers to the promise,
          * and returns a new promise resolving to the return value of the called handler.
@@ -6796,7 +6796,7 @@ var yaku = createCommonjsModule(function (module) {
          * });
          * ```
          */
-        then: function then (onFulfilled, onRejected) {
+        then: function (onFulfilled, onRejected) {
             if (this._s === undefined) { throw genTypeError(); }
 
             return addHandler(
@@ -6837,10 +6837,9 @@ var yaku = createCommonjsModule(function (module) {
          * @example
          * ```js
          * var Promise = require('yaku');
-         * var p = Promise.reject(new Error("ERR"));
-         *
-         * p['catch']((v) => {
-         *     console.log(v);
+         * var p = Math.random() > 0.5 ? Promise.resolve() : Promise.reject();
+         * p.finally(() => {
+         *     console.log('finally');
          * });
          * ```
          */
@@ -6855,13 +6854,10 @@ var yaku = createCommonjsModule(function (module) {
         },
 
         // The number of current promises that attach to this Yaku instance.
-        _pCount: 0,
+        _c: 0,
 
         // The parent Yaku.
-        _pre: $null,
-
-        // A unique type flag, it helps different versions of Yaku know each other.
-        _Yaku: 1
+        _p: $null
     });
 
     /**
@@ -6877,7 +6873,7 @@ var yaku = createCommonjsModule(function (module) {
      * var p = Promise.resolve(10);
      * ```
      */
-    Yaku.resolve = function resolve (val) {
+    Yaku.resolve = function (val) {
         return isYaku(val) ? val : settleWithX(newCapablePromise(this), val);
     };
 
@@ -6891,7 +6887,7 @@ var yaku = createCommonjsModule(function (module) {
      * var p = Promise.reject(new Error("ERR"));
      * ```
      */
-    Yaku.reject = function reject (reason) {
+    Yaku.reject = function (reason) {
         return settlePromise(newCapablePromise(this), $rejected, reason);
     };
 
@@ -6915,7 +6911,7 @@ var yaku = createCommonjsModule(function (module) {
      * });
      * ```
      */
-    Yaku.race = function race (iterable) {
+    Yaku.race = function (iterable) {
         var self = this
         , p = newCapablePromise(self)
 
@@ -6971,7 +6967,7 @@ var yaku = createCommonjsModule(function (module) {
      * });
      * ```
      */
-    Yaku.all = function all (iterable) {
+    Yaku.all = function (iterable) {
         var self = this
         , p1 = newCapablePromise(self)
         , res = []
@@ -7088,13 +7084,13 @@ var yaku = createCommonjsModule(function (module) {
      * Only Node has `process.nextTick` function. For browser there are
      * so many ways to polyfill it. Yaku won't do it for you, instead you
      * can choose what you prefer. For example, this project
-     * [setImmediate](https://github.com/YuzuJS/setImmediate).
+     * [next-tick](https://github.com/medikoo/next-tick).
      * By default, Yaku will use `process.nextTick` on Node, `setTimeout` on browser.
      * @type {Function}
      * @example
      * ```js
      * var Promise = require('yaku');
-     * Promise.nextTick = fn => window.setImmediate(fn);
+     * Promise.nextTick = require('next-tick');
      * ```
      * @example
      * You can even use sync resolution if you really know what you are doing.
@@ -7109,7 +7105,7 @@ var yaku = createCommonjsModule(function (module) {
 
     // ********************** Private **********************
 
-    Yaku._Yaku = 1;
+    Yaku._s = 1;
 
     /**
      * All static variable name will begin with `$`. Such as `$rejected`.
@@ -7122,11 +7118,10 @@ var yaku = createCommonjsModule(function (module) {
         return Yaku[$Symbol][$species] || $speciesKey;
     }
 
-    function extendPrototype (src, target) {
+    function extend (src, target) {
         for (var k in target) {
-            src.prototype[k] = target[k];
+            src[k] = target[k];
         }
-        return src;
     }
 
     function isObject (obj) {
@@ -7284,7 +7279,7 @@ var yaku = createCommonjsModule(function (module) {
 
         // 2.2.2
         // 2.2.3
-        handler = p1._s ? p2._onFulfilled : p2._onRejected;
+        handler = p1._s !== $rejected ? p2._onFulfilled : p2._onRejected;
 
         // 2.2.7.3
         // 2.2.7.4
@@ -7324,7 +7319,7 @@ var yaku = createCommonjsModule(function (module) {
             { Yaku[name](p._v, p); }
     }
 
-    function isYaku (val) { return val && val._Yaku; }
+    function isYaku (val) { return val && val._s; }
 
     function newCapablePromise (Constructor) {
         if (isYaku(Constructor)) { return new Constructor($noop); }
@@ -7381,8 +7376,8 @@ var yaku = createCommonjsModule(function (module) {
             p2._onRejected = onRejected;
         }
 
-        if (isLongStackTrace) { p2._pre = p1; }
-        p1[p1._pCount++] = p2;
+        if (isLongStackTrace) { p2._p = p1; }
+        p1[p1._c++] = p2;
 
         // 2.2.6
         if (p1._s !== $pending)
@@ -7401,7 +7396,7 @@ var yaku = createCommonjsModule(function (module) {
             { node._umark = true; }
 
         var i = 0
-        , len = node._pCount
+        , len = node._c
         , child;
 
         while (i < len) {
@@ -7427,7 +7422,7 @@ var yaku = createCommonjsModule(function (module) {
                 if (node && $promiseTrace in node) {
                     iter(node._next);
                     push(node[$promiseTrace] + "");
-                    iter(node._pre);
+                    iter(node._p);
                 }
             })(p);
         }
@@ -7450,7 +7445,7 @@ var yaku = createCommonjsModule(function (module) {
      */
     function settlePromise (p, state, value) {
         var i = 0
-        , len = p._pCount;
+        , len = p._c;
 
         // 2.1.2
         // 2.1.3
@@ -7630,6 +7625,8 @@ var index$1 = (function () {
 
 	return null;
 }());
+
+//      
 
 /**
  * Several utility functions / libs used by alo
@@ -9450,6 +9447,8 @@ Middleware.prototype.meddle = function meddle (args) {
   })
 };
 
+//      
+
 var Alo = function Alo (id) {
   /**
    * Access to the util namespace
@@ -9706,4 +9705,3 @@ var AloFullDev = addExtras(AloDev);
 return AloFullDev;
 
 })));
-//# sourceMappingURL=alo.full.dev.js.map

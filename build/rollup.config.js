@@ -9,6 +9,6 @@ export default {
   format: 'umd',
   moduleId: 'alo',
   moduleName: 'Alo',
-  sourceMap: 'true',
+//  sourceMap: 'false',
   plugins: [ flow(), nodeResolve({ jsnext: true, main: true }), commonjs(), buble() ]
 }
