@@ -1,5 +1,7 @@
-var Alo = require('./../lib/alo.js')
-var addExtras = require('./extend/addExtras')
-var addDev = require('./extend/addDev.js')
+import Alo from './../lib/alo.js'
+import addExtras from './extend/addExtras'
+import addDev from './extend/addDev.js'
 
-module.exports = addDev(addExtras(Alo))
+var AloDev = addDev(Alo)
+var AloFullDev = addExtras(AloDev)
+export default AloFullDev

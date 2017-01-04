@@ -1,41 +1,32 @@
-/* global describe, it */
+/* global test */
 
-var Alo = require('../main/alo.full.js')
+var Alo = require('../dist/alo.full.dev.js')
 var alo = new Alo()
 var assert = require('assert')
+import test from 'ava';
 
-describe('Alo', function () {
-  describe('isReducer', function () {
-    it('should return true for reducers', function () {
-      var reducer = alo.createReducer()
-      assert.equal(true, alo.isReducer(reducer))
-    })
-    it('should return false for objects', function () {
-      assert.equal(false, alo.isReducer({}))
-    })
-  })
+test('Alo isReducer should return true for reducers', function () {
+  var reducer = alo.createReducer()
+  assert.equal(true, alo.isReducer(reducer))
+})
+test('Alo isReducer should return false for objects', function () {
+  assert.equal(false, alo.isReducer({}))
+})
 
-  describe('isStore', function () {
-    it('should return true for stores', function () {
-      var store = alo.createStore()
-      assert.equal(true, alo.isStore(store))
-    })
-    it('should return false for objects', function () {
-      assert.equal(false, alo.isStore({}))
-    })
-  })
+test('Alo isStore should return true for stores', function () {
+  var store = alo.createStore()
+  assert.equal(true, alo.isStore(store))
+})
+test('Alo isStore should return false for objects', function () {
+  assert.equal(false, alo.isStore({}))
+})
 
-  describe('createReducer', function () {
-    it('should return a reducer', function () {
-      var reducer = alo.createReducer()
-      assert.equal(true, alo.isReducer(reducer))
-    })
-  })
+test('Alo createReducer should return a reducer', function () {
+  var reducer = alo.createReducer()
+  assert.equal(true, alo.isReducer(reducer))
+})
 
-  describe('createStore', function () {
-    it('should return a store', function () {
-      var store = alo.createStore()
-      assert.equal(true, alo.isStore(store))
-    })
-  })
+test('Alo createStore should return a store', function () {
+  var store = alo.createStore()
+  assert.equal(true, alo.isStore(store))
 })

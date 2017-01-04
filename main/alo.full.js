@@ -1,4 +1,7 @@
-var Alo = require('./../lib/alo.js')
-var addExtras = require('./extend/addExtras.js')
+// @flow
 
-module.exports = addExtras(Alo)
+import Alo from './../lib/alo.js'
+import addExtras from './extend/addExtras.js'
+
+var AloFull = addExtras(Alo)
+export default AloFull
