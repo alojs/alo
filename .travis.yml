@@ -1,5 +1,5 @@
 language: node_js
 node_js:
   - "node"
-script: "npm run-script test-nyc"
-after_script: "npm run-script coverage-nyc"
+script: "npm run-script test"
+# after_script: "npm run-script coverage-nyc"
