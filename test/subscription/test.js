@@ -19,6 +19,21 @@ test('remember should call the subscription with the last data', function () {
   })
 })
 
+test('remember should not fail on subscriptions with dependencies which stores never were dispatched', function () {
+  var store = alo.createStore()
+  var sub = store.createSubscription(function() {
+
+  })
+  var deb = sub.createDependency({})
+  var failed = false
+  try {
+    sub.remember();
+  } catch (e) {
+    failed = true
+  }
+  assert.equal(false, failed)
+})
+
 var store = alo.createStore({test: 'wrong string'}, 'store')
 
 store.createReducer(function (state, action) {

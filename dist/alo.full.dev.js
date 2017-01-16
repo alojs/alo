@@ -6697,7 +6697,7 @@ var polymorphic_1 = polymorphic;
 
 var yaku = createCommonjsModule(function (module) {
 /*
- Yaku v0.17.5
+ Yaku v0.17.8
  (c) 2015 Yad Smood. http://ysmood.org
  License MIT
 */
@@ -7040,7 +7040,7 @@ var yaku = createCommonjsModule(function (module) {
      * Promise.reject('my reason');
      *
      * // The below won't log the unhandled rejection error message.
-     * Promise.reject('v').catch(() => {});
+     * Promise.reject('v')["catch"](() => {});
      * ```
      */
     Yaku.unhandledRejection = function (reason, p) {
@@ -7054,7 +7054,7 @@ var yaku = createCommonjsModule(function (module) {
 
     /**
      * Emitted whenever a Promise was rejected and an error handler was
-     * attached to it (for example with `.catch()`) later than after an event loop turn.
+     * attached to it (for example with `["catch"]()`) later than after an event loop turn.
      * @param {Any} reason The rejection reason.
      * @param {Yaku} p The promise that was rejected.
      */
@@ -7071,7 +7071,7 @@ var yaku = createCommonjsModule(function (module) {
      * ```js
      * var Promise = require('yaku');
      * Promise.enableLongStackTrace();
-     * Promise.reject(new Error("err")).catch((err) => {
+     * Promise.reject(new Error("err"))["catch"]((err) => {
      *     console.log(err.longStack);
      * });
      * ```
@@ -8227,7 +8227,7 @@ Subscription.prototype._callEvent = function (name, state) {
 
 Subscription.prototype._publish = function (state) {
   var self = this;
-  if (self._muted === false) {
+  if (state && self._muted === false) {
     self._muted = true;
     var promise = u.Promise.resolve().then(function () {
       return self._callEvent('beforePublish', state)
