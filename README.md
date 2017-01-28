@@ -1,6 +1,5 @@
 <h1>
-  <img width="100px" src="https://cdn.rawgit.com/alojs/alo/e512ce4ef2fca64120d74942519b4a9cea8959de/logo/logo.png" /> 
-  &nbsp; Welcome to Alo
+  <img width="500px" src="https://cdn.rawgit.com/alojs/alo/e512ce4ef2fca64120d74942519b4a9cea8959de/logo/logo.png" /> 
 </h1>
 
 [![license](https://img.shields.io/github/license/alojs/alo.svg)](https://github.com/alojs/alo/blob/master/LICENSE)
@@ -121,5 +120,5 @@ I am working on it.
 3. *What are your future plans?*
 Trying to add examples, test the software, add more extras, work on the dev-tools. My goal is to ship an as stable as possible 3.0 in the next couple of months (End of Q1(17) / Start of Q2(17))
 
-
-
+## Logo
+The logo was created in association with Nora Rigo, a freelance designer at http://www.designcrowd.com/.

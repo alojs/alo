@@ -5632,6 +5632,9 @@ flyd.stream = function(initialValue) {
   s.end = endStream;
   s.fnArgs = [];
   endStream.listeners.push(s);
+  s.toJSON = function() {
+    return s();
+  };
   if (arguments.length > 0) { s(initialValue); }
   return s;
 };
@@ -5935,7 +5938,7 @@ function boundMap(f) { return flyd.map(f, this); }
  *
  * @name stream.ap
  * @param {stream} stream - the values stream
- * @return {stream} a new stram with the functions applied to values
+ * @return {stream} a new stream with the functions applied to values
  *
  * @example
  * var add = flyd.curryN(2, function(x, y) { return x + y; });
