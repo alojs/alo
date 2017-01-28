@@ -1,5 +1,5 @@
 <h1>
-  <img width="500px" src="https://cdn.rawgit.com/alojs/alo/e512ce4ef2fca64120d74942519b4a9cea8959de/logo/logo.png" /> 
+  <img width="400px" src="https://cdn.rawgit.com/alojs/alo/0eec1f5a9f032865d2bbb0d76d1fd9cfe1c67322/logo/logo.png" />
 </h1>
 
 [![license](https://img.shields.io/github/license/alojs/alo.svg)](https://github.com/alojs/alo/blob/master/LICENSE)
