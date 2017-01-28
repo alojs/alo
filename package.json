@@ -1,7 +1,7 @@
 {
   "name": "alo",
   "version": "2.8.2",
-  "description": "A minimalist approach to javascript state management",
+  "description": "Full-fledged state management",
   "main": "dist/alo.full.js",
   "scripts": {
     "test": "./node_modules/.bin/ava",
