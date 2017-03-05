@@ -65,7 +65,7 @@
     "documentation-loader": "^0.1.1-beta",
     "eslint": "^3.14.1",
     "eslint-plugin-flowtype": "^2.30.0",
-    "flow-bin": "^0.39.0",
+    "flow-bin": "^0.41.0",
     "flow-remove-types": "^1.2.0",
     "flow-typed": "^2.0.0",
     "flow-watch": "^1.1.0",
