@@ -65,7 +65,7 @@
     "documentation-loader": "^0.1.1-beta",
     "eslint": "^3.14.1",
     "eslint-plugin-flowtype": "^2.30.0",
-    "flow-bin": "^0.42.0",
+    "flow-bin": "^0.43.0",
     "flow-remove-types": "^1.2.0",
     "flow-typed": "^2.0.0",
     "flow-watch": "^1.1.0",
@@ -77,7 +77,7 @@
     "rollup-plugin-commonjs": "^8.0.0",
     "rollup-plugin-flow": "^1.1.1",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "standard": "^9.0.2",
+    "standard": "^10.0.0",
     "uglify-js": "^2.7.5"
   },
   "standard": {
