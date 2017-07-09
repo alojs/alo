@@ -112,13 +112,23 @@ Please have a look at [RawGit](https://rawgit.com). It allows you to use basical
 
 ## FAQ
 1. *Is this library ready to use for production?*
-API-wise there are not many open changes planned, however the library is quite young and I don't want to feature freeze the library yet. So if I see a huge optimization potential or get useful feedback I am open for API changes. (But even if that happens I will try to minimize the required changes for users). Then there is also just the chance to find nasty bugs as an early adopter - this chance just can't be eliminated 100%.
+Since 2.8.3 i couldn't find any bugs and it runs stable for me. But also please read 3. of this FAQ!
 
 2. *Where is the documentation?*
 I am working on it.
 
-3. *What are your future plans?*
-Trying to add examples, test the software, add more extras, work on the dev-tools. My goal is to ship an as stable as possible 3.0 in the next couple of months (End of Q1(17) / Start of Q2(17))
+3. *What are the future plans?*
+
+- *Documentation*
+- Documentation of Todo example
+- *More Documentation*
+- Some lib reworks: 2.8.3 was very stable in the latest months, but I saw, that many of the API's aren't used and could be simplified without giving up the features behind them:
+    - Promise code refactoring
+    - Reduce the library size - however the priority is a simple state management
+    - Probably remove flyd streams: they didn't really bring an advantage and just added wheight
+    - Subscription members: in 99% of the cases single functions without the class overhead were enough. For those cases where multible encapsulated functions are required its best to just call the member functions in the parent subscription function. But i am not 100% sure on this ;).
+- 100% Test coverage
+- Dev-tools
 
 ## Logo
 The logo was created in association with Nora Rigo, a freelance designer at http://www.designcrowd.com/.
