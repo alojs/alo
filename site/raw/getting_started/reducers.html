@@ -1,0 +1,43 @@
+<h1 id="reducers"><a href="#reducers" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Reducers</h1>
+<p>Reducers apply actions to store states:</p>
+<p><a href="https://jsfiddle.net/katywings/z2hheeuj/1/" target="_blank">Fiddle</a></p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+<span class="hljs-keyword">var</span> store = alo.createStore(<span class="hljs-number">0</span>, <span class="hljs-string">'number'</span>);
+
+<span class="hljs-comment">// Create a reducer on alo instance level</span>
+<span class="hljs-keyword">var</span> reducerPlus = alo.createReducer(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">state, action</span>) </span>{
+  <span class="hljs-keyword">if</span> (action.type == <span class="hljs-string">'+'</span>) {
+    state += <span class="hljs-number">1</span>;
+  }
+
+  <span class="hljs-keyword">return</span> state;
+});
+<span class="hljs-comment">// Add the reducer to the store</span>
+store.addReducer(reducerPlus);
+
+<span class="hljs-comment">// This creates and adds a new reducer to the store in one step</span>
+<span class="hljs-keyword">var</span> reducerMinus = store.createReducer(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">state, action</span>) </span>{
+  <span class="hljs-keyword">if</span> (action.type == <span class="hljs-string">'-'</span>) {
+    state -= <span class="hljs-number">1</span>;
+  }
+
+  <span class="hljs-keyword">return</span> state;
+});
+
+alo.util.Promise.resolve()
+  .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> store.dispatch({ <span class="hljs-attr">type</span>: <span class="hljs-string">'-'</span> });
+  })
+  .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> store.dispatch({ <span class="hljs-attr">type</span>: <span class="hljs-string">'-'</span> });
+  })
+  .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> store.dispatch({ <span class="hljs-attr">type</span>: <span class="hljs-string">'+'</span> });
+  })
+  .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> store.dispatch({ <span class="hljs-attr">type</span>: <span class="hljs-string">'-'</span> });
+  })
+  .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">console</span>.log(store.getState());
+    <span class="hljs-comment">// -2</span>
+  })</code></pre>
