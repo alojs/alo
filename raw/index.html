@@ -1,0 +1,79 @@
+<div style="display:none;">
+<h1 id="alo"><a href="#alo" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Alo</h1>
+</div>
+<img width="400px" src="https://cdn.rawgit.com/alojs/alo/0eec1f5a9f032865d2bbb0d76d1fd9cfe1c67322/logo/logo.png" />
+<p><a href="https://github.com/alojs/alo/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/alojs/alo.svg" alt="license" class="img-fluid"></a>
+<a href="https://www.npmjs.com/package/alo" target="_blank"><img src="https://img.shields.io/npm/v/alo.svg" alt="npm" class="img-fluid"></a>
+<a href="https://bower.io/search/?q=alo" target="_blank"><img src="https://img.shields.io/bower/v/alo.svg" alt="Bower" class="img-fluid"></a>
+<a href="https://travis-ci.org/alojs/alo" target="_blank"><img src="https://img.shields.io/travis/alojs/alo.svg" alt="Travis" class="img-fluid"></a></p>
+<!-- currently wrong, because i couldn't find a way to remove the libs from the coverage (and sourcemaps don't work either)
+[![Coveralls](https://img.shields.io/coveralls/alojs/alo.svg)](https://coveralls.io/github/alojs/alo)
+-->
+<p><a href="http://standardjs.com/" target="_blank"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" alt="JavaScript Style Guide" class="img-fluid"></a>
+<a href="https://www.npmjs.com/package/alo" target="_blank"><img src="https://img.shields.io/npm/dm/alo.svg" alt="npm" class="img-fluid"></a>
+<a href="https://github.com/alojs/alo" target="_blank"><img src="https://img.shields.io/david/alojs/alo.svg" alt="David" class="img-fluid"></a>
+<a href="https://github.com/alojs/alo" target="_blank"><img src="https://img.shields.io/david/dev/alojs/alo.svg" alt="David" class="img-fluid"></a></p>
+<p>Alo is a state management library, helping you to organize frontend application state in a productive way, giving you ways to handle side effects, and allowing you, to stay in control of whats going on. There are many libraries to manage state: <a href="https://github.com/reactjs/redux" target="_blank">Redux</a>, <a href="https://github.com/mobxjs/mobx" target="_blank">Mobx</a>, <a href="https://github.com/vuejs/vuex" target="_blank">Vuex</a>, and a countless number more. Although I like the ideas behind them, I wasn't quite happy how they introduce many necessary extra steps to get started, require dozens of extra plugins to get you your job done, or introduce new babel build tools, just to write pragmatic code.</p>
+<h2 id="features"><a href="#features" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h2>
+<ul>
+<li>State managed with <a href="https://github.com/paldepind/flyd" target="_blank">flyd</a> streams (therefore being able to access the state stream directly if needed)</li>
+<li>All the features of a basic state management library (stores, dispatch, subscriptions, middleware)</li>
+<li>Computed properties with dependencies on the state (only computed if dependencies change)</li>
+<li>Dependency-handling for subscriptions (allowing to call subscriptions only if specific dependencies change)</li>
+<li>Before and after events for subscriptions</li>
+<li>Flexible object oriented classes for stores, subscriptions, reducers, etc.</li>
+<li>Promise Support based on <a href="https://github.com/ysmood/yaku" target="_blank">yaku</a> for dispatches, dependencies and middleware</li>
+</ul>
+<h2 id="and-how"><a href="#and-how" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>And how?</h2>
+<p>The <a href="http://www.alojs.com/getting_started/first_steps.html" target="_blank">getting started</a> section will provide you with additional information, but here is Alo at first glance:</p>
+<p>(<a href="https://jsfiddle.net/katywings/tr1vexgp/" target="_blank">Fiddle</a>)</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> Alo = <span class="hljs-built_in">require</span>(<span class="hljs-string">'alo'</span>);
+<span class="hljs-comment">// Alo building blocks are always assigned to a specific Alo instance</span>
+<span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+
+<span class="hljs-comment">// Stores hold the state of your app and are the main building block of Alo</span>
+<span class="hljs-keyword">var</span> counterStore = alo.createStore({ <span class="hljs-attr">count</span>: <span class="hljs-number">0</span> }, <span class="hljs-string">'counter'</span>);
+
+<span class="hljs-keyword">var</span> increase = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">amount</span>) </span>{ <span class="hljs-keyword">return</span> { <span class="hljs-attr">type</span>: <span class="hljs-string">'increase'</span>, <span class="hljs-attr">payload</span>: amount || <span class="hljs-number">1</span> }}
+
+<span class="hljs-comment">// Reducers define how actions are applied to the state</span>
+<span class="hljs-keyword">var</span> reducer = counterStore.createReducer(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">state, action</span>) </span>{
+  <span class="hljs-keyword">if</span> (action.type === <span class="hljs-string">"increase"</span>) {
+      state.count += action.payload;
+  }
+
+  <span class="hljs-keyword">return</span> state
+});
+
+<span class="hljs-comment">// Subscribe to state changes</span>
+<span class="hljs-keyword">var</span> subscription = counterStore.subscribe(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">stores</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'count'</span>, stores.counter.state.count);
+});
+
+<span class="hljs-comment">// Apply the increase action to the store, you always will get a promise from this</span>
+<span class="hljs-keyword">var</span> promise = counterStore.dispatch(increase(<span class="hljs-number">3</span>));
+
+<span class="hljs-comment">// -> count 0</span>
+<span class="hljs-comment">// -> count 3</span></code></pre>
+<h2 id="roadmap"><a href="#roadmap" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Roadmap</h2>
+<ul>
+<li>Documentation of Todo example</li>
+<li>Writing a changelog</li>
+<li>Extending the documentation</li>
+<li>Promise code refactoring</li>
+<li>Where possible, reduce the library size</li>
+</ul>
+<h3 id="long-term"><a href="#long-term" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Long-term</h3>
+<p>Subject to change and open for discussion!</p>
+<ul>
+<li>100% Test coverage</li>
+<li>Dev-tools</li>
+<li>Remove utility dependencies</li>
+<li>Remove flyd streams: they didn't really bring an advantage and just added weight</li>
+<li>Remove subscription members: like with the flyd integration, my experience with them was, that they don't provide a lot of advantages</li>
+<li>Reducers just as functions</li>
+<li>Probably for 4.0: Subscriptions should not be called on addStore / removeStore - one can manually call remember if such behaviour is needed</li>
+<li>Probably for 4.0: Remove polymorphism, extend API with separate functions</li>
+</ul>
+<h2 id="logo"><a href="#logo" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Logo</h2>
+<p>The logo was created in association with Nora Rigo, a freelance designer at <a href="http://www.designcrowd.com/" target="_blank">http://www.designcrowd.com/</a>.</p>

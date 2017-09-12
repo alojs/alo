@@ -1,0 +1,54 @@
+<h1 id="first-steps"><a href="#first-steps" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>First steps</h1>
+<p>Alo is very similar to the <a href="https://medium.com/hacking-and-gonzo/flux-vs-mvc-design-patterns-57b28c0f71b7" target="_blank">flux pattern</a>.</p>
+<p>The main building blocks are:</p>
+<ul>
+<li>Stores: Are boxes of data, this data can be anything - from booleans to objects</li>
+<li>Reducers: They describe how an action should be synchronously applied to data</li>
+<li>Dependencies: Computations which are derived from data</li>
+<li>Subscriptions: Are reactions after the data in one or multiple stores has changed</li>
+<li>Middlewares: They can change an action - (even asynchronously), before it will be redirected to reducers</li>
+</ul>
+<p>Except a more object oriented approach, there is one <em>essential difference</em> compared implementations like <a href="http://redux.js.org/" target="_blank">Redux</a>: Alo doesn't try to enforce the use of only one central store for your data, therefore subscriptions can be attached to multible stores. That is, you still can use it with a single store model if you want.</p>
+<p>Alo's primary goal is not performance, but to minimize data mutation bugs. Therefore reducers will always get a clone and not the reference of the dispatched action and payload.</p>
+<p>The data flow is as follow:
+<code>dispatch on store -> middlewares -> reducers -> subscriptions</code></p>
+<h2 id="relations"><a href="#relations" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Relations</h2>
+<p>Thanks to the object oriented nature, the API consists of many helper functions. As an example stores and subscriptions are related <a href="https://stackoverflow.com/questions/3397349/meaning-of-nm-and-1n-in-database-design#3397384" target="_blank">m:n</a>:</p>
+<p>(<a href="https://jsfiddle.net/katywings/oogL9bnr/1/" target="_blank">Fiddle</a>)</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> makeLogState = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">storeName</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">stores</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(stores[storeName].state);
+  };
+};
+
+<span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+<span class="hljs-keyword">var</span> store = alo.createStore(<span class="hljs-string">'initial state'</span>, <span class="hljs-string">'store1'</span>);
+<span class="hljs-keyword">var</span> logStateStore1 = makeLogState(<span class="hljs-string">'store1'</span>);
+<span class="hljs-keyword">var</span> subscription = store.subscribe(logStateStore1);
+store.removeSubscription(subscription);
+<span class="hljs-keyword">var</span> subscription2 = alo.createSubscription(logStateStore1);
+subscription2.addStore(store);
+
+<span class="hljs-keyword">var</span> store2 = alo.createStore(<span class="hljs-literal">true</span>, <span class="hljs-string">'store2'</span>);
+<span class="hljs-keyword">var</span> logStateStore2 = makeLogState(<span class="hljs-string">'store2'</span>);
+<span class="hljs-keyword">var</span> subscription3 = alo.createSubscription(logStateStore2);
+store2.addSubscription(subscription3);</code></pre>
+<h2 id="alo-instances"><a href="#alo-instances" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Alo instances</h2>
+<p>As Alo follows a relational model, its building blocks are related to each other but they are also related to a Alo instance!</p>
+<pre><code class="hljs language-js"><span class="hljs-comment">// A single Alo instance</span>
+<span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+<span class="hljs-comment">// This store is related to the alo instance above</span>
+<span class="hljs-keyword">var</span> store = alo.createStore(<span class="hljs-string">'state'</span>, <span class="hljs-string">'storeName'</span>);</code></pre>
+<p><strong>This implementation detail was added, so that <a href="https://github.com/alojs/alo/issues/9" target="_blank">debugging and tooling</a> of your apps can be achieved at a later moment - currently the alo instances are just here because they are here.</strong></p>
+<p>If you are creating an app with Alo you should create the Alo instance at one place and use <a href="https://youtu.be/6YBV1cKRqzU" target="_blank">dependency injection</a>, to enable its use in multible parts of your software:</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> createAppStore = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">alo</span>) </span>{
+  <span class="hljs-keyword">return</span> alo.createStore({}, <span class="hljs-string">'app'</span>);
+}
+<span class="hljs-keyword">var</span> App = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+  <span class="hljs-keyword">var</span> appStore = createAppStore(alo);
+}</code></pre>
+<h3 id="when-to-use-multible-instances"><a href="#when-to-use-multible-instances" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>When to use multible instances</h3>
+<p><a href="https://github.com/alojs/alo/issues/9" target="_blank">Debugging and tooling</a> will be per instance, therefore if you are developing an "App in app" solution you could create an instance per App. Use multible Alo instances when you want to completely separate specific components for debugging.</p>
+<h2 id="utilities"><a href="#utilities" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Utilities</h2>
+<p>In the example code you probably will find many uses of the <code>alo.util</code> property. Use these with precaution! There are plans to remove many of them in a future major release.</p>

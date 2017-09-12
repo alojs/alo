@@ -1,0 +1,43 @@
+<h1 id="subscriptions"><a href="#subscriptions" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Subscriptions</h1>
+<p>Subscriptions get called each time the state on a related store changes. Therefore when a dispatched action doesn't lead to a state change via reducer, that dispatch will not lead to a subscription call either.</p>
+<p><strong>When a subscription gets related to a new store it will be called!</strong></p>
+<p><a href="https://jsfiddle.net/katywings/75fjhrbp/3/" target="_blank">Fiddle</a></p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+<span class="hljs-keyword">var</span> store = alo.createStore({<span class="hljs-attr">n</span>: <span class="hljs-number">1</span>}, <span class="hljs-string">'number'</span>);
+<span class="hljs-comment">// This is a nice reducer for prototyping which just replaces store state with the whole dispatched action</span>
+store.addReducer(alo.extras.reducers.createUntypedReplace());
+
+<span class="hljs-comment">// Creating a subscription over the alo instance</span>
+<span class="hljs-keyword">var</span> subscription1 = alo.createSubscription(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">stores</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'stores'</span>, stores);
+})
+store.addSubscription(subscription1);
+
+<span class="hljs-comment">// Creating a subscription directly on a store</span>
+<span class="hljs-keyword">var</span> subscription2 = store.subscribe(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">stores</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'hello from subscription 2'</span>);
+});
+<span class="hljs-comment">// or even store.createSubscription(fun...)</span>
+
+<span class="hljs-comment">// Ways of removing a subscription:</span>
+<span class="hljs-comment">// 1. Remove all related stores</span>
+subscription2.removeStore();
+<span class="hljs-comment">// 2. Remove a specific store</span>
+subscription2.removeStore(store);
+<span class="hljs-comment">// 3. Remove a subscription from a store (does the same as 2.)</span>
+store.removeSubscription(subscription2);
+
+store.dispatch({<span class="hljs-attr">n</span>: <span class="hljs-number">2</span>});</code></pre>
+<p>The parameters of the subscription function are:</p>
+<ol>
+<li>Stores: Object with every related store (by store name)</li>
+</ol>
+<ul>
+<li>stores.storeName.state: State of the store</li>
+<li>stores.storeName.computed: Computed properties of the store</li>
+</ul>
+<ol start="2">
+<li>Computed properties: Object with computed properties of this subscription</li>
+</ol>
+<h2 id="computed-properties"><a href="#computed-properties" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Computed properties</h2>
+<p>Subscriptions can have own computed properties like <a href="http://www.alojs.com/getting_started/stores.html#computed-properties%5D" target="_blank">stores</a>! But keep in mind: <strong>As soon as a subscription has its own computed properties, they will be used for the lazy subscription-call comparison and not the related stores of the subscription!</strong></p>
