@@ -63,7 +63,7 @@
     "coveralls": "^2.11.15",
     "eslint": "^4.1.0",
     "eslint-plugin-flowtype": "^2.30.0",
-    "flow-bin": "^0.54.1",
+    "flow-bin": "^0.75.0",
     "flow-remove-types": "^1.2.0",
     "flow-typed": "^2.0.0",
     "flow-watch": "^1.1.0",
