@@ -1,4 +1,8 @@
-.nyc_output
 node_modules
-.tern-port
-npm-debug.log
+tmp/*
+!tmp/.gitkeep
+coverage
+!coverage/.gitkeep
+.vscode
+dist/*
+!dist/.gitkeep

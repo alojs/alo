@@ -1,0 +1,4 @@
+{
+  fileName: '.',
+  exclude: <%= JSON.stringify(!input.isNode) %>
+}

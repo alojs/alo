@@ -1,0 +1,261 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>some-pkg</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="./app.min.css?v=0.0.3">
+    <script src="./app.min.js?v=0.0.3"></script>
+    <link class="favicon" rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';">-->
+  </head>
+  <body>
+    <div id="app">
+      <main>
+        <img src="https://raw.github.com/witneyjs/witney/master/static/readme/logo.png" alt="logo"/>
+<hr>
+<p>Witney is a template for javascript/typescript front- and backend projects with multiple entry points.</p>
+<h1 id="some-pkg-·-a-hrefhttpsopensourceorglicensesmitimg-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge0svgsanitizetrue-altlicensea-a-hrefhttpswwwnpmjscompackagesome-pkgimg-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge1svgsanitizetrue-altnpma-img-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge2svgsanitizetrue-alttests-img-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge3svgsanitizetrue-altcoverage-a-hrefhttpsprettierioimg-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge4svgsanitizetrue-altcode-stylea-img-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge5svgsanitizetrue-altprs"><a href="#some-pkg-%C2%B7-a-hrefhttpsopensourceorglicensesmitimg-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge0svgsanitizetrue-altlicensea-a-hrefhttpswwwnpmjscompackagesome-pkgimg-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge1svgsanitizetrue-altnpma-img-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge2svgsanitizetrue-alttests-img-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge3svgsanitizetrue-altcoverage-a-hrefhttpsprettierioimg-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge4svgsanitizetrue-altcode-stylea-img-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge5svgsanitizetrue-altprs" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/witneyjs/witney" target="_blank">some-pkg</a> · <a href="https://opensource.org/licenses/MIT"><img src="https://raw.github.com/witneyjs/witney/master/static/readme/gen-badges/badge.0.svg?sanitize=true" alt="license"></a> <a href="https://www.npmjs.com/package/some-pkg"><img src="https://raw.github.com/witneyjs/witney/master/static/readme/gen-badges/badge.1.svg?sanitize=true" alt="npm"></a> <img src="https://raw.github.com/witneyjs/witney/master/static/readme/gen-badges/badge.2.svg?sanitize=true" alt="Tests"> <img src="https://raw.github.com/witneyjs/witney/master/static/readme/gen-badges/badge.3.svg?sanitize=true" alt="coverage"> <a href="https://prettier.io/"><img src="https://raw.github.com/witneyjs/witney/master/static/readme/gen-badges/badge.4.svg?sanitize=true" alt="code style"></a> <img src="https://raw.github.com/witneyjs/witney/master/static/readme/gen-badges/badge.5.svg?sanitize=true" alt="PRs"></h1>
+<p>Some project description</p>
+<hr>
+<h2 id="getting-started-with-witney"><a href="#getting-started-with-witney" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Getting started with Witney</h2>
+<h3 id="clone-the-witney-repository"><a href="#clone-the-witney-repository" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Clone the witney repository</h3>
+<p>Witney is the raw project template. You can remove the original git origin and add changes to the template. Afterwards create new projects with <code>cp</code> or with <code>hoppla</code>.</p>
+<pre><code class="hljs language-bash">git <span class="hljs-built_in">clone</span> git@github.com:witneyjs/witney.git;
+npm install -g hoppla;</code></pre>
+<h3 id="start-a-new-project-from-your-local-witney-copy"><a href="#start-a-new-project-from-your-local-witney-copy" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Start a new project from your local witney copy</h3>
+<h4 id="empty-project"><a href="#empty-project" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Empty project</h4>
+<pre><code class="hljs language-bash">hoppla -t witney -d newProj;
+<span class="hljs-built_in">cd</span> newProj;
+npm install;</code></pre>
+<h4 id="demo-project"><a href="#demo-project" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Demo project</h4>
+<pre><code>hoppla -t witney -d newProj -i "{ type: 'demo' }";
+cd newProj;
+</code></pre>
+<h3 id="create-a-new-namespace-in-the-project"><a href="#create-a-new-namespace-in-the-project" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Create a new namespace in the project</h3>
+<h4 id="frontend"><a href="#frontend" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Frontend</h4>
+<pre><code class="hljs language-bash">npx hoppla -t templates/namespace/ -i <span class="hljs-string">"{ id: 'front' }"</span></code></pre>
+<h4 id="backend"><a href="#backend" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Backend</h4>
+<pre><code class="hljs language-bash">npx hoppla -t templates/namespace/ -i <span class="hljs-string">"{ id: 'back', isNode: true }"</span></code></pre>
+
+      </main>
+    </div>
+
+    <script>
+      var $ = document.querySelectorAll.bind(document)
+      new mallery($('#app')[0], {
+ "config": {
+  "colors": {
+   "accent": "#222"
+  },
+  "title": "some-pkg",
+  "footer": {
+   "html": ""
+  }
+ },
+ "toc": {
+  "items": [
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/docs/README.md",
+    "path": "index.html",
+    "name": "README.md",
+    "title": "some-pkg",
+    "level": 0,
+    "id": 0,
+    "htmlPath": "raw/index.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/static/docs/raw/index.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/static/docs/index.html",
+    "baseUrl": "./",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "some-pkg ·      ",
+       "hash": "some-pkg-·-a-hrefhttpsopensourceorglicensesmitimg-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge0svgsanitizetrue-altlicensea-a-hrefhttpswwwnpmjscompackagesome-pkgimg-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge1svgsanitizetrue-altnpma-img-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge2svgsanitizetrue-alttests-img-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge3svgsanitizetrue-altcoverage-a-hrefhttpsprettierioimg-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge4svgsanitizetrue-altcode-stylea-img-srchttpsrawgithubcomwitneyjswitneymasterstaticreadmegen-badgesbadge5svgsanitizetrue-altprs",
+       "children": [
+        1
+       ],
+       "id": 0
+      },
+      {
+       "level": "2",
+       "heading": "Getting started with Witney",
+       "hash": "getting-started-with-witney",
+       "children": [
+        2,
+        3,
+        6
+       ],
+       "id": 1
+      },
+      {
+       "level": "3",
+       "heading": "Clone the witney repository",
+       "hash": "clone-the-witney-repository",
+       "children": [],
+       "id": 2
+      },
+      {
+       "level": "3",
+       "heading": "Start a new project from your local witney copy",
+       "hash": "start-a-new-project-from-your-local-witney-copy",
+       "children": [
+        4,
+        5
+       ],
+       "id": 3
+      },
+      {
+       "level": "4",
+       "heading": "Empty project",
+       "hash": "empty-project",
+       "children": [],
+       "id": 4
+      },
+      {
+       "level": "4",
+       "heading": "Demo project",
+       "hash": "demo-project",
+       "children": [],
+       "id": 5
+      },
+      {
+       "level": "3",
+       "heading": "Create a new namespace in the project",
+       "hash": "create-a-new-namespace-in-the-project",
+       "children": [
+        7,
+        8
+       ],
+       "id": 6
+      },
+      {
+       "level": "4",
+       "heading": "Frontend",
+       "hash": "frontend",
+       "children": [],
+       "id": 7
+      },
+      {
+       "level": "4",
+       "heading": "Backend",
+       "hash": "backend",
+       "children": [],
+       "id": 8
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "ext": "",
+    "isDir": true,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/docs/getting_started",
+    "path": "getting_started",
+    "name": "getting_started",
+    "children": [
+     2
+    ],
+    "level": 0,
+    "id": 1,
+    "htmlPath": "raw/getting_started",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/static/docs/raw/getting_started",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/static/docs/getting_started",
+    "baseUrl": "./",
+    "title": "Getting Started"
+   },
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/docs/getting_started/installation.md",
+    "path": "getting_started/installation.html",
+    "name": "installation.md",
+    "level": 1,
+    "id": 2,
+    "htmlPath": "raw/getting_started/installation.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/static/docs/raw/getting_started/installation.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/static/docs/getting_started/installation.html",
+    "baseUrl": "../",
+    "title": "Installation",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "Installation",
+       "hash": "installation",
+       "children": [
+        1
+       ],
+       "id": 0
+      },
+      {
+       "level": "2",
+       "heading": "NPM",
+       "hash": "npm",
+       "children": [],
+       "id": 1
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/docs/CHANGELOG.md",
+    "path": "CHANGELOG.html",
+    "name": "CHANGELOG.md",
+    "title": "Changelog",
+    "level": 0,
+    "id": 3,
+    "htmlPath": "raw/CHANGELOG.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/static/docs/raw/CHANGELOG.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/witney/static/docs/CHANGELOG.html",
+    "baseUrl": "./",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "2",
+       "heading": "0.0.1",
+       "hash": "001",
+       "children": [],
+       "id": 0
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "href": "https://github.com/witneyjs/witney.git",
+    "title": "Repository",
+    "level": 0,
+    "id": 4,
+    "hasContent": false
+   }
+  ],
+  "root": [
+   0,
+   1,
+   3,
+   4
+  ],
+  "activeItemId": 0
+ }
+});
+    </script>
+  </body>
+</html>
