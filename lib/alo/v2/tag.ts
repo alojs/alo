@@ -45,6 +45,18 @@ export const createTagTrie = function(
   return tagTrie;
 };
 
+export const hasTag = function(
+  tagTrie: TagTrie,
+  tag: Tag,
+  ignoreWildcard = false
+) {
+  if (!ignoreWildcard && tagTrie[TAG_WILDCARD]) {
+    return true;
+  }
+
+  return tagTrie[tag.toString()]
+}
+
 /**
  * Check if the specified tag chain can be found in the tagTrie
  *
@@ -146,8 +158,8 @@ export const splitTag = function(tag: Tag): Tag[] {
 };
 
 let currentTagId = 0;
-const tagPrefix = "#alo";
-const tagSuffix = "alo#";
+const tagPrefix = "";
+const tagSuffix = "#";
 export const createUniqueTag = function(): Tag {
   return UNIQUE_TAG_PREFIX + tagPrefix + currentTagId++ + tagSuffix;
 };

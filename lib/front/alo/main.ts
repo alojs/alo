@@ -6,6 +6,8 @@ import { undoAction, redoAction } from "alo/v2/undoable";
 import { setName, setNameWithLastName } from "./store/name";
 import { count, COUNT_TAG } from "./store/count";
 import { UNDO_COUNT_ID, UNDO_NAME_ID, UNDO_ALL_ID } from "./store/undo";
+import { Timemachine } from "alo/v2/timemachine";
+import { Devtools } from "alo/v2/devtools";
 
 class App {
   el: HTMLDivElement;
@@ -14,6 +16,7 @@ class App {
   store: ReturnType<typeof createStore>;
   constructor() {
     const store = createStore();
+    new Devtools(store);
 
     this.el = <HTMLDivElement>el("div", [
       el("pre", (this.countEl = text(""))),
@@ -116,7 +119,7 @@ class App {
       )
     ]);
 
-    store.subscribe(() => {
+    store.subscribe((store) => {
       console.log(store.getAction());
       console.log(store.getState());
       this.update(<any>store.getState());

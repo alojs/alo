@@ -6,6 +6,8 @@ export interface SelectFuncResult<T = any> {
   value: T;
 }
 
+type Selector = (options, action: Action) => SelectFuncResult
+
 type SelectFunc = (
   options: any,
   action: Action,

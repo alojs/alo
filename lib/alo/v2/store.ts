@@ -67,13 +67,13 @@ const resolveAction = function<T extends UnresolvedAction>(
  * @class Store
  * @extends Subscribable
  */
-export class Store<T extends Mutator> extends Subscribable {
+export class Store<T extends Mutator = any> extends Subscribable {
   _isDispatching: boolean;
   _state: any = null;
   _lastAction: any = null;
   _effectHandler: any;
   _mutator: Mutator;
-  constructor(mutator: T, initialState: DeepPartial<ReturnType<T>> = {}) {
+  constructor(mutator: T, initialState?: DeepPartial<ReturnType<T>>) {
     super();
 
     this._isDispatching = false;
@@ -83,6 +83,7 @@ export class Store<T extends Mutator> extends Subscribable {
     // Initial set action
     this.dispatch({
       type: actionTypes.INIT,
+      payload: initialState,
       tagTrie: { [actionTypes.INIT]: true }
     });
   }
@@ -131,12 +132,9 @@ export class Store<T extends Mutator> extends Subscribable {
     };
     if (!action.signals) action.signals = { do: true };
 
+    // TODO: We is here a try?
     try {
-      this._state = this._mutator(
-        createMutatorContext({ action, pushResults }),
-        this._state,
-        ""
-      );
+      this._applyMutator(action, pushResults);
 
       action.tagTrie = pushResults.tagTrie;
     } finally {
@@ -171,6 +169,21 @@ export class Store<T extends Mutator> extends Subscribable {
     return batchAction;
   }
 
+  _applyMutator(action: Action, pushResults) {
+    const ctx = createMutatorContext({ action, pushResults })
+
+    if (action.type === actionTypes.INIT) {
+      this._state = action.payload;
+      ctx.push('*');
+    }
+
+    this._state = this._mutator(
+      ctx,
+      this._state,
+      ""
+    );
+  }
+
   batch<T extends UnresolvedAction>(unresolvedAction: T): BatchReturn<T> {
     let pushResults = {
       tagsPushed: false,
@@ -187,11 +200,7 @@ export class Store<T extends Mutator> extends Subscribable {
       }
       this._isDispatching = true;
 
-      this._state = this._mutator(
-        createMutatorContext({ action, pushResults }),
-        this._state,
-        ""
-      );
+      this._applyMutator(action, pushResults);
 
       this._isDispatching = false;
 

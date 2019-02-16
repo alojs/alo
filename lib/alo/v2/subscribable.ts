@@ -1,3 +1,5 @@
+export type Listener<T extends Subscribable = Subscribable> = (store: T) => void
+
 /**
  * Implements a very basic and general subscribable:
  * a list of listeners which will be called in specific moments - moments defined by the child class
@@ -31,10 +33,15 @@ export class Subscribable {
    *
    * @param {function} listener
    */
-  subscribe(listener: Function) {
+  subscribe(listener: Listener<this>, initialCall = false) {
     this._separateNextListeners();
     var isSubscribed = true;
     this._nextListeners.push(listener);
+
+    if (initialCall) {
+      listener(this);
+    }
+
     return function() {
       if (isSubscribed) {
         isSubscribed = false;
