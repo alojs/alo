@@ -1,4 +1,6 @@
-export type Listener<T extends Subscribable = Subscribable> = (store: T) => void
+export type Listener<T extends Subscribable = Subscribable> = (
+  store: T
+) => void;
 
 /**
  * Implements a very basic and general subscribable:

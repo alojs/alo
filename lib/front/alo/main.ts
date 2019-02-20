@@ -119,7 +119,7 @@ class App {
       )
     ]);
 
-    store.subscribe((store) => {
+    store.subscribe(store => {
       console.log(store.getAction());
       console.log(store.getState());
       this.update(<any>store.getState());

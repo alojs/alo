@@ -54,8 +54,8 @@ export const hasTag = function(
     return true;
   }
 
-  return tagTrie[tag.toString()]
-}
+  return tagTrie[tag.toString()];
+};
 
 /**
  * Check if the specified tag chain can be found in the tagTrie

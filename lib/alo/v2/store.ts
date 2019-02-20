@@ -170,18 +170,14 @@ export class Store<T extends Mutator = any> extends Subscribable {
   }
 
   _applyMutator(action: Action, pushResults) {
-    const ctx = createMutatorContext({ action, pushResults })
+    const ctx = createMutatorContext({ action, pushResults });
 
     if (action.type === actionTypes.INIT) {
       this._state = action.payload;
-      ctx.push('*');
+      ctx.push("*");
     }
 
-    this._state = this._mutator(
-      ctx,
-      this._state,
-      ""
-    );
+    this._state = this._mutator(ctx, this._state, "");
   }
 
   batch<T extends UnresolvedAction>(unresolvedAction: T): BatchReturn<T> {
