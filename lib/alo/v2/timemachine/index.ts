@@ -2,8 +2,9 @@ import { Store, actionTypes } from "../store";
 import { Listener, Subscribable } from "../subscribable";
 import { combineMutators } from "../mutator";
 import { createUniqueTag } from "../tag";
-import { mutator as actionsMutator, addAction } from "./actions";
+import { mutator as actionsMutator, setAction } from "./actions";
 import { cloneDeep } from "../util";
+import { createUniqueActionId } from "./util";
 
 const ROOT_TAG = createUniqueTag();
 export const rootMutator = combineMutators(
@@ -19,10 +20,12 @@ export class Timemachine<T extends Store<any> = any> {
   unsubscribe: null | ReturnType<Subscribable["subscribe"]>;
   initialTargetState: any;
   replaying = false;
+  // Save in the store
+  orderIdx = 0;
 
   constructor(targetStore: T) {
     this.targetStore = targetStore;
-    this.initialTargetState = cloneDeep(targetStore.getState());
+    this.initialTargetState = cloneDeep(targetStore.getAction().payload);
     this.store = new Store(rootMutator);
     this.store.subscribe(this.storeListener, true);
     this.enable();
@@ -36,12 +39,12 @@ export class Timemachine<T extends Store<any> = any> {
   };
 
   targetStoreListener: Listener<T> = store => {
-    if (this.replaying) return;
-
     const action = store.getAction();
-    this.store.dispatch(
-      addAction({ ...action, state: cloneDeep(store.getState()) })
-    );
+    const id = action["_devtoolsActionId"] || createUniqueActionId();
+    delete action["_devtoolsActionId"];
+
+    this.store.dispatch(setAction(action, id, this.orderIdx));
+    this.orderIdx++;
   };
 
   replay() {
@@ -50,6 +53,7 @@ export class Timemachine<T extends Store<any> = any> {
       return;
     }
     this.replaying = true;
+    this.orderIdx = 0;
 
     console.log(this.store.getState());
     const actions = this.store.getState().actions.items;
@@ -57,17 +61,22 @@ export class Timemachine<T extends Store<any> = any> {
     const newInitialState = cloneDeep(this.initialTargetState);
     console.log(this.initialTargetState);
     this.targetStore.dispatch(async dispatch => {
-      dispatch({ type: actionTypes.INIT, payload: newInitialState });
+      for (const [id, trackedAction] of Object.entries(actions)) {
+        if (trackedAction.disabled) continue;
 
-      for (const action of actions) {
+        let action = trackedAction.action;
+        action["_devtoolsActionId"] = id;
+        if (action.type == actionTypes.INIT) {
+          action.payload = newInitialState;
+        }
+
+        dispatch(action);
+
         await new Promise(res => {
           setTimeout(() => {
             res(true);
           }, 1000);
         });
-
-        console.log("replaying", action);
-        dispatch(action);
       }
 
       this.replaying = false;

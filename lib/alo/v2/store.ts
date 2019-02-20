@@ -177,7 +177,15 @@ export class Store<T extends Mutator = any> extends Subscribable {
       ctx.push("*");
     }
 
-    this._state = this._mutator(ctx, this._state, "");
+    if (action.type === actionTypes.BATCH) {
+      // TODO: Analyze if this is okay
+      for (const batchedAction of action.payload) {
+        ctx.action = batchedAction;
+        this._state = this._mutator(ctx, this._state, "");
+      }
+    } else {
+      this._state = this._mutator(ctx, this._state, "");
+    }
   }
 
   batch<T extends UnresolvedAction>(unresolvedAction: T): BatchReturn<T> {

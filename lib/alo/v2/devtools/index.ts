@@ -1,13 +1,17 @@
 import {
   Timemachine,
   rootMutator as timemachineRootMutator
-} from "./timemachine";
-import { Store } from "./store";
+} from "../timemachine";
+import { Store } from "../store";
 import { el, setChildren, text, List, list } from "redom";
-import { Mutator } from "./mutator";
-import { createUniqueTag, hasTags, hasTag } from "./tag";
-import { ACTION_ITEM_TAG } from "./timemachine/actions";
-import { actionTypes } from "./store";
+import { Mutator } from "../mutator";
+import { createUniqueTag, hasTags, hasTag } from "../tag";
+import {
+  ACTION_ITEM_TAG,
+  TrackedAction,
+  toggleAction
+} from "../timemachine/actions";
+import { actionTypes } from "../store";
 
 type DevtoolsStore = Store<typeof rootMutator>;
 type TimemachineStore = Store<typeof timemachineRootMutator>;
@@ -43,13 +47,15 @@ const rootMutator: Mutator<RootState> = function(ctx, state) {
 const createActionListItemClass = (ctx: GlobalCtx) =>
   class ActionListItem {
     unsubscribe;
-    index;
+    id;
     el: HTMLElement;
-    view: ViewCache = {
-      actionEl: document.body,
-      titleEl: document.body
+    view: {
+      actionEl: HTMLElement;
+      titleEl: HTMLElement;
+      disabledInputEl: HTMLInputElement;
     };
     constructor() {
+      const view: any = {};
       this.el = el(
         "div",
         {
@@ -59,34 +65,58 @@ const createActionListItemClass = (ctx: GlobalCtx) =>
           }
         },
         [
-          el("div", [(this.view.titleEl = el("h3", ""))]),
-          (this.view.actionEl = el("pre"))
+          el("div", [
+            (view.titleEl = el("h3", "")),
+            (view.disabledInputEl = el("input", {
+              type: "checkbox",
+              onchange: evt => {
+                ctx.timemachineStore.dispatch(
+                  toggleAction(this.id, !evt.currentTarget.checked)
+                );
+              }
+            }))
+          ]),
+          (view.actionEl = el("pre", {
+            style: { "font-family": '"Courier New", Courier, monospace' }
+          }))
         ]
       );
+
+      this.view = view;
     }
     onmount() {
       if (this.unsubscribe) {
         this.unsubscribe();
       }
       this.unsubscribe = ctx.timemachineStore.subscribe(store => {
-        if (hasTags(store.getAction().tagTrie, [ACTION_ITEM_TAG, this.index])) {
-          this.lazyUpdate(store.getState().actions.items[this.index]);
+        if (hasTags(store.getAction().tagTrie, [ACTION_ITEM_TAG, this.id])) {
+          this.lazyUpdate(store.getState().actions.items[this.id]);
         }
       });
     }
     onunmount() {
       this.unsubscribe();
     }
-    update(data, index, items, context) {
-      this.view.titleEl.textContent = data.type;
+    update(trackedAction: TrackedAction, index, items, context) {
+      this.view.titleEl.textContent = trackedAction.action.type;
 
-      if (!this.index) {
-        this.index = index;
-        this.lazyUpdate(data);
+      if (!this.id) {
+        this.id = trackedAction.id;
+        this.lazyUpdate(trackedAction);
       }
     }
-    lazyUpdate(action) {
+    lazyUpdate(trackedAction: TrackedAction) {
+      const action = trackedAction.action;
       const { payload, signals } = action;
+
+      console.log("rendered", action);
+      if (action.type === actionTypes.INIT) {
+        this.view.disabledInputEl.style.display = "none";
+      }
+
+      this.view.disabledInputEl.checked = !trackedAction.disabled;
+      this.el.style.opacity = trackedAction.disabled ? "0.5" : "1";
+
       if (action.type === actionTypes.BATCH) {
         let contents = action.payload
           .map(({ type, payload, signals }) =>
@@ -102,8 +132,8 @@ const createActionListItemClass = (ctx: GlobalCtx) =>
         );
       }
 
-      this.view.actionEl.textContent +=
-        "\n\n" + JSON.stringify(action.state, null, "  ");
+      //this.view.actionEl.textContent +=
+      //  "\n\n" + JSON.stringify(action.state, null, "  ");
     }
   };
 
@@ -127,6 +157,7 @@ export class Devtools {
       "div",
       {
         style: {
+          "font-family": "Arial, Helvetica, sans-serif",
           color: "silver",
           bottom: 0,
           left: 0,
@@ -142,17 +173,28 @@ export class Devtools {
         }
       },
       [
-        (this.view.heightEl = el("input", {
-          value: this.context.store.getState().height,
-          onchange: (event: KeyboardEvent) => {
-            if (event.currentTarget) {
-              this.context.store.dispatch({
-                type: "SET_HEIGHT",
-                payload: event.currentTarget["value"]
-              });
+        el("div", [
+          (this.view.heightEl = el("input", {
+            value: this.context.store.getState().height,
+            onchange: (event: KeyboardEvent) => {
+              if (event.currentTarget) {
+                this.context.store.dispatch({
+                  type: "SET_HEIGHT",
+                  payload: event.currentTarget["value"]
+                });
+              }
             }
-          }
-        })),
+          })),
+          el(
+            "button",
+            {
+              onclick: () => {
+                this.timemachine.replay();
+              }
+            },
+            "Replay"
+          )
+        ]),
         (this.view.actionListWrapperEl = el(
           "div",
           {
@@ -183,14 +225,26 @@ export class Devtools {
     }
   }
 
+  lastActionListCount = 0;
   update(ctx: GlobalCtx) {
     const state = ctx.store.getState();
     const timemachineState = ctx.timemachineStore.getState();
 
-    this.actionList.update(timemachineState.actions.items);
-    this.view.actionListWrapperEl["scrollTop"] = this.view.actionListWrapperEl[
-      "scrollHeight"
-    ];
+    // Use selector
+    const sortedTrackedActions = Object.values(
+      timemachineState.actions.items
+    ).sort((a, b) => {
+      return a.order - b.order;
+    });
+    this.actionList.update(sortedTrackedActions);
+
+    const sortedTrackedActionsLength = sortedTrackedActions.length;
+    if (this.lastActionListCount != sortedTrackedActionsLength) {
+      this.view.actionListWrapperEl[
+        "scrollTop"
+      ] = this.view.actionListWrapperEl["scrollHeight"];
+    }
+    this.lastActionListCount = sortedTrackedActionsLength;
 
     if (hasTag(ctx.store.getAction().tagTrie, HEIGHT_TAG)) {
       document.body.style["padding-bottom"] = state.height;

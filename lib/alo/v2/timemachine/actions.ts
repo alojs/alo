@@ -3,31 +3,64 @@ import { Action } from "../action";
 import { createUniqueTag, joinTags, hasTags } from "../tag";
 import { createSelector } from "../selector";
 
-const ACTIONS_TAG = createUniqueTag();
+export type TrackedAction = {
+  id: string;
+  action: Action;
+  disabled: boolean;
+  trackState: boolean;
+  order: number;
+};
+
+type TrackedActionsObject = {
+  [key: string]: TrackedAction;
+};
+
 export const ACTION_ITEM_TAG = createUniqueTag();
-const itemsMutator: Mutator<Action[]> = function(ctx, state = [], prev) {
+export const ACTION_ITEM_DISABLED_TAG = createUniqueTag();
+const byIdMutator: Mutator<TrackedActionsObject> = function(
+  ctx,
+  state = {},
+  prev
+) {
   if (ctx.action.signals.do) {
-    if (ctx.action.type == ADD_ACTION) {
-      const itemIdx = state.push(ctx.action.payload);
-      ctx.push(joinTags(prev, ACTION_ITEM_TAG, itemIdx));
+    if (ctx.action.type == SET_ACTION) {
+      const action: Action = ctx.action.payload.action;
+      const id = ctx.action.payload.id;
+      let trackedAction =
+        state[id] || <TrackedAction>{ id, disabled: false, trackState: false };
+      trackedAction.order = ctx.action.payload.order;
+      trackedAction.action = action;
+      state[id] = trackedAction;
+      ctx.push(joinTags(prev, ACTION_ITEM_TAG, id));
+    }
+  }
+
+  if (ctx.action.signals.do) {
+    if (ctx.action.type == TOGGLE_ACTION) {
+      const id = ctx.action.payload.id;
+      if (state[id]) {
+        state[id].disabled = ctx.action.payload.toggle;
+        ctx.push(joinTags(prev, ACTION_ITEM_TAG, id, ACTION_ITEM_DISABLED_TAG));
+      }
     }
   }
 
   return state;
 };
 
-export const mutator = combineMutators(
-  {
-    items: itemsMutator
-  },
-  ACTIONS_TAG
-);
-
-const ADD_ACTION = "ADD_ACTION";
-export const addAction = function(action) {
+const SET_ACTION = "SET_ACTION";
+export const setAction = function(action, id, order) {
   return {
-    type: ADD_ACTION,
-    payload: action
+    type: SET_ACTION,
+    payload: { id, action, order }
+  };
+};
+
+const TOGGLE_ACTION = "TOGGLE_ACTION";
+export const toggleAction = function(id, toggle) {
+  return {
+    type: TOGGLE_ACTION,
+    payload: { id, toggle }
   };
 };
 
@@ -42,3 +75,11 @@ export const addAction = function(action) {
 });*/
 
 //export const toggleAction = function()
+
+const ACTIONS_TAG = createUniqueTag();
+export const mutator = combineMutators(
+  {
+    items: byIdMutator
+  },
+  ACTIONS_TAG
+);
