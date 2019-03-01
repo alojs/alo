@@ -62,6 +62,75 @@ const resolveAction = function<T extends UnresolvedAction>(
   return <any>action;
 };
 
+export const batchAction = function(action: UnresolvedAction) {
+  return function(rootDispatch, getState) {
+    let batchAction: Action = {
+      type: actionTypes.BATCH,
+      payload: [],
+      tagTrie: {},
+      meta: { batch: true }
+    };
+
+    let pushResults = {
+      tagsPushed: false,
+      tagTrie: batchAction.tagTrie
+    };
+
+    // If rootDispatch.batchDispatch is true we already are in a running batchAction
+    // so we dont have to create a new wrapper
+    let dispatch = rootDispatch;
+    if (!rootDispatch.batchDispatch) {
+      // Define the root batchAction dispatch wrapper
+      dispatch = function(action: Action) {
+        const batchInfo = { pushResults };
+
+        let dispatchingActions: Action[] = action.payload;
+        if (action.type !== actionTypes.BATCH) {
+          dispatchingActions = [action];
+        }
+
+        for (const subAction of dispatchingActions) {
+          if (action.type === actionTypes.BATCH) {
+            console.log("found a batch action in a batch action", action);
+          }
+
+          subAction.meta = subAction.meta || {};
+          subAction.meta.batchItem = batchInfo;
+
+          batchAction.payload.push({
+            type: subAction.type,
+            payload: subAction.payload,
+            meta: subAction.meta
+          });
+
+          rootDispatch(subAction);
+          delete subAction.meta.batchItem;
+        }
+
+        return action;
+      };
+      dispatch.batchDispatch = true;
+    }
+
+    const resolvedAction = resolveAction(dispatch, getState, action);
+
+    const dispatchBatchAction = function() {
+      batchAction.meta.batchPushResults = pushResults;
+      batchAction = rootDispatch(batchAction);
+      delete batchAction.meta.batchPushResults;
+      return batchAction;
+    };
+
+    if (resolvedAction && isPromise(resolvedAction)) {
+      return resolvedAction.then(function() {
+        return dispatchBatchAction();
+      });
+    }
+
+    return dispatchBatchAction();
+  };
+};
+
 /**
  * @export
  * @class Store
@@ -83,8 +152,7 @@ export class Store<T extends Mutator = any> extends Subscribable {
     // Initial set action
     this.dispatch({
       type: actionTypes.INIT,
-      payload: initialState,
-      tagTrie: { [actionTypes.INIT]: true }
+      payload: initialState
     });
   }
 
@@ -112,12 +180,8 @@ export class Store<T extends Mutator = any> extends Subscribable {
       return action;
     }
 
-    // Check for promises
+    // Check for promises, they will be resolved with the thunk dispatch function
     if (isPromise(action)) {
-      /*let result: any = action.then((action) => {
-        return this.dispatch(action)
-      })*/
-
       return action;
     }
 
@@ -130,17 +194,35 @@ export class Store<T extends Mutator = any> extends Subscribable {
       tagsPushed: false,
       tagTrie: {}
     };
-    if (!action.signals) action.signals = { do: true };
+    if (!action.meta) action.meta = {};
+    if (!action.meta.undo && !action.meta.redo) action.meta.do = true;
 
-    // TODO: We is here a try?
-    try {
-      this._applyMutator(action, pushResults);
+    // An action which is a batch and has existing batchPushResults went already through the mutator
+    if (!action.meta.batch || !action.meta.batchPushResults) {
+      try {
+        this._applyMutator(
+          action,
+          action.meta.batchItem
+            ? action.meta.batchItem.pushResults
+            : pushResults
+        );
 
-      action.tagTrie = pushResults.tagTrie;
-    } finally {
+        action.tagTrie = pushResults.tagTrie;
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      pushResults = action.meta.batchPushResults;
     }
 
     this._isDispatching = false;
+
+    // Batch items should not be published like normal actions
+    if (action.meta.batchItem) {
+      return <any>action;
+    }
+
+    // Action publishing
     this._lastAction = action;
     if (pushResults.tagsPushed) {
       this._callSubscribers();
@@ -148,26 +230,6 @@ export class Store<T extends Mutator = any> extends Subscribable {
 
     return <any>action;
   };
-
-  _batchEnd(actions: Action[], tagsPushed: boolean, tagTrie: TagTrie) {
-    if (!actions.length) {
-      return;
-    }
-
-    let batchAction = {
-      type: actionTypes.BATCH,
-      payload: actions,
-      tagTrie,
-      signals: { do: true }
-    };
-    this._lastAction = batchAction;
-
-    if (tagsPushed) {
-      this._callSubscribers();
-    }
-
-    return batchAction;
-  }
 
   _applyMutator(action: Action, pushResults) {
     const ctx = createMutatorContext({ action, pushResults });
@@ -186,58 +248,5 @@ export class Store<T extends Mutator = any> extends Subscribable {
     } else {
       this._state = this._mutator(ctx, this._state, "");
     }
-  }
-
-  batch<T extends UnresolvedAction>(unresolvedAction: T): BatchReturn<T> {
-    let pushResults = {
-      tagsPushed: false,
-      tagTrie: {}
-    };
-
-    let resolvedActions: Action[] = [];
-
-    const dispatch = action => {
-      if (!action.signals) action.signals = { do: true };
-
-      if (this._isDispatching) {
-        throw new Error("Dispatching is already happening");
-      }
-      this._isDispatching = true;
-
-      this._applyMutator(action, pushResults);
-
-      this._isDispatching = false;
-
-      resolvedActions.push(action);
-
-      return action;
-    };
-
-    let action = resolveAction(dispatch, this.getState, <UnresolvedAction>(
-      unresolvedAction
-    ));
-
-    // If its a thunk function, the action will be dispatched by the provided dispatch function
-    if (action && !isFunction(unresolvedAction)) {
-      resolvedActions.push(action);
-    }
-
-    if (action && isPromise(action)) {
-      return <any>action.then(() => {
-        return this._batchEnd(
-          resolvedActions,
-          pushResults.tagsPushed,
-          pushResults.tagTrie
-        );
-      });
-    }
-
-    return <any>(
-      this._batchEnd(
-        resolvedActions,
-        pushResults.tagsPushed,
-        pushResults.tagTrie
-      )
-    );
   }
 }

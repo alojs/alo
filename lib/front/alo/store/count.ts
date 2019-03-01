@@ -1,20 +1,21 @@
 import {
   createUniqueTag,
   undoData,
-  joinTags,
   SelectFuncResult,
-  createSelector
+  createSelector,
+  SelectorResult,
+  joinTags
 } from "alo/v2";
 import { mutator } from ".";
 
-export const COUNT_TAG = createUniqueTag();
+export const COUNT_TAG = createUniqueTag() + "count";
 export const COUNT_ADD = "COUNT_ADD";
 
 export const countMutator = function(ctx, state: number = 0, tag) {
   if (ctx.action.type === COUNT_ADD) {
     const undoable = undoData(ctx.action, COUNT_TAG, state);
-    if (ctx.action.signals.do) state++;
-    if (ctx.action.signals.undo) state = undoable;
+    if (ctx.action.meta.do) state++;
+    if (ctx.action.meta.undo) state = undoable;
     ctx.push(joinTags(tag, COUNT_TAG, 5));
   }
 

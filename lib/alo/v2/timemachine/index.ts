@@ -5,6 +5,7 @@ import { createUniqueTag } from "../tag";
 import { mutator as actionsMutator, setAction } from "./actions";
 import { cloneDeep } from "../util";
 import { createUniqueActionId } from "./util";
+import { diffString } from "json-diff";
 
 const ROOT_TAG = createUniqueTag();
 export const rootMutator = combineMutators(
@@ -20,30 +21,39 @@ export class Timemachine<T extends Store<any> = any> {
   unsubscribe: null | ReturnType<Subscribable["subscribe"]>;
   initialTargetState: any;
   replaying = false;
-  // Save in the store
   orderIdx = 0;
+  lastTargetState;
 
   constructor(targetStore: T) {
     this.targetStore = targetStore;
     this.initialTargetState = cloneDeep(targetStore.getAction().payload);
+    this.lastTargetState = this.initialTargetState;
     this.store = new Store(rootMutator);
     this.store.subscribe(this.storeListener, true);
     this.enable();
   }
 
+  // TODO: Remove this as it isnt needed
   storeListener: Listener<this["store"]> = store => {
     if (this.replaying) return;
 
     const action = store.getAction();
-    console.log("last timemachine action", action);
+    // console.log("last timemachine action", action);
   };
 
   targetStoreListener: Listener<T> = store => {
     const action = store.getAction();
-    const id = action["_devtoolsActionId"] || createUniqueActionId();
-    delete action["_devtoolsActionId"];
+    const id = action.meta.devtoolsActionId || createUniqueActionId();
+    delete action.meta.devtoolsActionId;
 
-    this.store.dispatch(setAction(action, id, this.orderIdx));
+    // TODO: Clean this up
+    let newTargetState = cloneDeep(store.getState());
+    const stateDiff = diffString(this.lastTargetState, newTargetState, {
+      color: false
+    });
+    this.lastTargetState = newTargetState;
+
+    this.store.dispatch(setAction(action, id, this.orderIdx, stateDiff));
     this.orderIdx++;
   };
 
@@ -55,17 +65,14 @@ export class Timemachine<T extends Store<any> = any> {
     this.replaying = true;
     this.orderIdx = 0;
 
-    console.log(this.store.getState());
     const actions = this.store.getState().actions.items;
-    console.log(actions);
     const newInitialState = cloneDeep(this.initialTargetState);
-    console.log(this.initialTargetState);
     this.targetStore.dispatch(async dispatch => {
       for (const [id, trackedAction] of Object.entries(actions)) {
         if (trackedAction.disabled) continue;
 
         let action = trackedAction.action;
-        action["_devtoolsActionId"] = id;
+        action.meta.devtoolsActionId = id;
         if (action.type == actionTypes.INIT) {
           action.payload = newInitialState;
         }
@@ -75,7 +82,7 @@ export class Timemachine<T extends Store<any> = any> {
         await new Promise(res => {
           setTimeout(() => {
             res(true);
-          }, 1000);
+          }, 500);
         });
       }
 

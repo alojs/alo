@@ -22,7 +22,7 @@ const byIdMutator: Mutator<TrackedActionsObject> = function(
   state = {},
   prev
 ) {
-  if (ctx.action.signals.do) {
+  if (ctx.action.meta.do) {
     if (ctx.action.type == SET_ACTION) {
       const action: Action = ctx.action.payload.action;
       const id = ctx.action.payload.id;
@@ -30,12 +30,14 @@ const byIdMutator: Mutator<TrackedActionsObject> = function(
         state[id] || <TrackedAction>{ id, disabled: false, trackState: false };
       trackedAction.order = ctx.action.payload.order;
       trackedAction.action = action;
+      // TODO: Clean this up
+      trackedAction["stateDiff"] = ctx.action.payload.stateDiff;
       state[id] = trackedAction;
       ctx.push(joinTags(prev, ACTION_ITEM_TAG, id));
     }
   }
 
-  if (ctx.action.signals.do) {
+  if (ctx.action.meta.do) {
     if (ctx.action.type == TOGGLE_ACTION) {
       const id = ctx.action.payload.id;
       if (state[id]) {
@@ -49,10 +51,10 @@ const byIdMutator: Mutator<TrackedActionsObject> = function(
 };
 
 const SET_ACTION = "SET_ACTION";
-export const setAction = function(action, id, order) {
+export const setAction = function(action, id, order, stateDiff) {
   return {
     type: SET_ACTION,
-    payload: { id, action, order }
+    payload: { id, action, order, stateDiff }
   };
 };
 

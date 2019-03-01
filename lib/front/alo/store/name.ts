@@ -8,11 +8,11 @@ export const nameMutator = function(ctx, state: string = "", tag) {
   if (ctx.action.type === SET_NAME) {
     const undoable = undoData(ctx.action, NAME_TAG, state);
 
-    if (ctx.action.signals.do) {
+    if (ctx.action.meta.do) {
       state = ctx.action.payload;
     }
 
-    if (ctx.action.signals.undo) {
+    if (ctx.action.meta.undo) {
       state = undoable;
     }
 

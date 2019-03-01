@@ -1,4 +1,5 @@
 export type Tag = string | number;
+export type MaybeTag = Tag | undefined;
 
 export type TagTrie = object;
 
@@ -140,7 +141,7 @@ export const hasSomeTags = function(
 
 const TAG_SEPARATOR = ".";
 
-export const joinTags = function(...tags: Tag[]): Tag {
+export const joinTags = function(...tags: MaybeTag[]): Tag {
   return tags.join(TAG_SEPARATOR);
 };
 

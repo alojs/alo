@@ -45,6 +45,7 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "jsdom": "13.1.0",
     "jsdom-global": "3.0.2",
+    "json-diff": "^0.5.4",
     "localforage": "^1.7.2",
     "lost": "^8.3.0",
     "mallery": "0.0.3",

@@ -5,9 +5,10 @@ import { hasSomeTags } from "alo/v2/tag";
 import { undoAction, redoAction } from "alo/v2/undoable";
 import { setName, setNameWithLastName } from "./store/name";
 import { count, COUNT_TAG } from "./store/count";
-import { UNDO_COUNT_ID, UNDO_NAME_ID, UNDO_ALL_ID } from "./store/undo";
+import { UNDO_COUNT_TAG, UNDO_NAME_TAG, UNDO_ALL_TAG } from "./store/undo";
 import { Timemachine } from "alo/v2/timemachine";
 import { Devtools } from "alo/v2/devtools";
+import { batchAction } from "alo/v2/store";
 
 class App {
   el: HTMLDivElement;
@@ -63,7 +64,7 @@ class App {
         "button",
         {
           onclick: function() {
-            store.batch(undoAction(UNDO_COUNT_ID));
+            store.dispatch(undoAction(UNDO_COUNT_TAG));
           }
         },
         "undo 1 of count"
@@ -72,7 +73,7 @@ class App {
         "button",
         {
           onclick: function() {
-            store.batch(redoAction(UNDO_COUNT_ID));
+            store.dispatch(redoAction(UNDO_COUNT_TAG));
           }
         },
         "redo 1 of count"
@@ -83,7 +84,7 @@ class App {
         "button",
         {
           onclick: function() {
-            store.batch(undoAction(UNDO_NAME_ID));
+            store.dispatch(undoAction(UNDO_NAME_TAG));
           }
         },
         "undo 1 of name"
@@ -92,7 +93,7 @@ class App {
         "button",
         {
           onclick: function() {
-            store.batch(redoAction(UNDO_NAME_ID));
+            store.dispatch(redoAction(UNDO_NAME_TAG));
           }
         },
         "redo 1 of name"
@@ -103,7 +104,7 @@ class App {
         "button",
         {
           onclick: function() {
-            store.batch(undoAction(UNDO_ALL_ID));
+            store.dispatch(batchAction(undoAction(UNDO_ALL_TAG)));
           }
         },
         "undo 1 of everything"
@@ -112,7 +113,7 @@ class App {
         "button",
         {
           onclick: function() {
-            store.batch(redoAction(UNDO_ALL_ID));
+            store.dispatch(batchAction(redoAction(UNDO_ALL_TAG)));
           }
         },
         "redo 1 of everything"
@@ -120,7 +121,7 @@ class App {
     ]);
 
     store.subscribe(store => {
-      console.log(store.getAction());
+      console.log("subscribe", JSON.stringify(store.getAction()));
       console.log(store.getState());
       this.update(<any>store.getState());
       if (hasTags(store.getAction().tagTrie, [COUNT_TAG, 5])) {

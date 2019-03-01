@@ -1,16 +1,24 @@
 import { actionTypes } from "./store";
-import { Action, NewAction } from "./action";
-import { createUniqueTag, joinTags } from "./tag";
+import { Action, NewAction, ActionMeta } from "./action";
+import { createUniqueTag, joinTags, Tag } from "./tag";
 import { Mutator } from "./mutator";
 
 type ActionFilter = (action: Action) => boolean;
 
 interface UndoableAction extends Action {
+  meta: UndoableActionMeta;
+}
+
+interface UndoableActionMeta extends ActionMeta {
   undoData?: {};
 }
 
 interface UndoRedoAction extends NewAction {
-  _undoableCache?: Action;
+  meta?: UndoRedoActionMeta;
+}
+
+interface UndoRedoActionMeta extends ActionMeta {
+  undoableCache?: NewAction;
 }
 
 export const undoData = function(
@@ -18,22 +26,20 @@ export const undoData = function(
   id: string | number,
   value: any
 ) {
-  action.undoData = action.undoData || {};
+  action.meta.undoData = action.meta.undoData || {};
 
-  if (action.signals.do) action.undoData[id] = value;
+  if (action.meta.do) action.meta.undoData[id] = value;
 
-  return action.undoData[id];
+  return action.meta.undoData[id];
 };
 
-const setUndoableCache = function(action: UndoRedoAction, value: Action) {
-  action._undoableCache = value;
+const setUndoableCache = function(action: UndoRedoAction, value: NewAction) {
+  action.meta = action.meta || {};
+  action.meta.undoableCache = value;
 };
 
 const undoActionTypePrefix = "@@undo_";
 const redoActionTypePrefix = "@@redo_";
-
-export const PAST_TAG_PREFIX = createUniqueTag();
-export const FUTURE_TAG_PREFIX = createUniqueTag();
 
 export const undoAction = function(id) {
   return dispatch => {
@@ -41,9 +47,13 @@ export const undoAction = function(id) {
       type: undoActionTypePrefix + id
     };
     dispatch(action);
-    if (action._undoableCache) {
-      dispatch(action._undoableCache);
-      delete action._undoableCache;
+    if (action.meta && action.meta.undoableCache) {
+      dispatch({
+        type: action.meta.undoableCache.type,
+        payload: action.meta.undoableCache.payload,
+        meta: action.meta.undoableCache.meta
+      });
+      delete action.meta.undoableCache;
     }
   };
 };
@@ -54,22 +64,31 @@ export const redoAction = function(id) {
       type: redoActionTypePrefix + id
     };
     dispatch(action);
-    if (action._undoableCache) {
-      dispatch(action._undoableCache);
-      delete action._undoableCache;
+    if (action.meta && action.meta.undoableCache) {
+      dispatch(action.meta.undoableCache);
+      delete action.meta.undoableCache;
     }
   };
 };
 
 type UndoableMutatorState = {
-  past: Action[];
-  future: Action[];
+  past: NewAction[];
+  future: NewAction[];
 };
 
-export const createUndoableMutator = function(id, actionFilter?: ActionFilter) {
-  const PAST_TAG = PAST_TAG_PREFIX + id;
-  const FUTURE_TAG = FUTURE_TAG_PREFIX + id;
-
+export const createUndoableMutator = function({
+  id,
+  tags = {},
+  actionFilter
+}: {
+  id: string;
+  tags?: {
+    self?: Tag;
+    past?: Tag;
+    future?: Tag;
+  };
+  actionFilter?: ActionFilter;
+}) {
   const mutator: Mutator<UndoableMutatorState> = function(
     ctx,
     state = { past: [], future: [] },
@@ -83,7 +102,7 @@ export const createUndoableMutator = function(id, actionFilter?: ActionFilter) {
       }
 
       const action = state.past.pop();
-      ctx.push(joinTags(tag, PAST_TAG));
+      ctx.push(joinTags(tag, tags.self, tags.past));
 
       if (!action) {
         console.log("this actually happens");
@@ -91,12 +110,17 @@ export const createUndoableMutator = function(id, actionFilter?: ActionFilter) {
       }
 
       setUndoableCache(ctx.action, {
-        ...action,
-        signals: { ...action.signals, do: false, redo: false, undo: true }
+        type: action.type,
+        payload: action.payload,
+        meta: { ...action.meta, do: false, redo: false, undo: true }
       });
 
-      state.future.push(action);
-      ctx.push(joinTags(tag, FUTURE_TAG));
+      state.future.push({
+        type: action.type,
+        payload: action.payload,
+        meta: action.meta
+      });
+      ctx.push(joinTags(tag, tags.self, tags.future));
     } else if (ctx.action.type === redoActionTypePrefix + id) {
       // Handle redo
 
@@ -105,19 +129,20 @@ export const createUndoableMutator = function(id, actionFilter?: ActionFilter) {
       }
 
       const action = state.future.pop();
-      ctx.push(joinTags(tag, FUTURE_TAG));
+      ctx.push(joinTags(tag, tags.self, tags.future));
 
       if (!action) {
         return state;
       }
 
       setUndoableCache(ctx.action, {
-        ...action,
-        signals: { ...action.signals, do: true, redo: true, undo: false }
+        type: action.type,
+        payload: action.payload,
+        meta: { ...action.meta, do: true, redo: true, undo: false }
       });
 
       state.past.push(action);
-      ctx.push(joinTags(tag, PAST_TAG));
+      ctx.push(joinTags(tag, tags.self, tags.past));
     } else {
       // Handle new actions
 
@@ -125,7 +150,7 @@ export const createUndoableMutator = function(id, actionFilter?: ActionFilter) {
         return state;
       }
 
-      if (ctx.action.signals.undo || ctx.action.signals.redo) {
+      if (ctx.action.meta.undo || ctx.action.meta.redo) {
         return state;
       }
 
@@ -134,10 +159,14 @@ export const createUndoableMutator = function(id, actionFilter?: ActionFilter) {
       }
 
       state.future = [];
-      ctx.push(joinTags(tag, FUTURE_TAG));
+      ctx.push(joinTags(tag, tags.self, tags.future));
 
-      state.past.push(ctx.action);
-      ctx.push(joinTags(tag, PAST_TAG));
+      state.past.push({
+        type: ctx.action.type,
+        payload: ctx.action.payload,
+        meta: ctx.action.meta
+      });
+      ctx.push(joinTags(tag, tags.self, tags.past));
     }
 
     return state;

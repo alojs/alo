@@ -14,7 +14,7 @@ type SelectFunc = (
   last?: false | SelectFuncResult
 ) => SelectFuncResult;
 
-interface SelectorResult<T extends SelectFunc> {
+export interface SelectorResult<T extends SelectFunc> {
   changed: boolean;
   value: ReturnType<T>["value"];
 }
