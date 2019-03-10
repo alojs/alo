@@ -34,8 +34,8 @@ export class ActionList {
 
     this.view = <any>view;
 
-    this.view.list.el.style.margin = '0';
-    this.view.list.el.style.padding = '0';
+    this.view.list.el.style.margin = "0";
+    this.view.list.el.style.padding = "0";
   }
 
   update(ctx: GlobalCtx) {

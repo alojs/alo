@@ -6,7 +6,7 @@ import {
   SelectorResult,
   joinTags
 } from "alo/v2";
-import { mutator } from ".";
+import { _mutatorCreator } from ".";
 
 export const COUNT_TAG = createUniqueTag() + "count";
 export const COUNT_ADD = "COUNT_ADD";
@@ -39,7 +39,7 @@ export const countAfter1 = function(info?) {
 
 export const countSelector = createSelector(
   (
-    state: ReturnType<typeof mutator>,
+    state: ReturnType<ReturnType<typeof _mutatorCreator>>,
     action,
     last
   ): SelectFuncResult<number> => {

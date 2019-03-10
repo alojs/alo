@@ -1,5 +1,9 @@
-import { combineMutators, createUniqueTag } from "alo/v2";
-import { Store } from "alo/v2";
+import {
+  Store,
+  combineMutators,
+  createUniqueTag,
+  mutatorCreator
+} from "alo/v2";
 import { undoAllMutator, undoCountMutator, undoNameMutator } from "./undo";
 import { countMutator } from "./count";
 import { nameMutator } from "./name";
@@ -20,21 +24,23 @@ const appMutator = combineMutators(
   ROOT_TAG
 );
 
-export const mutator = function(ctx, state, tag) {
-  type ReturnState = {
-    new?: string;
-  } & ReturnType<typeof appMutator>;
+export const _mutatorCreator = mutatorCreator(function() {
+  return function(ctx, state, tag) {
+    type ReturnState = {
+      new?: string;
+    } & ReturnType<typeof appMutator>;
 
-  let returnState: ReturnState = appMutator(ctx, state, tag);
+    let returnState: ReturnState = appMutator(ctx, state, tag);
 
-  if (ctx.action.type === "ADD_NEW") {
-    returnState.new = "New added";
-    ctx.push("*");
-  }
+    if (ctx.action.type === "ADD_NEW") {
+      returnState.new = "New added";
+      ctx.push("*");
+    }
 
-  return returnState;
-};
+    return returnState;
+  };
+});
 
 export const createStore = function() {
-  return new Store(mutator);
+  return new Store(_mutatorCreator);
 };

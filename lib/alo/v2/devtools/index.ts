@@ -1,6 +1,6 @@
 import {
   Timemachine,
-  rootMutator as timemachineRootMutator
+  rootMutatorCreator as timemachineRootMutator
 } from "../timemachine";
 import { Store } from "../store";
 import { el, setChildren, text } from "redom";
@@ -8,14 +8,14 @@ import { hasTag, hasSomeTags } from "../tag";
 import { ActionList } from "./actionList";
 import {
   createStore,
-  rootMutator,
+  rootMutatorCreator,
   HEIGHT_TAG,
   setHeight,
   SELECTED_ACTION_ID_TAG
 } from "./store";
 import { ACTION_ITEM_TAG } from "../timemachine/actions";
 
-type DevtoolsStore = Store<typeof rootMutator>;
+type DevtoolsStore = Store<typeof rootMutatorCreator>;
 type TimemachineStore = Store<typeof timemachineRootMutator>;
 export type GlobalCtx = {
   store: DevtoolsStore;

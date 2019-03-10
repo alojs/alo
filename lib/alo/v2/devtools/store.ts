@@ -1,4 +1,4 @@
-import { Mutator } from "../mutator";
+import { Mutator, typeMutatorCreator } from "../mutator";
 import { createUniqueTag } from "../tag";
 import { Store } from "../store";
 
@@ -11,32 +11,37 @@ type RootState = {
 };
 export const HEIGHT_TAG = createUniqueTag();
 export const SELECTED_ACTION_ID_TAG = createUniqueTag();
-export const rootMutator: Mutator<RootState> = function(ctx, state) {
-  if (!state) {
-    state = {
-      height: "50vh",
-      selectedActionId: false
-    };
-  }
 
-  if (
-    ctx.action.type === SET_HEIGHT_TYPE &&
-    state.height !== ctx.action.payload
-  ) {
-    state.height = ctx.action.payload;
-    ctx.push(HEIGHT_TAG);
-  }
+export const rootMutatorCreator = typeMutatorCreator(function(ctx) {
+  const rootMutator: Mutator<RootState> = function(ctx, state) {
+    if (!state) {
+      state = {
+        height: "50vh",
+        selectedActionId: false
+      };
+    }
 
-  if (
-    ctx.action.type === SET_SELECTED_ACTION_ID &&
-    state.selectedActionId !== ctx.action.payload
-  ) {
-    state.selectedActionId = ctx.action.payload;
-    ctx.push(SELECTED_ACTION_ID_TAG);
-  }
+    if (
+      ctx.action.type === SET_HEIGHT_TYPE &&
+      state.height !== ctx.action.payload
+    ) {
+      state.height = ctx.action.payload;
+      ctx.push(HEIGHT_TAG);
+    }
 
-  return state;
-};
+    if (
+      ctx.action.type === SET_SELECTED_ACTION_ID &&
+      state.selectedActionId !== ctx.action.payload
+    ) {
+      state.selectedActionId = ctx.action.payload;
+      ctx.push(SELECTED_ACTION_ID_TAG);
+    }
+
+    return state;
+  };
+
+  return rootMutator;
+});
 
 export const setHeight = function(height) {
   return {
@@ -53,5 +58,5 @@ export const setSelectedActionId = function(actionId) {
 };
 
 export const createStore = function() {
-  return new Store(rootMutator);
+  return new Store(rootMutatorCreator);
 };

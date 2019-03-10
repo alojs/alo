@@ -3,6 +3,8 @@ export type MaybeTag = Tag | undefined;
 
 export type TagTrie = object;
 
+export type OneOrManyTagTries = TagTrie | TagTrie[];
+
 export const UNIQUE_TAG_PREFIX = "$";
 
 export const TAG_WILDCARD = "*";
@@ -47,15 +49,46 @@ export const createTagTrie = function(
 };
 
 export const hasTag = function(
-  tagTrie: TagTrie,
+  tagTries: OneOrManyTagTries,
   tag: Tag,
   ignoreWildcard = false
 ) {
-  if (!ignoreWildcard && tagTrie[TAG_WILDCARD]) {
-    return true;
+  const manyTagTries = ([] as TagTrie[]).concat(tagTries);
+  for (const tagTrie of manyTagTries) {
+    if (!ignoreWildcard && tagTrie[TAG_WILDCARD]) {
+      return true;
+    }
+
+    if (tagTrie[tag.toString()]) {
+      return true;
+    }
+
+    if (!ignoreWildcard && aTagsParentHasWildcard(tagTrie, tag)) {
+      return true;
+    }
   }
 
-  return tagTrie[tag.toString()];
+  return false;
+};
+
+/**
+ * Checks if any of the parents has a wildcard in the tagTrie
+ *
+ * @param tagTrie
+ * @param tag
+ */
+const aTagsParentHasWildcard = function(tagTrie: TagTrie, tag: Tag) {
+  // Is it really enough that tags[0] (the very first parent) has to be checked?
+  const tagParents: Tag[] = tagTrie["$$$parentsMap"][tag];
+  if (tagParents) {
+    for (const parentTag of tagParents) {
+      if (tagTrie[parentTag] && tagTrie[parentTag][TAG_WILDCARD]) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 };
 
 /**
@@ -65,19 +98,28 @@ export const hasTag = function(
  * @param tag Tag to be searched
  */
 export const hasTags = function(
-  tagTrie: TagTrie,
+  tagTries: OneOrManyTagTries,
   tags: Tag[],
   ignoreWildcard = false
 ) {
   const length = tags.length;
 
-  for (var idx = 0; idx < length; idx++) {
-    if (!ignoreWildcard && tagTrie[TAG_WILDCARD]) {
+  const manyTagTries = ([] as TagTrie[]).concat(tagTries);
+  for (let tagTrie of manyTagTries) {
+    if (!ignoreWildcard && aTagsParentHasWildcard(tagTrie, tags[0])) {
       return true;
     }
-    tagTrie = tagTrie[tags[idx].toString()];
-    if (!tagTrie) {
-      return false;
+
+    for (var idx = 0; idx < length; idx++) {
+      if (!ignoreWildcard && tagTrie[TAG_WILDCARD]) {
+        return true;
+      }
+      const tag = tags[idx].toString();
+
+      tagTrie = tagTrie[tag];
+      if (!tagTrie) {
+        return false;
+      }
     }
   }
 
@@ -106,33 +148,45 @@ export const hasTags = function(
  * @param deepTags
  */
 export const hasSomeTags = function(
-  tagTrie: TagTrie,
+  tagTries: OneOrManyTagTries,
   deepTags: object,
-  ignoreWildcard = false
+  ignoreWildcard = false,
+  inRecursiveLookup?: boolean
 ) {
-  const tags = Object.keys(deepTags);
-  const length = tags.length;
-
-  for (var idx = 0; idx < length; idx++) {
+  const manyTagTries = ([] as TagTrie[]).concat(tagTries);
+  for (const tagTrie of manyTagTries) {
     if (!ignoreWildcard && tagTrie[TAG_WILDCARD]) {
       return true;
     }
 
-    const tag = tags[idx];
+    const tags = Object.keys(deepTags);
+    const length = tags.length;
 
-    if (!tagTrie[tag]) {
-      continue;
-    }
+    for (var idx = 0; idx < length; idx++) {
+      const tag = tags[idx];
 
-    // If the current deepTags child is true, this indicates that we have completed a tag lookup
-    // and that hasSomeTags is true
-    if (deepTags[tag] === true) {
-      return true;
-    }
+      if (
+        !inRecursiveLookup &&
+        !ignoreWildcard &&
+        aTagsParentHasWildcard(tagTrie, tag)
+      ) {
+        return true;
+      }
 
-    // If the recursive lookup was successfull we can complete hasSomeTags
-    if (hasSomeTags(tagTrie[tag], deepTags[tag], ignoreWildcard)) {
-      return true;
+      if (!tagTrie[tag]) {
+        continue;
+      }
+
+      // If the current deepTags child is true, this indicates that we have completed a tag lookup
+      // and that hasSomeTags is true
+      if (deepTags[tag] === true) {
+        return true;
+      }
+
+      // If the recursive lookup was successfull we can complete hasSomeTags
+      if (hasSomeTags(tagTrie[tag], deepTags[tag], ignoreWildcard, true)) {
+        return true;
+      }
     }
   }
 
@@ -161,6 +215,12 @@ export const splitTag = function(tag: Tag): Tag[] {
 let currentTagId = 0;
 const tagPrefix = "";
 const tagSuffix = "#";
-export const createUniqueTag = function(): Tag {
-  return UNIQUE_TAG_PREFIX + tagPrefix + currentTagId++ + tagSuffix;
+export const createUniqueTag = function(identifier: string | number = ""): Tag {
+  return (
+    UNIQUE_TAG_PREFIX + tagPrefix + currentTagId++ + tagSuffix + identifier
+  );
+};
+
+export const isUniqueTag = function(tag: Tag) {
+  return tag.toString().startsWith(UNIQUE_TAG_PREFIX);
 };

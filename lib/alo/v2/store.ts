@@ -1,7 +1,7 @@
 import { Subscribable } from "./subscribable";
-import { Mutator, createMutatorContext } from "./mutator";
+import { Mutator, createMutatorContext, MutatorCreator } from "./mutator";
 import { Action, NewAction, isAction } from "./action";
-import { TagTrie } from "./tag";
+import { TagTrie, Tag, splitTag, joinTags, isUniqueTag } from "./tag";
 import { DeepPartial, isFunction, isPromise, isArray } from "./util";
 
 export var actionTypes = {
@@ -136,18 +136,45 @@ export const batchAction = function(action: UnresolvedAction) {
  * @class Store
  * @extends Subscribable
  */
-export class Store<T extends Mutator = any> extends Subscribable {
+export class Store<T extends MutatorCreator = any> extends Subscribable {
   _isDispatching: boolean;
   _state: any = null;
   _lastAction: any = null;
   _effectHandler: any;
   _mutator: Mutator;
-  constructor(mutator: T, initialState?: DeepPartial<ReturnType<T>>) {
+  _tagParentsMap: Tag[][] = [];
+  constructor(
+    mutatorCreator: T,
+    initialState?: DeepPartial<ReturnType<ReturnType<T>>>
+  ) {
     super();
 
     this._isDispatching = false;
     this._state = initialState;
-    this._mutator = mutator;
+    this._mutator = mutatorCreator(
+      {
+        registerTag: (parent, tag) => {
+          this._tagParentsMap[tag] = this._tagParentsMap[tag] || [];
+          let tagParents: Tag[] = this._tagParentsMap[tag];
+
+          const newParents = splitTag(parent);
+          for (const parent of newParents) {
+            if (!isUniqueTag(parent)) {
+              continue;
+            }
+
+            if (tagParents.includes(parent)) {
+              continue;
+            }
+
+            tagParents.push(parent);
+          }
+
+          return joinTags(parent, tag);
+        }
+      },
+      ""
+    );
 
     // Initial set action
     this.dispatch({
@@ -159,7 +186,7 @@ export class Store<T extends Mutator = any> extends Subscribable {
   /**
    * Returns the current state
    */
-  getState = (): ReturnType<T> => {
+  getState = (): ReturnType<ReturnType<T>> => {
     return this._state;
   };
 
@@ -221,6 +248,9 @@ export class Store<T extends Mutator = any> extends Subscribable {
     if (action.meta.batchItem) {
       return <any>action;
     }
+
+    // TODO: Add constant for the propname, think about using a different propname :)
+    action.tagTrie["$$$parentsMap"] = this._tagParentsMap;
 
     // Action publishing
     this._lastAction = action;

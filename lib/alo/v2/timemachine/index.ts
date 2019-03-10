@@ -1,22 +1,22 @@
 import { Store, actionTypes } from "../store";
 import { Listener, Subscribable } from "../subscribable";
-import { combineMutators } from "../mutator";
+import { combineMutatorCreators } from "../mutator";
 import { createUniqueTag } from "../tag";
-import { mutator as actionsMutator, setAction } from "./actions";
+import { mutatorCreator as actionsMutatorCreator, setAction } from "./actions";
 import { cloneDeep } from "../util";
 import { createUniqueActionId } from "./util";
 import { diffString } from "json-diff";
 
 const ROOT_TAG = createUniqueTag();
-export const rootMutator = combineMutators(
+export const rootMutatorCreator = combineMutatorCreators(
   {
-    actions: actionsMutator
+    actions: actionsMutatorCreator
   },
   ROOT_TAG
 );
 
 export class Timemachine<T extends Store<any> = any> {
-  store: Store<typeof rootMutator>;
+  store: Store<typeof rootMutatorCreator>;
   targetStore: T;
   unsubscribe: null | ReturnType<Subscribable["subscribe"]>;
   initialTargetState: any;
@@ -28,7 +28,7 @@ export class Timemachine<T extends Store<any> = any> {
     this.targetStore = targetStore;
     this.initialTargetState = cloneDeep(targetStore.getAction().payload);
     this.lastTargetState = this.initialTargetState;
-    this.store = new Store(rootMutator);
+    this.store = new Store(rootMutatorCreator);
     this.store.subscribe(this.storeListener, true);
     this.enable();
   }

@@ -1,4 +1,9 @@
-import { Mutator, combineMutators } from "../mutator";
+import {
+  Mutator,
+  combineMutators,
+  combineMutatorCreators,
+  typeMutatorCreator as _mutatorCreator
+} from "../mutator";
 import { Action } from "../action";
 import { createUniqueTag, joinTags, hasTags } from "../tag";
 import { createSelector } from "../selector";
@@ -17,38 +22,39 @@ type TrackedActionsObject = {
 
 export const ACTION_ITEM_TAG = createUniqueTag();
 export const ACTION_ITEM_DISABLED_TAG = createUniqueTag();
-const byIdMutator: Mutator<TrackedActionsObject> = function(
-  ctx,
-  state = {},
-  prev
-) {
-  if (ctx.action.meta.do) {
-    if (ctx.action.type == SET_ACTION) {
-      const action: Action = ctx.action.payload.action;
-      const id = ctx.action.payload.id;
-      let trackedAction =
-        state[id] || <TrackedAction>{ id, disabled: false, trackState: false };
-      trackedAction.order = ctx.action.payload.order;
-      trackedAction.action = action;
-      // TODO: Clean this up
-      trackedAction["stateDiff"] = ctx.action.payload.stateDiff;
-      state[id] = trackedAction;
-      ctx.push(joinTags(prev, ACTION_ITEM_TAG, id));
-    }
-  }
-
-  if (ctx.action.meta.do) {
-    if (ctx.action.type == TOGGLE_ACTION) {
-      const id = ctx.action.payload.id;
-      if (state[id]) {
-        state[id].disabled = ctx.action.payload.toggle;
-        ctx.push(joinTags(prev, ACTION_ITEM_TAG, id, ACTION_ITEM_DISABLED_TAG));
+const byIdMutatorCreator = _mutatorCreator(function() {
+  return function(ctx, state: TrackedActionsObject = {}, prev) {
+    if (ctx.action.meta.do) {
+      if (ctx.action.type == SET_ACTION) {
+        const action: Action = ctx.action.payload.action;
+        const id = ctx.action.payload.id;
+        let trackedAction =
+          state[id] ||
+          <TrackedAction>{ id, disabled: false, trackState: false };
+        trackedAction.order = ctx.action.payload.order;
+        trackedAction.action = action;
+        // TODO: Clean this up
+        trackedAction["stateDiff"] = ctx.action.payload.stateDiff;
+        state[id] = trackedAction;
+        ctx.push(joinTags(prev, ACTION_ITEM_TAG, id));
       }
     }
-  }
 
-  return state;
-};
+    if (ctx.action.meta.do) {
+      if (ctx.action.type == TOGGLE_ACTION) {
+        const id = ctx.action.payload.id;
+        if (state[id]) {
+          state[id].disabled = ctx.action.payload.toggle;
+          ctx.push(
+            joinTags(prev, ACTION_ITEM_TAG, id, ACTION_ITEM_DISABLED_TAG)
+          );
+        }
+      }
+    }
+
+    return state;
+  };
+});
 
 const SET_ACTION = "SET_ACTION";
 export const setAction = function(action, id, order, stateDiff) {
@@ -79,9 +85,9 @@ export const toggleAction = function(id, toggle) {
 //export const toggleAction = function()
 
 const ACTIONS_TAG = createUniqueTag();
-export const mutator = combineMutators(
+export const mutatorCreator = combineMutatorCreators(
   {
-    items: byIdMutator
+    items: byIdMutatorCreator
   },
   ACTIONS_TAG
 );
