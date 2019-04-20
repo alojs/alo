@@ -1,67 +1,73 @@
-const shell = require('shelljs');
-const fs = require('fs');
-const { paths } = require("common");
-const micromatch = require('micromatch')
+const fs = require("fs");
+const paths = require("../../../lib/node/paths");
+const {
+  runConfiguredScripts,
+  getScriptNameSpaces
+} = require("../../../lib/node/scripts");
 
 const getSummary = function() {
-    const scriptsDir = paths.scripts();
-    const scripts = fs.readdirSync(scriptsDir);
-    const coverageScripts = micromatch.match(scripts, 'coverage-*');
-    coverageScripts.forEach((script) => {
-        shell.exec(`node ${paths.scripts(script)} --reporter json-summary`);
+  runConfiguredScripts({
+    scriptType: "coverage",
+    args: "--reporter json-summary"
+  });
+
+  let failedTestsCount = 0;
+
+  const coverageNameSpaceIds = getScriptNameSpaces({ scriptType: "coverage" });
+  const coverageDir = paths.project("coverage");
+  const coverageSubDirs = fs.readdirSync(coverageDir).filter(nameSpaceDir => {
+    const fileStat = fs.lstatSync(paths.project(`coverage/${nameSpaceDir}`));
+
+    return (
+      coverageNameSpaceIds.indexOf(nameSpaceDir) >= 0 && fileStat.isDirectory()
+    );
+  });
+  let coverage = coverageSubDirs
+    .map(nameSpaceDir => {
+      const jsonSummary = require(paths.project(
+        `coverage/${nameSpaceDir}/coverage-summary.json`
+      ));
+      try {
+        const aFailedTestsCount = getFailedCount(nameSpaceDir);
+        failedTestsCount += aFailedTestsCount;
+      } catch (err) {}
+
+      return jsonSummary;
     })
-    
-    let failedTestsCount = 0;
+    .map(jsonSummary => {
+      const types = Object.keys(jsonSummary.total);
+      const pctSum =
+        types.reduce((acc, type) => {
+          acc += jsonSummary.total[type].pct;
 
-    const coverageDir = paths.project('coverage');
-    const coverageSubDirs = fs.readdirSync(coverageDir)
-    const coverage = coverageSubDirs
-        .filter((nameSpaceDir) => {
-            const fileStat = fs.lstatSync(paths.project(`coverage/${nameSpaceDir}`));
+          return acc;
+        }, 0) / types.length;
 
-            return fileStat.isDirectory();
-        })
-        .map((nameSpaceDir) => {
-            const jsonSummary = require(paths.project(`coverage/${nameSpaceDir}/coverage-summary.json`));
-            try {
-                const aFailedTestsCount = getFailedCount(nameSpaceDir);
-                failedTestsCount += aFailedTestsCount;
-            }
-            catch(err) {}
-            
-            return jsonSummary;
-        })
-        .map((jsonSummary) => {
-            const types = Object.keys(jsonSummary.total);
-            const pctSum = types.reduce((acc,type) => {
-                acc += jsonSummary.total[type].pct;
+      if (isNaN(pctSum)) {
+        console.log("No valid coverage found", jsonSummary.total);
+        return 0;
+      }
 
-                return acc;
-            }, 0) / types.length
+      return pctSum;
+    })
+    .reduce((acc, pct) => {
+      acc += pct;
 
-            if (isNaN(pctSum)) {
-                console.log('No valid coverage found', jsonSummary.total);
-                return 0;
-            }
+      return acc;
+    }, 0);
 
-            return pctSum;
-        })
-        .reduce((acc, pct) => {
-            acc += pct;
+  coverage = coverageSubDirs.length ? coverage / coverageSubDirs.length : 100;
 
-            return acc;
-        }, 0) / coverageSubDirs.length;
-
-    return { coverage, failedTestsCount };
-}
+  return { coverage, failedTestsCount };
+};
 
 const getFailedCount = function(nameSpaceId) {
-    const filePath = paths.tmp(`.nyc_output_${nameSpaceId}/failedTestsCount.txt`);
-    const failedTestsCount = fs.readFileSync(filePath, { encoding: 'utf8' });
+  const filePath = paths.tmp(`.nyc_output_${nameSpaceId}/failedTestsCount.txt`);
+  const failedTestsCount = fs.readFileSync(filePath, { encoding: "utf8" });
 
-    return Number.parseInt(failedTestsCount);
-}
+  return Number.parseInt(failedTestsCount);
+};
 
 module.exports = {
-    getSummary
-}
+  getSummary
+};

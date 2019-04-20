@@ -3,8 +3,9 @@ const pino = require("pino")({ prettyPrint: { forceColor: true } });
 const yargs = require("yargs");
 const fs = require("fs");
 
-const { paths, mergeDirectories } = require("common");
-const concat = require("common/lib/concatJs");
+const { paths, mergeDirectories } = require("../../lib/node");
+const concat = require("../../lib/node/concatJs");
+const { runScript } = require("../../lib/node/scripts");
 
 const checkStaticTypes = function({ nameSpaceId }) {
   const result = require("./type")({
@@ -76,7 +77,7 @@ const runWebpack = function({
     command += " --colors";
   }
 
-  command += ` --config ${paths.config(`webpack.${nameSpaceId}.config.js`)}`;
+  command += ` --config ${paths.config(`${nameSpaceId}/webpack.config.js`)}`;
   command += ` ${endOfOptions}`;
 
   pino.info(command);
@@ -122,7 +123,7 @@ const build = function({
     : paths.testDist(nameSpaceId);
   // Custom version of clean-webpack-plugin =)
   shell.rm("-rf", outputPath);
-  shell.mkdir(outputPath);
+  shell.mkdir("-p", outputPath);
 
   // Create raw js file bundles
   if (!testing) {
@@ -135,11 +136,11 @@ const build = function({
       });
     }
 
-    const svgScript = paths.scripts(`svg-${nameSpaceId}.js`);
-    if (fs.existsSync(svgScript)) {
+    // For "node" namespaces the svg script doesnt exist, we just ignore the err for now
+    try {
       pino.info("Building svg sprites");
-      shell.exec(`node ${svgScript}`);
-    }
+      runScript({ scriptType: "svg", nameSpaceId });
+    } catch (err) {}
   }
 
   if (!testing && !argv.watch) {

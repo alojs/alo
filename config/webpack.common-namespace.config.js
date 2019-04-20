@@ -1,4 +1,4 @@
-const common = require("common");
+const common = require("../lib/node");
 const paths = common.paths;
 const util = common.webpack;
 
@@ -31,9 +31,6 @@ module.exports = function({
     output: {
       filename: outputFileName,
       path: nameSpaceOutputDir
-    },
-    resolve: {
-      modules: [paths.lib(), "node_modules"]
     }
   };
 

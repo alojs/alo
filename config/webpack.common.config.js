@@ -1,4 +1,4 @@
-const common = require("common");
+const common = require("../lib/node");
 const util = common.webpack;
 const paths = common.paths;
 const TerserPlugin = require("terser-webpack-plugin");
@@ -107,7 +107,13 @@ const createCssRule = ({
   return cssRule;
 };
 
-module.exports = function({ env, argv, isNode = false, outputDir }) {
+module.exports = function({
+  env,
+  argv,
+  isNode = false,
+  outputDir,
+  nameSpaceId
+}) {
   const envIsTesting = util.envIsTesting(env);
   const envIsProd = process.env.NODE_ENV === "production";
 
@@ -136,8 +142,7 @@ module.exports = function({ env, argv, isNode = false, outputDir }) {
     "@babel/proposal-object-rest-spread",
     "lodash",
     emotionPlugin,
-    "macros",
-    "idx"
+    "macros"
   ];
 
   const babelPresetEnv = [
@@ -175,11 +180,15 @@ module.exports = function({ env, argv, isNode = false, outputDir }) {
     },
     externals: [],
     resolve: {
-      extensions: [".js", ".jsx", ".ts", ".tsx"]
+      extensions: [".js", ".jsx", ".ts", ".tsx"],
+      alias: {
+        "@lib": paths.lib(),
+        "@project": paths.project()
+      }
     },
     plugins: {
       banner: util.getBannerPlugin({ isNode, env }),
-      define: util.getDefinePlugin({ isNode, env })
+      define: util.getDefinePlugin({ isNode, env, nameSpaceId })
     },
     optimization: {
       minimizer: {
