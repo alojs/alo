@@ -1,0 +1,11 @@
+<h1 id="streams"><a href="#streams" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Streams</h1>
+<p>Alo uses <a href="https://github.com/paldepind/flyd" target="_blank">Flyd</a> streams in the background. The API provides you with a direct way to access underlying streams:</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+<span class="hljs-keyword">var</span> store = alo.createStore(<span class="hljs-string">'state'</span>, <span class="hljs-string">'storeName'</span>);
+<span class="hljs-keyword">var</span> subscription = alo.createSubscription(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{});
+
+<span class="hljs-comment">// This is the flyd stream and you can use it with the many flyd modules</span>
+<span class="hljs-keyword">var</span> stream = store.getStream();
+
+<span class="hljs-comment">// Use this very careful: Subscription streams are overwritten with new streams, each time when the relation between the subscription and its stores is changed. If you only add / remove stores to the subscription at the beginning of your app, then the usage of this should be fine</span>
+<span class="hljs-keyword">var</span> subscriptionStream = subscription.getStream();</code></pre>

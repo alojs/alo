@@ -1,22 +1,23 @@
-var addDev = function addDev (AloOld) {
+var addDev = function addDev (AloOrig) {
   var catchLongStack = function (reason) {
     console.error(reason.longStack)
   }
 
-  var AloDev = function Alo () {
-    AloOld.apply(this, arguments)
-    this.util.Promise.enableLongStackTrace()
-    this.util.Promise.unhandledRejection = catchLongStack
-    this.util.createAlo = function createAlo () {
-      var alo = Object.create(AloDev.prototype)
-      AloDev.apply(alo, arguments)
-      return alo
+  class Alo extends AloOrig {
+    constructor(id) {
+      super(id)
+      this.util.Promise.enableLongStackTrace()
+      this.util.Promise.unhandledRejection = catchLongStack
+      this.util.createAlo = function createAlo () {
+        var alo = Object.create(Alo.prototype)
+        Alo.apply(alo, arguments)
+        return alo
+      }
+      this.dev = true
     }
-    this.dev = true
   }
-  AloDev.prototype = AloOld.prototype
-  AloDev.prototype.catchLongStack = catchLongStack
-  return AloDev
+  Alo.prototype.catchLongStack = catchLongStack
+  return Alo
 }
 
 module.exports = addDev

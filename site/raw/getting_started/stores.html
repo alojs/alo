@@ -1,0 +1,75 @@
+<h1 id="stores"><a href="#stores" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Stores</h1>
+<p>As earlier mentioned stores hold the state of your application and redirect actions to reducers.</p>
+<p>They can be created like this:</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+<span class="hljs-keyword">var</span> store = alo.createStore(<span class="hljs-string">"state"</span>, <span class="hljs-string">"storeName"</span>);</code></pre>
+<p>The constructor parameters are:</p>
+<ol>
+<li>Initial state of the store, (can be any type but generally will be an object)</li>
+<li>Optional: An unique name for the store (this name will be used as store identifier in the subscription!)</li>
+</ol>
+<h2 id="dispatch"><a href="#dispatch" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Dispatch</h2>
+<p>Dispatches are the way to notify a store about a state change:</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> action = {
+  <span class="hljs-attr">type</span>: <span class="hljs-string">'changeState'</span>,
+  <span class="hljs-attr">payload</span>: <span class="hljs-string">'newState'</span>
+}
+store.dispatch(action);</code></pre>
+<p><em>Atleast if you are not using a middleware to change this behaviour, you <strong>always</strong>
+need to dispatch action objects atleast with a type field.</em></p>
+<p>The dispatch will however not do anything, as long as the store doesn't have a related reducer!
+If the store has any reducers, they will decide what should happen with your action.</p>
+<h2 id="get-the-current-state"><a href="#get-the-current-state" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Get the current state</h2>
+<ul>
+<li>Only the state:</li>
+</ul>
+<pre><code class="hljs language-js">store.getState();</code></pre>
+<ul>
+<li>State and computed properties</li>
+</ul>
+<pre><code class="hljs language-js">store.getData();</code></pre>
+<h2 id="computed-properties"><a href="#computed-properties" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Computed properties</h2>
+<p>Alo has built-in support for computed properties. They are only recalculated, when their dependencies change (plusThree is only called, when plusTwo changes). Look at the following example to get a feel for them:</p>
+<p><a href="https://jsfiddle.net/katywings/w4q6242q/4/" target="_blank">Fiddle</a></p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+<span class="hljs-keyword">var</span> store = alo.createStore(<span class="hljs-number">1</span>, <span class="hljs-string">'number'</span>);
+store.createReducer(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">state, action</span>) </span>{
+  <span class="hljs-keyword">if</span> (action.type == <span class="hljs-string">'add'</span>) {
+    state += <span class="hljs-number">1</span>;
+  }
+
+  <span class="hljs-keyword">return</span> state;
+});
+
+<span class="hljs-comment">// Creates 3 computed properties, plusThree is especially dependent on plusTwo</span>
+store.createComputedProperty({
+  <span class="hljs-string">'plusOne'</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">store</span>) </span>{
+    <span class="hljs-keyword">return</span> store + <span class="hljs-number">1</span>;
+  },
+  <span class="hljs-string">'plusTwo'</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">store</span>) </span>{
+    <span class="hljs-keyword">return</span> store + <span class="hljs-number">2</span>;
+  },
+  <span class="hljs-string">'plusThree'</span>: [[<span class="hljs-string">'plusTwo'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">store, computed</span>) </span>{
+    <span class="hljs-keyword">return</span> computed.plusTwo + <span class="hljs-number">1</span>;
+  }]
+});
+
+store.subscribe(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">stores</span>) </span>{
+  <span class="hljs-comment">// Computed</span>
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'state'</span>, stores.number.state);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'computed properties'</span>, stores.number.computed);
+});
+
+store.dispatch({ <span class="hljs-attr">type</span>: <span class="hljs-string">'add'</span> });</code></pre>
+<p><strong>At the moment computed properties will (as lazy as they are) only be called after a dispatch with state change, as an example you could have a "initialize" action which sets the initial store state</strong>:</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+<span class="hljs-keyword">var</span> store = alo.createStore({}, <span class="hljs-string">'number'</span>);
+store.createReducer(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">state, action</span>) </span>{
+  <span class="hljs-keyword">if</span> (action.type == <span class="hljs-string">'initialize'</span>) {
+    state = action.payload;
+  }
+
+  <span class="hljs-keyword">return</span> state;
+});
+<span class="hljs-comment">// store.createComputedProperty...</span>
+store.dispatch({ <span class="hljs-attr">type</span>: <span class="hljs-string">'initialize'</span>, <span class="hljs-attr">payload</span>: <span class="hljs-number">1</span>});</code></pre>

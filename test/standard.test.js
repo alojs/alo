@@ -1,10 +1,8 @@
-/* globals it */
-
 var standard = require('mocha-standard')
+import test from 'ava'
 
-describe('Coding style', function() {
-  this.timeout(5000)
-  it('conforms to standard', standard.files([
+test('Coding style conforms to standard', function() {
+  return standard.files([
     'lib/**/*.js'
-  ]))
+  ])
 })

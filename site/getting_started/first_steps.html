@@ -1,0 +1,569 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>First Steps - Alo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../app.min.css?v=0.0.3">
+    <script src="../app.min.js?v=0.0.3"></script>
+    <link class="favicon" rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';">-->
+  </head>
+  <body>
+    <div id="app">
+      <main>
+        <h1 id="first-steps"><a href="#first-steps" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>First steps</h1>
+<p>Alo is very similar to the <a href="https://medium.com/hacking-and-gonzo/flux-vs-mvc-design-patterns-57b28c0f71b7" target="_blank">flux pattern</a>.</p>
+<p>The main building blocks are:</p>
+<ul>
+<li>Stores: Are boxes of data, this data can be anything - from booleans to objects</li>
+<li>Reducers: They describe how an action should be synchronously applied to data</li>
+<li>Dependencies: Computations which are derived from data</li>
+<li>Subscriptions: Are reactions after the data in one or multiple stores has changed</li>
+<li>Middlewares: They can change an action - (even asynchronously), before it will be redirected to reducers</li>
+</ul>
+<p>Except a more object oriented approach, there is one <em>essential difference</em> compared implementations like <a href="http://redux.js.org/" target="_blank">Redux</a>: Alo doesn't try to enforce the use of only one central store for your data, therefore subscriptions can be attached to multible stores. That is, you still can use it with a single store model if you want.</p>
+<p>Alo's primary goal is not performance, but to minimize data mutation bugs. Therefore reducers will always get a clone and not the reference of the dispatched action and payload.</p>
+<p>The data flow is as follow:
+<code>dispatch on store -> middlewares -> reducers -> subscriptions</code></p>
+<h2 id="relations"><a href="#relations" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Relations</h2>
+<p>Thanks to the object oriented nature, the API consists of many helper functions. As an example stores and subscriptions are related <a href="https://stackoverflow.com/questions/3397349/meaning-of-nm-and-1n-in-database-design#3397384" target="_blank">m:n</a>:</p>
+<p>(<a href="https://jsfiddle.net/katywings/oogL9bnr/1/" target="_blank">Fiddle</a>)</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> makeLogState = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">storeName</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">stores</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(stores[storeName].state);
+  };
+};
+
+<span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+<span class="hljs-keyword">var</span> store = alo.createStore(<span class="hljs-string">'initial state'</span>, <span class="hljs-string">'store1'</span>);
+<span class="hljs-keyword">var</span> logStateStore1 = makeLogState(<span class="hljs-string">'store1'</span>);
+<span class="hljs-keyword">var</span> subscription = store.subscribe(logStateStore1);
+store.removeSubscription(subscription);
+<span class="hljs-keyword">var</span> subscription2 = alo.createSubscription(logStateStore1);
+subscription2.addStore(store);
+
+<span class="hljs-keyword">var</span> store2 = alo.createStore(<span class="hljs-literal">true</span>, <span class="hljs-string">'store2'</span>);
+<span class="hljs-keyword">var</span> logStateStore2 = makeLogState(<span class="hljs-string">'store2'</span>);
+<span class="hljs-keyword">var</span> subscription3 = alo.createSubscription(logStateStore2);
+store2.addSubscription(subscription3);</code></pre>
+<h2 id="alo-instances"><a href="#alo-instances" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Alo instances</h2>
+<p>As Alo follows a relational model, its building blocks are related to each other but they are also related to a Alo instance!</p>
+<pre><code class="hljs language-js"><span class="hljs-comment">// A single Alo instance</span>
+<span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+<span class="hljs-comment">// This store is related to the alo instance above</span>
+<span class="hljs-keyword">var</span> store = alo.createStore(<span class="hljs-string">'state'</span>, <span class="hljs-string">'storeName'</span>);</code></pre>
+<p><strong>This implementation detail was added, so that <a href="https://github.com/alojs/alo/issues/9" target="_blank">debugging and tooling</a> of your apps can be achieved at a later moment - currently the alo instances are just here because they are here.</strong></p>
+<p>If you are creating an app with Alo you should create the Alo instance at one place and use <a href="https://youtu.be/6YBV1cKRqzU" target="_blank">dependency injection</a>, to enable its use in multible parts of your software:</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">var</span> createAppStore = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">alo</span>) </span>{
+  <span class="hljs-keyword">return</span> alo.createStore({}, <span class="hljs-string">'app'</span>);
+}
+<span class="hljs-keyword">var</span> App = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">var</span> alo = <span class="hljs-keyword">new</span> Alo();
+  <span class="hljs-keyword">var</span> appStore = createAppStore(alo);
+}</code></pre>
+<h3 id="when-to-use-multible-instances"><a href="#when-to-use-multible-instances" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>When to use multible instances</h3>
+<p><a href="https://github.com/alojs/alo/issues/9" target="_blank">Debugging and tooling</a> will be per instance, therefore if you are developing an "App in app" solution you could create an instance per App. Use multible Alo instances when you want to completely separate specific components for debugging.</p>
+<h2 id="utilities"><a href="#utilities" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Utilities</h2>
+<p>In the example code you probably will find many uses of the <code>alo.util</code> property. Use these with precaution! There are plans to remove many of them in a future major release.</p>
+
+      </main>
+    </div>
+
+    <script>
+      var $ = document.querySelectorAll.bind(document)
+      new mallery($('#app')[0], {
+ "config": {
+  "colors": {
+   "accent": "#D97647"
+  },
+  "title": "Alo",
+  "footer": {
+   "html": ""
+  }
+ },
+ "toc": {
+  "items": [
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/docs/README.md",
+    "path": "index.html",
+    "name": "README.md",
+    "title": "Alo",
+    "level": 0,
+    "id": 0,
+    "htmlPath": "raw/index.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/raw/index.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/index.html",
+    "baseUrl": "./",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "Alo",
+       "hash": "alo",
+       "children": [
+        1,
+        2,
+        3,
+        5
+       ],
+       "id": 0
+      },
+      {
+       "level": "2",
+       "heading": "Features",
+       "hash": "features",
+       "children": [],
+       "id": 1
+      },
+      {
+       "level": "2",
+       "heading": "And how?",
+       "hash": "and-how",
+       "children": [],
+       "id": 2
+      },
+      {
+       "level": "2",
+       "heading": "Roadmap",
+       "hash": "roadmap",
+       "children": [
+        4
+       ],
+       "id": 3
+      },
+      {
+       "level": "3",
+       "heading": "Long-term",
+       "hash": "long-term",
+       "children": [],
+       "id": 4
+      },
+      {
+       "level": "2",
+       "heading": "Logo",
+       "hash": "logo",
+       "children": [],
+       "id": 5
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "ext": "",
+    "isDir": true,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/docs/getting_started",
+    "path": "getting_started",
+    "name": "getting_started",
+    "children": [
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "level": 0,
+    "id": 1,
+    "htmlPath": "raw/getting_started",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/raw/getting_started",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/getting_started",
+    "baseUrl": "./",
+    "title": "Getting Started"
+   },
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/docs/getting_started/installation.md",
+    "path": "getting_started/installation.html",
+    "name": "installation.md",
+    "level": 1,
+    "id": 2,
+    "htmlPath": "raw/getting_started/installation.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/raw/getting_started/installation.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/getting_started/installation.html",
+    "baseUrl": "../",
+    "title": "Installation",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "Installation",
+       "hash": "installation",
+       "children": [
+        1,
+        2,
+        3,
+        4,
+        8
+       ],
+       "id": 0
+      },
+      {
+       "level": "2",
+       "heading": "NPM",
+       "hash": "npm",
+       "children": [],
+       "id": 1
+      },
+      {
+       "level": "2",
+       "heading": "Bower",
+       "hash": "bower",
+       "children": [],
+       "id": 2
+      },
+      {
+       "level": "2",
+       "heading": "Versions",
+       "hash": "versions",
+       "children": [],
+       "id": 3
+      },
+      {
+       "level": "2",
+       "heading": "CDN's",
+       "hash": "cdns",
+       "children": [
+        5,
+        6,
+        7
+       ],
+       "id": 4
+      },
+      {
+       "level": "3",
+       "heading": "Development (unminified and with devtools) (see Versions)",
+       "hash": "development-unminified-and-with-devtools-see-a-hrefversionsversionsa",
+       "children": [],
+       "id": 5
+      },
+      {
+       "level": "3",
+       "heading": "Production (minified)",
+       "hash": "production-minified",
+       "children": [],
+       "id": 6
+      },
+      {
+       "level": "3",
+       "heading": "More?",
+       "hash": "more",
+       "children": [],
+       "id": 7
+      },
+      {
+       "level": "2",
+       "heading": "Use (CJS)",
+       "hash": "use-cjs",
+       "children": [],
+       "id": 8
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/docs/getting_started/first_steps.md",
+    "path": "getting_started/first_steps.html",
+    "name": "first_steps.md",
+    "level": 1,
+    "id": 3,
+    "htmlPath": "raw/getting_started/first_steps.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/raw/getting_started/first_steps.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/getting_started/first_steps.html",
+    "baseUrl": "../",
+    "title": "First Steps",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "First steps",
+       "hash": "first-steps",
+       "children": [
+        1,
+        2,
+        4
+       ],
+       "id": 0
+      },
+      {
+       "level": "2",
+       "heading": "Relations",
+       "hash": "relations",
+       "children": [],
+       "id": 1
+      },
+      {
+       "level": "2",
+       "heading": "Alo instances",
+       "hash": "alo-instances",
+       "children": [
+        3
+       ],
+       "id": 2
+      },
+      {
+       "level": "3",
+       "heading": "When to use multible instances",
+       "hash": "when-to-use-multible-instances",
+       "children": [],
+       "id": 3
+      },
+      {
+       "level": "2",
+       "heading": "Utilities",
+       "hash": "utilities",
+       "children": [],
+       "id": 4
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/docs/getting_started/stores.md",
+    "path": "getting_started/stores.html",
+    "name": "stores.md",
+    "level": 1,
+    "id": 4,
+    "htmlPath": "raw/getting_started/stores.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/raw/getting_started/stores.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/getting_started/stores.html",
+    "baseUrl": "../",
+    "title": "Stores",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "Stores",
+       "hash": "stores",
+       "children": [
+        1,
+        2,
+        3
+       ],
+       "id": 0
+      },
+      {
+       "level": "2",
+       "heading": "Dispatch",
+       "hash": "dispatch",
+       "children": [],
+       "id": 1
+      },
+      {
+       "level": "2",
+       "heading": "Get the current state",
+       "hash": "get-the-current-state",
+       "children": [],
+       "id": 2
+      },
+      {
+       "level": "2",
+       "heading": "Computed properties",
+       "hash": "computed-properties",
+       "children": [],
+       "id": 3
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/docs/getting_started/reducers.md",
+    "path": "getting_started/reducers.html",
+    "name": "reducers.md",
+    "level": 1,
+    "id": 5,
+    "htmlPath": "raw/getting_started/reducers.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/raw/getting_started/reducers.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/getting_started/reducers.html",
+    "baseUrl": "../",
+    "title": "Reducers",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "Reducers",
+       "hash": "reducers",
+       "children": [],
+       "id": 0
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/docs/getting_started/subscriptions.md",
+    "path": "getting_started/subscriptions.html",
+    "name": "subscriptions.md",
+    "level": 1,
+    "id": 6,
+    "htmlPath": "raw/getting_started/subscriptions.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/raw/getting_started/subscriptions.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/getting_started/subscriptions.html",
+    "baseUrl": "../",
+    "title": "Subscriptions",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "Subscriptions",
+       "hash": "subscriptions",
+       "children": [
+        1
+       ],
+       "id": 0
+      },
+      {
+       "level": "2",
+       "heading": "Computed properties",
+       "hash": "computed-properties",
+       "children": [],
+       "id": 1
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/docs/getting_started/middlewares.md",
+    "path": "getting_started/middlewares.html",
+    "name": "middlewares.md",
+    "level": 1,
+    "id": 7,
+    "htmlPath": "raw/getting_started/middlewares.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/raw/getting_started/middlewares.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/getting_started/middlewares.html",
+    "baseUrl": "../",
+    "title": "Middlewares",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "Middlewares",
+       "hash": "middlewares",
+       "children": [],
+       "id": 0
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/docs/streams.md",
+    "path": "streams.html",
+    "name": "streams.md",
+    "level": 0,
+    "id": 8,
+    "htmlPath": "raw/streams.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/raw/streams.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/streams.html",
+    "baseUrl": "./",
+    "title": "Streams",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "Streams",
+       "hash": "streams",
+       "children": [],
+       "id": 0
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "ext": ".md",
+    "isDir": false,
+    "absolutePath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/docs/extras.md",
+    "path": "extras.html",
+    "name": "extras.md",
+    "level": 0,
+    "id": 9,
+    "htmlPath": "raw/extras.html",
+    "absoluteHtmlOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/raw/extras.html",
+    "absoluteOutputPath": "/Users/katja/Archiv/Privat/Unterhaltung/Projekte/Web/alo/site/extras.html",
+    "baseUrl": "./",
+    "title": "Extras",
+    "chapters": {
+     "root": [
+      0
+     ],
+     "items": [
+      {
+       "level": "1",
+       "heading": "Extras",
+       "hash": "extras",
+       "children": [],
+       "id": 0
+      }
+     ]
+    },
+    "hasContent": true
+   },
+   {
+    "href": "https://github.com/alojs/alo",
+    "title": "Github",
+    "level": 0,
+    "id": 10,
+    "hasContent": false
+   }
+  ],
+  "root": [
+   0,
+   1,
+   8,
+   9,
+   10
+  ],
+  "activeItemId": 3
+ }
+});
+    </script>
+  </body>
+</html>

@@ -1,7 +1,6 @@
-/* global describe, it */
-
-var alo = require('./../../main/alo.js')
+var alo = require('./../../dist/alo.js')
 var u = alo.util
 var assert = require('assert')
+import test from 'ava'
 
-describe('Member', function () {})
+test('Member', function () {})

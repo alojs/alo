@@ -1,15 +1,20 @@
-var addExtras = function addExtras (Alo) {
-  var extras = require('./../../lib/extras/extras.js')
+import extras from './../../lib/extras/extras.js'
 
-  /**
-  * Useful functions
-  *
-  * @memberof Alo
-  *
-  * @see extras
-  */
-  Alo.prototype.extras = extras
+var addExtras = function addExtras (AloOrig) {
+  class Alo extends AloOrig {
+    constructor(id) {
+      super(id)
+      /**
+      * Useful functions
+      *
+      * @memberof Alo
+      *
+      * @see extras
+      */
+      this.extras = extras
+    }
+  }
   return Alo
 }
 
-module.exports = addExtras
+export default addExtras

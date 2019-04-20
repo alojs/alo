@@ -1,13 +1,14 @@
 <h1>
-  <img width="100px" src="https://cdn.rawgit.com/alojs/alo/e512ce4ef2fca64120d74942519b4a9cea8959de/logo/logo.png" /> 
-  &nbsp; Welcome to Alo
+  <img width="400px" src="https://cdn.rawgit.com/alojs/alo/0eec1f5a9f032865d2bbb0d76d1fd9cfe1c67322/logo/logo.png" />
 </h1>
 
 [![license](https://img.shields.io/github/license/alojs/alo.svg)](https://github.com/alojs/alo/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/v/alo.svg)](https://www.npmjs.com/package/alo)
 [![Bower](https://img.shields.io/bower/v/alo.svg)](https://bower.io/search/?q=alo)
 [![Travis](https://img.shields.io/travis/alojs/alo.svg)](https://travis-ci.org/alojs/alo)
+<!-- currently wrong, because i couldnt find a way to remove the libs from the coverage (and sourcemaps dont work either)
 [![Coveralls](https://img.shields.io/coveralls/alojs/alo.svg)](https://coveralls.io/github/alojs/alo)
+-->
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![npm](https://img.shields.io/npm/dm/alo.svg)](https://www.npmjs.com/package/alo)
 [![David](https://img.shields.io/david/alojs/alo.svg)](https://github.com/alojs/alo)
@@ -119,5 +120,5 @@ I am working on it.
 3. *What are your future plans?*
 Trying to add examples, test the software, add more extras, work on the dev-tools. My goal is to ship an as stable as possible 3.0 in the next couple of months (End of Q1(17) / Start of Q2(17))
 
-
-
+## Logo
+The logo was created in association with Nora Rigo, a freelance designer at http://www.designcrowd.com/.
