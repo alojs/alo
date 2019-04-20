@@ -3,7 +3,7 @@ const webpackUtil = common.webpack;
 const paths = common.paths;
 const _ = require("lodash");
 const FilterWarningsPlugin = require("webpack-filter-warnings-plugin");
-const pkg = require(paths.project('package.json'));
+const pkg = require(paths.project("package.json"));
 
 module.exports = function(env, argv) {
   const isNode = false;

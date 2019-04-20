@@ -2,10 +2,14 @@
   "name": "alo",
   "version": "4.0.0-alpha.0",
   "description": "Mutation based state management",
-  "main": "index.js",
+  "main": "dist/alo/main.js",
   "homepage": "https://github.com/alojs/alo",
   "types": "typings/alo/main/main.d.ts",
-  "author": "{author}",
+  "author": {
+    "name": "Katja Lutz",
+    "email": "alojs@katjalutz.ch",
+    "url": "https://github.com/katywings"
+  },
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.4.3",
