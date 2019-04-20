@@ -4,6 +4,4 @@ tmp/*
 coverage
 !coverage/.gitkeep
 .vscode
-dist/*
-!dist/.gitkeep
 .npmrc

@@ -1,10 +1,10 @@
 {
-  "name": "some-pkg",
-  "version": "0.0.1",
-  "description": "Some project description",
+  "name": "alo",
+  "version": "4.0.0-alpha.0",
+  "description": "Mutation based state management",
   "main": "index.js",
-  "homepage": "https://github.com/witneyjs/witney",
-  "types": "typings/package/main/main.d.ts",
+  "homepage": "https://github.com/alojs/alo",
+  "types": "typings/alo/main/main.d.ts",
   "author": "{author}",
   "license": "MIT",
   "devDependencies": {
@@ -101,13 +101,13 @@
   },
   "common": {
     "licenseUrl": "https://opensource.org/licenses/MIT",
-    "repoStaticUrl": "https://raw.github.com/witneyjs/witney/${branch}/",
+    "repoStaticUrl": "https://raw.github.com/alojs/alo/${branch}/",
     "readmeSvgUrlSuffix": "?sanitize=true",
-    "bannerCopyright": "Copyright(c) {year} {name} {surname}"
+    "bannerCopyright": "Copyright(c) 2019 Katja Lutz"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/witneyjs/witney.git"
+    "url": "https://github.com/alojs/alo.git"
   },
   "dependencies": {
     "express": "^4.16.4",

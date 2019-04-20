@@ -1,11 +1,17 @@
 {
   "build": {
-    "nameSpaces": []
+    "nameSpaces": [
+      "alo"
+    ]
   },
   "coverage": {
-    "nameSpaces": []
+    "nameSpaces": [
+      "alo"
+    ]
   },
   "test": {
-    "nameSpaces": []
+    "nameSpaces": [
+      "alo"
+    ]
   }
 }
