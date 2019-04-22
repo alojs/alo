@@ -18,7 +18,9 @@ export type MutatorCreator<T = any> = (
   tag: Tag
 ) => Mutator<T>;
 
-export const typeMutatorCreator = function<T extends MutatorCreator>(consumer: T) {
+export const typeMutatorCreator = function<T extends MutatorCreator>(
+  consumer: T
+) {
   return consumer;
 };
 

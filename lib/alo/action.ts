@@ -20,5 +20,5 @@ export interface Action extends NewAction {
 }
 
 export const isAction = function(action): action is NewAction {
-  return (<NewAction>action).type !== undefined;
+  return action && (<NewAction>action).type !== undefined;
 };
