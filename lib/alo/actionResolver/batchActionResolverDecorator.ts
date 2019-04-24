@@ -1,25 +1,23 @@
 import { AbstractActionResolverDecorator, ResolveOptions } from ".";
-import { BATCH_ACTION_TYPE } from "../main/main";
+import { BATCH_ACTION_TYPE, createEvent } from "../main/main";
 import { Action } from "../action";
-import { createPushResults, actionTypes } from "../store";
 
 export class BatchActionResolverDecorator extends AbstractActionResolverDecorator {
-  _pushResultsByBatchId = {};
+  _eventByBatchId = {};
 
   resolve(options: ResolveOptions) {
     const { action, store } = options;
 
     // We collect all pushResults of the batch items
     if (action.meta.batchItem) {
-      const pushResults = (this._pushResultsByBatchId[action.meta.batchId] =
-        this._pushResultsByBatchId[action.meta.batchId] || createPushResults());
+      const event = (this._eventByBatchId[action.meta.batchId] =
+        this._eventByBatchId[action.meta.batchId] || createEvent());
+      action.event = event;
 
+      delete action.meta.batchItem;
       delete action.meta.batchId;
 
-      store._applyMutator({
-        action,
-        pushResults
-      });
+      store._applyMutator(action as Action);
 
       return action;
     }
@@ -27,7 +25,7 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
     if (action.type === BATCH_ACTION_TYPE) {
       // Batch action which already, originally was dispatched and yet to be dispatched again in array form
       if (!action.meta.newBatch) {
-        const pushResults = createPushResults();
+        const event = createEvent();
 
         let batchItems: Action[] = [...action.payload];
         if (action.meta.undo) {
@@ -51,31 +49,29 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
             newBatchActionItem.meta.redo = true;
           }
 
-          store._applyMutator({
-            action: newBatchActionItem,
-            pushResults
-          });
+          newBatchActionItem.event = event;
+
+          store._applyMutator(action as Action);
         }
 
         store._lastAction = action;
-        if (pushResults.tagsPushed) {
+        if (event.tagsSet) {
           store._callSubscribers();
         }
 
         return action;
       } else {
-        const pushResults = (this._pushResultsByBatchId[action.meta.batchId] =
-          this._pushResultsByBatchId[action.meta.batchId] ||
-          createPushResults());
+        const event = (this._eventByBatchId[action.meta.batchId] =
+          this._eventByBatchId[action.meta.batchId] || createEvent());
 
         // If we get here, this is a new batch action
-        action.tagTrie = pushResults.tagTrie;
+        action.event = event;
         delete action.meta.newBatch;
-        delete this._pushResultsByBatchId[action.meta.batchId];
+        delete this._eventByBatchId[action.meta.batchId];
         delete action.meta.batchId;
 
         store._lastAction = action;
-        if (pushResults.tagsPushed) {
+        if (event.tagsSet) {
           store._callSubscribers();
         }
 

@@ -11,10 +11,17 @@ import {
   BatchActionNormalizerDecorator,
   ActionResolver,
   BatchActionResolverDecorator,
-  createUniqueTag
+  createTag,
+  createEvent,
+  setTag,
+  setWildCard,
+  tagIsSet
 } from "@lib/alo/main/main";
 import { Action } from "@lib/alo/action";
+import { timeout } from "q";
+import { string } from "prop-types";
 
+/*
 let actionNormalizer = new ActionNormalizer();
 actionNormalizer = new ThunkActionNormalizerDecorator({ actionNormalizer });
 actionNormalizer = new PromiseActionNormalizerDecorator({ actionNormalizer });
@@ -27,12 +34,12 @@ const store = new Store({
   actionResolver,
   actionNormalizer,
   mutatorCreator: () => {
-    return ctx => {
+    return event => {
       console.log("mutator got action type and meta", {
-        type: ctx.action.type,
-        meta: JSON.stringify(ctx.action.meta)
+        type: event.action.type,
+        meta: JSON.stringify(event.action.meta)
       });
-      ctx.push(createUniqueTag("dingdong"));
+      event.push(createUniqueTag("dingdong"));
     };
   }
 });
@@ -64,3 +71,32 @@ const result = store.dispatch(thunkAction).then(action => {
 });
 
 console.log("basic result", result);
+*/
+
+const NAME_TAG = createTag({ name: "name" });
+const SURNAME_TAG = createTag({ name: "surname" });
+const NAMES_TAG = createTag({
+  name: "names",
+  children: [NAME_TAG, SURNAME_TAG]
+});
+const PROFILE_TAG = createTag({ name: "profile", children: [NAMES_TAG] });
+const PROFILES_TAG = createTag({
+  name: "profiles",
+  entityContainer: true,
+  children: [PROFILE_TAG]
+});
+
+let evt = createEvent();
+
+console.time();
+setTag(evt, SURNAME_TAG, 4);
+setWildCard(evt, SURNAME_TAG);
+//pushTag({ event, tag: PROFILES_TAG, wildCard: true });
+
+console.log(tagIsSet(evt, NAMES_TAG, undefined, 4));
+console.log(tagIsSet(evt, SURNAME_TAG, undefined, 4));
+console.log(tagIsSet(evt, NAME_TAG, undefined));
+
+console.timeEnd();
+
+console.log(evt);

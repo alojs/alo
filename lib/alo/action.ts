@@ -1,4 +1,4 @@
-import { TagTrie } from "./tag";
+import { EventInterface } from "./event";
 
 export interface ActionMeta {
   [propName: string]: any;
@@ -10,15 +10,27 @@ export interface ActionMeta {
 export interface NewAction {
   type: string;
   payload?: any;
-  tagTrie?: TagTrie;
+  event?: EventInterface;
   meta?: ActionMeta;
 }
 
-export interface Action extends NewAction {
-  tagTrie: TagTrie;
+export interface NormalizedAction extends NewAction {
   meta: ActionMeta;
+}
+
+export interface Action extends NormalizedAction {
+  event: EventInterface;
 }
 
 export const isAction = function(action): action is NewAction {
   return action && (<NewAction>action).type !== undefined;
+};
+
+export const normalizeNewAction = function(
+  action: NewAction
+): NormalizedAction {
+  if (!action.meta) action.meta = {};
+  if (!action.meta.undo && !action.meta.redo) action.meta.do = true;
+
+  return action as Action;
 };

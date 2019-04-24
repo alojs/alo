@@ -1,25 +1,17 @@
 import { Subscribable } from "./subscribable";
-import { Mutator, createMutatorContext, MutatorCreator } from "./mutator";
-import { Action, NewAction, isAction } from "./action";
-import { TagTrie, Tag, splitTag, joinTags, isUniqueTag } from "./tag";
-import { DeepPartial, isFunction, isPromise, isArray } from "./util";
-import { mutatorCreator } from "./main/main";
+import { Mutator } from "./mutator";
+import { Action, NewAction, isAction, normalizeNewAction } from "./action";
+import { DeepPartial } from "./util";
 import {
   ActionNormalizer,
-  ActionNormalizerInterface
+  ActionNormalizerInterface,
+  NormalizeOptions
 } from "./actionNormalizer";
 import { ActionResolverInterface, ActionResolver } from "./actionResolver";
+import { setWildCard } from "./event";
 
 export var actionTypes = {
-  INIT: "@@init",
-  BATCH: "@@batch"
-};
-
-export const createPushResults = function() {
-  return {
-    tagsPushed: false,
-    tagTrie: {}
-  };
+  INIT: "@@init"
 };
 
 type DispatchReturn<T> = T extends (...args: any[]) => any
@@ -36,88 +28,28 @@ export type ThunkFunc = (
   getState: Function
 ) => any;
 
-/*
-export const batchAction = function(action: UnresolvedAction) {
-  return function(rootDispatch, getState) {
-    
-
-    // If rootDispatch.batchDispatch is true we already are in a running batchAction
-    // so we dont have to create a new wrapper
-    let dispatch = rootDispatch;
-    if (!rootDispatch.batchDispatch) {
-      // Define the root batchAction dispatch wrapper
-      dispatch = function(action: Action) {
-        const batchInfo = { pushResults };
-
-        let dispatchingActions: Action[] = action.payload;
-        if (action.type !== actionTypes.BATCH) {
-          dispatchingActions = [action];
-        }
-
-        for (const subAction of dispatchingActions) {
-          if (action.type === actionTypes.BATCH) {
-            console.log("found a batch action in a batch action", action);
-          }
-
-          subAction.meta = subAction.meta || {};
-          subAction.meta.batchItem = batchInfo;
-
-          batchAction.payload.push({
-            type: subAction.type,
-            payload: subAction.payload,
-            meta: subAction.meta
-          });
-
-          rootDispatch(subAction);
-          delete subAction.meta.batchItem;
-        }
-
-        return action;
-      };
-      dispatch.batchDispatch = true;
-    }
-
-    const resolvedAction = resolveAction(dispatch, getState, action);
-
-    const dispatchBatchAction = function() {
-      batchAction.meta.batchPushResults = pushResults;
-      batchAction = rootDispatch(batchAction);
-      delete batchAction.meta.batchPushResults;
-      return batchAction;
-    };
-
-    if (resolvedAction && isPromise(resolvedAction)) {
-      return resolvedAction.then(function() {
-        return dispatchBatchAction();
-      });
-    }
-
-    return dispatchBatchAction();
-  };
-};
-*/
+// TODO: Dont extend on Subscribable - instead add it as constructor option
 
 /**
  * @export
  * @class Store
  * @extends Subscribable
  */
-export class Store<T extends MutatorCreator = any> extends Subscribable {
+export class Store<T extends Mutator = any> extends Subscribable {
   _isMutating: boolean;
   _state: any = null;
   _lastAction: any = null;
   _effectHandler: any;
   _mutator: Mutator;
-  _tagParentsMap: Tag[][] = [];
   _actionNormalizer: ActionNormalizerInterface;
   _actionResolver: ActionResolverInterface;
   constructor({
-    mutatorCreator,
+    mutator,
     state,
     actionNormalizer = new ActionNormalizer(),
     actionResolver = new ActionResolver()
   }: {
-    mutatorCreator: T;
+    mutator: T;
     state?: DeepPartial<ReturnType<ReturnType<T>>>;
     actionNormalizer?: ActionNormalizerInterface;
     actionResolver?: ActionResolverInterface;
@@ -128,30 +60,7 @@ export class Store<T extends MutatorCreator = any> extends Subscribable {
     this._actionNormalizer = actionNormalizer;
     this._isMutating = false;
     this._state = state;
-    this._mutator = mutatorCreator(
-      {
-        registerTag: (parent, tag) => {
-          this._tagParentsMap[tag] = this._tagParentsMap[tag] || [];
-          let tagParents: Tag[] = this._tagParentsMap[tag];
-
-          const newParents = splitTag(parent);
-          for (const parent of newParents) {
-            if (!isUniqueTag(parent)) {
-              continue;
-            }
-
-            if (tagParents.includes(parent)) {
-              continue;
-            }
-
-            tagParents.push(parent);
-          }
-
-          return joinTags(parent, tag);
-        }
-      },
-      ""
-    );
+    this._mutator = mutator;
 
     // Initial set action
     this.dispatch({
@@ -179,75 +88,32 @@ export class Store<T extends MutatorCreator = any> extends Subscribable {
     return this._actionResolver;
   }
 
+  _afterDispatchNormalization: NormalizeOptions["callBack"] = action => {
+    if (!isAction(action)) {
+      return action;
+    }
+
+    return this._actionResolver.resolve({
+      action: normalizeNewAction(action),
+      store: this
+    });
+  };
+
   /**
    * Send a mesage which will trigger an action
    */
   dispatch = <T extends UnresolvedAction>(action: T): DispatchReturn<T> => {
-    let afterNormalization = action => {
-      if (!action.meta) action.meta = {};
-      if (!action.meta.undo && !action.meta.redo) action.meta.do = true;
-
-      return this._actionResolver.resolve({
-        action,
-        store: this
-      });
-    };
-
     return this._actionNormalizer.normalize({
       action,
-      callBack: afterNormalization,
+      callBack: this._afterDispatchNormalization,
       store: this
     });
-
-    /*
-
-    let pushResults = {
-      tagsPushed: false,
-      tagTrie: {}
-    };
-    
-
-    // An action which is a batch and has existing batchPushResults went already through the mutator
-    if (!action.meta.batch || !action.meta.batchPushResults) {
-      try {
-        this._applyMutator(
-          action,
-          action.meta.batchItem
-            ? action.meta.batchItem.pushResults
-            : pushResults
-        );
-
-        action.tagTrie = pushResults.tagTrie;
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      pushResults = action.meta.batchPushResults;
-    }
-
-    // Batch items should not be published like normal actions
-    if (action.meta.batchItem) {
-      return <any>action;
-    }
-
-    // TODO: Add constant for the propname, think about using a different propname :)
-    // action.tagTrie["$$$parentsMap"] = this._tagParentsMap;
-
-    */
   };
 
-  _applyMutator({
-    action,
-    pushResults
-  }: {
-    action: Action;
-    pushResults: ReturnType<typeof createPushResults>;
-  }) {
-    const ctx = createMutatorContext({ action, pushResults });
-
+  _applyMutator(action: Action) {
     if (action.type === actionTypes.INIT) {
       this._state = action.payload;
-      ctx.push("*");
+      setWildCard(action.event);
     }
 
     if (this._isMutating) {
@@ -257,7 +123,7 @@ export class Store<T extends MutatorCreator = any> extends Subscribable {
     this._isMutating = true;
 
     try {
-      this._state = this._mutator(ctx, this._state, "");
+      this._state = this._mutator(action, this._state);
     } catch (err) {
       console.error(err);
     }

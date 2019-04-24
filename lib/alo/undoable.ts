@@ -1,6 +1,5 @@
 import { actionTypes } from "./store";
 import { Action, NewAction, ActionMeta } from "./action";
-import { createUniqueTag, joinTags, Tag } from "./tag";
 import { Mutator } from "./mutator";
 
 type ActionFilter = (action: Action) => boolean;

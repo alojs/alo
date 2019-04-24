@@ -1,2 +1,2 @@
-import '@lib/alo/actionNormalizer';
+export {};
 //# sourceMappingURL=main.d.ts.map

@@ -1,5 +1,5 @@
 import { AbstractActionNormalizerDecorator, NormalizeOptions } from ".";
-import { Action } from "../action";
+import { Action, NormalizedAction, NewAction } from "../action";
 import { isFunction, isPromise } from "../util";
 
 export const BATCH_ACTION_TYPE = "@@batch";
@@ -26,22 +26,14 @@ export class BatchActionNormalizerDecorator extends AbstractActionNormalizerDeco
 
     let batchId = batchIdx++;
 
-    let batchAction: Action = {
+    let batchAction: NormalizedAction = {
       type: BATCH_ACTION_TYPE,
       payload: [],
-      tagTrie: {},
       meta: { batch: true, batchId, newBatch: true }
     };
 
-    /*
-          let pushResults = {
-            tagsPushed: false,
-            tagTrie: batchAction.tagTrie
-          };
-          */
-
     const batchNormalizedCallback = function(action) {
-      (batchAction.payload as Action[]).push(action);
+      (batchAction.payload as NewAction[]).push(action);
       action.meta = action.meta || {};
       action.meta.batchId = batchId;
       action.meta.batchItem = true;

@@ -1,8 +1,9 @@
-import { Action, ActionMeta } from "../action";
-import { Store, createPushResults } from "../store";
+import { Action, ActionMeta, NormalizedAction } from "../action";
+import { Store } from "../store";
+import { createEvent } from "../event";
 
 export type ResolveOptions = {
-  action: Action;
+  action: NormalizedAction;
   store: Store;
 };
 
@@ -12,13 +13,13 @@ export interface ActionResolverInterface {
 
 export class ActionResolver implements ActionResolverInterface {
   resolve({ action, store }: ResolveOptions) {
-    const pushResults = createPushResults();
-    store._applyMutator({ action, pushResults });
+    const event = createEvent();
+    action.event = event;
 
-    action.tagTrie = pushResults.tagTrie;
+    store._applyMutator(action as Action);
+
     store._lastAction = action;
-
-    if (pushResults.tagsPushed) {
+    if (action.event.tagsSet) {
       store._callSubscribers();
     }
 
