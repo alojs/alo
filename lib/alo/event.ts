@@ -85,8 +85,8 @@ export const parentWildCardIsSet = function(event: EventInterface, childTag) {
 export const tagIsSet = function(
   event: EventInterface,
   tag,
-  checkWildCard = true,
-  entityId?: number | string
+  entityId?: number | string,
+  checkWildCard = true
 ) {
   if (checkWildCard && event.tags["*"]) {
     return true;
