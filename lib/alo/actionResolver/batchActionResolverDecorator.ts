@@ -6,7 +6,7 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
   _eventByBatchId = {};
 
   resolve(options: ResolveOptions) {
-    const { action, store } = options;
+    const { action, store, setAction, applyMutator } = options;
 
     // We collect all pushResults of the batch items
     if (action.meta.batchItem) {
@@ -17,7 +17,7 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
       delete action.meta.batchItem;
       delete action.meta.batchId;
 
-      store._applyMutator(action as Action);
+      applyMutator(action as Action);
 
       return action;
     }
@@ -51,10 +51,10 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
 
           newBatchActionItem.event = event;
 
-          store._applyMutator(action as Action);
+          applyMutator(action as Action);
         }
 
-        store._lastAction = action;
+        setAction(action as Action);
         if (event.tagsSet) {
           store._callSubscribers();
         }
@@ -70,7 +70,7 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
         delete this._eventByBatchId[action.meta.batchId];
         delete action.meta.batchId;
 
-        store._lastAction = action;
+        setAction(action as Action);
         if (event.tagsSet) {
           store._callSubscribers();
         }

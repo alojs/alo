@@ -1,5 +1,7 @@
 export { Store } from "../store";
 
+export { Action, isAction } from "../action";
+
 export {
   createTag,
   setTag,

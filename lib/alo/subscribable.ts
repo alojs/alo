@@ -1,15 +1,22 @@
-export type Listener<T extends Subscribable = Subscribable> = (
-  store: T
-) => void;
+export type Listener<T = any> = (options: T) => void;
+
+export interface SubscribableInterface<T = any> {
+  _separateNextListeners: () => void;
+  _callSubscribers: (listenerOptions: T) => void;
+  subscribe: (listener: Listener<T>, initialCall: boolean) => () => void;
+}
 
 /**
  * Implements a very basic and general subscribable:
  * a list of listeners which will be called in specific moments - moments defined by the child class
  * New listeners will not be directly called, when they are subscribed while a broadcast is happening
  */
-export class Subscribable {
+export class Subscribable<T = any> implements SubscribableInterface<T> {
   _currentListeners: Function[];
   _nextListeners: Function[];
+  _lastListenerOptions?: T;
+  _subscribersCalled = false;
+
   constructor() {
     this._currentListeners = [];
     // Will be copied shallowly from currentListeners by _separateNextListeners
@@ -35,13 +42,13 @@ export class Subscribable {
    *
    * @param {function} listener
    */
-  subscribe(listener: Listener<this>, initialCall = false) {
+  subscribe(listener: Listener<T>, remember = false) {
     this._separateNextListeners();
     var isSubscribed = true;
     this._nextListeners.push(listener);
 
-    if (initialCall) {
-      listener(this);
+    if (remember && this._subscribersCalled) {
+      listener(this._lastListenerOptions as T);
     }
 
     return function() {
@@ -57,11 +64,15 @@ export class Subscribable {
   /**
    * Should be called by the child class, when a broadcast to the subscribers should occur
    * This also sets the listeners registered in nextListeners as currentListeners
+   *
+   * TODO: Rename remove _
    */
-  _callSubscribers() {
+  _callSubscribers(listenerOptions: T) {
+    this._subscribersCalled = true;
+    this._lastListenerOptions = listenerOptions;
     this._currentListeners = this._nextListeners;
     for (var listener of this._currentListeners) {
-      listener(this);
+      listener(listenerOptions);
     }
   }
 }

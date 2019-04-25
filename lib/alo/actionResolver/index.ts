@@ -1,10 +1,13 @@
-import { Action, ActionMeta, NormalizedAction } from "../action";
-import { Store } from "../store";
+import { Action, NormalizedAction } from "../action";
+import { StoreInterface } from "../store";
 import { createEvent } from "../event";
 
 export type ResolveOptions = {
   action: NormalizedAction;
-  store: Store;
+  store: StoreInterface;
+  setAction: StoreInterface["_setAction"];
+  callSubscribers: StoreInterface["_callSubscribers"];
+  applyMutator: StoreInterface["_applyMutator"];
 };
 
 export interface ActionResolverInterface {
@@ -12,15 +15,20 @@ export interface ActionResolverInterface {
 }
 
 export class ActionResolver implements ActionResolverInterface {
-  resolve({ action, store }: ResolveOptions) {
+  resolve({
+    action,
+    callSubscribers,
+    applyMutator,
+    setAction
+  }: ResolveOptions) {
     const event = createEvent();
     action.event = event;
 
-    store._applyMutator(action as Action);
+    applyMutator(action as Action);
 
-    store._lastAction = action;
+    setAction(action as Action);
     if (action.event.tagsSet) {
-      store._callSubscribers();
+      callSubscribers();
     }
 
     return action;

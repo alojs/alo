@@ -1,10 +1,10 @@
-import { Store } from "../store";
+import { StoreInterface } from "../store";
 import { isAction, NewAction } from "../action";
 
 export type NormalizeOptions = {
   action: any;
   callBack: (action: NewAction) => any;
-  store: Store;
+  store: StoreInterface;
 };
 
 export interface ActionNormalizerInterface {
