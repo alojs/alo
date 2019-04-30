@@ -1,4 +1,4 @@
-import { Action, NewAction, ActionMeta } from "./action";
+import { Action, NewAction, ActionMeta } from "./action/types";
 import { Mutator } from "./mutator";
 declare type ActionFilter = (action: Action) => boolean;
 interface UndoableAction extends Action {

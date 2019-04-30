@@ -1,20 +1,15 @@
-import { Store } from "../store";
-import { NewAction } from "../action";
-export declare type NormalizeOptions = {
-    action: any;
-    callBack: (action: NewAction) => any;
-    store: Store;
-};
-export interface ActionNormalizerInterface {
-    normalize(options: NormalizeOptions): any;
-}
+import { NewAction } from "../action/types";
+import { ActionNormalizerInterface, NormalizeOptions } from "./types";
 export declare class ActionNormalizer implements ActionNormalizerInterface {
-    normalize({ action, callBack }: NormalizeOptions): any;
+    normalize<T>({ action, callBack }: {
+        action: T;
+        callBack: (action: NewAction) => any;
+    }): any;
 }
 export declare abstract class AbstractActionNormalizerDecorator implements ActionNormalizerInterface {
     _actionNormalizer: ActionNormalizerInterface;
     constructor({ actionNormalizer }: {
-        actionNormalizer: ActionNormalizer;
+        actionNormalizer: ActionNormalizerInterface;
     });
     normalize(options: NormalizeOptions): any;
 }

@@ -1,12 +1,14 @@
-export declare type Listener<T extends Subscribable = Subscribable> = (store: T) => void;
+import { SubscribableInterface, Listener } from "./types";
 /**
  * Implements a very basic and general subscribable:
  * a list of listeners which will be called in specific moments - moments defined by the child class
  * New listeners will not be directly called, when they are subscribed while a broadcast is happening
  */
-export declare class Subscribable {
+export declare class Subscribable<T = any> implements SubscribableInterface<T> {
     _currentListeners: Function[];
     _nextListeners: Function[];
+    _lastListenerOptions?: T;
+    _subscribersCalled: boolean;
     constructor();
     /**
      * Creates a copy of currentListeners for the futureListeners (Look at subscribe for more information)
@@ -22,12 +24,12 @@ export declare class Subscribable {
      *
      * @param {function} listener
      */
-    subscribe(listener: Listener<this>, initialCall?: boolean): () => void;
+    subscribe(listener: Listener<T>, remember?: boolean): () => void;
     /**
      * Should be called by the child class, when a broadcast to the subscribers should occur
      * This also sets the listeners registered in nextListeners as currentListeners
      */
-    _callSubscribers(): void;
+    callSubscribers(listenerOptions: T): void;
 }
 /**
  * Callback used by _callSubscribers
@@ -36,4 +38,4 @@ export declare class Subscribable {
  *
  * TODO: This notation currently doesnt work with vscode https://github.com/Microsoft/TypeScript/issues/7515
  */
-//# sourceMappingURL=subscribable.d.ts.map
+//# sourceMappingURL=index.d.ts.map

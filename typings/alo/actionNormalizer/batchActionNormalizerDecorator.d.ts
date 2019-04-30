@@ -1,4 +1,5 @@
-import { AbstractActionNormalizerDecorator, NormalizeOptions } from ".";
+import { AbstractActionNormalizerDecorator } from ".";
+import { NormalizeOptions } from "./types";
 export declare const BATCH_ACTION_TYPE = "@@batch";
 export declare const batchAction: (action: Function) => (dispatch: any, getState: any) => any;
 export declare class BatchActionNormalizerDecorator extends AbstractActionNormalizerDecorator {

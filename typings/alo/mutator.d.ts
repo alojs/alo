@@ -1,4 +1,4 @@
-import { Action } from "./action";
+import { Action } from "./action/types";
 export interface Mutator<T = any> {
     (action: Action, state: T): T;
 }

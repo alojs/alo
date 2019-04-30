@@ -1,14 +1,6 @@
-import { NormalizedAction } from "../action";
-import { Store } from "../store";
-export declare type ResolveOptions = {
-    action: NormalizedAction;
-    store: Store;
-};
-export interface ActionResolverInterface {
-    resolve(options: ResolveOptions): any;
-}
+import { ActionResolverInterface, ResolveOptions } from "./types";
 export declare class ActionResolver implements ActionResolverInterface {
-    resolve({ action, store }: ResolveOptions): NormalizedAction;
+    resolve({ action, callSubscribers, applyMutator, setAction }: ResolveOptions): import("../action/types").NormalizedAction;
 }
 export declare abstract class AbstractActionResolverDecorator implements ActionResolverInterface {
     _actionResolver: ActionResolverInterface;
