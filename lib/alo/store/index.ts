@@ -1,55 +1,22 @@
-import { Subscribable, SubscribableInterface, Listener } from "./subscribable";
-import { Mutator } from "./mutator";
-import { Action, NewAction, isAction, normalizeNewAction } from "./action";
-import { DeepPartial } from "./util";
-import {
-  ActionNormalizer,
-  ActionNormalizerInterface,
-  NormalizeOptions
-} from "./actionNormalizer";
-import { ActionResolverInterface, ActionResolver } from "./actionResolver";
-import { setWildCard } from "./event";
+import { Action } from '../action/types';
+import { ActionNormalizer } from '../actionNormalizer';
+import { ActionNormalizerInterface, NormalizeOptions } from '../actionNormalizer/types';
+import { ActionResolver } from '../actionResolver';
+import { ActionResolverInterface } from '../actionResolver/types';
+import { DeepPartial } from '../util';
+import { isAction, normalizeNewAction } from '../action';
+import { Listener, SubscribableInterface } from '../subscribable/types';
+import { Mutator } from '../mutator';
+import { setWildCard } from '../event';
+import { StoreInterface } from './types';
+import { Subscribable } from '../subscribable';
 
 export var actionTypes = {
   INIT: "@@init"
 };
 
-type DispatchReturn<T> = T extends (...args: any[]) => any
-  ? ReturnType<T>
-  : T extends Promise<any>
-  ? Promise<NewAction | null>
-  : Action;
 
-type UnresolvedAction = NewAction | Promise<any> | ThunkFunc;
-
-export type ThunkDispatchFunc = <T>(action: T) => DispatchReturn<T>;
-export type ThunkFunc = (
-  dispatch: ThunkDispatchFunc,
-  getState: Function
-) => any;
-
-export interface StoreInterface<T extends Mutator = any> {
-  getActionNormalizer: () => ActionNormalizerInterface;
-  setActionNormalizer: (ActionNormalizer: ActionNormalizerInterface) => void;
-
-  getActionResolver: () => ActionResolverInterface;
-  setActionResolver: (actionResolver: ActionResolverInterface) => void;
-
-  getSubscribable: () => SubscribableInterface<Store<T>>;
-  setSubscribable: (subscribable: SubscribableInterface<Store<T>>) => void;
-
-  getState: () => ReturnType<ReturnType<T>>;
-  _applyMutator: (action: Action) => void;
-  _callSubscribers: () => void;
-  _setAction: (action: Action) => void;
-}
-
-/**
- * @export
- * @class Store
- * @extends Subscribable
- */
-export class Store<T extends Mutator = any> implements StoreInterface {
+export class Store<T extends Mutator> implements StoreInterface {
   _isMutating: boolean;
   _state: any = null;
   _action: Action;
@@ -130,22 +97,26 @@ export class Store<T extends Mutator = any> implements StoreInterface {
   }
 
   /**
-   * Send a mesage which will trigger an action
+   * Send a message which will trigger an action
    */
-  dispatch = <T extends UnresolvedAction>(action: T): DispatchReturn<T> => {
+  dispatch = unnormalizedAction => {
     return this._actionNormalizer.normalize({
-      action,
+      action: unnormalizedAction,
       callBack: this._afterDispatchNormalization,
       store: this
     });
   };
 
   _callSubscribers = () => {
-    this._subscribable._callSubscribers(this);
+    this._subscribable.callSubscribers(this);
   };
 
   _afterDispatchNormalization: NormalizeOptions["callBack"] = action => {
     if (!isAction(action)) {
+      if (action) {
+        throw new Error("Invalid action dispatched");
+      }
+
       return action;
     }
 

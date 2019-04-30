@@ -1,4 +1,4 @@
-import { Action } from "./action";
+import { Action } from "./action/types";
 import { FirstArgument } from "./util";
 
 export interface SelectFuncResult<T = any> {

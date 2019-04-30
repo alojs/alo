@@ -1,6 +1,7 @@
-import { AbstractActionNormalizerDecorator, NormalizeOptions } from ".";
-import { Action, NormalizedAction, NewAction } from "../action";
+import { AbstractActionNormalizerDecorator } from ".";
+import { NormalizedAction, NewAction } from "../action/types";
 import { isFunction, isPromise } from "../util";
+import { NormalizeOptions } from "./types";
 
 export const BATCH_ACTION_TYPE = "@@batch";
 

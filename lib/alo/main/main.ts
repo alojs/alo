@@ -1,6 +1,8 @@
-export { Store } from "../store";
+export * from "../store";
+export * from "../store/types";
 
-export { Action, isAction } from "../action";
+export { isAction } from "../action";
+export * from "../action/types";
 
 export {
   createTag,
@@ -24,10 +26,15 @@ export {
   redoAction
 } from "../undoable";
 
+export * from "../subscribable"
+export * from "../subscribable/types"
+
 export * from "../actionNormalizer";
+export * from "../actionNormalizer/types";
 export * from "../actionNormalizer/batchActionNormalizerDecorator";
 export * from "../actionNormalizer/promiseActionNormalizerDecorator";
 export * from "../actionNormalizer/thunkActionNormalizerDecorator";
 
 export * from "../actionResolver";
+export * from "../actionResolver/types"
 export * from "../actionResolver/batchActionResolverDecorator";

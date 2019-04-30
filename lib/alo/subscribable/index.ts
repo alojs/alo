@@ -1,10 +1,4 @@
-export type Listener<T = any> = (options: T) => void;
-
-export interface SubscribableInterface<T = any> {
-  _separateNextListeners: () => void;
-  _callSubscribers: (listenerOptions: T) => void;
-  subscribe: (listener: Listener<T>, initialCall: boolean) => () => void;
-}
+import { SubscribableInterface, Listener } from "./types";
 
 /**
  * Implements a very basic and general subscribable:
@@ -64,10 +58,8 @@ export class Subscribable<T = any> implements SubscribableInterface<T> {
   /**
    * Should be called by the child class, when a broadcast to the subscribers should occur
    * This also sets the listeners registered in nextListeners as currentListeners
-   *
-   * TODO: Rename remove _
    */
-  _callSubscribers(listenerOptions: T) {
+  callSubscribers(listenerOptions: T) {
     this._subscribersCalled = true;
     this._lastListenerOptions = listenerOptions;
     this._currentListeners = this._nextListeners;

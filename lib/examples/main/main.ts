@@ -17,16 +17,29 @@ import {
   setWildCard,
   tagIsSet,
   typeMutator,
+  typeThunkAction,
+  ThunkNormalizerReturn,
+  PromiseNormalizerReturn,
+  ActionNormalizerInterface,
   Action
 } from "@lib/alo/main/main";
 
-let actionNormalizer = new ActionNormalizer();
-actionNormalizer = new ThunkActionNormalizerDecorator({ actionNormalizer });
-actionNormalizer = new PromiseActionNormalizerDecorator({ actionNormalizer });
-actionNormalizer = new BatchActionNormalizerDecorator({ actionNormalizer });
+/*
+
+
+actionNormalizer = new BatchActionNormalizerDecorator({ actionNormalizer });*/
 
 let actionResolver = new ActionResolver();
 actionResolver = new BatchActionResolverDecorator({ actionResolver });
+
+let actionNormalizer: ActionNormalizerInterface = new ActionNormalizer();
+actionNormalizer = new ThunkActionNormalizerDecorator({ actionNormalizer });
+actionNormalizer = new PromiseActionNormalizerDecorator({ actionNormalizer });
+
+type NormalizeReturn<T> = ThunkNormalizerReturn<T, PromiseNormalizerReturn<T>>;
+const dispatch = function<T>(storeDispatch, action: T): NormalizeReturn<T> {
+  return storeDispatch(action) as any;
+};
 
 const NAME_TAG = createTag({ name: "name" });
 const SURNAME_TAG = createTag({ name: "surname" });
@@ -45,8 +58,8 @@ const createInitialState = () => ({
 });
 
 const store = new Store({
-  actionResolver,
   actionNormalizer,
+  actionResolver,
   mutator: typeMutator(
     (
       action,
@@ -82,15 +95,21 @@ store.subscribe(store => {
     console.log("Surname changed", action);
   }
 });
+dispatch(store.dispatch, {
+  type: "create"
+});
+
+dispatch(store.dispatch, function(td) {
+  console.log("huhu");
+  return dispatch(td, Promise.resolve({ type: "create" }));
+}).then(action => {
+  console.log("promise action", action);
+});
+
 store.dispatch({
   type: "create"
 });
-store.dispatch({
-  type: "create"
-});
-store.dispatch({
-  type: "create"
-});
+
 store.dispatch({
   type: "create"
 });

@@ -4,7 +4,7 @@ import {
   combineMutatorCreators,
   typeMutatorCreator as _mutatorCreator
 } from "../mutator";
-import { Action } from "../action";
+import { Action } from "../action/types";
 import { createUniqueTag, joinTags, hasTags } from "../tag";
 import { createSelector } from "../selector";
 

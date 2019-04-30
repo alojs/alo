@@ -1,6 +1,7 @@
-import { AbstractActionResolverDecorator, ResolveOptions } from ".";
+import { AbstractActionResolverDecorator } from ".";
 import { BATCH_ACTION_TYPE, createEvent } from "../main/main";
-import { Action } from "../action";
+import { Action } from "../action/types";
+import { ResolveOptions } from "./types";
 
 export class BatchActionResolverDecorator extends AbstractActionResolverDecorator {
   _eventByBatchId = {};

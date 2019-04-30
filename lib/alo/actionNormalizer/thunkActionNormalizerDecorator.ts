@@ -1,5 +1,8 @@
 import { isFunction } from "../util";
 import { AbstractActionNormalizerDecorator } from ".";
+import { ThunkAction } from "./types";
+
+export const typeThunk = <T extends ThunkAction>(thunk: T) => thunk;
 
 export class ThunkActionNormalizerDecorator extends AbstractActionNormalizerDecorator {
   normalize(options) {

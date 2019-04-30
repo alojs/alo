@@ -1,18 +1,6 @@
-import { Action, NormalizedAction } from "../action";
-import { StoreInterface } from "../store";
+import { Action } from "../action/types";
 import { createEvent } from "../event";
-
-export type ResolveOptions = {
-  action: NormalizedAction;
-  store: StoreInterface;
-  setAction: StoreInterface["_setAction"];
-  callSubscribers: StoreInterface["_callSubscribers"];
-  applyMutator: StoreInterface["_applyMutator"];
-};
-
-export interface ActionResolverInterface {
-  resolve(options: ResolveOptions);
-}
+import { ActionResolverInterface, ResolveOptions } from "./types";
 
 export class ActionResolver implements ActionResolverInterface {
   resolve({

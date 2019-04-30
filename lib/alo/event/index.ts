@@ -1,3 +1,5 @@
+import { Event } from './types'
+
 let idx = 0;
 let parentByTag = {};
 let entityContainerByTag = {};
@@ -43,7 +45,7 @@ export const setWildCard = function(event, tag = "") {
 };
 
 export const setTag = function(
-  event: EventInterface,
+  event: Event,
   tag: string,
   entityId?: number | string
 ) {
@@ -66,7 +68,7 @@ export const setTag = function(
   }
 };
 
-export const parentWildCardIsSet = function(event: EventInterface, childTag) {
+export const parentWildCardIsSet = function(event: Event, childTag) {
   let origTag = childTag;
 
   while (true) {
@@ -83,7 +85,7 @@ export const parentWildCardIsSet = function(event: EventInterface, childTag) {
 };
 
 export const tagIsSet = function(
-  event: EventInterface,
+  event: Event,
   tag,
   entityId?: number | string,
   checkWildCard = true
@@ -108,25 +110,7 @@ export const tagIsSet = function(
   return !!(tagIsSet || wildCardIsSet);
 };
 
-export interface EventInterface {
-  // Tag key
-  tagsSet: boolean;
-  tags: {
-    [key: string]: boolean;
-  };
-  containers: {
-    [key: string]: {
-      [key: string]: {
-        [key: string]: boolean;
-      };
-      [key: number]: {
-        [key: string]: boolean;
-      };
-    };
-  };
-}
-
-export const createEvent = function(): EventInterface {
+export const createEvent = function(): Event {
   return {
     tagsSet: false,
     tags: {},
