@@ -1,12 +1,12 @@
-import { actionTypes, Store } from '../store';
-import { cloneDeep } from '../util';
-import { combineMutatorCreators } from '../mutator';
-import { createUniqueActionId } from './util';
-import { createUniqueTag } from '../tag';
-import { diffString } from 'json-diff';
-import { Listener } from '../subscribable/types';
-import { mutatorCreator as actionsMutatorCreator, setAction } from './actions';
-import { Subscribable } from '../subscribable';
+import { actionTypes, Store } from "../store";
+import { cloneDeep } from "../util";
+import { combineMutatorCreators } from "../mutator";
+import { createUniqueActionId } from "./util";
+import { createUniqueTag } from "../tag";
+import { diffString } from "json-diff";
+import { Listener } from "../subscribable/types";
+import { mutatorCreator as actionsMutatorCreator, setAction } from "./actions";
+import { Subscribable } from "../subscribable";
 
 const ROOT_TAG = createUniqueTag();
 export const rootMutatorCreator = combineMutatorCreators(

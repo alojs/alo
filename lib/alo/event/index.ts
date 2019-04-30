@@ -1,4 +1,4 @@
-import { Event } from './types'
+import { Event } from "./types";
 
 let idx = 0;
 let parentByTag = {};

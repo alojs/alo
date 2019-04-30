@@ -1,20 +1,22 @@
-import { Action } from '../action/types';
-import { ActionNormalizer } from '../actionNormalizer';
-import { ActionNormalizerInterface, NormalizeOptions } from '../actionNormalizer/types';
-import { ActionResolver } from '../actionResolver';
-import { ActionResolverInterface } from '../actionResolver/types';
-import { DeepPartial } from '../util';
-import { isAction, normalizeNewAction } from '../action';
-import { Listener, SubscribableInterface } from '../subscribable/types';
-import { Mutator } from '../mutator';
-import { setWildCard } from '../event';
-import { StoreInterface } from './types';
-import { Subscribable } from '../subscribable';
+import { Action } from "../action/types";
+import { ActionNormalizer } from "../actionNormalizer";
+import {
+  ActionNormalizerInterface,
+  NormalizeOptions
+} from "../actionNormalizer/types";
+import { ActionResolver } from "../actionResolver";
+import { ActionResolverInterface } from "../actionResolver/types";
+import { DeepPartial } from "../util";
+import { isAction, normalizeNewAction } from "../action";
+import { Listener, SubscribableInterface } from "../subscribable/types";
+import { Mutator } from "../mutator";
+import { setWildCard } from "../event";
+import { StoreInterface } from "./types";
+import { Subscribable } from "../subscribable";
 
 export var actionTypes = {
   INIT: "@@init"
 };
-
 
 export class Store<T extends Mutator> implements StoreInterface {
   _isMutating: boolean;

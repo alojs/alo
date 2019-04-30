@@ -26,8 +26,8 @@ export {
   redoAction
 } from "../undoable";
 
-export * from "../subscribable"
-export * from "../subscribable/types"
+export * from "../subscribable";
+export * from "../subscribable/types";
 
 export * from "../actionNormalizer";
 export * from "../actionNormalizer/types";
@@ -36,5 +36,5 @@ export * from "../actionNormalizer/promiseActionNormalizerDecorator";
 export * from "../actionNormalizer/thunkActionNormalizerDecorator";
 
 export * from "../actionResolver";
-export * from "../actionResolver/types"
+export * from "../actionResolver/types";
 export * from "../actionResolver/batchActionResolverDecorator";
