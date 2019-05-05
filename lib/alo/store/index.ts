@@ -1,4 +1,4 @@
-import { Action } from "../action/types";
+import { Action, NewAction, NormalizedAction } from "../action/types";
 import { ActionNormalizer } from "../actionNormalizer";
 import {
   ActionNormalizerInterface,
@@ -6,13 +6,14 @@ import {
 } from "../actionNormalizer/types";
 import { ActionResolver } from "../actionResolver";
 import { ActionResolverInterface } from "../actionResolver/types";
-import { DeepPartial } from "../util";
-import { isAction, normalizeNewAction } from "../action";
+import { DeepPartial } from "../util/types";
+import { isAction } from "../action";
 import { Listener, SubscribableInterface } from "../subscribable/types";
 import { Mutator } from "../mutator";
 import { setWildCard } from "../event";
 import { StoreInterface } from "./types";
 import { Subscribable } from "../subscribable";
+import { cloneDeep as _cloneDeep } from "../util";
 
 export var actionTypes = {
   INIT: "@@init"
@@ -27,31 +28,41 @@ export class Store<T extends Mutator> implements StoreInterface {
   _actionNormalizer: ActionNormalizerInterface;
   _actionResolver: ActionResolverInterface;
   _subscribable: SubscribableInterface<Store<T>>;
+  _cloneDeep: typeof _cloneDeep;
+  _pureByDefault: boolean;
 
   constructor({
     mutator,
     state,
     actionNormalizer = new ActionNormalizer(),
     actionResolver = new ActionResolver(),
-    subscribable = new Subscribable()
+    subscribable = new Subscribable(),
+    cloneDeep = _cloneDeep,
+    pureByDefault = false
   }: {
     mutator: T;
     state?: DeepPartial<ReturnType<ReturnType<T>>>;
     actionNormalizer?: ActionNormalizerInterface;
     actionResolver?: ActionResolverInterface;
     subscribable?: SubscribableInterface<Store<T>>;
+    cloneDeep?: typeof _cloneDeep;
+    pureByDefault?: boolean;
   }) {
     this._actionResolver = actionResolver;
     this._actionNormalizer = actionNormalizer;
     this._subscribable = subscribable;
+    this._cloneDeep = cloneDeep;
+    this._pureByDefault = pureByDefault;
 
     this._isMutating = false;
-    this._state = state;
     this._mutator = mutator;
 
     // Initial set action
     this.dispatch({
       type: actionTypes.INIT,
+      meta: {
+        impure: true
+      },
       payload: state
     });
   }
@@ -101,9 +112,19 @@ export class Store<T extends Mutator> implements StoreInterface {
   /**
    * Send a message which will trigger an action
    */
-  dispatch = unnormalizedAction => {
+  dispatch = (action: NewAction): Action | undefined => {
+    if (!isAction(action)) {
+      if (action) {
+        console.error("Invalid action dispatched", action);
+      }
+
+      return;
+    }
+
+    if (!action.meta) action.meta = {};
+
     return this._actionNormalizer.normalize({
-      action: unnormalizedAction,
+      action: action as NormalizedAction,
       callBack: this._afterDispatchNormalization,
       store: this
     });
@@ -114,16 +135,8 @@ export class Store<T extends Mutator> implements StoreInterface {
   };
 
   _afterDispatchNormalization: NormalizeOptions["callBack"] = action => {
-    if (!isAction(action)) {
-      if (action) {
-        throw new Error("Invalid action dispatched");
-      }
-
-      return action;
-    }
-
     return this._actionResolver.resolve({
-      action: normalizeNewAction(action),
+      action: action,
       store: this,
       setAction: this._setAction,
       callSubscribers: this._callSubscribers,
@@ -132,9 +145,11 @@ export class Store<T extends Mutator> implements StoreInterface {
   };
 
   _applyMutator = (action: Action) => {
-    if (action.type === actionTypes.INIT) {
-      this._state = action.payload;
-      setWildCard(action.event);
+    let pureAction =
+      action.meta.pure != null ? action.meta.pure : this._pureByDefault;
+    let originalPayload = action.payload;
+    if (action.payload != null && pureAction) {
+      action.payload = this._cloneDeep(originalPayload);
     }
 
     if (this._isMutating) {
@@ -143,6 +158,11 @@ export class Store<T extends Mutator> implements StoreInterface {
 
     this._isMutating = true;
 
+    if (action.type === actionTypes.INIT) {
+      this._state = action.payload;
+      setWildCard(action.event);
+    }
+
     try {
       this._state = this._mutator(action, this._state);
     } catch (err) {
@@ -150,6 +170,8 @@ export class Store<T extends Mutator> implements StoreInterface {
     }
 
     this._isMutating = false;
+
+    action.payload = originalPayload;
   };
 
   /**

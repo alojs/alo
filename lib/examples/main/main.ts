@@ -5,10 +5,6 @@ console.log("examples namespace started");
 
 import {
   Store,
-  ActionNormalizer,
-  ThunkActionNormalizerDecorator,
-  PromiseActionNormalizerDecorator,
-  BatchActionNormalizerDecorator,
   ActionResolver,
   BatchActionResolverDecorator,
   createTag,
@@ -17,29 +13,24 @@ import {
   setWildCard,
   tagIsSet,
   typeMutator,
-  typeThunkAction,
-  ThunkNormalizerReturn,
-  PromiseNormalizerReturn,
   ActionNormalizerInterface,
-  Action
+  BatchActionNormalizerDecorator,
+  Action,
+  dispatchBatch,
+  dispatchThunk,
+  dispatchPromise,
+  ActionNormalizer,
+  dispatchActions,
+  cloneAction,
+  DateActionNormalizerDecorator
 } from "@lib/alo/main/main";
 
-/*
-
-
-actionNormalizer = new BatchActionNormalizerDecorator({ actionNormalizer });*/
+let actionNormalizer = new ActionNormalizer();
+actionNormalizer = new DateActionNormalizerDecorator({ actionNormalizer });
+actionNormalizer = new BatchActionNormalizerDecorator({ actionNormalizer });
 
 let actionResolver = new ActionResolver();
 actionResolver = new BatchActionResolverDecorator({ actionResolver });
-
-let actionNormalizer: ActionNormalizerInterface = new ActionNormalizer();
-actionNormalizer = new ThunkActionNormalizerDecorator({ actionNormalizer });
-actionNormalizer = new PromiseActionNormalizerDecorator({ actionNormalizer });
-
-type NormalizeReturn<T> = ThunkNormalizerReturn<T, PromiseNormalizerReturn<T>>;
-const dispatch = function<T>(storeDispatch, action: T): NormalizeReturn<T> {
-  return storeDispatch(action) as any;
-};
 
 const NAME_TAG = createTag({ name: "name" });
 const SURNAME_TAG = createTag({ name: "surname" });
@@ -58,8 +49,8 @@ const createInitialState = () => ({
 });
 
 const store = new Store({
-  actionNormalizer,
   actionResolver,
+  actionNormalizer,
   mutator: typeMutator(
     (
       action,
@@ -95,13 +86,14 @@ store.subscribe(store => {
     console.log("Surname changed", action);
   }
 });
-dispatch(store.dispatch, {
+
+/*
+store.dispatch({
   type: "create"
 });
 
-dispatch(store.dispatch, function(td) {
-  console.log("huhu");
-  return dispatch(td, Promise.resolve({ type: "create" }));
+dispatchThunk(store, function(ds) {
+  return dispatchPromise(ds, Promise.resolve({ type: "create" }));
 }).then(action => {
   console.log("promise action", action);
 });
@@ -110,41 +102,64 @@ store.dispatch({
   type: "create"
 });
 
+dispatchThunk(store, ds => {});
+
 store.dispatch({
   type: "create"
 });
 store.dispatch({
   type: "create"
-});
+})
 store.dispatch({
   type: "surname",
   payload: { id: 4, surname: "Gray" }
 });
+*/
 
-/*
-const action = {
-  type: "blue"
-};
-const thunkAction = async function(dispatch) {
-  dispatch({
-    type: 1
+const result = dispatchBatch(store, async function(ds) {
+  dispatchBatch(ds, ds => {
+    ds.dispatch({ type: "create", payload: 1 });
+
+    const batch8 = dispatchBatch(ds, ds => {
+      ds.dispatch({ type: "create", payload: 2 });
+
+      const batch2 = dispatchBatch(ds, ds => {
+        ds.dispatch({ type: "create", payload: 3 });
+        ds.dispatch({ type: "create", payload: 4 });
+      });
+
+      console.log("batch2", batch2);
+
+      ds.dispatch(cloneAction(batch2!));
+
+      const thunkBatch1 = dispatchThunk(ds, ds => {
+        ds.dispatch({ type: "create", payload: 5 });
+        ds.dispatch({ type: "create", payload: 6 });
+        ds.dispatch({ type: "create", payload: 7 });
+      });
+
+      console.log("thunkBatch1", thunkBatch1);
+
+      dispatchActions(ds, thunkBatch1.map(a => cloneAction(a)));
+    });
+
+    console.log("batch11", batch8);
   });
-  await dispatch(Promise.resolve({ type: 2 }));
-};
-thunkAction.isBatch = true;
-
-const result = store.dispatch(thunkAction).then(action => {
-  console.log("undo batch");
-
-  store.dispatch({
-    ...((action as unknown) as Action),
-    meta: {
-      do: false,
-      undo: true
-    }
-  });
+}).then(batch9 => {
+  console.log("batch12", batch9);
+  let newAction = cloneAction(batch9!);
+  newAction.meta.undo = true;
+  newAction.meta.do = false;
+  console.log("batch12 undo", store.dispatch(newAction));
 });
 
-console.log("basic result", result);
-
-*/
+/*dispatch(store.dispatch, batchAction(function(dp) {
+  dispatch(dp, {
+    type: 'surname',
+    payload: { id: 4, surname: "Black" }
+  })
+  dispatch(dp, {
+    type: 'surname',
+    payload: { id: 4, surname: "White" }
+  })
+}))*/

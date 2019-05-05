@@ -8,9 +8,8 @@ export class ActionResolver implements ActionResolverInterface {
     callSubscribers,
     applyMutator,
     setAction
-  }: ResolveOptions) {
-    const event = createEvent();
-    action.event = event;
+  }: ResolveOptions): Action | undefined {
+    action.event = createEvent();
 
     applyMutator(action as Action);
 
@@ -19,7 +18,7 @@ export class ActionResolver implements ActionResolverInterface {
       callSubscribers();
     }
 
-    return action;
+    return action as Action;
   }
 }
 

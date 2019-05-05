@@ -1,14 +1,17 @@
-import { NewAction, NormalizedAction, Action } from "./types";
+import { NewAction, Action, NormalizedAction } from "./types";
 
 export const isAction = function(action): action is NewAction {
   return action && (<NewAction>action).type !== undefined;
 };
 
-export const normalizeNewAction = function(
-  action: NewAction
+export const cloneAction = function(
+  action: NormalizedAction | Action
 ): NormalizedAction {
-  if (!action.meta) action.meta = {};
-  if (!action.meta.undo && !action.meta.redo) action.meta.do = true;
-
-  return action as Action;
+  return {
+    ...action,
+    event: undefined,
+    meta: {
+      ...action.meta
+    }
+  };
 };

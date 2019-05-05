@@ -1,4 +1,4 @@
-import { NormalizedAction, StoreInterface } from "../main/main";
+import { NormalizedAction, StoreInterface, Action } from "../main/main";
 
 export type ResolveOptions = {
   action: NormalizedAction;
@@ -9,5 +9,5 @@ export type ResolveOptions = {
 };
 
 export interface ActionResolverInterface {
-  resolve(options: ResolveOptions);
+  resolve(options: ResolveOptions): Action | undefined;
 }

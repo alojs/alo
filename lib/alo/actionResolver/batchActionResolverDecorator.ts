@@ -5,81 +5,60 @@ import { ResolveOptions } from "./types";
 
 export class BatchActionResolverDecorator extends AbstractActionResolverDecorator {
   _eventByBatchId = {};
+  _childsByBatchId = {};
 
   resolve(options: ResolveOptions) {
-    const { action, store, setAction, applyMutator } = options;
+    const { store, setAction, applyMutator } = options;
 
-    // We collect all pushResults of the batch items
+    if (
+      !options.action.meta.batchItem &&
+      options.action.type !== BATCH_ACTION_TYPE
+    ) {
+      return this._actionResolver.resolve(options);
+    }
+
+    const batchId = options.action.meta.batchId;
+    const rootBatchId = options.action.meta.rootBatchId;
+
+    options.action.event = this._eventByBatchId[rootBatchId] =
+      this._eventByBatchId[rootBatchId] || createEvent();
+    const action: Action = options.action as Action;
+    delete action.meta.batchId;
+    delete action.meta.rootBatchId;
+    delete action.meta.newBatch;
+    const parentBatchIds = options.action.meta.parentBatchIds;
+    delete action.meta.parentBatchIds;
+
+    if (action.meta.batchItem && action.type !== BATCH_ACTION_TYPE) {
+      applyMutator(action);
+    }
+
+    if (action.type === BATCH_ACTION_TYPE) {
+      action.payload = this._childsByBatchId[batchId];
+      delete this._childsByBatchId[batchId];
+    }
+
     if (action.meta.batchItem) {
-      const event = (this._eventByBatchId[action.meta.batchId] =
-        this._eventByBatchId[action.meta.batchId] || createEvent());
-      action.event = event;
+      if (action.type !== BATCH_ACTION_TYPE && parentBatchIds) {
+        for (const parentId of parentBatchIds) {
+          this._childsByBatchId[parentId] =
+            this._childsByBatchId[parentId] || [];
+          this._childsByBatchId[parentId].push(action);
+        }
+      }
 
       delete action.meta.batchItem;
-      delete action.meta.batchId;
-
-      applyMutator(action as Action);
 
       return action;
     }
 
-    if (action.type === BATCH_ACTION_TYPE) {
-      // Batch action which already, originally was dispatched and yet to be dispatched again in array form
-      if (!action.meta.newBatch) {
-        const event = createEvent();
+    delete this._eventByBatchId[batchId];
 
-        let batchItems: Action[] = [...action.payload];
-        if (action.meta.undo) {
-          batchItems.reverse();
-        }
-
-        for (const batchedAction of batchItems) {
-          const newBatchActionItem = {
-            ...batchedAction,
-            meta: {
-              ...batchedAction.meta
-            }
-          };
-
-          // Apply do/undo/redo signals from the batch action to its item
-          if (action.meta.undo) {
-            newBatchActionItem.meta.do = !newBatchActionItem.meta.do;
-            newBatchActionItem.meta.undo = !newBatchActionItem.meta.undo;
-          }
-          if (action.meta.redo && newBatchActionItem.meta.do) {
-            newBatchActionItem.meta.redo = true;
-          }
-
-          newBatchActionItem.event = event;
-
-          applyMutator(action as Action);
-        }
-
-        setAction(action as Action);
-        if (event.tagsSet) {
-          store._callSubscribers();
-        }
-
-        return action;
-      } else {
-        const event = (this._eventByBatchId[action.meta.batchId] =
-          this._eventByBatchId[action.meta.batchId] || createEvent());
-
-        // If we get here, this is a new batch action
-        action.event = event;
-        delete action.meta.newBatch;
-        delete this._eventByBatchId[action.meta.batchId];
-        delete action.meta.batchId;
-
-        setAction(action as Action);
-        if (event.tagsSet) {
-          store._callSubscribers();
-        }
-
-        return action;
-      }
+    setAction(action as Action);
+    if (action.event.tagsSet) {
+      store._callSubscribers();
     }
 
-    return this._actionResolver.resolve(options);
+    return action;
   }
 }

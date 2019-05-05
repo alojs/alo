@@ -1,15 +1,10 @@
-import { NewAction } from "../action/types";
 import { ActionNormalizerInterface, NormalizeOptions } from "./types";
 
 export class ActionNormalizer implements ActionNormalizerInterface {
-  normalize<T>({
-    action,
-    callBack
-  }: {
-    action: T;
-    callBack: (action: NewAction) => any;
-  }) {
-    return callBack(action as any);
+  normalize({ action, callBack }: NormalizeOptions) {
+    if (!action.meta.undo && !action.meta.redo) action.meta.do = true;
+
+    return callBack(action);
   }
 }
 

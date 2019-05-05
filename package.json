@@ -46,6 +46,7 @@
     "emotion": "^10.0.9",
     "emotion-server": "^10.0.9",
     "express-http-proxy": "^1.5.1",
+    "fast-clone": "^1.5.13",
     "feathericon": "^1.0.2",
     "file-loader": "^3.0.1",
     "hoppla": "^0.10.0",
