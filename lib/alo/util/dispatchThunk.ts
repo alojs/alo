@@ -17,7 +17,6 @@ export const dispatchThunk = function<
     getState: store.getState,
     dispatch: function(action) {
       const dispatchedAction = store.dispatch(action);
-      console.log("thunked action", dispatchedAction);
       if (dispatchedAction) {
         dispatchedActions.push(dispatchedAction);
       }
