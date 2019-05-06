@@ -11,7 +11,8 @@ export const cloneAction = function(
     ...action,
     event: undefined,
     meta: {
-      ...action.meta
+      ...action.meta,
+      tmp: {}
     }
   };
 };

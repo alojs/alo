@@ -30,7 +30,7 @@ export const dispatchBatch = function<
     type: BATCH_ACTION_TYPE,
     payload: [],
     meta: {
-      pure: false,
+      pure: true,
       batchId,
       rootBatchId: batchId,
       batch: true,

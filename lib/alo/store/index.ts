@@ -122,6 +122,7 @@ export class Store<T extends Mutator> implements StoreInterface {
     }
 
     if (!action.meta) action.meta = {};
+    if (!action.meta.tmp) action.meta.tmp = {};
 
     return this._actionNormalizer.normalize({
       action: action as NormalizedAction,
@@ -148,7 +149,7 @@ export class Store<T extends Mutator> implements StoreInterface {
     let pureAction =
       action.meta.pure != null ? action.meta.pure : this._pureByDefault;
     let originalPayload = action.payload;
-    if (action.payload != null && pureAction) {
+    if (action.payload != null && !pureAction) {
       action.payload = this._cloneDeep(originalPayload);
     }
 

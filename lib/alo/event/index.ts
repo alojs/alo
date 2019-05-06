@@ -1,4 +1,4 @@
-import { Event } from "./types";
+import { Event, Tag, EntityId } from "./types";
 
 let idx = 0;
 let parentByTag = {};
@@ -20,23 +20,31 @@ export const createTag = function({
   entityContainer = false
 }: {
   name?: string;
-  children?: string[];
+  children?: Tag[];
   entityContainer?: boolean;
-}) {
+}): Tag {
   const tag = `${idx++}-${name}`;
 
   if (children) {
-    childrenByTag[tag] = children;
-
-    for (const child of children) {
-      parentByTag[child] = tag;
-      if (entityContainer) {
-        registerEntityContainer(tag, child);
-      }
-    }
+    setTagChildren(tag, children, entityContainer);
   }
 
   return tag;
+};
+
+export const setTagChildren = function(
+  tag: Tag,
+  children: Tag[],
+  entityContainer = false
+) {
+  childrenByTag[tag] = children;
+
+  for (const child of children) {
+    parentByTag[child] = tag;
+    if (entityContainer) {
+      registerEntityContainer(tag, child);
+    }
+  }
 };
 
 export const setWildCard = function(event, tag = "") {
@@ -44,11 +52,7 @@ export const setWildCard = function(event, tag = "") {
   event.tagsSet = true;
 };
 
-export const setTag = function(
-  event: Event,
-  tag: string,
-  entityId?: number | string
-) {
+export const setTag = function(event: Event, tag: string, entityId?: EntityId) {
   event.tagsSet = true;
 
   event.tags[tag] = event.tags[tag] || true;
@@ -87,7 +91,7 @@ export const parentWildCardIsSet = function(event: Event, childTag) {
 export const tagIsSet = function(
   event: Event,
   tag,
-  entityId?: number | string,
+  entityId?: EntityId,
   checkWildCard = true
 ) {
   if (checkWildCard && event.tags["*"]) {

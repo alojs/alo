@@ -1,7 +1,7 @@
 import { Action } from "./action/types";
 
-export interface Mutator<T = any> {
-  (action: Action, state: T): T;
+export interface Mutator<T = any, R = T> {
+  (action: Action, state: T): R;
 }
 
 export const typeMutator = function<T extends Mutator>(consumer: T) {

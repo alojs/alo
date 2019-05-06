@@ -1,7 +1,7 @@
 import { AbstractActionNormalizerDecorator } from ".";
 import { Action } from "../action/types";
 import { NormalizeOptions } from "./types";
-import { isAction } from "../action";
+import { isAction, cloneAction } from "../action";
 import {
   StoreDispatchApi,
   dispatchBatch,
@@ -23,7 +23,9 @@ export class BatchActionNormalizerDecorator extends AbstractActionNormalizerDeco
       return this._actionNormalizer.normalize(options);
     }
 
-    let batchItems: Action[] = [...action.payload];
+    let batchItems: Action[] = action.payload.map(action =>
+      cloneAction(action)
+    );
     if (action.meta.undo) {
       batchItems.reverse();
     }
