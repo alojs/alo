@@ -33,10 +33,6 @@ export const findInArray = function(
   }
 };
 
-const isObjectLike = function(value) {
-  return value != null && typeof value == "object";
-};
-
 export const cloneDeep = function(value) {
   return clone(value);
 };
