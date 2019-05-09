@@ -1,16 +1,12 @@
-import { NewAction } from "../action/types";
 import { ActionNormalizerInterface, NormalizeOptions } from "./types";
 export declare class ActionNormalizer implements ActionNormalizerInterface {
-    normalize<T>({ action, callBack }: {
-        action: T;
-        callBack: (action: NewAction) => any;
-    }): any;
+    normalize({ action, callBack }: NormalizeOptions): import("../action/types").Action | undefined;
 }
 export declare abstract class AbstractActionNormalizerDecorator implements ActionNormalizerInterface {
     _actionNormalizer: ActionNormalizerInterface;
     constructor({ actionNormalizer }: {
         actionNormalizer: ActionNormalizerInterface;
     });
-    normalize(options: NormalizeOptions): any;
+    normalize(options: NormalizeOptions): import("../action/types").Action | undefined;
 }
 //# sourceMappingURL=index.d.ts.map

@@ -1,8 +1,10 @@
 import { AbstractActionNormalizerDecorator } from ".";
+import { Action } from "../action/types";
 import { NormalizeOptions } from "./types";
-export declare const BATCH_ACTION_TYPE = "@@batch";
-export declare const batchAction: (action: Function) => (dispatch: any, getState: any) => any;
+/**
+ * Handles batch actions which are dispatched for a second time
+ */
 export declare class BatchActionNormalizerDecorator extends AbstractActionNormalizerDecorator {
-    normalize(options: NormalizeOptions): any;
+    normalize(options: NormalizeOptions): Action | undefined;
 }
 //# sourceMappingURL=batchActionNormalizerDecorator.d.ts.map

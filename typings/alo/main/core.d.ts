@@ -1,19 +1,26 @@
 export * from "../store";
 export * from "../store/types";
-export { isAction } from "../action";
+export * from "../action";
 export * from "../action/types";
-export { createTag, setTag, setWildCard, createEvent, tagIsSet, parentWildCardIsSet } from "../event";
+export * from "../event";
+export * from "../event/types";
 export { combineMutators, typeMutator } from "../mutator";
 export * from "../selector";
-export { createUndoableMutator, undoData, undoAction, redoAction } from "../undoable";
+export * from "../undoable";
+export * from "../undoable/types";
 export * from "../subscribable";
 export * from "../subscribable/types";
 export * from "../actionNormalizer";
 export * from "../actionNormalizer/types";
 export * from "../actionNormalizer/batchActionNormalizerDecorator";
-export * from "../actionNormalizer/promiseActionNormalizerDecorator";
-export * from "../actionNormalizer/thunkActionNormalizerDecorator";
+export * from "../actionNormalizer/dateActionNormalizerDecorator";
 export * from "../actionResolver";
 export * from "../actionResolver/types";
 export * from "../actionResolver/batchActionResolverDecorator";
-//# sourceMappingURL=main.d.ts.map
+export * from "../util/dispatchBatch";
+export * from "../util/dispatchThunk";
+export * from "../util/dispatchPromise";
+export * from "../util/dispatchActions";
+export * from "../util/types";
+export { once, findInArray } from "../util";
+//# sourceMappingURL=core.d.ts.map

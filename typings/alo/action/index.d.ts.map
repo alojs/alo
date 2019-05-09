@@ -1,1 +1,1 @@
-{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../lib/alo/action/index.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,gBAAgB,EAAU,MAAM,SAAS,CAAC;AAE9D,eAAO,MAAM,QAAQ,sCAEpB,CAAC;AAEF,eAAO,MAAM,kBAAkB,yCAO9B,CAAC"}
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../lib/alo/action/index.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,EAAE,gBAAgB,EAAE,MAAM,SAAS,CAAC;AAE9D,eAAO,MAAM,QAAQ,sCAEpB,CAAC;AAEF,eAAO,MAAM,WAAW,yDAWvB,CAAC"}

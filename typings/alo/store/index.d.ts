@@ -1,14 +1,15 @@
-import { Action } from "../action/types";
+import { Action, NewAction } from "../action/types";
 import { ActionNormalizerInterface, NormalizeOptions } from "../actionNormalizer/types";
 import { ActionResolverInterface } from "../actionResolver/types";
-import { DeepPartial } from "../util";
+import { DeepPartial } from "../util/types";
 import { Listener, SubscribableInterface } from "../subscribable/types";
 import { Mutator } from "../mutator";
 import { StoreInterface } from "./types";
+import { cloneDeep as _cloneDeep } from "../util";
 export declare var actionTypes: {
     INIT: string;
 };
-export declare class Store<T extends Mutator> implements StoreInterface {
+export declare class Store<T extends Mutator = Mutator> implements StoreInterface {
     _isMutating: boolean;
     _state: any;
     _action: Action;
@@ -17,12 +18,16 @@ export declare class Store<T extends Mutator> implements StoreInterface {
     _actionNormalizer: ActionNormalizerInterface;
     _actionResolver: ActionResolverInterface;
     _subscribable: SubscribableInterface<Store<T>>;
-    constructor({ mutator, state, actionNormalizer, actionResolver, subscribable }: {
+    _cloneDeep: typeof _cloneDeep;
+    _pureByDefault: boolean;
+    constructor({ mutator, state, actionNormalizer, actionResolver, subscribable, cloneDeep, pureByDefault }: {
         mutator: T;
         state?: DeepPartial<ReturnType<ReturnType<T>>>;
         actionNormalizer?: ActionNormalizerInterface;
         actionResolver?: ActionResolverInterface;
         subscribable?: SubscribableInterface<Store<T>>;
+        cloneDeep?: typeof _cloneDeep;
+        pureByDefault?: boolean;
     });
     /**
      * Returns the current state
@@ -42,7 +47,7 @@ export declare class Store<T extends Mutator> implements StoreInterface {
     /**
      * Send a message which will trigger an action
      */
-    dispatch: (unnormalizedAction: any) => any;
+    dispatch: (action: NewAction) => Action | undefined;
     _callSubscribers: () => void;
     _afterDispatchNormalization: NormalizeOptions["callBack"];
     _applyMutator: (action: Action) => void;

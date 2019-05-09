@@ -1,5 +1,5 @@
 import { Action } from "./action/types";
-import { FirstArgument } from "./util";
+import { FirstArgument } from "./util/types";
 export interface SelectFuncResult<T = any> {
     changed?: boolean;
     value: T;

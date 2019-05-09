@@ -22,8 +22,12 @@ import {
   ActionNormalizer,
   dispatchActions,
   cloneAction,
-  DateActionNormalizerDecorator
-} from "@lib/alo/main/main";
+  DateActionNormalizerDecorator,
+  createUndoableMutator,
+  UndoableMutatorState
+} from "@lib/alo/main/core";
+import { setUndoData, getUndoData, createUndoThunk } from "@lib/alo/undoable";
+import { Devtools } from "@lib/alo/devtools";
 
 let actionNormalizer = new ActionNormalizer();
 actionNormalizer = new DateActionNormalizerDecorator({ actionNormalizer });
@@ -44,8 +48,18 @@ const PEOPLE_TAG = createTag({
   children: [PERSON_TAG]
 });
 
-const createInitialState = () => ({
-  people: [{ name: "John", surname: "Black" }]
+const createInitialState = (): {
+  people: { name: string; surname: string }[];
+  undo: UndoableMutatorState;
+} => ({
+  people: [{ name: "John", surname: "Black" }],
+  undo: undefined as any
+});
+
+const UNDO_ID = "personsCreateUndo";
+const undoableMutator = createUndoableMutator({
+  id: UNDO_ID,
+  actionFilter: action => action.type === "create"
 });
 
 const store = new Store({
@@ -58,11 +72,20 @@ const store = new Store({
     ) => {
       switch (action.type) {
         case "create":
-          let id = state.people.push({
-            name: "Newb",
-            surname: "White"
-          });
-          setTag(action.event, PERSON_TAG, id);
+          if (action.meta.do) {
+            const id =
+              state.people.push({
+                name: "Newb",
+                surname: "White"
+              }) - 1;
+            setTag(action.event, PERSON_TAG, id);
+            setUndoData(action, "people", id);
+          } else if (action.meta.undo) {
+            const id = getUndoData(action, "people");
+            state.people.splice(id, 1);
+            setTag(action.event, PERSON_TAG, id);
+          }
+
           break;
 
         case "surname":
@@ -71,15 +94,22 @@ const store = new Store({
           break;
       }
 
+      state.undo = undoableMutator(action, state.undo);
+
       return state;
     }
   )
 });
+
+const devtools = new Devtools(store, "#app");
+
 store.subscribe(store => {
   const action = store.getAction();
+
+  //console.log('persons', store.getState().people.length)
+
   if (tagIsSet(action.event, PERSON_TAG, 4)) {
     console.log("Person id 4 changed", action);
-    console.log(store.getState());
   }
 
   if (tagIsSet(action.event, SURNAME_TAG)) {
@@ -128,7 +158,7 @@ const result = dispatchBatch(store, async function(ds) {
         ds.dispatch({ type: "create", payload: 4 });
       });
 
-      console.log("batch2", batch2);
+      ds.dispatch({ type: "create", payload: 5 });
 
       ds.dispatch(cloneAction(batch2!));
 
@@ -138,7 +168,7 @@ const result = dispatchBatch(store, async function(ds) {
         ds.dispatch({ type: "create", payload: 7 });
       });
 
-      console.log("thunkBatch1", thunkBatch1);
+      //console.log("thunkBatch1", thunkBatch1);
 
       dispatchActions(ds, thunkBatch1.map(a => cloneAction(a)));
     });
@@ -147,19 +177,18 @@ const result = dispatchBatch(store, async function(ds) {
   });
 }).then(batch9 => {
   console.log("batch12", batch9);
-  let newAction = cloneAction(batch9!);
-  newAction.meta.undo = true;
-  newAction.meta.do = false;
-  console.log("batch12 undo", store.dispatch(newAction));
-});
+  console.log(store.getState().people.length);
 
-/*dispatch(store.dispatch, batchAction(function(dp) {
-  dispatch(dp, {
-    type: 'surname',
-    payload: { id: 4, surname: "Black" }
-  })
-  dispatch(dp, {
-    type: 'surname',
-    payload: { id: 4, surname: "White" }
-  })
-}))*/
+  dispatchThunk(store, createUndoThunk(UNDO_ID));
+  dispatchThunk(store, createUndoThunk(UNDO_ID));
+  dispatchThunk(store, createUndoThunk(UNDO_ID));
+  dispatchThunk(store, createUndoThunk(UNDO_ID));
+  dispatchThunk(store, createUndoThunk(UNDO_ID));
+  dispatchThunk(store, createUndoThunk(UNDO_ID));
+  dispatchThunk(store, createUndoThunk(UNDO_ID));
+  dispatchThunk(store, createUndoThunk(UNDO_ID));
+  dispatchThunk(store, createUndoThunk(UNDO_ID));
+  dispatchThunk(store, createUndoThunk(UNDO_ID));
+  /*dispatchThunk(store, createUndoThunk(UNDO_ID))
+  dispatchThunk(store, createUndoThunk(UNDO_ID))*/
+});

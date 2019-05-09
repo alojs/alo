@@ -1,7 +1,9 @@
 import { AbstractActionResolverDecorator } from ".";
+import { Action } from "../action/types";
 import { ResolveOptions } from "./types";
 export declare class BatchActionResolverDecorator extends AbstractActionResolverDecorator {
     _eventByBatchId: {};
-    resolve(options: ResolveOptions): any;
+    _childsByBatchId: {};
+    resolve(options: ResolveOptions): Action | undefined;
 }
 //# sourceMappingURL=batchActionResolverDecorator.d.ts.map

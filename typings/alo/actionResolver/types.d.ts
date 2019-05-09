@@ -1,4 +1,4 @@
-import { NormalizedAction, StoreInterface } from "../main/main";
+import { NormalizedAction, StoreInterface, Action } from "../main/core";
 export declare type ResolveOptions = {
     action: NormalizedAction;
     store: StoreInterface;
@@ -7,6 +7,6 @@ export declare type ResolveOptions = {
     applyMutator: StoreInterface["_applyMutator"];
 };
 export interface ActionResolverInterface {
-    resolve(options: ResolveOptions): any;
+    resolve(options: ResolveOptions): Action | undefined;
 }
 //# sourceMappingURL=types.d.ts.map
