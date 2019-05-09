@@ -1,22 +1,19 @@
-import {
-  Timemachine,
-  rootMutatorCreator as timemachineRootMutator
-} from "../timemachine";
+import { Timemachine, mutator as timemachineMutator } from "../timemachine";
 import { Store } from "../store";
 import { el, setChildren, text } from "redom";
-import { hasTag, hasSomeTags } from "../tag";
 import { ActionList } from "./actionList";
 import {
   createStore,
-  rootMutatorCreator,
+  mutator,
   HEIGHT_TAG,
   setHeight,
   SELECTED_ACTION_ID_TAG
 } from "./store";
-import { ACTION_ITEM_TAG } from "../timemachine/actions";
+import { ACTION_TAG } from "../timemachine/actions";
+import { tagIsSet } from "../event";
 
-type DevtoolsStore = Store<typeof rootMutatorCreator>;
-type TimemachineStore = Store<typeof timemachineRootMutator>;
+type DevtoolsStore = Store<typeof mutator>;
+type TimemachineStore = Store<typeof timemachineMutator>;
 export type GlobalCtx = {
   store: DevtoolsStore;
   timemachineStore: TimemachineStore;
@@ -49,11 +46,7 @@ class ActionDetails {
 
     ctx.store.subscribe(store => {
       const action = store.getAction();
-      if (
-        hasSomeTags(action.tagTrie, {
-          [SELECTED_ACTION_ID_TAG]: true
-        })
-      ) {
+      if (tagIsSet(action.event, SELECTED_ACTION_ID_TAG)) {
         this.lazyUpdate(ctx);
       }
     }, true);
@@ -66,13 +59,7 @@ class ActionDetails {
         return;
       }
 
-      if (
-        hasSomeTags(action.tagTrie, {
-          [ACTION_ITEM_TAG]: {
-            [selectedActionId]: true
-          }
-        })
-      ) {
+      if (tagIsSet(action.event, ACTION_TAG, selectedActionId)) {
         this.lazyUpdate(ctx);
       }
     });
@@ -89,7 +76,7 @@ class ActionDetails {
       return;
     }
 
-    const trackedAction = ctx.timemachineStore.getState().actions.items[
+    const trackedAction = ctx.timemachineStore.getState().actions[
       selectedActionId
     ];
     const action = trackedAction.action;
@@ -115,7 +102,7 @@ class ActionDetails {
   }
 }
 
-export class Devtools {
+export class Devtools<TS extends Store> {
   timemachine: Timemachine;
   el: HTMLElement;
   view: {
@@ -123,7 +110,7 @@ export class Devtools {
     heightEl: HTMLInputElement;
   };
   context: GlobalCtx;
-  constructor(targetStore: Store, targetElSelector = "body") {
+  constructor(targetStore: TS, targetElSelector = "body") {
     const store = createStore();
     this.timemachine = new Timemachine(targetStore);
     this.context = {
@@ -133,9 +120,8 @@ export class Devtools {
 
     let view: Partial<this["view"]> = {};
 
-    this.el = el(
-      "div",
-      {
+    // prettier-ignore
+    this.el = el("div", {
         style: {
           "font-family": "Arial, Helvetica, sans-serif",
           color: "silver",
@@ -148,8 +134,7 @@ export class Devtools {
           width: "100%",
           height: this.context.store.getState().height,
           "max-height": "100%",
-          "min-height": "100px",
-          "overflow-y": "scroll"
+          "min-height": "100px"
         }
       },
       [
@@ -178,11 +163,11 @@ export class Devtools {
             )
           ]
         ),
-        el(
-          "div",
+        el("div",
           {
             style: {
-              height: "100%",
+              flex: 1,
+              "min-height": 0,
               display: "flex"
             }
           },
@@ -194,7 +179,7 @@ export class Devtools {
             ),
             el(
               "div",
-              { style: { flex: 3, height: "100%", "overflow-y": "scroll" } },
+              { style: { flex: 3, "overflow-y": "auto" } },
               new ActionDetails(this.context)
             )
           ]
@@ -220,7 +205,7 @@ export class Devtools {
     this.view.actionList.update(this.context);
 
     const state = ctx.store.getState();
-    if (hasTag(ctx.store.getAction().tagTrie, HEIGHT_TAG)) {
+    if (tagIsSet(ctx.store.getAction().event, HEIGHT_TAG)) {
       document.body.style["padding-bottom"] = state.height;
       this.el.style.height = state.height;
     }

@@ -6,7 +6,7 @@ import {
   StoreDispatchApi,
   dispatchBatch,
   BATCH_ACTION_TYPE
-} from "../main/main";
+} from "../main/core";
 
 /**
  * Handles batch actions which are dispatched for a second time
@@ -30,21 +30,29 @@ export class BatchActionNormalizerDecorator extends AbstractActionNormalizerDeco
       batchItems.reverse();
     }
 
-    // Handle recursive batches
-    let storeProxy: StoreDispatchApi = store;
-    if (action.meta.batchId != null) {
-      storeProxy = {
-        getState: store.getState,
-        dispatch: function(childAction) {
-          childAction.meta = childAction.meta || {};
+    let storeProxy: StoreDispatchApi = {
+      getState: store.getState,
+      dispatch: function(childAction) {
+        childAction.meta = childAction.meta || {};
+
+        // Handle recursive batches
+        if (action.meta.batchId != null) {
           childAction.meta.rootBatchId = action.meta.rootBatchId;
           childAction.meta.parentBatchIds = action.meta.parentBatchIds;
-          childAction.meta.batchItem = true;
-
-          return store.dispatch(childAction);
         }
-      };
-    }
+
+        if (
+          childAction.type === BATCH_ACTION_TYPE &&
+          !childAction.meta.batchItem
+        ) {
+          // This is the final new batch action created by "dispatchBatch"
+          // We now apply metas from our original batch options.action at the top
+          childAction.meta = { ...action.meta, ...childAction.meta };
+        }
+
+        return store.dispatch(childAction);
+      }
+    };
 
     // For now we just use the dispatchBatch function to rehandle the old batch action
     const newBatchAction = dispatchBatch(storeProxy, function(ds) {

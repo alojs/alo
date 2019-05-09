@@ -1,23 +1,25 @@
 import { actionTypes, Store } from "../store";
 import { cloneDeep } from "../util";
-import { combineMutatorCreators } from "../mutator";
+import { combineMutators } from "../mutator";
 import { createUniqueActionId } from "./util";
-import { createUniqueTag } from "../tag";
 import { diffString } from "json-diff";
 import { Listener } from "../subscribable/types";
-import { mutatorCreator as actionsMutatorCreator, setAction } from "./actions";
+import { setAction, actionsMutator, ACTIONS_TAG } from "./actions";
 import { Subscribable } from "../subscribable";
+import { createTag } from "../event";
+import { dispatchThunk, cloneAction } from "../main/core";
 
-const ROOT_TAG = createUniqueTag();
-export const rootMutatorCreator = combineMutatorCreators(
-  {
-    actions: actionsMutatorCreator
-  },
-  ROOT_TAG
-);
+const ROOT_TAG = createTag({
+  name: "root",
+  children: [ACTIONS_TAG]
+});
+
+export const mutator = combineMutators({
+  actions: actionsMutator
+});
 
 export class Timemachine<T extends Store<any> = any> {
-  store: Store<typeof rootMutatorCreator>;
+  store: Store<typeof mutator>;
   targetStore: T;
   unsubscribe: null | ReturnType<Subscribable["subscribe"]>;
   initialTargetState: any;
@@ -29,18 +31,11 @@ export class Timemachine<T extends Store<any> = any> {
     this.targetStore = targetStore;
     this.initialTargetState = cloneDeep(targetStore.getAction().payload);
     this.lastTargetState = this.initialTargetState;
-    this.store = new Store(rootMutatorCreator);
-    this.store.subscribe(this.storeListener, true);
+    this.store = new Store({
+      mutator
+    });
     this.enable();
   }
-
-  // TODO: Remove this as it isnt needed
-  storeListener: Listener<this["store"]> = store => {
-    if (this.replaying) return;
-
-    const action = store.getAction();
-    // console.log("last timemachine action", action);
-  };
 
   targetStoreListener: Listener<T> = store => {
     const action = store.getAction();
@@ -60,15 +55,14 @@ export class Timemachine<T extends Store<any> = any> {
 
   replay() {
     if (this.replaying) {
-      console.log("not guud");
-      return;
+      throw new Error("Timemachine already replaying");
     }
     this.replaying = true;
     this.orderIdx = 0;
 
-    const actions = this.store.getState().actions.items;
+    const actions = this.store.getState().actions;
     const newInitialState = cloneDeep(this.initialTargetState);
-    this.targetStore.dispatch(async dispatch => {
+    dispatchThunk(this.targetStore, async store => {
       for (const [id, trackedAction] of Object.entries(actions)) {
         if (trackedAction.disabled) continue;
 
@@ -78,7 +72,7 @@ export class Timemachine<T extends Store<any> = any> {
           action.payload = newInitialState;
         }
 
-        dispatch(action);
+        store.dispatch(cloneAction(action));
 
         await new Promise(res => {
           setTimeout(() => {

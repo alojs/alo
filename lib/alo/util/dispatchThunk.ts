@@ -1,5 +1,5 @@
 import { isPromiseLike } from ".";
-import { StoreDispatchApi, Action } from "../main/main";
+import { StoreDispatchApi, Action } from "../main/core";
 import { Thunk } from "./types";
 
 export const typeThunk = <T extends Thunk>(thunk: T) => thunk;

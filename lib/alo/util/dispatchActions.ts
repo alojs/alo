@@ -1,4 +1,4 @@
-import { StoreDispatchApi, NewAction, Action } from "../main/main";
+import { StoreDispatchApi, NewAction, Action } from "../main/core";
 
 export const dispatchActions = function(
   store: StoreDispatchApi,

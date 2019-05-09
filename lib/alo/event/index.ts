@@ -22,7 +22,7 @@ export const createTag = function({
   name?: string;
   children?: Tag[];
   entityContainer?: boolean;
-}): Tag {
+} = {}): Tag {
   const tag = `${idx++}-${name}`;
 
   if (children) {

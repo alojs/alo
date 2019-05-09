@@ -1,10 +1,15 @@
 import { actionTypes } from "../store";
 import { NewAction } from "../action/types";
-import { Mutator } from "../mutator";
+import { Mutator, typeMutator } from "../mutator";
 import { Tag } from "../event/types";
 import { setTagChildren, setTag } from "../event";
-import { typeThunk } from "../main/main";
-import { UndoableAction, UndoRedoAction, ActionFilter } from "./types";
+import { typeThunk } from "../main/core";
+import {
+  UndoableAction,
+  UndoRedoAction,
+  ActionFilter,
+  UndoableMutatorState
+} from "./types";
 
 export const setUndoData = function(
   action: UndoableAction,
@@ -62,11 +67,6 @@ export const createRedoThunk = function(id) {
   });
 };
 
-type UndoableMutatorState = {
-  past: NewAction[];
-  future: NewAction[];
-};
-
 export const createUndoableMutator = function({
   id,
   tags = {},
@@ -87,18 +87,15 @@ export const createUndoableMutator = function({
     setTagChildren(tags.self, children);
   }
 
-  const mutator: Mutator<
-    Partial<UndoableMutatorState> | undefined,
-    UndoableMutatorState
-  > = function(action, state = {}) {
-    if (!state.future) state.future = [];
-    if (!state.past) state.past = [];
-
+  return typeMutator(function(
+    action,
+    state: UndoableMutatorState = { past: [], future: [] }
+  ) {
     if (action.type === undoActionTypePrefix + id) {
       // Handle undo
 
       if (state.past.length === 0) {
-        return state as any;
+        return state;
       }
 
       const pastAction = state.past.pop();
@@ -166,7 +163,5 @@ export const createUndoableMutator = function({
     }
 
     return state;
-  };
-
-  return mutator;
+  });
 };

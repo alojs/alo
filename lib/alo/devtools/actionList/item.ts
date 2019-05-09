@@ -1,12 +1,12 @@
 import { el } from "redom";
-import { hasTags } from "../../tag";
 import {
-  ACTION_ITEM_TAG,
   TrackedAction,
-  toggleAction
+  toggleAction,
+  ACTION_TAG
 } from "../../timemachine/actions";
 import { actionTypes } from "../../store";
 import { GlobalCtx } from "..";
+import { BATCH_ACTION_TYPE, tagIsSet } from "@lib/alo/main/core";
 
 export const createActionListItemClass = (ctx: GlobalCtx, onSelectAction) =>
   class ActionListItem {
@@ -21,25 +21,21 @@ export const createActionListItemClass = (ctx: GlobalCtx, onSelectAction) =>
     };
     constructor() {
       const view: any = {};
-      this.el = el(
-        "div",
-        {
+      // prettier-ignore
+      this.el = el("div", {
           style: {
             padding: "5px",
             "border-bottom": "1px solid #666"
           }
         },
         [
-          (view.flexWrapperEl = el(
-            "div",
-            {
+          (view.flexWrapperEl = el("div", {
               style: {
                 display: "flex"
               }
             },
             [
-              el(
-                "div",
+              el("div",
                 (view.disabledInputEl = el("input", {
                   type: "checkbox",
                   onchange: evt => {
@@ -49,9 +45,7 @@ export const createActionListItemClass = (ctx: GlobalCtx, onSelectAction) =>
                   }
                 }))
               ),
-              el(
-                "a",
-                {
+              el("a", {
                   href: "#",
                   onclick: e => {
                     if (onSelectAction) onSelectAction(e, this.id);
@@ -87,8 +81,8 @@ export const createActionListItemClass = (ctx: GlobalCtx, onSelectAction) =>
         this.unsubscribe();
       }
       this.unsubscribe = ctx.timemachineStore.subscribe(store => {
-        if (hasTags(store.getAction().tagTrie, [ACTION_ITEM_TAG, this.id])) {
-          this.lazyUpdate(store.getState().actions.items[this.id]);
+        if (tagIsSet(store.getAction().event, ACTION_TAG, this.id)) {
+          this.lazyUpdate(store.getState().actions[this.id]);
         }
       });
     }
@@ -114,7 +108,7 @@ export const createActionListItemClass = (ctx: GlobalCtx, onSelectAction) =>
         ? "0.5"
         : "1";
 
-      if (action.type === actionTypes.BATCH) {
+      if (action.type === BATCH_ACTION_TYPE) {
         this.view.batchItemTypes.textContent = `( ${action.payload
           .map(batchItem => batchItem.type)
           .join(" , ")} )`;

@@ -1,4 +1,4 @@
-import { StoreDispatchApi, NewAction, Action } from "../main/main";
+import { StoreDispatchApi, NewAction, Action } from "../main/core";
 
 // https://stackoverflow.com/a/49936686
 // https://github.com/krzkaczor/ts-essentials/blob/4bfaf215f1aae39a7be70d178b2226ebdbbcec61/lib/types.ts#L9

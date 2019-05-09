@@ -1,4 +1,4 @@
-import { NormalizedAction, StoreInterface, Action } from "../main/main";
+import { NormalizedAction, StoreInterface, Action } from "../main/core";
 
 export type ResolveOptions = {
   action: NormalizedAction;

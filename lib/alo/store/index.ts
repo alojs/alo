@@ -19,7 +19,7 @@ export var actionTypes = {
   INIT: "@@init"
 };
 
-export class Store<T extends Mutator> implements StoreInterface {
+export class Store<T extends Mutator = Mutator> implements StoreInterface {
   _isMutating: boolean;
   _state: any = null;
   _action: Action;

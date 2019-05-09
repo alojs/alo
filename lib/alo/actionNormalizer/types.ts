@@ -1,4 +1,4 @@
-import { StoreInterface, NormalizedAction, Action } from "../main/main";
+import { StoreInterface, NormalizedAction, Action } from "../main/core";
 
 export type NormalizeOptions = {
   action: NormalizedAction;

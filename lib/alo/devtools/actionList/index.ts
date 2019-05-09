@@ -17,9 +17,8 @@ export class ActionList {
       "div",
       {
         style: {
-          flex: 2,
           height: "100%",
-          "overflow-y": "scroll"
+          "overflow-y": "auto"
         }
       },
       [
@@ -42,11 +41,11 @@ export class ActionList {
     const timemachineState = ctx.timemachineStore.getState();
 
     // Use selector
-    const sortedTrackedActions = Object.values(
-      timemachineState.actions.items
-    ).sort((a, b) => {
-      return a.order - b.order;
-    });
+    const sortedTrackedActions = Object.values(timemachineState.actions).sort(
+      (a, b) => {
+        return a.order - b.order;
+      }
+    );
     this.view.list.update(sortedTrackedActions);
 
     const sortedTrackedActionsLength = sortedTrackedActions.length;

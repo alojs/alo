@@ -1,4 +1,4 @@
-import { Action, ActionMeta, NewAction } from "../main/main";
+import { Action, ActionMeta, NewAction } from "../main/core";
 
 export type ActionFilter = (action: Action) => boolean;
 
@@ -19,3 +19,8 @@ export interface UndoRedoAction extends Action {
 interface UndoRedoActionMeta extends ActionMeta {
   undoableCache?: NewAction;
 }
+
+export type UndoableMutatorState = {
+  past: NewAction[];
+  future: NewAction[];
+};

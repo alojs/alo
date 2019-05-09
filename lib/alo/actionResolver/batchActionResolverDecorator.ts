@@ -1,5 +1,5 @@
 import { AbstractActionResolverDecorator } from ".";
-import { BATCH_ACTION_TYPE, createEvent } from "../main/main";
+import { BATCH_ACTION_TYPE, createEvent } from "../main/core";
 import { Action } from "../action/types";
 import { ResolveOptions } from "./types";
 
