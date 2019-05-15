@@ -23,7 +23,6 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
   _isMutating: boolean;
   _state: any = null;
   _action: Action;
-  _effectHandler: any;
   _mutator: Mutator;
   _actionNormalizer: ActionNormalizerInterface;
   _actionResolver: ActionResolverInterface;
