@@ -3,6 +3,14 @@ import { createEvent } from "../event";
 import { ActionResolverInterface, ResolveOptions } from "./types";
 
 export class ActionResolver implements ActionResolverInterface {
+  callSubscribersLazy: boolean;
+
+  constructor({
+    callSubscribersLazy = false
+  }: { callSubscribersLazy?: boolean } = {}) {
+    this.callSubscribersLazy = callSubscribersLazy;
+  }
+
   resolve({
     action,
     callSubscribers,
@@ -14,7 +22,7 @@ export class ActionResolver implements ActionResolverInterface {
     applyMutator(action as Action);
 
     setAction(action as Action);
-    if (action.event.tagsSet) {
+    if (!this.callSubscribersLazy || action.event.tagsSet) {
       callSubscribers();
     }
 
