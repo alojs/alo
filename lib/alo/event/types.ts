@@ -10,16 +10,17 @@ export interface Event {
   };
   containers: {
     // Container key
-    [key: string]: {
-      // Entity Id
-      [key: string]: {
-        // Tag
-        [key: string]: boolean;
-      };
-      [key: number]: {
-        // Tag
-        [key: string]: boolean;
-      };
-    };
+    [key: string]: EntityContainer;
   };
+}
+
+export interface EntityContainer {
+  // Entity Id
+  [key: string]: Entity;
+  [key: number]: Entity;
+}
+
+export interface Entity {
+  // Tag
+  [key: string]: boolean;
 }
