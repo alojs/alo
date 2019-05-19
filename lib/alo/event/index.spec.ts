@@ -7,6 +7,14 @@ import {
   setWildCard,
   setTagChildren
 } from ".";
+import { Action } from "../main/dev";
+
+const createAction = (): Action => ({
+  type: "",
+  meta: { tmp: {} },
+  event: createEvent()
+});
+const tag = createTag();
 
 describe("createTag", function() {
   it("should optionally accept a name and join it with its data", function() {
@@ -65,6 +73,20 @@ describe("setWildCard", function() {
     setWildCard(event, child2, 33);
     assert.equal(!event.containers[parent2], true);
   });
+
+  it("accepts action instead of event", function() {
+    const action = createAction();
+    setWildCard(action, tag);
+    assert.equal(action.event.tags[tag + "*"], true);
+  });
+});
+
+describe("setTag", function() {
+  it("accepts action instead of event", function() {
+    const action = createAction();
+    setTag(action, tag);
+    assert.equal(action.event.tags[tag], true);
+  });
 });
 
 describe("tagIsSet", function() {
@@ -85,6 +107,12 @@ describe("tagIsSet", function() {
     setTag(event, phoneTag);
 
     assert.equal(tagIsSet(event, phoneTag), true);
+  });
+
+  it("accepts action instead of event", function() {
+    const action = createAction();
+    setTag(action, tag);
+    assert.equal(tagIsSet(action, tag), true);
   });
 
   describe("with entity", function() {

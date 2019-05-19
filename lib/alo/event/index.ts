@@ -1,4 +1,5 @@
-import { Event, Tag, EntityId, EntityContainer, Entity } from "./types";
+import { Event, Tag, EntityId, Entity } from "./types";
+import { Action } from "../main/dev";
 
 let idx = 0;
 let parentByTag = {};
@@ -68,10 +69,15 @@ const getTagEntity = function(
 };
 
 export const setWildCard = function(
-  event: Event,
+  subject: Event | Action,
   tag: Tag = "",
   entityId?: EntityId
 ) {
+  const event: Event =
+    (subject as Action).type !== undefined
+      ? (subject as Action).event
+      : (subject as Event);
+
   event.tagsSet = true;
 
   event.tags[tag + "*"] = true;
@@ -85,11 +91,16 @@ export const setWildCard = function(
 };
 
 export const setTag = function(
-  event: Event,
+  subject: Event | Action,
   tag: Tag,
   entityId?: EntityId,
   entity?: Entity
 ) {
+  const event: Event =
+    (subject as Action).type !== undefined
+      ? (subject as Action).event
+      : (subject as Event);
+
   event.tagsSet = true;
 
   event.tags[tag] = event.tags[tag] || true;
@@ -129,11 +140,16 @@ const parentWildCardIsSet = function(
 };
 
 export const tagIsSet = function(
-  event: Event,
+  subject: Event | Action,
   tag: Tag,
   entityId?: EntityId,
   checkWildCard = true
 ) {
+  const event: Event =
+    (subject as Action).type !== undefined
+      ? (subject as Action).event
+      : (subject as Event);
+
   if (checkWildCard && event.tags["*"]) {
     return true;
   }
