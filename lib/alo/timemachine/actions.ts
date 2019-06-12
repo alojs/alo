@@ -3,8 +3,6 @@ import { Action } from "../action/types";
 import { createTag, setTag } from "../event";
 import { createSelector } from "../selector";
 
-// TODO: This is refactored but not tested
-
 export type TrackedAction = {
   id: string;
   action: Action;
@@ -17,11 +15,14 @@ type TrackedActionsObject = {
   [key: string]: TrackedAction;
 };
 
-const SET_ACTION = "SET_ACTION";
-export const setAction = function(action, id, order, stateDiff) {
+export const SET_ACTION = "SET_ACTION";
+export const setAction = function(action, id, order) {
   return {
     type: SET_ACTION,
-    payload: { id, action, order, stateDiff }
+    payload: { id, action, order },
+    meta: {
+      pure: true
+    }
   };
 };
 
@@ -56,8 +57,6 @@ export const actionsMutator = typeMutator(function(
         state[id] || <TrackedAction>{ id, disabled: false, trackState: false };
       trackedAction.order = action.payload.order;
       trackedAction.action = childAction;
-      // TODO: Clean this up
-      trackedAction["stateDiff"] = action.payload.stateDiff;
       state[id] = trackedAction;
 
       setTag(action.event, ACTION_TAG, id);

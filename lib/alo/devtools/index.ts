@@ -1,141 +1,64 @@
-import { Timemachine, mutator as timemachineMutator } from "../timemachine";
+import { Timemachine } from "../timemachine";
 import { Store } from "../store";
-import { el, setChildren, text } from "redom";
-import { ActionList } from "./actionList";
-import {
-  createStore,
-  mutator,
-  HEIGHT_TAG,
-  setHeight,
-  SELECTED_ACTION_ID_TAG
-} from "./store";
-import { ACTION_TAG } from "../timemachine/actions";
-import { tagIsSet } from "../event";
+import { el, setChildren } from "redom";
+import { ACTION_LIST } from "./actionList";
+import { HEIGHT_TAG, setHeight, setAction, STORE } from "./store";
+import { tagIsSet, setTagChildren } from "../event";
+import { ACTION_DETAILS } from "./actionDetails";
+import { SET_ACTION } from "../timemachine/actions";
+import { cloneDeep } from "../util";
+import { createPatch } from "rfc6902";
+import { createBlueprint, BlueprintEntity } from "wald";
+import { createIoc, TARGET_STORE } from "./ioc";
 
-type DevtoolsStore = Store<typeof mutator>;
-type TimemachineStore = Store<typeof timemachineMutator>;
-export type GlobalCtx = {
-  store: DevtoolsStore;
-  timemachineStore: TimemachineStore;
-};
-
-class ActionDetails {
-  el: HTMLElement;
-  view: {
-    actionEl: HTMLPreElement;
-    storeEl: HTMLPreElement;
-  };
-
-  constructor(ctx: GlobalCtx) {
-    this.el = el("div", { style: { padding: "5px" } });
-
-    let view: Partial<this["view"]> = {};
-    view.actionEl = <any>el("pre", {
-      style: {
-        "font-size": "0.7rem",
-        "font-family": '"Courier New", Courier, monospace'
-      }
-    });
-    view.storeEl = <any>el("pre", {
-      style: {
-        "font-size": "0.7rem",
-        "font-family": '"Courier New", Courier, monospace'
-      }
-    });
-    this.view = <any>view;
-
-    ctx.store.subscribe(store => {
-      const action = store.getAction();
-      if (tagIsSet(action.event, SELECTED_ACTION_ID_TAG)) {
-        this.lazyUpdate(ctx);
-      }
-    }, true);
-
-    ctx.timemachineStore.subscribe(store => {
-      const action = store.getAction();
-      const selectedActionId = ctx.store.getState().selectedActionId;
-
-      if (!selectedActionId || selectedActionId === true) {
-        return;
-      }
-
-      if (tagIsSet(action.event, ACTION_TAG, selectedActionId)) {
-        this.lazyUpdate(ctx);
-      }
-    });
+export const TIMEMACHINE = createBlueprint({
+  create: function({ ioc }) {
+    return new Timemachine(ioc.get({ blueprint: TARGET_STORE }));
+  },
+  meta: {
+    singleton: true
   }
-
-  update(ctx: GlobalCtx) {
-    this.lazyUpdate(ctx);
-  }
-
-  lazyUpdate(ctx: GlobalCtx) {
-    const selectedActionId = ctx.store.getState().selectedActionId;
-    if (!selectedActionId || selectedActionId === true) {
-      this.el.textContent = "No action selected";
-      return;
-    }
-
-    const trackedAction = ctx.timemachineStore.getState().actions[
-      selectedActionId
-    ];
-    const action = trackedAction.action;
-    this.view.actionEl.textContent = JSON.stringify(
-      {
-        type: action.type,
-        payload: action.payload,
-        meta: action.meta
-      },
-      null,
-      "  "
-    );
-
-    // TODO: Clean this up
-    this.view.storeEl.textContent = trackedAction["stateDiff"];
-
-    setChildren(this.el, [
-      text("Action details"),
-      this.view.actionEl,
-      text("Diff"),
-      this.view.storeEl
-    ]);
-  }
-}
+});
 
 export class Devtools<TS extends Store> {
-  timemachine: Timemachine;
   el: HTMLElement;
   view: {
-    actionList: ActionList;
+    actionList: BlueprintEntity<typeof ACTION_LIST>;
     heightEl: HTMLInputElement;
   };
-  context: GlobalCtx;
-  constructor(targetStore: TS, targetElSelector = "body") {
-    const store = createStore();
-    this.timemachine = new Timemachine(targetStore);
-    this.context = {
-      store,
-      timemachineStore: this.timemachine.getStore()
-    };
+
+  store: BlueprintEntity<typeof STORE>;
+  timemachine: BlueprintEntity<typeof TIMEMACHINE>;
+
+  constructor(targetStore: TS, targetElSelector = "body", inline = false) {
+    const ioc = createIoc({ targetStore });
+
+    this.store = ioc.get({ blueprint: STORE });
+    this.timemachine = ioc.get({ blueprint: TIMEMACHINE });
 
     let view: Partial<this["view"]> = {};
+
+    const devToolsStyles: any = {
+      "font-family": "Arial, Helvetica, sans-serif",
+      color: "silver",
+      bottom: 0,
+      left: 0,
+      "background-color": "#222",
+      "border-top": "1px solid #777",
+      display: "flex",
+      "flex-direction": "column",
+      width: "100%",
+      "max-height": "100%",
+      "min-height": "100px"
+    };
+
+    if (!inline) {
+      devToolsStyles.position = "fixed";
+    }
 
     // prettier-ignore
     this.el = el("div", {
-        style: {
-          "font-family": "Arial, Helvetica, sans-serif",
-          color: "silver",
-          bottom: 0,
-          left: 0,
-          "background-color": "#222",
-          display: "flex",
-          "flex-direction": "column",
-          position: "fixed",
-          width: "100%",
-          height: this.context.store.getState().height,
-          "max-height": "100%",
-          "min-height": "100px"
-        }
+        style: devToolsStyles
       },
       [
         el(
@@ -143,10 +66,9 @@ export class Devtools<TS extends Store> {
           { style: { padding: "5px", "border-bottom": "2px solid #333" } },
           [
             (view.heightEl = <any>el("input", {
-              value: this.context.store.getState().height,
               onchange: (event: KeyboardEvent) => {
                 if (event.currentTarget) {
-                  this.context.store.dispatch(
+                  this.store.dispatch(
                     setHeight(event.currentTarget["value"])
                   );
                 }
@@ -175,12 +97,12 @@ export class Devtools<TS extends Store> {
             el(
               "div",
               { style: { flex: 1, "border-right": "2px solid #333" } },
-              (view.actionList = new ActionList(this.context))
+              view.actionList = ioc.get({ blueprint: ACTION_LIST })
             ),
             el(
               "div",
               { style: { flex: 3, "overflow-y": "auto" } },
-              new ActionDetails(this.context)
+              ioc.get({ blueprint: ACTION_DETAILS })
             )
           ]
         )
@@ -191,22 +113,56 @@ export class Devtools<TS extends Store> {
 
     const parentEl = document.querySelector(targetElSelector);
     if (parentEl) {
-      parentEl.append(this.el);
+      setChildren(parentEl, [
+        ...Array.prototype.values.call(parentEl.childNodes),
+        this
+      ]);
+      this.update();
       this.timemachine.getStore().subscribe(() => {
-        this.update(this.context);
+        requestAnimationFrame(() => {
+          this.update();
+        });
       });
-      this.context.store.subscribe(() => {
-        this.update(this.context);
+      this.store.subscribe(() => {
+        requestAnimationFrame(() => {
+          this.update();
+        });
       }, true);
     }
+
+    let targetState = this.timemachine.getInitialTargetState();
+    this.timemachine.getStore().subscribe(timemachineStore => {
+      const action = timemachineStore.getAction();
+      if (action.type !== SET_ACTION) {
+        return;
+      }
+
+      const newTargetState = cloneDeep(targetStore.getState());
+      const statePatch = (function() {
+        let old = targetState;
+        let aNew = newTargetState;
+
+        return () => createPatch(old, aNew);
+      })();
+      targetState = newTargetState;
+
+      this.store.dispatch(
+        setAction(action.payload.id, targetState, statePatch)
+      );
+    }, true);
   }
 
-  update(ctx: GlobalCtx) {
-    this.view.actionList.update(this.context);
+  enable() {
+    this.timemachine.enable();
+  }
 
-    const state = ctx.store.getState();
-    if (tagIsSet(ctx.store.getAction().event, HEIGHT_TAG)) {
+  update() {
+    this.view.actionList.update();
+
+    const state = this.store.getState();
+    if (tagIsSet(this.store.getAction().event, HEIGHT_TAG)) {
       document.body.style["padding-bottom"] = state.height;
+      this.view.heightEl.value = state.height;
       this.el.style.height = state.height;
     }
   }

@@ -27,3 +27,7 @@ export type BatchAction = NewAction & {
     newBatch: boolean;
   };
 };
+
+export interface Dictionary<T> {
+  [index: string]: T;
+}

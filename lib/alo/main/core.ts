@@ -18,10 +18,14 @@ export * from "../undoable/types";
 export * from "../subscribable";
 export * from "../subscribable/types";
 
+export * from "../observable";
+export * from "../observable/types";
+
 export * from "../actionNormalizer";
 export * from "../actionNormalizer/types";
 export * from "../actionNormalizer/batchActionNormalizerDecorator";
 export * from "../actionNormalizer/dateActionNormalizerDecorator";
+export * from "../actionNormalizer/undoableActionNormalizerDecorator";
 
 export * from "../actionResolver";
 export * from "../actionResolver/types";

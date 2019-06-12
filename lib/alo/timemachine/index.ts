@@ -2,12 +2,11 @@ import { actionTypes, Store } from "../store";
 import { cloneDeep } from "../util";
 import { combineMutators } from "../mutator";
 import { createUniqueActionId } from "./util";
-import { diffString } from "json-diff";
 import { Listener } from "../subscribable/types";
 import { setAction, actionsMutator, ACTIONS_TAG } from "./actions";
 import { Subscribable } from "../subscribable";
 import { createTag } from "../event";
-import { dispatchThunk, cloneAction } from "../main/core";
+import { dispatchThunk, cloneAction, StoreInterface } from "../main/core";
 
 const ROOT_TAG = createTag({
   name: "root",
@@ -18,38 +17,26 @@ export const mutator = combineMutators({
   actions: actionsMutator
 });
 
-export class Timemachine<T extends Store<any> = any> {
+export class Timemachine<T extends StoreInterface<any> = any> {
   store: Store<typeof mutator>;
   targetStore: T;
   unsubscribe: null | ReturnType<Subscribable["subscribe"]>;
   initialTargetState: any;
   replaying = false;
   orderIdx = 0;
-  lastTargetState;
 
   constructor(targetStore: T) {
     this.targetStore = targetStore;
     this.initialTargetState = cloneDeep(targetStore.getAction().payload);
-    this.lastTargetState = this.initialTargetState;
     this.store = new Store({
       mutator
     });
-    this.enable();
   }
 
   targetStoreListener: Listener<T> = store => {
     const action = store.getAction();
-    const id = action.meta.devtoolsActionId || createUniqueActionId();
-    delete action.meta.devtoolsActionId;
-
-    // TODO: Clean this up
-    let newTargetState = cloneDeep(store.getState());
-    const stateDiff = diffString(this.lastTargetState, newTargetState, {
-      color: false
-    });
-    this.lastTargetState = newTargetState;
-
-    this.store.dispatch(setAction(action, id, this.orderIdx, stateDiff));
+    const id = action.meta.tmp.timemachineActionId || createUniqueActionId();
+    this.store.dispatch(setAction(action, id, this.orderIdx));
     this.orderIdx++;
   };
 
@@ -66,13 +53,13 @@ export class Timemachine<T extends Store<any> = any> {
       for (const [id, trackedAction] of Object.entries(actions)) {
         if (trackedAction.disabled) continue;
 
-        let action = trackedAction.action;
-        action.meta.devtoolsActionId = id;
+        let action = cloneAction(trackedAction.action);
+        action.meta.tmp.timemachineActionId = id;
         if (action.type == actionTypes.INIT) {
           action.payload = newInitialState;
         }
 
-        store.dispatch(cloneAction(action));
+        store.dispatch(action);
 
         await new Promise(res => {
           setTimeout(() => {
@@ -87,6 +74,10 @@ export class Timemachine<T extends Store<any> = any> {
 
   getStore() {
     return this.store;
+  }
+
+  getInitialTargetState() {
+    return this.initialTargetState;
   }
 
   enable() {

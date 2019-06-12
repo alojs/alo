@@ -1,7 +1,17 @@
 import { el, list, List } from "redom";
-import { createActionListItemClass } from "./item";
-import { GlobalCtx } from "..";
-import { setSelectedActionId } from "../store";
+import { CREATE_ACTION_LIST_ITEM } from "./item";
+import { STORE, setSelectedActionId } from "../store";
+import { TIMEMACHINE } from "..";
+import { BlueprintEntity, createBlueprint } from "wald";
+
+export const ACTION_LIST = createBlueprint({
+  create: ({ ioc }) =>
+    new ActionList({
+      store: ioc.get({ blueprint: STORE }),
+      timemachine: ioc.get({ blueprint: TIMEMACHINE }),
+      createItem: ioc.get({ blueprint: CREATE_ACTION_LIST_ITEM })
+    })
+});
 
 export class ActionList {
   el: HTMLElement;
@@ -9,9 +19,26 @@ export class ActionList {
     list: List;
   };
   actionCountCache = 0;
+  store: BlueprintEntity<typeof STORE>;
+  timemachine: BlueprintEntity<typeof TIMEMACHINE>;
 
-  constructor(ctx: GlobalCtx) {
+  constructor({
+    store,
+    timemachine,
+    createItem
+  }: {
+    store;
+    timemachine;
+    createItem: BlueprintEntity<typeof CREATE_ACTION_LIST_ITEM>;
+  }) {
+    this.store = store;
+    this.timemachine = timemachine;
+
     let view: Partial<this["view"]> = {};
+
+    const onSelectItem = (e, actionId) => {
+      this.store.dispatch(setSelectedActionId(actionId));
+    };
 
     this.el = el(
       "div",
@@ -24,9 +51,10 @@ export class ActionList {
       [
         (view.list = list(
           "ul",
-          createActionListItemClass(ctx, function(e, actionId) {
-            ctx.store.dispatch(setSelectedActionId(actionId));
-          })
+          function() {
+            return createItem(onSelectItem);
+          },
+          "id"
         ))
       ]
     );
@@ -37,8 +65,8 @@ export class ActionList {
     this.view.list.el.style.padding = "0";
   }
 
-  update(ctx: GlobalCtx) {
-    const timemachineState = ctx.timemachineStore.getState();
+  update() {
+    const timemachineState = this.timemachine.getStore().getState();
 
     // Use selector
     const sortedTrackedActions = Object.values(timemachineState.actions).sort(

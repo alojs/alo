@@ -6,51 +6,80 @@ export interface SelectFuncResult<T = any> {
   value: T;
 }
 
-type Selector = (options, action: Action) => SelectFuncResult;
-
-type SelectFunc = (
-  options: any,
-  action: Action,
-  last?: false | SelectFuncResult
-) => SelectFuncResult;
+type SelectFunc<T = any> = (options: any, last?: false | T) => T;
 
 export interface SelectorResult<T extends SelectFunc> {
   changed: boolean;
   value: ReturnType<T>["value"];
 }
 
-export const createSelector = function<T extends SelectFunc>(
-  selectFunc: T,
-  pure = false
+const equalityCheck = function(options, last, next) {
+  return last === next;
+};
+
+export const createPrimitiveSelector = function<
+  T extends (options: any) => any
+>(select: T) {
+  return createSelector(
+    select,
+    {
+      equalityCheck
+    }
+  );
+};
+
+export const createSelector = function<
+  R,
+  S extends (options: any, last: R) => R
+>(
+  select: S,
+  {
+    selectCheck,
+    equalityCheck
+  }: {
+    selectCheck?: (options: Parameters<S>[0], last: ReturnType<S>) => boolean;
+    equalityCheck?: (
+      options: Parameters<S>[0],
+      last: ReturnType<S>,
+      next: ReturnType<S>
+    ) => boolean;
+  }
 ) {
-  type Result = SelectorResult<T>;
+  let lastValue: ReturnType<S>;
+  let firstSelect = true;
 
-  let lastResult: Result;
-  let lastAction: Action | null = null;
+  return function(options: Parameters<S>[0], force = false) {
+    const reselect =
+      firstSelect ||
+      force ||
+      !selectCheck ||
+      selectCheck(options as any, lastValue as any);
+    firstSelect = false;
 
-  return function(options: FirstArgument<T>, action: Action) {
-    // If a selector is pure, it will have the same result, if the current action object is the same as last one
-    if (pure && lastAction === action) {
-      lastResult = { ...lastResult, changed: false };
-
-      return lastResult;
+    if (!reselect) {
+      return {
+        changed: false,
+        value: lastValue
+      };
     }
 
-    const decoratedLastResult = lastResult
-      ? { ...lastResult, changed: false }
-      : false;
+    let nextValue = select(options, lastValue);
+    let changed = true;
 
-    let nextResult: any = selectFunc(options, action, decoratedLastResult);
-    if (nextResult.changed == null) {
-      nextResult.changed = true;
+    if (equalityCheck) {
+      changed = !equalityCheck(
+        options as any,
+        lastValue as any,
+        nextValue as any
+      );
     }
 
-    lastResult = nextResult;
-    if (pure) {
-      lastAction = action;
-    }
+    lastValue = nextValue as any;
 
-    return lastResult;
+    return {
+      changed,
+      value: lastValue
+    };
   };
 };
 

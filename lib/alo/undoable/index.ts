@@ -16,7 +16,7 @@ export const setUndoData = function(
   key: string | number,
   value?: any
 ) {
-  const undoData = (action.meta.tmp.undoData = action.meta.tmp.undoData || {});
+  const undoData = (action.meta.undoData = action.meta.undoData || {});
   if (action.meta.do) undoData[key] = value;
 
   return undoData[key];
@@ -26,7 +26,7 @@ export const getUndoData = function(
   action: UndoableAction,
   key: string | number
 ) {
-  const undoData = (action.meta.tmp.undoData = action.meta.tmp.undoData || {});
+  const undoData = (action.meta.undoData = action.meta.undoData || {});
 
   return undoData[key];
 };

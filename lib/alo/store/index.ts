@@ -14,6 +14,9 @@ import { setWildCard } from "../event";
 import { StoreInterface } from "./types";
 import { Subscribable } from "../subscribable";
 import { cloneDeep as _cloneDeep } from "../util";
+import { observe, observable, batch } from "../observable";
+import _ from "lodash";
+import { ObserveFn, AvoidFn } from "../observable/types";
 
 export var actionTypes = {
   INIT: "@@init"
@@ -21,7 +24,11 @@ export var actionTypes = {
 
 export class Store<T extends Mutator = Mutator> implements StoreInterface {
   _isMutating: boolean;
-  _state: any = null;
+  _observable: {
+    state: any;
+  } = observable({
+    state: null
+  });
   _action: Action;
   _mutator: Mutator;
   _actionNormalizer: ActionNormalizerInterface;
@@ -70,7 +77,7 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
    * Returns the current state
    */
   getState = (): ReturnType<T> => {
-    return this._state;
+    return this._observable.state;
   };
 
   /**
@@ -130,6 +137,12 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
     });
   };
 
+  observe(func: (store: this, avoidFn: AvoidFn) => any) {
+    return observe(avoidFn => {
+      func(this, avoidFn);
+    });
+  }
+
   _callSubscribers = () => {
     this._subscribable.callSubscribers(this);
   };
@@ -143,6 +156,25 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
       applyMutator: this._applyMutator
     });
   };
+
+  _applyMutatorBatch(action: Action) {
+    if (action.type === actionTypes.INIT) {
+      this._observable.state = _.isPlainObject(action.payload)
+        ? observable(action.payload)
+        : action.payload;
+      setWildCard(action.event);
+    }
+
+    try {
+      let result = this._mutator(action, this._observable.state);
+      if (_.isPlainObject(result)) {
+        result = observable(result);
+      }
+      this._observable.state = result;
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   _applyMutator = (action: Action) => {
     let pureAction =
@@ -158,16 +190,9 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
 
     this._isMutating = true;
 
-    if (action.type === actionTypes.INIT) {
-      this._state = action.payload;
-      setWildCard(action.event);
-    }
-
-    try {
-      this._state = this._mutator(action, this._state);
-    } catch (err) {
-      console.error(err);
-    }
+    batch(() => {
+      this._applyMutatorBatch(action);
+    });
 
     this._isMutating = false;
 
