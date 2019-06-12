@@ -1,15 +1,23 @@
-import { Action } from "./action";
-import { FirstArgument } from "./util";
 export interface SelectFuncResult<T = any> {
     changed?: boolean;
     value: T;
 }
-declare type SelectFunc = (options: any, action: Action, last?: false | SelectFuncResult) => SelectFuncResult;
+declare type SelectFunc<T = any> = (options: any, last?: false | T) => T;
 export interface SelectorResult<T extends SelectFunc> {
     changed: boolean;
     value: ReturnType<T>["value"];
 }
-export declare const createSelector: <T extends SelectFunc>(selectFunc: T, pure?: boolean) => (options: FirstArgument<T>, action: Action) => SelectorResult<T>;
+export declare const createPrimitiveSelector: <T extends (options: any) => any>(select: T) => (options: Parameters<T>[0], force?: boolean) => {
+    changed: boolean;
+    value: ReturnType<T>;
+};
+export declare const createSelector: <R, S extends (options: any, last: R) => R>(select: S, { selectCheck, equalityCheck }: {
+    selectCheck?: ((options: Parameters<S>[0], last: ReturnType<S>) => boolean) | undefined;
+    equalityCheck?: ((options: Parameters<S>[0], last: ReturnType<S>, next: ReturnType<S>) => boolean) | undefined;
+}) => (options: Parameters<S>[0], force?: boolean) => {
+    changed: boolean;
+    value: ReturnType<S>;
+};
 declare type SelectorResultsObj = {
     [propName: string]: SelectFuncResult;
 };

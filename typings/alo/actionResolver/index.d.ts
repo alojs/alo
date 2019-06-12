@@ -1,6 +1,10 @@
 import { Action } from "../action/types";
 import { ActionResolverInterface, ResolveOptions } from "./types";
 export declare class ActionResolver implements ActionResolverInterface {
+    callSubscribersLazy: boolean;
+    constructor({ callSubscribersLazy }?: {
+        callSubscribersLazy?: boolean;
+    });
     resolve({ action, callSubscribers, applyMutator, setAction }: ResolveOptions): Action | undefined;
 }
 export declare abstract class AbstractActionResolverDecorator implements ActionResolverInterface {

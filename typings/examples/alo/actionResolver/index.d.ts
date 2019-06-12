@@ -1,20 +1,17 @@
-import { NormalizedAction } from "../action";
-import { Store } from "../store";
-export declare type ResolveOptions = {
-    action: NormalizedAction;
-    store: Store;
-};
-export interface ActionResolverInterface {
-    resolve(options: ResolveOptions): any;
-}
+import { Action } from "../action/types";
+import { ActionResolverInterface, ResolveOptions } from "./types";
 export declare class ActionResolver implements ActionResolverInterface {
-    resolve({ action, store }: ResolveOptions): NormalizedAction;
+    callSubscribersLazy: boolean;
+    constructor({ callSubscribersLazy }?: {
+        callSubscribersLazy?: boolean;
+    });
+    resolve({ action, callSubscribers, applyMutator, setAction }: ResolveOptions): Action | undefined;
 }
 export declare abstract class AbstractActionResolverDecorator implements ActionResolverInterface {
     _actionResolver: ActionResolverInterface;
     constructor({ actionResolver }: {
         actionResolver: ActionResolverInterface;
     });
-    resolve(options: ResolveOptions): any;
+    resolve(options: ResolveOptions): Action | undefined;
 }
 //# sourceMappingURL=index.d.ts.map
