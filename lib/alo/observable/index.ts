@@ -90,6 +90,66 @@ export function observe(fn: ObserveFn) {
   };
 }
 
+export const set = function(
+  obj: Observable<any>,
+  key: string | number,
+  value: any,
+  makeObservable = false
+) {
+  const getter = (Object.getOwnPropertyDescriptor(obj, key) || {}).get;
+  const { storage, propObserverIdSetMap } = observableInfoMap[
+    obj.__observableId
+  ];
+  const observerIdSet: BooleanSet = (propObserverIdSetMap[key] = {});
+
+  if (makeObservable) {
+    if (_.isPlainObject(value)) {
+      value = observable(value);
+    } else if (_.isArray(value)) {
+      for (const [itemKey, itemValue] of Object.entries(value)) {
+        if (!_.isPlainObject(itemValue)) {
+          continue;
+        }
+
+        value[itemKey] = observable(itemValue);
+      }
+    }
+  }
+
+  if (storage[key] !== undefined) {
+    console.log("already existing");
+    setValue(storage, observerIdSet, key, value);
+    return;
+  }
+
+  Object.defineProperty(obj, key, {
+    configurable: true,
+    enumerable: true,
+    get() {
+      const observerId = observerIdStack[observerIdStack.length - 1];
+      if (observerId && !observerIdSet[observerId]) {
+        observerIdSet[observerId] = true;
+        observerInfoMap[observerId].targetObserverIdSets.push(observerIdSet);
+      }
+      return storage[key];
+    }
+  });
+
+  if (typeof getter === "function") {
+    observe(() => {
+      const value = getter.call(obj);
+      setValue(storage, observerIdSet, key, value);
+    });
+  } else {
+    (storage as any)[key] = value;
+    Object.defineProperty(obj, key, {
+      set(value) {
+        setValue(storage, observerIdSet, key, value);
+      }
+    });
+  }
+};
+
 export function observable<T extends Dictionary<any>>(
   obj: T,
   deep: boolean = true
@@ -103,65 +163,20 @@ export function observable<T extends Dictionary<any>>(
   }
 
   const observableId = generateObservableId();
-
-  const storage = {} as T;
-  const propObserverIdSetMap = {} as Dictionary<BooleanSet>;
   const resultObj = {} as T;
 
   observableInfoMap[observableId] = {
-    storage,
-    propObserverIdSetMap
+    storage: {},
+    propObserverIdSetMap: {}
   };
-
-  for (const key of Object.keys(obj)) {
-    const getter = (Object.getOwnPropertyDescriptor(obj, key) || {}).get;
-    const observerIdSet: BooleanSet = (propObserverIdSetMap[key] = {});
-
-    Object.defineProperty(resultObj, key, {
-      configurable: true,
-      enumerable: true,
-      get() {
-        const observerId = observerIdStack[observerIdStack.length - 1];
-        if (observerId && !observerIdSet[observerId]) {
-          observerIdSet[observerId] = true;
-          observerInfoMap[observerId].targetObserverIdSets.push(observerIdSet);
-        }
-        return storage[key];
-      }
-    });
-
-    if (typeof getter === "function") {
-      observe(() => {
-        const value = getter.call(resultObj);
-        setValue(storage, observerIdSet, key, value);
-      });
-    } else {
-      let value = obj[key];
-      if (deep) {
-        if (_.isPlainObject(value)) {
-          value = observable(value, deep);
-        } else if (_.isArray(value)) {
-          for (const [itemKey, itemValue] of Object.entries(value)) {
-            if (!_.isPlainObject(itemValue)) {
-              continue;
-            }
-
-            value[itemKey] = observable(itemValue, deep);
-          }
-        }
-      }
-      (storage as any)[key] = value;
-      Object.defineProperty(resultObj, key, {
-        set(value) {
-          setValue(storage, observerIdSet, key, value);
-        }
-      });
-    }
-  }
 
   Object.defineProperty(resultObj, "__observableId", {
     value: observableId
   });
+
+  for (const [key, value] of Object.entries(obj)) {
+    set(resultObj, key, value, deep);
+  }
 
   return resultObj as Observable<T>;
 }
