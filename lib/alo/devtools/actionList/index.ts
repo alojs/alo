@@ -53,7 +53,7 @@ export class ActionList {
           "ul",
           function() {
             return createItem(onSelectItem);
-          },
+          } as any,
           "id"
         ))
       ]

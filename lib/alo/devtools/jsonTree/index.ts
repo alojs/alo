@@ -34,7 +34,7 @@ export class JsonTree {
     if (isPlainObject || isArray) {
       this.type = isArray ? "array" : "object";
 
-      const propsList = list("table", (_, [key, value]) => {
+      const propsList = list("table", ((_, [key, value]) => {
         const primitive = isPrimitive(value);
 
         const keyLabel = primitive ? `${key}:` : key;
@@ -64,9 +64,9 @@ export class JsonTree {
             //item.el.style.display = (showItem)? 'block': 'none'
             keyEl.textContent = `${showItem ? "v " : "> "}${keyLabel}`;
             if (showItem) {
-              setChildren(itemParent, new JsonTree(value));
+              setChildren(itemParent, new JsonTree(value) as any);
             } else {
-              setChildren(itemParent, null);
+              setChildren(itemParent, []);
             }
           };
           const keyEl = el(
@@ -93,7 +93,7 @@ export class JsonTree {
         rootEl.style.padding = "3px 0";
 
         return { el: rootEl };
-      });
+      }) as any);
 
       let entries = Object.entries(value);
       let length = entries.length;

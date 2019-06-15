@@ -72,7 +72,7 @@ class ActionListItem {
                     toggleAction(this.id, !evt.currentTarget.checked)
                   );
                 }
-              }))
+              }) as any)
             ),
             el("a", {
                 href: "#!",

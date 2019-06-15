@@ -37,7 +37,7 @@ export class ConnectedComponent<
       return;
     }
 
-    this._component.update(options);
+    (this._component.update as any)(options);
   }
   _storeListener = store => {
     if (!this._component.update) {
@@ -55,7 +55,7 @@ export class ConnectedComponent<
     }
 
     requestAnimationFrame(() => {
-      this._component.update(updateOptions);
+      (this._component.update as any)(updateOptions);
     });
   };
   onmount() {
