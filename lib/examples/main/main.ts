@@ -1,250 +1,122 @@
-console.log("examples namespace started");
+import { mount, list } from "redom";
+import { observable, observe, set, notify, batch } from "@lib/alo/main/dev";
+import { el } from "redom";
 
-//import { App } from "./../app";
-//new App().init();
+type State = {
+  count: number;
+  items: {
+    [index: string]: { name: string; id: string };
+  };
+};
 
-import {
-  Store,
-  ActionResolver,
-  BatchActionResolverDecorator,
-  createTag,
-  createEvent,
-  setTag,
-  setWildCard,
-  tagIsSet,
-  typeMutator,
-  ActionNormalizerInterface,
-  BatchActionNormalizerDecorator,
-  Action,
-  dispatchBatch,
-  dispatchThunk,
-  dispatchPromise,
-  ActionNormalizer,
-  dispatchActions,
-  cloneAction,
-  DateActionNormalizerDecorator,
-  createUndoableMutator,
-  UndoableMutatorState,
-  ActionResolverInterface,
-  notify,
-  batch,
-  UndoableActionNormalizerDecorator,
-  setUndoData,
-  getUndoData,
-  createUndoThunk,
-  createRedoThunk
-} from "@lib/alo/main/core";
-
-import { Devtools } from "@lib/alo/devtools";
-import { el, setChildren, list } from "redom";
-import faker from "faker";
-
-let actionNormalizer = new ActionNormalizer();
-actionNormalizer = new DateActionNormalizerDecorator({ actionNormalizer });
-actionNormalizer = new UndoableActionNormalizerDecorator({ actionNormalizer });
-actionNormalizer = new BatchActionNormalizerDecorator({ actionNormalizer });
-
-let actionResolver: ActionResolverInterface = new ActionResolver();
-actionResolver = new BatchActionResolverDecorator({ actionResolver });
-
-const NAME_TAG = createTag({ name: "name" });
-const SURNAME_TAG = createTag({ name: "surname" });
-const PERSON_TAG = createTag({
-  name: "person",
-  children: [NAME_TAG, SURNAME_TAG]
-});
-const PEOPLE_TAG = createTag({
-  name: "people",
-  entityContainer: true,
-  children: [PERSON_TAG]
-});
-
-let ids = 0;
-const createPerson = () => ({
-  type: "create",
-  payload: {
-    id: ids++,
-    name: faker.name.firstName(),
-    surname: faker.name.lastName()
-  },
-  meta: {
-    pure: true
+class Item {
+  // prettier-ignore
+  view = {
+    input: el('input', { oninput: (evt) => this.itemState.name = evt.currentTarget.value }) as HTMLInputElement,
+    lengthLabel: el('span')
   }
-});
-
-const createInitialState = (): {
-  notPeople: {};
-  people: { [key: string]: { id: string; name: string; surname: string } };
-  undo: UndoableMutatorState;
-} => ({
-  notPeople: {},
-  people: {},
-  undo: undefined as any
-});
-
-const UNDO_ID = "personsCreateUndo";
-const undoableMutator = createUndoableMutator({
-  id: UNDO_ID,
-  actionFilter: action => action.type === "create"
-});
-
-const store = new Store({
-  actionResolver,
-  actionNormalizer,
-  mutator: typeMutator(
-    (
-      action,
-      state: ReturnType<typeof createInitialState> = createInitialState()
-    ) => {
-      switch (action.type) {
-        case "create":
-          if (action.meta.do) {
-            const id = action.payload.id;
-            state.people[id] = action.payload;
-            notify(state, "people");
-            setTag(action.event, PERSON_TAG, id);
-            setUndoData(action, "people", id);
-          } else if (action.meta.undo) {
-            const id = getUndoData(action, "people");
-            delete state.people[id];
-            notify(state, "people");
-            setTag(action.event, PERSON_TAG, id);
-          }
-
-          break;
-
-        case "surname":
-          state.people[action.payload.id].surname = action.payload.surname;
-          setTag(action.event, SURNAME_TAG, action.payload.id);
-          break;
-      }
-
-      state.undo = undoableMutator(action, state.undo);
-
-      return state;
+  id;
+  state: State;
+  itemState;
+  sub;
+  el = el("li", [this.view.input, this.view.lengthLabel]);
+  onmount() {
+    const items = this.state.items;
+    this.sub = observe(() => {
+      this.itemState = items[this.id];
+      this.view.input.value = this.itemState.name;
+      this.view.lengthLabel.textContent =
+        this.itemState.name.length + " " + Math.random();
+    });
+  }
+  onunmount() {
+    this.sub();
+  }
+  update(item, _, __, state) {
+    this.state = state;
+    this.id = item.id;
+    if (this.itemState != null && item != this.itemState) {
+      this.onunmount();
+      this.onmount();
     }
-  )
-});
+  }
+}
 
-const personsEl = list(
-  "ul",
-  class Item {
-    el = el("li");
-    update(data) {
-      this.el.textContent = JSON.stringify(data);
-    }
-  },
-  "id"
-);
+const generateId = (function() {
+  let idx = 0;
+  return () => idx++ + "";
+})();
 
-const view: any = {};
-const app = el("div", [
-  (view.count = el("input", { value: 1, size: 3 })),
-  el(
-    "button",
-    {
-      onclick: () => {
-        const count = view.count.value;
-        if (count > 1) {
-          dispatchBatch(store, function(ds) {
-            for (var idx = 0; idx < count; idx++) {
-              ds.dispatch(createPerson());
-            }
-          });
-        } else {
-          store.dispatch(createPerson());
+class App {
+  subs: Function[] = [];
+  state: State = observable({
+    count: 1,
+    items: {}
+  });
+  view = {
+    count: el("input", {
+      oninput: e => (this.state.count = e.currentTarget.value)
+    }) as HTMLInputElement,
+    countSuffix: el("span"),
+    items: list("ul", Item as any, "id"),
+    json: el("textarea", {
+      style: { width: "700px", height: "700px" },
+      onchange: e => {
+        try {
+          this.state = observable(JSON.parse(e.currentTarget.value));
+          this.onunmount();
+          this.onmount();
+        } catch (err) {
+          console.error(err);
         }
       }
-    },
-    "Add person"
-  ),
-  el(
-    "button",
-    { onclick: () => dispatchBatch(store, createUndoThunk(UNDO_ID)) },
-    "Undo"
-  ),
-  el(
-    "button",
-    { onclick: () => dispatchBatch(store, createRedoThunk(UNDO_ID)) },
-    "Redo"
-  ),
-  personsEl
-]);
+    })
+  };
 
-const devToolsEl = el("div.dev");
-const devToolsToolsEl = el("div.dev2");
-setChildren(document.querySelector("#app")!, [
-  app,
-  devToolsEl,
-  devToolsToolsEl
-]);
-const devtools = new Devtools(store, "div.dev");
-//const devtools2 = new Devtools(devtools.store, 'div.dev2', true)
-//devtools2.enable()
-devtools.enable();
+  // prettier-ignore
+  el = el("div", [
+    el("button", { onclick: () => this.state.count++ }, "Count"),
+    el("button", { onclick: () => {
+      batch(() => {
+        for(let idx = 0; idx < this.state.count; idx++) {
+          const id = generateId();
+          set(this.state.items, id, { name: '', id }, true)
+          notify(this.state, 'items');
+        }
+      })
+    }}, "Add items"),
+    el("hr"),
+    this.view.count,
+    this.view.countSuffix,
+    this.view.items,
+    this.view.json
+  ]);
+  onmount() {
+    this.subs.push(
+      observe(() => {
+        this.view.count.value = this.state.count + "";
+        this.view.countSuffix.textContent = "" + Math.random();
+      })
+    );
 
-store.observe(function() {
-  const people = store.getState().people;
+    this.subs.push(
+      observe(() => {
+        this.view.items.update(Object.values(this.state.items), this.state);
+      })
+    );
 
-  requestAnimationFrame(() => {
-    personsEl.update(Object.values(people));
-  });
-});
+    this.subs.push(
+      observe(() => {
+        this.view.json["value"] = JSON.stringify(this.state, null, "  ");
+      })
+    );
+  }
+  onunmount() {
+    for (const sub of this.subs) {
+      sub();
+    }
+    this.subs = [];
+  }
+}
 
-() => {
-  const result = dispatchBatch(store, async function(ds) {
-    dispatchBatch(ds, ds => {
-      console.log("whaaaaaat");
-      ds.dispatch(createPerson());
-
-      const batch = dispatchBatch(ds, ds => {
-        ds.dispatch({ type: "create", payload: createPerson() });
-
-        dispatchThunk(ds, ds => {
-          ds.dispatch({ type: "create", payload: createPerson() });
-          ds.dispatch({ type: "create", payload: createPerson() });
-        });
-      });
-
-      ds.dispatch(cloneAction(batch!));
-
-      /*const batch8 = dispatchBatch(ds, ds => {
-      ds.dispatch({ type: "create", payload: 2 });
-
-      const batch2 = dispatchBatch(ds, ds => {
-        ds.dispatch({ type: "create", payload: 3 });
-        ds.dispatch({ type: "create", payload: 4 });
-      });
-
-      ds.dispatch({ type: "create", payload: 5 });
-
-      ds.dispatch(cloneAction(batch2!));
-
-      const thunkBatch1 = dispatchThunk(ds, ds => {
-        ds.dispatch({ type: "create", payload: 5 });
-        ds.dispatch({ type: "create", payload: 6 });
-        ds.dispatch({ type: "create", payload: 7 });
-      });
-
-      //console.log("thunkBatch1", thunkBatch1);
-
-      dispatchActions(ds, thunkBatch1.map(a => cloneAction(a)));
-    });*/
-    });
-  }).then(batch9 => {
-    console.log(store.getState().people.length);
-
-    dispatchBatch(store, createUndoThunk(UNDO_ID));
-    dispatchBatch(store, createUndoThunk(UNDO_ID));
-    dispatchBatch(store, createUndoThunk(UNDO_ID));
-    dispatchBatch(store, createUndoThunk(UNDO_ID));
-    //dispatchBatch(store, createUndoThunk(UNDO_ID));
-    /*dispatchThunk(store, createUndoThunk(UNDO_ID));
-  dispatchThunk(store, createUndoThunk(UNDO_ID));
-  dispatchThunk(store, createUndoThunk(UNDO_ID));
-  dispatchThunk(store, createUndoThunk(UNDO_ID));
-  dispatchThunk(store, createUndoThunk(UNDO_ID));
-  /*dispatchThunk(store, createUndoThunk(UNDO_ID))
-  dispatchThunk(store, createUndoThunk(UNDO_ID))*/
-  });
-};
+mount(document.querySelector("#app")!, new App());

@@ -90,19 +90,19 @@ export function observe(fn: ObserveFn) {
   };
 }
 
-export const set = function(
-  obj: Observable<any>,
-  key: string | number,
-  value: any,
-  makeObservable = false
+export const set = function<T extends Observable<any>, K extends keyof T>(
+  obj: T,
+  key: K,
+  value: T[K],
+  deep = false
 ) {
   const getter = (Object.getOwnPropertyDescriptor(obj, key) || {}).get;
   const { storage, propObserverIdSetMap } = observableInfoMap[
     obj.__observableId
   ];
-  const observerIdSet: BooleanSet = (propObserverIdSetMap[key] = {});
+  const observerIdSet: BooleanSet = (propObserverIdSetMap[key as any] = {});
 
-  if (makeObservable) {
+  if (deep) {
     if (_.isPlainObject(value)) {
       value = observable(value);
     } else if (_.isArray(value)) {
@@ -201,7 +201,10 @@ const notifyObservers = function(observerIdSet) {
   }
 };
 
-export function notify<T, K extends keyof T>(obj: T, key: K) {
+export function notify<T extends Observable<any>, K extends keyof T>(
+  obj: T,
+  key: K
+) {
   if (isObservable(obj)) {
     const propObserverIdSetMap =
       observableInfoMap[obj.__observableId].propObserverIdSetMap[key as string];
