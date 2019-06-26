@@ -1,44 +1,41 @@
 import { mount, list } from "@lufrai/redom";
 import { observable, observe, set, notify, batch } from "@lib/alo/main/dev";
 import { el } from "@lufrai/redom";
+import { ObservingListItem, ObservingComponent } from "@lib/alo/redom";
 
 type State = {
   count: number;
+  color: string;
   items: {
     [index: string]: { name: string; id: string };
   };
 };
 
-class Item {
+class Item extends ObservingListItem {
   // prettier-ignore
   view = {
-    input: el('input', { oninput: (evt) => this.itemState.name = evt.currentTarget.value }) as HTMLInputElement,
+    input: el('input', { oninput: (evt) => this.state.item.name = evt.currentTarget.value }),
     lengthLabel: el('span')
   }
-  id;
-  state: State;
-  itemState;
-  sub;
   el = el("li", [this.view.input, this.view.lengthLabel]);
-  onmount() {
-    const items = this.state.items;
-    this.sub = observe(() => {
-      this.itemState = items[this.id];
-      this.view.input.value = this.itemState.name;
-      this.view.lengthLabel.textContent =
-        this.itemState.name.length + " " + Math.random();
+  constructor() {
+    super();
+
+    this.observe(() => {
+      const self = this;
+      const color = this.state.context.color;
+
+      requestAnimationFrame(function() {
+        self.view.lengthLabel.style.color = color;
+      });
     });
-  }
-  onunmount() {
-    this.sub();
-  }
-  update(item, _, __, state) {
-    this.state = state;
-    this.id = item.id;
-    if (this.itemState != null && item != this.itemState) {
-      this.onunmount();
-      this.onmount();
-    }
+
+    this.observe(() => {
+      const item = this.state.item;
+      const name = item.name;
+      this.view.input.value = name;
+      this.view.lengthLabel.textContent = name.length + " " + Math.random();
+    });
   }
 }
 
@@ -47,34 +44,31 @@ const generateId = (function() {
   return () => idx++ + "";
 })();
 
-class App {
+class App extends ObservingComponent {
   subs: Function[] = [];
   state: State = observable({
     count: 1,
-    items: {}
+    items: {},
+    color: "blue"
   });
   view = {
     count: el("input", {
       oninput: e => (this.state.count = e.currentTarget.value)
-    }) as HTMLInputElement,
+    }),
+    color: el("input", {
+      oninput: e => (this.state.color = e.currentTarget.value)
+    }),
     countSuffix: el("span"),
-    items: list("ul", Item as any, "id"),
-    json: el("textarea", {
-      style: { width: "700px", height: "700px" },
-      onchange: e => {
-        try {
-          this.state = observable(JSON.parse(e.currentTarget.value));
-          this.onunmount();
-          this.onmount();
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    })
+    items: list("ul", Item, "id")
   };
 
   // prettier-ignore
   el = el("div", [
+    el('button', { onclick: () => {
+      const clonedState = JSON.parse(JSON.stringify(this.state));
+      this.state = observable(clonedState)
+      this.startSubscriptions();
+    }}, 'Refresh state'),
     el("button", { onclick: () => this.state.count++ }, "Count"),
     el("button", { onclick: () => {
       batch(() => {
@@ -88,34 +82,28 @@ class App {
     el("hr"),
     this.view.count,
     this.view.countSuffix,
-    this.view.items,
-    this.view.json
+    ' ',
+    this.view.color,
+    this.view.items
   ]);
-  onmount() {
-    this.subs.push(
-      observe(() => {
-        this.view.count.value = this.state.count + "";
-        this.view.countSuffix.textContent = "" + Math.random();
-      })
-    );
+  constructor() {
+    super();
 
-    this.subs.push(
-      observe(() => {
-        this.view.items.update(Object.values(this.state.items), this.state);
-      })
-    );
+    this.observe(() => {
+      this.view.color.value = this.state.color;
+    });
+    this.observe(() => {
+      this.view.count.value = this.state.count + "";
+      this.view.countSuffix.textContent = "" + Math.random();
+    });
+    this.observe(() => {
+      const self = this;
+      const items = Object.values(this.state.items);
 
-    this.subs.push(
-      observe(() => {
-        this.view.json["value"] = JSON.stringify(this.state, null, "  ");
-      })
-    );
-  }
-  onunmount() {
-    for (const sub of this.subs) {
-      sub();
-    }
-    this.subs = [];
+      requestAnimationFrame(function() {
+        self.view.items.update(items, self.state);
+      });
+    });
   }
 }
 
