@@ -1,7 +1,84 @@
-import { SubscribableInterface, StoreInterface, Store } from "../main/dev";
+import {
+  SubscribableInterface,
+  StoreInterface,
+  Store,
+  observe,
+  observable,
+  batchStart,
+  batchEnd,
+  ObserveFn
+} from "../main/dev";
 import { RedomComponent } from "@lufrai/redom";
 
 // TODO: Test
+
+export abstract class ObservingComponent {
+  _subscriptions: { [key: string]: ReturnType<typeof observe> } = {};
+  _observeFunctions: ObserveFn[] = [];
+  _mounted = false;
+  _started = false;
+  observe(fn: ObserveFn) {
+    const length = this._observeFunctions.push(fn);
+    const idx = length - 1;
+
+    if (this._mounted) {
+      this._startSubscription(fn, idx);
+    }
+
+    return () => {
+      this._observeFunctions.splice(idx, 1);
+      if (!this._subscriptions[idx]) {
+        return;
+      }
+
+      this._subscriptions[idx]();
+      delete this._subscriptions[idx];
+    };
+  }
+  _startSubscription = (fn, idx) => {
+    this._subscriptions[idx] = observe(fn);
+  };
+  startSubscriptions() {
+    if (this._started) {
+      this.clearSubscriptions();
+    }
+    this._started = true;
+    this._observeFunctions.forEach(this._startSubscription);
+  }
+  clearSubscriptions() {
+    for (const fn of Object.values(this._subscriptions)) {
+      if (!fn) continue;
+      fn();
+    }
+    this._started = false;
+    this._subscriptions = {};
+  }
+  onmount() {
+    this._mounted = true;
+    this.startSubscriptions();
+  }
+  onunmount() {
+    this._mounted = false;
+    this.clearSubscriptions();
+  }
+}
+
+export abstract class ObservingListItem extends ObservingComponent {
+  state = observable({
+    index: null as any,
+    item: null as any,
+    items: null as any,
+    context: null as any
+  });
+  update(item, index, items, context) {
+    const id = batchStart();
+    this.state.item = item;
+    this.state.index = index;
+    this.state.items = items;
+    this.state.context = context;
+    batchEnd(id);
+  }
+}
 
 export class ConnectedComponent<
   S extends StoreInterface = any,
