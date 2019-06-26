@@ -1,5 +1,5 @@
 export declare class JsonTree {
-    el: HTMLElement;
+    el: HTMLDivElement;
     type: string;
     value: any;
     showItemDefault: any;

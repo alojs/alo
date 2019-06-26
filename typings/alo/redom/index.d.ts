@@ -1,5 +1,5 @@
 import { SubscribableInterface, StoreInterface, Store } from "../main/dev";
-import { RedomComponent } from "redom";
+import { RedomComponent } from "@lufrai/redom";
 export declare class ConnectedComponent<S extends StoreInterface = any, T extends RedomComponent = any> {
     el: any;
     _mounted: boolean;

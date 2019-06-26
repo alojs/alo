@@ -1,6 +1,6 @@
 import { Timemachine } from "../timemachine";
 import { Store } from "../store";
-import { el, setChildren } from "redom";
+import { el, setChildren } from "@lufrai/redom";
 import { ACTION_LIST } from "./actionList";
 import { HEIGHT_TAG, setHeight, setAction, STORE } from "./store";
 import { tagIsSet, setTagChildren } from "../event";

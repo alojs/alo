@@ -1,6 +1,6 @@
-import { mount, list } from "redom";
+import { mount, list } from "@lufrai/redom";
 import { observable, observe, set, notify, batch } from "@lib/alo/main/dev";
-import { el } from "redom";
+import { el } from "@lufrai/redom";
 
 type State = {
   count: number;

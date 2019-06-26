@@ -1,4 +1,4 @@
-import { el, list, List } from "redom";
+import { el, list, List } from "@lufrai/redom";
 import { CREATE_ACTION_LIST_ITEM } from "./item";
 import { STORE, setSelectedActionId } from "../store";
 import { TIMEMACHINE } from "..";

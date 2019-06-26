@@ -1,5 +1,5 @@
 import { SubscribableInterface, StoreInterface, Store } from "../main/dev";
-import { RedomComponent } from "redom";
+import { RedomComponent } from "@lufrai/redom";
 
 // TODO: Test
 

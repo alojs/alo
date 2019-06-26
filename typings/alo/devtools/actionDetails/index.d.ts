@@ -1,9 +1,9 @@
-import { Router } from "redom";
+import { Router } from "@lufrai/redom";
 import { STORE } from "../store";
 import { BlueprintEntity } from "wald";
 import { TIMEMACHINE } from "..";
 import { JsonTree } from "@lib/alo/devtools/jsonTree";
-import { ConnectedComponent } from "@lib/alo/redom";
+import { ConnectedComponent } from "./../../redom";
 import { Action } from "@lib/alo/main/dev";
 export declare const ACTION_DETAILS: import("wald").Blueprint<({ ioc }: import("wald").BlueprintCreateFunctionOptions) => ConnectedComponent<import("../../store").Store<(action: Action, state?: Partial<{
     actions: {

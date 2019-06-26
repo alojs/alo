@@ -1,4 +1,4 @@
-import { el, setChildren, text, router, Router } from "redom";
+import { el, setChildren, text, router, Router } from "@lufrai/redom";
 import { tagIsSet } from "@lib/alo/event";
 import {
   SELECTED_ACTION_ID_TAG,
@@ -10,7 +10,7 @@ import { ACTION_TAG, SET_ACTION } from "@lib/alo/timemachine/actions";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { TIMEMACHINE } from "..";
 import { JsonTree } from "@lib/alo/devtools/jsonTree";
-import { ConnectedComponent } from "@lib/alo/redom";
+import { ConnectedComponent } from "./../../redom";
 import {
   createSelector,
   createPrimitiveSelector,

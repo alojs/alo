@@ -1,4 +1,4 @@
-import { el } from "redom";
+import { el } from "@lufrai/redom";
 import {
   TrackedAction,
   toggleAction,

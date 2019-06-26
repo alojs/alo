@@ -1,4 +1,4 @@
-import { el, list, setChildren, text } from "redom";
+import { el, list, setChildren, text } from "@lufrai/redom";
 import { isArray } from "util";
 import _ from "lodash";
 

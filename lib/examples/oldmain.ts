@@ -37,7 +37,7 @@ import {
 } from "@lib/alo/main/core";
 
 import { Devtools } from "@lib/alo/devtools";
-import { el, setChildren, list } from "redom";
+import { el, setChildren, list } from "@lufrai/redom";
 import faker from "faker";
 
 let actionNormalizer = new ActionNormalizer();
