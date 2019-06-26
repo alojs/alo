@@ -13,7 +13,7 @@ type MutatorsObj = {
 };
 
 type MutatorsReturnObject<TMutatorsObj extends MutatorsObj> = {
-  [P in keyof TMutatorsObj]: ReturnType<TMutatorsObj[P]>
+  [P in keyof TMutatorsObj]: ReturnType<TMutatorsObj[P]>;
 };
 
 export const combineMutators = function<
