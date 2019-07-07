@@ -1,22 +1,11 @@
-import { el, setChildren, text, router, Router } from "@lufrai/redom";
-import { tagIsSet } from "@lib/alo/event";
-import {
-  SELECTED_ACTION_ID_TAG,
-  STORE,
-  setActionDetailsTab,
-  ACTION_DETAILS_TAB_TAG
-} from "../store";
-import { ACTION_TAG, SET_ACTION } from "@lib/alo/timemachine/actions";
+import { el, setChildren, text, router } from "@lufrai/redom";
+import { STORE, setActionDetailsTab } from "../store";
+import { TrackedAction } from "@lib/alo/timemachine/actions";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { TIMEMACHINE } from "..";
 import { JsonTree } from "@lib/alo/devtools/jsonTree";
-import { ConnectedComponent } from "./../../redom";
-import {
-  createSelector,
-  createPrimitiveSelector,
-  Action,
-  StoreState
-} from "@lib/alo/main/dev";
+import { ConnectedComponent, ObservingComponent } from "./../../redom";
+import { StoreState, observable } from "@lib/alo/main/dev";
 
 export const ACTION_DETAILS = createBlueprint({
   create: ({ ioc }) => {
@@ -45,21 +34,17 @@ export const ACTION_DETAILS = createBlueprint({
   }
 });
 
-type TabData = {
-  action: ReturnType<ActionDetails["$action"]>;
-};
-
 class ActionTab {
   el = el("div");
   jsonBox = new JsonBox();
-  update({ action }: TabData) {
-    if (action.value == null) return;
+  update({ state }: ActionDetails) {
+    if (state.timemachineAction == null) return;
 
-    this.jsonBox.update(action.value.timemachine.action);
+    this.jsonBox.update(state.timemachineAction.action);
 
     setChildren(this.el, [
       this.jsonBox,
-      new JsonTree(action.value.timemachine.action, true)
+      new JsonTree(state.timemachineAction.action, true)
     ]);
   }
 }
@@ -67,13 +52,13 @@ class ActionTab {
 class PatchTab {
   el = el("div");
   jsonBox = new JsonBox();
-  update({ action }: TabData) {
-    if (action.value == null) return;
+  update({ state }: ActionDetails) {
+    if (state.storeAction == null) return;
 
     let patch = "Too much data for an rfc6902 diff";
 
     try {
-      patch = action.value.store.statePatch();
+      patch = state.storeAction.statePatch();
     } catch (err) {}
 
     this.jsonBox.update(patch);
@@ -85,187 +70,153 @@ class PatchTab {
 class StateTab {
   el = el("div");
   jsonBox = new JsonBox();
-  update({ action }: TabData) {
-    if (action.value == null) return;
+  update({ state }: ActionDetails) {
+    if (state.storeAction == null) return;
 
-    this.jsonBox.update(action.value.store.state);
+    this.jsonBox.update(state.storeAction.state);
 
-    setChildren(this.el, [
-      this.jsonBox,
-      new JsonTree(action.value.store.state)
-    ]);
+    setChildren(this.el, [this.jsonBox, new JsonTree(state.storeAction.state)]);
   }
 }
 
-class JsonBox {
-  el = el("div");
-  show = false;
-  view: { preWrap; pre: any; toggle: any } = {} as any;
-  constructor(title: string = "Show json") {
-    this.el = el("div", [
-      (this.view.toggle = el(
-        "a",
-        {
-          href: "#!",
-          style: { color: "inherit" },
-          onclick: () => {
-            this.show = !this.show;
-            this.updateShow();
-          }
-        },
-        title
-      )),
-      (this.view.preWrap = el(
-        "div",
-        { style: { border: "1px solid gray", padding: "3px", margin: "6px" } },
-        (this.view.pre = el("pre", {
-          style: {
-            "font-size": "0.7rem",
-            "font-family": '"Courier New", Courier, monospace'
-          }
-        }))
-      ))
-    ]);
+class JsonBox extends ObservingComponent {
+  state = observable({
+    show: false,
+    data: null
+  });
+  title: string;
+  preEl = el("pre", {
+    style: {
+      "font-size": "0.7rem",
+      "font-family": '"Courier New", Courier, monospace'
+    }
+  });
+  preWrap = el(
+    "div",
+    { style: { border: "1px solid gray", padding: "3px", margin: "6px" } },
+    this.preEl
+  );
+  el = el("div", [
+    el(
+      "a",
+      {
+        href: "#!",
+        style: { color: "inherit" },
+        onclick: () => {
+          this.state.show = !this.state.show;
+        }
+      },
+      this.title
+    ),
+    this.preWrap
+  ]);
 
-    this.updateShow();
+  constructor(title: string = "Show json") {
+    super();
+    this.title = title;
+    this.observe(() => {
+      const data = this.state.data;
+      if (this.state.show) {
+        this.preEl.textContent = JSON.stringify(data, null, "  ");
+      } else {
+        this.preEl.textContent = "";
+      }
+    });
+    this.observe(() => {
+      this.preWrap.style["display"] = this.state.show ? "block" : "none";
+    });
   }
   update(data) {
-    if (this.show) {
-      this.view.pre.textContent = JSON.stringify(data, null, "  ");
-    } else {
-      this.view.pre.textContent = "";
-    }
-  }
-  updateShow() {
-    this.view.preWrap.style["display"] = this.show ? "block" : "none";
+    this.state.data = data;
   }
 }
 
-export class ActionDetails {
-  el: HTMLElement;
-  view: {
-    routerWrap: any;
-    actionEl: HTMLPreElement;
-    storeEl: HTMLPreElement;
-    jsonTree: JsonTree;
-  } = {} as any;
+type ActionDetailsState = {
+  tab: string;
+  timemachineAction: TrackedAction | null;
+  storeAction: StoreState<ActionDetails["store"]>["actions"][0] | null;
+};
 
-  viewer;
-  router: Router;
+export class ActionDetails extends ObservingComponent {
+  state = observable(<ActionDetailsState>{
+    timemachineAction: null,
+    storeAction: null,
+    tab: null as any
+  });
   store: BlueprintEntity<typeof STORE>;
   timemachine: BlueprintEntity<typeof TIMEMACHINE>;
-
-  $actionId = createPrimitiveSelector(function(
-    state: ReturnType<ActionDetails["store"]["getState"]>
-  ) {
-    return state.selectedActionId;
+  routerWrap = el("div");
+  el = el("div", { style: { padding: "5px" } }, [
+    el("div", [
+      el(
+        "button",
+        {
+          onclick: () => {
+            this.store.dispatch(setActionDetailsTab("action"));
+          }
+        },
+        "Action"
+      ),
+      el(
+        "button",
+        {
+          onclick: () => {
+            this.store.dispatch(setActionDetailsTab("patch"));
+          }
+        },
+        "Patch"
+      ),
+      el(
+        "button",
+        {
+          onclick: () => {
+            this.store.dispatch(setActionDetailsTab("state"));
+          }
+        },
+        "State"
+      )
+    ]),
+    this.routerWrap
+  ]);
+  router = router(this.routerWrap, {
+    none: function() {
+      return { el: text("No action selected") };
+    } as any,
+    action: ActionTab,
+    patch: PatchTab,
+    state: StateTab
   });
-  $tab = createPrimitiveSelector(function(
-    state: ReturnType<ActionDetails["store"]["getState"]>
-  ) {
-    return state.actionDetailsTab;
-  });
-  $action = createSelector(
-    function({
-      action,
-      actionId,
-      timemachine,
-      state
-    }: {
-      action: Action;
-      state: StoreState<ActionDetails["store"]>;
-      actionId: ReturnType<ActionDetails["$actionId"]>;
-      timemachine: StoreState<
-        ReturnType<ActionDetails["timemachine"]["getStore"]>
-      >;
-    }) {
-      if (actionId.value == null) return null;
-
-      return {
-        timemachine: timemachine.actions[actionId.value],
-        store: state.actions[actionId.value]
-      };
-    },
-    {
-      selectCheck: function({ actionId, action }) {
-        return (
-          actionId.changed ||
-          (actionId.value != null &&
-            tagIsSet(action, ACTION_TAG, actionId.value))
-        );
-      }
-    }
-  );
 
   constructor({ store, timemachine }) {
+    super();
     this.store = store;
     this.timemachine = timemachine;
 
-    this.el = el("div", { style: { padding: "5px" } }, [
-      el("div", [
-        el(
-          "button",
-          {
-            onclick: () => {
-              this.store.dispatch(setActionDetailsTab("action"));
-            }
-          },
-          "Action"
-        ),
-        el(
-          "button",
-          {
-            onclick: () => {
-              this.store.dispatch(setActionDetailsTab("patch"));
-            }
-          },
-          "Patch"
-        ),
-        el(
-          "button",
-          {
-            onclick: () => {
-              this.store.dispatch(setActionDetailsTab("state"));
-            }
-          },
-          "State"
-        )
-      ]),
-      (this.view.routerWrap = el("div"))
-    ]);
-    this.router = router(this.view.routerWrap, {
-      none: function() {
-        return { el: text("No action selected") };
-      } as any,
-      action: ActionTab,
-      patch: PatchTab,
-      state: StateTab
+    this.observe(() => {
+      const state = this.store.getState();
+      const timemachineState = this.timemachine.getStore().getState();
+      const actionId = state.selectedActionId;
+      if (actionId != null) {
+        this.state.timemachineAction = timemachineState.actions[actionId];
+        this.state.storeAction = state.actions[actionId];
+      } else {
+        this.state.timemachineAction = null;
+        this.state.storeAction = null;
+      }
     });
-  }
-
-  update({ connectId, action, mounted }) {
-    const state = this.store.getState();
-    const timemachineState = this.timemachine.getStore().getState();
-
-    const actionId = this.$actionId(state);
-    const theAction = this.$action(
-      { action, state, actionId, timemachine: timemachineState },
-      mounted
-    );
-    const tab = this.$tab(state);
-
-    if (actionId.value == null) {
-      if (actionId.changed) {
+    this.observe(() => {
+      const state = this.store.getState();
+      this.state.tab = state.actionDetailsTab;
+    });
+    this.observe(() => {
+      if (this.state.storeAction == null) {
         this.router.update("none");
       }
 
-      return;
-    }
-
-    if (theAction.changed || tab.changed || actionId.changed) {
-      this.router.update(tab.value, {
-        action: theAction
-      });
-    }
+      const tab = this.state.tab;
+      if (this.state.storeAction) {
+        this.router.update(tab, this);
+      }
+    });
   }
 }

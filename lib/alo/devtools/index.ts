@@ -3,13 +3,14 @@ import { Store } from "../store";
 import { el, setChildren } from "@lufrai/redom";
 import { ACTION_LIST } from "./actionList";
 import { HEIGHT_TAG, setHeight, setAction, STORE } from "./store";
-import { tagIsSet, setTagChildren } from "../event";
+import { tagIsSet } from "../event";
 import { ACTION_DETAILS } from "./actionDetails";
 import { SET_ACTION } from "../timemachine/actions";
 import { cloneDeep } from "../util";
 import { createPatch } from "rfc6902";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { createIoc, TARGET_STORE } from "./ioc";
+import _ from "lodash";
 
 export const TIMEMACHINE = createBlueprint({
   create: function({ ioc }) {
@@ -113,10 +114,7 @@ export class Devtools<TS extends Store> {
 
     const parentEl = document.querySelector(targetElSelector);
     if (parentEl) {
-      setChildren(parentEl, [
-        ...Array.prototype.values.call(parentEl.childNodes),
-        this
-      ]);
+      setChildren(parentEl, [..._.toArray(parentEl.childNodes), this]);
       this.update();
       this.timemachine.getStore().subscribe(() => {
         requestAnimationFrame(() => {
@@ -157,8 +155,6 @@ export class Devtools<TS extends Store> {
   }
 
   update() {
-    this.view.actionList.update();
-
     const state = this.store.getState();
     if (tagIsSet(this.store.getAction().event, HEIGHT_TAG)) {
       document.body.style["padding-bottom"] = state.height;

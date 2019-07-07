@@ -112,3 +112,47 @@ export const combineSelectorResults = function<T extends SelectorResultsObj>(
 
   return { changed, value };
 };
+
+/*
+$actionId = createPrimitiveSelector(function(
+  state: ReturnType<ActionDetails["store"]["getState"]>
+) {
+  return state.selectedActionId;
+});
+$tab = createPrimitiveSelector(function(
+  state: ReturnType<ActionDetails["store"]["getState"]>
+) {
+  return state.actionDetailsTab;
+});
+$action = createSelector(
+  function({
+    action,
+    actionId,
+    timemachine,
+    state
+  }: {
+    action: Action;
+    state: StoreState<ActionDetails["store"]>;
+    actionId: ReturnType<ActionDetails["$actionId"]>;
+    timemachine: StoreState<
+      ReturnType<ActionDetails["timemachine"]["getStore"]>
+    >;
+  }) {
+    if (actionId.value == null) return null;
+
+    return {
+      timemachine: timemachine.actions[actionId.value],
+      store: state.actions[actionId.value]
+    };
+  },
+  {
+    selectCheck: function({ actionId, action }) {
+      return (
+        actionId.changed ||
+        (actionId.value != null &&
+          tagIsSet(action, ACTION_TAG, actionId.value))
+      );
+    }
+  }
+);
+*/

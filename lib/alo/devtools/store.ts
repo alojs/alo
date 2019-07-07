@@ -2,6 +2,7 @@ import { typeMutator } from "../mutator";
 import { Store } from "../store";
 import { setTag, createTag } from "../event";
 import { createBlueprint } from "wald";
+import { observable, set, notify } from "../main/dev";
 
 const SET_HEIGHT_TYPE = "SET_HEIGHT";
 const SET_SELECTED_ACTION_ID = "SET_SELECTED_ACTION_ID";
@@ -22,12 +23,12 @@ export const ROOT_TAG = createTag({
 
 export const mutator = typeMutator(function(action, state: RootState) {
   if (!state) {
-    state = {
+    state = observable({
       height: "50vh",
       actionDetailsTab: "action",
       selectedActionId: null,
       actions: {}
-    };
+    });
   }
 
   if (
@@ -44,7 +45,18 @@ export const mutator = typeMutator(function(action, state: RootState) {
   }
 
   if (action.type === SET_ACTION) {
-    state.actions[action.payload.id] = state.actions[action.payload.id] || {};
+    if (!state.actions[action.payload.id]) {
+      set(
+        state.actions,
+        action.payload.id,
+        {
+          state: null,
+          statePatch: null
+        },
+        true
+      );
+      notify(state, "actions");
+    }
     state.actions[action.payload.id].state = action.payload.state;
     state.actions[action.payload.id].statePatch = action.payload.statePatch;
   }

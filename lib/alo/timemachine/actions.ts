@@ -2,6 +2,7 @@ import { typeMutator } from "../mutator";
 import { Action } from "../action/types";
 import { createTag, setTag } from "../event";
 import { createSelector } from "../selector";
+import { set } from "../main/dev";
 
 export type TrackedAction = {
   id: string;
@@ -53,11 +54,18 @@ export const actionsMutator = typeMutator(function(
     if (action.type == SET_ACTION) {
       const childAction: Action = action.payload.action;
       const id = action.payload.id;
-      let trackedAction =
-        state[id] || <TrackedAction>{ id, disabled: false, trackState: false };
-      trackedAction.order = action.payload.order;
-      trackedAction.action = childAction;
-      state[id] = trackedAction;
+
+      if (!state[id]) {
+        set(
+          state,
+          id,
+          <TrackedAction>{ id, disabled: false, trackState: false },
+          true
+        );
+      }
+
+      state[id].order = action.payload.order;
+      state[id].action = childAction;
 
       setTag(action.event, ACTION_TAG, id);
     }
@@ -75,15 +83,3 @@ export const actionsMutator = typeMutator(function(
 
   return state;
 });
-
-/*export const actionItemSelector = createSelector(function({ idx, state }, action, last) {
-    if (last && !hasTags(action.tagTrie, [ ACTION_ITEM_TAG, idx])) {
-        return last;
-    }
-
-    return {
-        value: state.
-    }
-});*/
-
-//export const toggleAction = function()

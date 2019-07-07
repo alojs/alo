@@ -1,8 +1,9 @@
-import { el, list, List } from "@lufrai/redom";
+import { el, list } from "@lufrai/redom";
 import { CREATE_ACTION_LIST_ITEM } from "./item";
 import { STORE, setSelectedActionId } from "../store";
 import { TIMEMACHINE } from "..";
 import { BlueprintEntity, createBlueprint } from "wald";
+import { ObservingComponent } from "@lib/alo/redom";
 
 export const ACTION_LIST = createBlueprint({
   create: ({ ioc }) =>
@@ -13,14 +14,30 @@ export const ACTION_LIST = createBlueprint({
     })
 });
 
-export class ActionList {
-  el: HTMLElement;
-  view: {
-    list: List;
-  };
+export class ActionList extends ObservingComponent {
   actionCountCache = 0;
   store: BlueprintEntity<typeof STORE>;
   timemachine: BlueprintEntity<typeof TIMEMACHINE>;
+  createItem: BlueprintEntity<typeof CREATE_ACTION_LIST_ITEM>;
+
+  listEl = list(
+    el("ul", { style: { margin: "0", padding: "0" } }),
+    (() => {
+      return this.createItem(this.onSelectItem);
+    }) as any,
+    "id"
+  );
+
+  el = el(
+    "div",
+    {
+      style: {
+        height: "100%",
+        "overflow-y": "auto"
+      }
+    },
+    this.listEl
+  );
 
   constructor({
     store,
@@ -31,55 +48,31 @@ export class ActionList {
     timemachine;
     createItem: BlueprintEntity<typeof CREATE_ACTION_LIST_ITEM>;
   }) {
+    super();
+
     this.store = store;
     this.timemachine = timemachine;
+    this.createItem = createItem;
 
-    let view: Partial<this["view"]> = {};
+    this.observe(() => {
+      const timemachineState = this.timemachine.getStore().getState();
 
-    const onSelectItem = (e, actionId) => {
-      this.store.dispatch(setSelectedActionId(actionId));
-    };
-
-    this.el = el(
-      "div",
-      {
-        style: {
-          height: "100%",
-          "overflow-y": "auto"
+      const sortedTrackedActions = Object.values(timemachineState.actions).sort(
+        (a, b) => {
+          return a.order - b.order;
         }
-      },
-      [
-        (view.list = list(
-          "ul",
-          function() {
-            return createItem(onSelectItem);
-          } as any,
-          "id"
-        ))
-      ]
-    );
+      );
+      this.listEl.update(sortedTrackedActions);
 
-    this.view = <any>view;
-
-    this.view.list.el.style.margin = "0";
-    this.view.list.el.style.padding = "0";
-  }
-
-  update() {
-    const timemachineState = this.timemachine.getStore().getState();
-
-    // Use selector
-    const sortedTrackedActions = Object.values(timemachineState.actions).sort(
-      (a, b) => {
-        return a.order - b.order;
+      const sortedTrackedActionsLength = sortedTrackedActions.length;
+      if (this.actionCountCache != sortedTrackedActionsLength) {
+        this.el.scrollTop = this.el.scrollHeight;
       }
-    );
-    this.view.list.update(sortedTrackedActions);
-
-    const sortedTrackedActionsLength = sortedTrackedActions.length;
-    if (this.actionCountCache != sortedTrackedActionsLength) {
-      this.el.scrollTop = this.el.scrollHeight;
-    }
-    this.actionCountCache = sortedTrackedActionsLength;
+      this.actionCountCache = sortedTrackedActionsLength;
+    });
   }
+
+  onSelectItem = (e, actionId) => {
+    this.store.dispatch(setSelectedActionId(actionId));
+  };
 }
