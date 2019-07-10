@@ -1,4 +1,4 @@
-import { el, setChildren, text, router } from "@lufrai/redom";
+import { el, setChildren, text, router, mount } from "@lufrai/redom";
 import { STORE, setActionDetailsTab } from "../store";
 import { TrackedAction } from "@lib/alo/timemachine/actions";
 import { createBlueprint, BlueprintEntity } from "wald";
@@ -146,38 +146,36 @@ export class ActionDetails extends ObservingComponent {
   store: BlueprintEntity<typeof STORE>;
   timemachine: BlueprintEntity<typeof TIMEMACHINE>;
   routerWrap = el("div");
-  el = el("div", { style: { padding: "5px" } }, [
-    el("div", [
-      el(
-        "button",
-        {
-          onclick: () => {
-            this.store.dispatch(setActionDetailsTab("action"));
-          }
-        },
-        "Action"
-      ),
-      el(
-        "button",
-        {
-          onclick: () => {
-            this.store.dispatch(setActionDetailsTab("patch"));
-          }
-        },
-        "Patch"
-      ),
-      el(
-        "button",
-        {
-          onclick: () => {
-            this.store.dispatch(setActionDetailsTab("state"));
-          }
-        },
-        "State"
-      )
-    ]),
-    this.routerWrap
+  routerButtons = el("div", [
+    el(
+      "button",
+      {
+        onclick: () => {
+          this.store.dispatch(setActionDetailsTab("action"));
+        }
+      },
+      "Action"
+    ),
+    el(
+      "button",
+      {
+        onclick: () => {
+          this.store.dispatch(setActionDetailsTab("patch"));
+        }
+      },
+      "Patch"
+    ),
+    el(
+      "button",
+      {
+        onclick: () => {
+          this.store.dispatch(setActionDetailsTab("state"));
+        }
+      },
+      "State"
+    )
   ]);
+  el = el("div", { style: { padding: "5px" } });
   router = router(this.routerWrap, {
     none: function() {
       return { el: text("No action selected") };
@@ -209,13 +207,13 @@ export class ActionDetails extends ObservingComponent {
       this.state.tab = state.actionDetailsTab;
     });
     this.observe(() => {
+      const tab = this.state.tab;
       if (this.state.storeAction == null) {
         this.router.update("none");
-      }
-
-      const tab = this.state.tab;
-      if (this.state.storeAction) {
+        mount(this.el, this.routerWrap);
+      } else {
         this.router.update(tab, this);
+        setChildren(this.el, [this.routerButtons, this.routerWrap]);
       }
     });
   }
