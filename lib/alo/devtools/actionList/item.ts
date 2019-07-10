@@ -76,7 +76,9 @@ class ActionListItem extends ObservingListItem {
     {
       style: {
         padding: "5px",
-        "border-bottom": "1px solid #666"
+        borderBottom: "1px solid #666",
+        borderLeftWidth: "2px",
+        borderLeftStyle: "solid"
       }
     },
     this.flexWrapperEl
@@ -96,10 +98,10 @@ class ActionListItem extends ObservingListItem {
 
       if (trackedAction.id === state.selectedActionId) {
         this.el.style.backgroundColor = "#292929";
-        this.el.style.borderLeft = "2px solid #bbb";
+        this.el.style.borderLeftColor = "#bbb";
       } else {
         this.el.style.backgroundColor = "";
-        this.el.style.borderLeft = "";
+        this.el.style.borderLeftColor = "transparent";
       }
 
       this.titleEl.textContent = trackedAction.action.type;
