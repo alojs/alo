@@ -2,32 +2,20 @@ import { el, setChildren, text, router, mount } from "@lufrai/redom";
 import { STORE, setActionDetailsTab } from "../store";
 import { TrackedAction } from "@lib/alo/timemachine/actions";
 import { createBlueprint, BlueprintEntity } from "wald";
-import { TIMEMACHINE } from "..";
 import { JsonTree } from "@lib/alo/devtools/jsonTree";
-import { ConnectedComponent, ObservingComponent } from "./../../redom";
+import { ObservingComponent } from "./../../redom";
 import { StoreState, observable } from "@lib/alo/main/dev";
+import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 
 export const ACTION_DETAILS = createBlueprint({
   create: ({ ioc }) => {
     const store = ioc.get({ blueprint: STORE });
-    const timemachine = ioc.get({ blueprint: TIMEMACHINE });
+    const globalState = ioc.get({ blueprint: GLOBAL_DEVTOOLS_STATE });
 
-    const devtoolsComponent = new ConnectedComponent({
-      id: "devtools",
+    return new ActionDetails({
       store,
-      component: new ActionDetails({
-        store,
-        timemachine: timemachine
-      })
+      globalState
     });
-
-    const timemachineComponent = new ConnectedComponent({
-      id: "timemachine",
-      store: timemachine.getStore(),
-      component: devtoolsComponent
-    });
-
-    return timemachineComponent;
   },
   meta: {
     singleton: true
@@ -144,7 +132,7 @@ export class ActionDetails extends ObservingComponent {
     tab: null as any
   });
   store: BlueprintEntity<typeof STORE>;
-  timemachine: BlueprintEntity<typeof TIMEMACHINE>;
+  globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;
   routerWrap = el("div");
   routerButtons = el("div", [
     el(
@@ -185,14 +173,19 @@ export class ActionDetails extends ObservingComponent {
     state: StateTab
   });
 
-  constructor({ store, timemachine }) {
+  constructor({ store, globalState }) {
     super();
     this.store = store;
-    this.timemachine = timemachine;
+    this.globalState = globalState;
 
     this.observe(() => {
       const state = this.store.getState();
-      const timemachineState = this.timemachine.getStore().getState();
+
+      const selectedStore = state.selectedStore;
+      const timemachine = this.globalState.timemachines[selectedStore];
+      if (!timemachine) return;
+
+      const timemachineState = timemachine.getStore().getState();
       const actionId = state.selectedActionId;
       if (actionId != null) {
         this.state.timemachineAction = timemachineState.actions[actionId];
@@ -210,7 +203,7 @@ export class ActionDetails extends ObservingComponent {
       const tab = this.state.tab;
       if (this.state.storeAction == null) {
         this.router.update("none");
-        mount(this.el, this.routerWrap);
+        setChildren(this.el, [this.routerWrap]);
       } else {
         this.router.update(tab, this);
         setChildren(this.el, [this.routerButtons, this.routerWrap]);

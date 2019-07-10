@@ -6,7 +6,7 @@ import {
   BlueprintCreateFunctionOptions,
   createBlueprint
 } from "wald";
-import { StoreInterface } from "../main/dev";
+import { GlobalDevtoolsState } from ".";
 
 class GlobalsEntityCreatorDecorator extends AbstractEntityCreatorDecorator {
   globals;
@@ -31,18 +31,20 @@ export const createGlobalBlueprintCreate = function<R = any>(
   };
 };
 
-export const createIoc = function({ targetStore }) {
+export const createIoc = function({ globalDevtoolsState }) {
   let entityCreator = new EntityCreator();
   entityCreator = new SingletonEntityCreatorDecorator({ entityCreator });
   entityCreator = new GlobalsEntityCreatorDecorator({
     globals: {
-      targetStore
+      globalDevtoolsState
     },
     entityCreator
   });
   return new Ioc({ entityCreator });
 };
 
-export const TARGET_STORE = createBlueprint({
-  create: createGlobalBlueprintCreate<StoreInterface>("targetStore")
+export const GLOBAL_DEVTOOLS_STATE = createBlueprint({
+  create: createGlobalBlueprintCreate<GlobalDevtoolsState>(
+    "globalDevtoolsState"
+  )
 });

@@ -4,17 +4,17 @@ import { actionTypes } from "../../store";
 import { BATCH_ACTION_TYPE } from "@lib/alo/main/core";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { STORE } from "../store";
-import { TIMEMACHINE } from "..";
 import { ObservingListItem } from "@lib/alo/redom";
+import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 
 export const CREATE_ACTION_LIST_ITEM = createBlueprint({
   create: ({ ioc }) => onSelectAction => {
     const store = ioc.get({ blueprint: STORE });
-    const timemachine = ioc.get({ blueprint: TIMEMACHINE });
+    const globalState = ioc.get({ blueprint: GLOBAL_DEVTOOLS_STATE });
     return new ActionListItem({
       store,
       onSelectAction,
-      timemachine
+      globalState
     });
   }
 });
@@ -22,7 +22,7 @@ export const CREATE_ACTION_LIST_ITEM = createBlueprint({
 class ActionListItem extends ObservingListItem {
   onSelectAction;
   store: BlueprintEntity<typeof STORE>;
-  timemachine: BlueprintEntity<typeof TIMEMACHINE>;
+  globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;
 
   titleEl = el(
     "h3",
@@ -39,7 +39,9 @@ class ActionListItem extends ObservingListItem {
   disabledInputEl = el("input", {
     type: "checkbox",
     onchange: evt => {
-      this.timemachine
+      const selectedStore = this.store.getState().selectedStore;
+      const timemachine = this.globalState.timemachines[selectedStore];
+      timemachine
         .getStore()
         .dispatch(toggleAction(this.state.item.id, !evt.currentTarget.checked));
     }
@@ -84,10 +86,10 @@ class ActionListItem extends ObservingListItem {
     this.flexWrapperEl
   );
 
-  constructor({ store, timemachine, onSelectAction }) {
+  constructor({ store, globalState, onSelectAction }) {
     super();
 
-    this.timemachine = timemachine;
+    this.globalState = globalState;
     this.store = store;
     this.onSelectAction = onSelectAction;
 

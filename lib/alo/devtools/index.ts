@@ -1,27 +1,57 @@
 import { Timemachine } from "../timemachine";
 import { Store } from "../store";
-import { el, setChildren } from "@lufrai/redom";
+import { el, setChildren, list } from "@lufrai/redom";
 import { ACTION_LIST } from "./actionList";
-import { HEIGHT_TAG, setHeight, setAction, STORE } from "./store";
-import { tagIsSet } from "../event";
+import {
+  setHeight,
+  setAction,
+  STORE,
+  setSelectedStore,
+  setSelectedActionId
+} from "./store";
 import { ACTION_DETAILS } from "./actionDetails";
 import { SET_ACTION } from "../timemachine/actions";
 import { cloneDeep } from "../util";
 import { createPatch } from "rfc6902";
-import { createBlueprint, BlueprintEntity } from "wald";
-import { createIoc, TARGET_STORE } from "./ioc";
+import { BlueprintEntity } from "wald";
+import { createIoc } from "./ioc";
 import _ from "lodash";
+import { observable, set, notify, dispatchBatch } from "../main/dev";
+import { ObservingComponent } from "../redom";
 
-export const TIMEMACHINE = createBlueprint({
-  create: function({ ioc }) {
-    return new Timemachine(ioc.get({ blueprint: TARGET_STORE }));
-  },
-  meta: {
-    singleton: true
-  }
+export type GlobalDevtoolsState = {
+  stores: { [index: string]: Store };
+  timemachines: { [index: string]: Timemachine };
+};
+
+const globalDevtoolsState = observable(<GlobalDevtoolsState>{
+  stores: {},
+  timemachines: {}
 });
 
-export class Devtools<TS extends Store> {
+let storeIdx = 0;
+export const attachStoreToDevtools = function<S extends Store>({
+  store,
+  name = ""
+}: {
+  store: S;
+  name?: string;
+}) {
+  set(globalDevtoolsState.stores, name + storeIdx++, store);
+  notify(globalDevtoolsState, "stores");
+};
+
+export const createDevtools = function({ targetElSelector, inline = false }) {
+  if (process.env.NODE_ENV === "production") {
+    return;
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    new Devtools({ targetElSelector, inline });
+  }
+};
+
+export class Devtools extends ObservingComponent {
   el: HTMLElement;
   view: {
     actionList: BlueprintEntity<typeof ACTION_LIST>;
@@ -29,13 +59,37 @@ export class Devtools<TS extends Store> {
   };
 
   store: BlueprintEntity<typeof STORE>;
-  timemachine: BlueprintEntity<typeof TIMEMACHINE>;
 
-  constructor(targetStore: TS, targetElSelector = "body", inline = false) {
-    const ioc = createIoc({ targetStore });
+  storeSelect = list(
+    el("select", {
+      onchange: evt => {
+        dispatchBatch(this.store, function(store) {
+          store.dispatch(setSelectedStore(evt.target.value));
+          store.dispatch(setSelectedActionId(null));
+        });
+      }
+    }),
+    class Item {
+      el = el("option");
+      update(item) {
+        this.el.textContent = item;
+        this.el.value = item;
+      }
+    }
+  );
+
+  constructor({
+    targetElSelector = "body",
+    inline = false
+  }: {
+    targetElSelector;
+    inline;
+  }) {
+    super();
+
+    const ioc = createIoc({ globalDevtoolsState });
 
     this.store = ioc.get({ blueprint: STORE });
-    this.timemachine = ioc.get({ blueprint: TIMEMACHINE });
 
     let view: Partial<this["view"]> = {};
 
@@ -66,6 +120,8 @@ export class Devtools<TS extends Store> {
           "div",
           { style: { padding: "5px", "border-bottom": "2px solid #333" } },
           [
+            this.storeSelect,
+            ' ',
             (view.heightEl = <any>el("input", {
               onchange: (event: KeyboardEvent) => {
                 if (event.currentTarget) {
@@ -75,11 +131,13 @@ export class Devtools<TS extends Store> {
                 }
               }
             })),
+            ' ',
             el(
               "button",
               {
                 onclick: () => {
-                  this.timemachine.replay();
+                  const storeName = this.store.getState().selectedStore;
+                  globalDevtoolsState.timemachines[storeName].replay();
                 }
               },
               "Replay"
@@ -112,54 +170,73 @@ export class Devtools<TS extends Store> {
 
     this.view = <any>view;
 
+    this.observe(avoid => {
+      const stores = globalDevtoolsState.stores;
+
+      avoid();
+
+      const storeNames = Object.keys(stores);
+      for (const key of storeNames) {
+        const store = stores[key];
+
+        if (globalDevtoolsState.timemachines[key]) {
+          continue;
+        }
+
+        const timemachine = new Timemachine(store);
+
+        let targetState = timemachine.getInitialTargetState();
+        timemachine.getStore().subscribe(timemachineStore => {
+          const action = timemachineStore.getAction();
+          if (action.type !== SET_ACTION) {
+            return;
+          }
+
+          const newTargetState = cloneDeep(store.getState());
+          const statePatch = (function() {
+            let old = targetState;
+            let aNew = newTargetState;
+
+            return () => createPatch(old, aNew);
+          })();
+          targetState = newTargetState;
+
+          this.store.dispatch(
+            setAction(action.payload.id, targetState, statePatch)
+          );
+        }, true);
+
+        timemachine.enable();
+
+        set(globalDevtoolsState.timemachines, key, timemachine);
+        notify(globalDevtoolsState, "timemachines");
+
+        if (storeNames.length === 1) {
+          this.store.dispatch(setSelectedStore(key));
+        }
+      }
+    });
+
     const parentEl = document.querySelector(targetElSelector);
     if (parentEl) {
       setChildren(parentEl, [..._.toArray(parentEl.childNodes), this]);
-      this.update();
-      this.timemachine.getStore().subscribe(() => {
-        requestAnimationFrame(() => {
-          this.update();
-        });
+      this.observe(() => {
+        const height = this.store.getState().height;
+        if (!inline) {
+          document.body.style["padding-bottom"] = height;
+        }
+        this.view.heightEl.value = height;
+        this.el.style.height = height;
       });
-      this.store.subscribe(() => {
-        requestAnimationFrame(() => {
-          this.update();
-        });
-      }, true);
     }
 
-    let targetState = this.timemachine.getInitialTargetState();
-    this.timemachine.getStore().subscribe(timemachineStore => {
-      const action = timemachineStore.getAction();
-      if (action.type !== SET_ACTION) {
-        return;
-      }
+    this.observe(() => {
+      const stores = globalDevtoolsState.stores;
+      const names = Object.keys(stores);
+      const selectedStore = this.store.getState().selectedStore;
 
-      const newTargetState = cloneDeep(targetStore.getState());
-      const statePatch = (function() {
-        let old = targetState;
-        let aNew = newTargetState;
-
-        return () => createPatch(old, aNew);
-      })();
-      targetState = newTargetState;
-
-      this.store.dispatch(
-        setAction(action.payload.id, targetState, statePatch)
-      );
-    }, true);
-  }
-
-  enable() {
-    this.timemachine.enable();
-  }
-
-  update() {
-    const state = this.store.getState();
-    if (tagIsSet(this.store.getAction().event, HEIGHT_TAG)) {
-      document.body.style["padding-bottom"] = state.height;
-      this.view.heightEl.value = state.height;
-      this.el.style.height = state.height;
-    }
+      this.storeSelect.update(names);
+      this.storeSelect.el["value"] = selectedStore;
+    });
   }
 }

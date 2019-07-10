@@ -1,15 +1,15 @@
 import { el, list } from "@lufrai/redom";
 import { CREATE_ACTION_LIST_ITEM } from "./item";
 import { STORE, setSelectedActionId } from "../store";
-import { TIMEMACHINE } from "..";
 import { BlueprintEntity, createBlueprint } from "wald";
 import { ObservingComponent } from "@lib/alo/redom";
+import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 
 export const ACTION_LIST = createBlueprint({
   create: ({ ioc }) =>
     new ActionList({
       store: ioc.get({ blueprint: STORE }),
-      timemachine: ioc.get({ blueprint: TIMEMACHINE }),
+      globalState: ioc.get({ blueprint: GLOBAL_DEVTOOLS_STATE }),
       createItem: ioc.get({ blueprint: CREATE_ACTION_LIST_ITEM })
     })
 });
@@ -17,7 +17,7 @@ export const ACTION_LIST = createBlueprint({
 export class ActionList extends ObservingComponent {
   actionCountCache = 0;
   store: BlueprintEntity<typeof STORE>;
-  timemachine: BlueprintEntity<typeof TIMEMACHINE>;
+  globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;
   createItem: BlueprintEntity<typeof CREATE_ACTION_LIST_ITEM>;
 
   listEl = list(
@@ -41,21 +41,25 @@ export class ActionList extends ObservingComponent {
 
   constructor({
     store,
-    timemachine,
+    globalState,
     createItem
   }: {
     store;
-    timemachine;
+    globalState;
     createItem: BlueprintEntity<typeof CREATE_ACTION_LIST_ITEM>;
   }) {
     super();
 
     this.store = store;
-    this.timemachine = timemachine;
+    this.globalState = globalState;
     this.createItem = createItem;
 
     this.observe(() => {
-      const timemachineState = this.timemachine.getStore().getState();
+      const selectedStore = this.store.getState().selectedStore;
+      const timemachine = this.globalState.timemachines[selectedStore];
+      if (!timemachine) return;
+
+      const timemachineState = timemachine.getStore().getState();
 
       const sortedTrackedActions = Object.values(timemachineState.actions).sort(
         (a, b) => {

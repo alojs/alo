@@ -1,8 +1,17 @@
 import { typeMutator } from "../mutator";
 import { Store } from "../store";
-import { setTag, createTag } from "../event";
 import { createBlueprint } from "wald";
-import { observable, set, notify } from "../main/dev";
+import {
+  observable,
+  set,
+  notify,
+  ActionResolverInterface,
+  BatchActionResolverDecorator,
+  ActionNormalizerInterface,
+  ActionNormalizer,
+  BatchActionNormalizerDecorator,
+  ActionResolver
+} from "../main/dev";
 
 const SET_HEIGHT_TYPE = "SET_HEIGHT";
 const SET_SELECTED_ACTION_ID = "SET_SELECTED_ACTION_ID";
@@ -12,14 +21,8 @@ type RootState = {
   selectedActionId: string | null;
   actionDetailsTab: string;
   actions: { [id: string]: { state; statePatch } };
+  selectedStore;
 };
-
-export const HEIGHT_TAG = createTag();
-export const SELECTED_ACTION_ID_TAG = createTag();
-export const ACTION_DETAILS_TAB_TAG = createTag();
-export const ROOT_TAG = createTag({
-  children: [ACTION_DETAILS_TAB_TAG, HEIGHT_TAG, SELECTED_ACTION_ID_TAG]
-});
 
 export const mutator = typeMutator(function(action, state: RootState) {
   if (!state) {
@@ -27,6 +30,7 @@ export const mutator = typeMutator(function(action, state: RootState) {
       height: "50vh",
       actionDetailsTab: "action",
       selectedActionId: null,
+      selectedStore: null,
       actions: {}
     });
   }
@@ -36,12 +40,14 @@ export const mutator = typeMutator(function(action, state: RootState) {
     state.actionDetailsTab !== action.payload
   ) {
     state.actionDetailsTab = action.payload;
-    setTag(action.event, ACTION_DETAILS_TAB_TAG);
   }
 
   if (action.type === SET_HEIGHT_TYPE && state.height !== action.payload) {
     state.height = action.payload;
-    setTag(action.event, HEIGHT_TAG);
+  }
+
+  if (action.type === SET_SELECTED_STORE) {
+    state.selectedStore = action.payload;
   }
 
   if (action.type === SET_ACTION) {
@@ -66,7 +72,6 @@ export const mutator = typeMutator(function(action, state: RootState) {
     state.selectedActionId !== action.payload
   ) {
     state.selectedActionId = action.payload;
-    setTag(action.event, SELECTED_ACTION_ID_TAG);
   }
 
   return state;
@@ -96,6 +101,14 @@ export const setHeight = function(height) {
   };
 };
 
+const SET_SELECTED_STORE = "SET_SELECTED_STORE";
+export const setSelectedStore = function(storeName) {
+  return {
+    type: SET_SELECTED_STORE,
+    payload: storeName
+  };
+};
+
 export const setSelectedActionId = function(actionId) {
   return {
     type: SET_SELECTED_ACTION_ID,
@@ -104,7 +117,13 @@ export const setSelectedActionId = function(actionId) {
 };
 
 const createStore = function() {
-  return new Store({ mutator });
+  let actionNormalizer: ActionNormalizerInterface = new ActionNormalizer();
+  actionNormalizer = new BatchActionNormalizerDecorator({ actionNormalizer });
+
+  let actionResolver: ActionResolverInterface = new ActionResolver();
+  actionResolver = new BatchActionResolverDecorator({ actionResolver });
+
+  return new Store({ mutator, actionResolver, actionNormalizer });
 };
 
 export const STORE = createBlueprint({
