@@ -23,6 +23,7 @@
     "@babel/preset-typescript": "^7.3.3",
     "@babel/runtime": "^7.4.5",
     "@lufrai/concat-with-sourcemaps": "^1.1.0",
+    "@lufrai/redom": "^3.23.2",
     "@types/chai": "^4.1.7",
     "@types/express": "^4.17.0",
     "@types/express-http-proxy": "^1.5.10",
@@ -76,7 +77,6 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-emotion": "^10.0.0",
-    "@lufrai/redom": "^3.23.2",
     "resolve-url-loader": "^3.1.0",
     "rfc6902": "^3.0.2",
     "router5": "^7.0.2",
@@ -94,7 +94,7 @@
     "typescript": "^3.5.2",
     "wait-on": "^3.2.0",
     "wald": "^0.1.2",
-    "webpack": "4.35.0",
+    "webpack": "4.35.3",
     "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2",
@@ -117,9 +117,9 @@
     "type": "git",
     "url": "https://github.com/alojs/alo.git"
   },
+  "sideEffects": false,
   "dependencies": {
     "express": "^4.17.1",
-    "faker": "^4.1.0",
     "faye": "^1.2.4",
     "lodash": "^4.17.11",
     "source-map-support": "^0.5.12"
