@@ -1,5 +1,5 @@
 import { Event, Tag, EntityId, Entity } from "./types";
-import { Action } from "../main/dev";
+import { Action } from "../action/types";
 
 let idx = 0;
 let parentByTag = {};

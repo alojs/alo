@@ -1,7 +1,7 @@
 import { el } from "@lufrai/redom";
 import { toggleAction } from "../../timemachine/actions";
 import { actionTypes } from "../../store";
-import { BATCH_ACTION_TYPE } from "@lib/alo/main/core";
+import { BATCH_ACTION_TYPE } from "../../util/dispatchBatch";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { STORE } from "../store";
 import { ObservingListItem } from "@lib/alo/redom";

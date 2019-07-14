@@ -1,11 +1,7 @@
 import { AbstractActionResolverDecorator } from ".";
-import {
-  BATCH_ACTION_TYPE,
-  createEvent,
-  batchStart,
-  batchPause,
-  batchEnd
-} from "../main/core";
+import { batchStart, batchPause, batchEnd } from "../observable";
+import { createEvent } from "../event";
+import { BATCH_ACTION_TYPE } from "../util/dispatchBatch";
 import { Action } from "../action/types";
 import { ResolveOptions } from "./types";
 

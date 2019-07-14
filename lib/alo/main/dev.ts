@@ -1,2 +1,1 @@
-export * from "./core";
-export { Devtools } from "../devtools";
+export * from "../devtools";

@@ -2,7 +2,7 @@
 // https://github.com/nhn/tui.grid/blob/55278fba5303fcef928715cbb003aeed0964dd29/src/helper/observable.ts
 
 import _ from "lodash";
-import { Dictionary } from "../main/dev";
+import { Dictionary } from "../util/types";
 import {
   ObserverInfo,
   ObservableInfo,

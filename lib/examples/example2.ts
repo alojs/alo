@@ -8,37 +8,28 @@ import {
   ActionResolver,
   BatchActionResolverDecorator,
   createTag,
-  createEvent,
   setTag,
-  setWildCard,
-  tagIsSet,
   typeMutator,
-  ActionNormalizerInterface,
   BatchActionNormalizerDecorator,
-  Action,
   dispatchBatch,
   dispatchThunk,
-  dispatchPromise,
   ActionNormalizer,
-  dispatchActions,
   cloneAction,
   DateActionNormalizerDecorator,
   createUndoableMutator,
-  UndoableMutatorState,
-  ActionResolverInterface,
   notify,
-  batch,
   UndoableActionNormalizerDecorator,
   setUndoData,
   getUndoData,
   createUndoThunk,
   createRedoThunk,
+  ActionResolverInterface,
+  UndoableMutatorState,
   set
-} from "@lib/alo/main/core";
+} from "../../dist/alo/core";
+import { attachStoreToDevtools, Devtools } from "../../dist/alo/dev";
 
-import { Devtools } from "@lib/alo/devtools";
 import { el, setChildren, list } from "@lufrai/redom";
-import faker from "faker";
 
 let actionNormalizer = new ActionNormalizer();
 actionNormalizer = new DateActionNormalizerDecorator({ actionNormalizer });
@@ -65,8 +56,8 @@ const createPerson = () => ({
   type: "create",
   payload: {
     id: ids++,
-    name: faker.name.firstName(),
-    surname: faker.name.lastName()
+    name: "name" + (ids - 1),
+    surname: "surname" + (ids - 1)
   },
   meta: {
     pure: true
@@ -173,16 +164,12 @@ const app = el("div", [
 ]);
 
 const devToolsEl = el("div.dev");
-const devToolsToolsEl = el("div.dev2");
-setChildren(document.querySelector("#app")!, [
-  app,
-  devToolsEl,
-  devToolsToolsEl
-]);
-const devtools = new Devtools(store, "div.dev");
-//const devtools2 = new Devtools(devtools.store, 'div.dev2', true)
-//devtools2.enable()
-devtools.enable();
+setChildren(document.querySelector("#app")!, [app, devToolsEl]);
+if (process.env.NODE_ENV === "development") {
+  new Devtools({ targetElSelector: "div.dev" });
+  attachStoreToDevtools({ store, name: "blub" });
+  attachStoreToDevtools({ store: new Store({ mutator: () => {} }) });
+}
 
 store.observe(function() {
   const people = store.getState().people;

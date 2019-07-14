@@ -1,7 +1,7 @@
 import { typeMutator } from "../mutator";
 import { Action } from "../action/types";
 import { createTag, setTag } from "../event";
-import { set } from "../main/dev";
+import { set } from "../observable";
 
 export type TrackedAction = {
   id: string;

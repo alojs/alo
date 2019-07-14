@@ -7,7 +7,7 @@ import {
   setWildCard,
   setTagChildren
 } from ".";
-import { Action } from "../main/dev";
+import { Action } from "../action/types";
 
 const createAction = (): Action => ({
   type: "",

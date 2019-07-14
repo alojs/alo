@@ -16,7 +16,8 @@ import { createPatch } from "rfc6902";
 import { BlueprintEntity } from "wald";
 import { createIoc } from "./ioc";
 import _ from "lodash";
-import { observable, set, notify, dispatchBatch } from "../main/dev";
+import { observable, set, notify } from "../observable";
+import { dispatchBatch } from "../util/dispatchBatch";
 import { ObservingComponent } from "../redom";
 
 export type GlobalDevtoolsState = {
@@ -39,16 +40,6 @@ export const attachStoreToDevtools = function<S extends Store>({
 }) {
   set(globalDevtoolsState.stores, name + storeIdx++, store);
   notify(globalDevtoolsState, "stores");
-};
-
-export const createDevtools = function({ targetElSelector, inline = false }) {
-  if (process.env.NODE_ENV === "production") {
-    return;
-  }
-
-  if (process.env.NODE_ENV !== "production") {
-    new Devtools({ targetElSelector, inline });
-  }
 };
 
 export class Devtools extends ObservingComponent {
@@ -82,8 +73,8 @@ export class Devtools extends ObservingComponent {
     targetElSelector = "body",
     inline = false
   }: {
-    targetElSelector;
-    inline;
+    targetElSelector?;
+    inline?;
   }) {
     super();
 

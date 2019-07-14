@@ -1,17 +1,13 @@
 import { typeMutator } from "../mutator";
 import { Store } from "../store";
 import { createBlueprint } from "wald";
-import {
-  observable,
-  set,
-  notify,
-  ActionResolverInterface,
-  BatchActionResolverDecorator,
-  ActionNormalizerInterface,
-  ActionNormalizer,
-  BatchActionNormalizerDecorator,
-  ActionResolver
-} from "../main/dev";
+import { observable, set, notify } from "../observable";
+import { ActionNormalizer } from "../actionNormalizer/";
+import { ActionNormalizerInterface } from "../actionNormalizer/types";
+import { BatchActionNormalizerDecorator } from "../actionNormalizer/batchActionNormalizerDecorator";
+import { ActionResolver } from "../actionResolver";
+import { ActionResolverInterface } from "../actionResolver/types";
+import { BatchActionResolverDecorator } from "../actionResolver/batchActionResolverDecorator";
 
 const SET_HEIGHT_TYPE = "SET_HEIGHT";
 const SET_SELECTED_ACTION_ID = "SET_SELECTED_ACTION_ID";

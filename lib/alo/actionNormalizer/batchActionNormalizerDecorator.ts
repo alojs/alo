@@ -2,11 +2,8 @@ import { AbstractActionNormalizerDecorator } from ".";
 import { Action } from "../action/types";
 import { NormalizeOptions } from "./types";
 import { isAction, cloneAction } from "../action";
-import {
-  StoreDispatchApi,
-  dispatchBatch,
-  BATCH_ACTION_TYPE
-} from "../main/core";
+import { dispatchBatch, BATCH_ACTION_TYPE } from "../util/dispatchBatch";
+import { StoreDispatchApi } from "../store/types";
 
 /**
  * Handles batch actions which are dispatched for a second time

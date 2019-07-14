@@ -2,7 +2,7 @@ import { el, list } from "@lufrai/redom";
 import { CREATE_ACTION_LIST_ITEM } from "./item";
 import { STORE, setSelectedActionId } from "../store";
 import { BlueprintEntity, createBlueprint } from "wald";
-import { ObservingComponent } from "@lib/alo/redom";
+import { ObservingComponent } from "../../redom";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 
 export const ACTION_LIST = createBlueprint({

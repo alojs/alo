@@ -1,4 +1,4 @@
-import { Dictionary } from "../main/dev";
+import { Dictionary } from "../util/types";
 
 export type BooleanSet = Dictionary<boolean>;
 

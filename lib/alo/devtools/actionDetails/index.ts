@@ -1,10 +1,11 @@
-import { el, setChildren, text, router, mount } from "@lufrai/redom";
+import { el, setChildren, text, router } from "@lufrai/redom";
 import { STORE, setActionDetailsTab } from "../store";
-import { TrackedAction } from "@lib/alo/timemachine/actions";
+import { TrackedAction } from "../../timemachine/actions";
 import { createBlueprint, BlueprintEntity } from "wald";
-import { JsonTree } from "@lib/alo/devtools/jsonTree";
+import { JsonTree } from "../jsonTree";
 import { ObservingComponent } from "./../../redom";
-import { StoreState, observable } from "@lib/alo/main/dev";
+import { observable } from "../../observable";
+import { StoreState } from "../../store/types";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 
 export const ACTION_DETAILS = createBlueprint({

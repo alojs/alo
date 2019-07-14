@@ -1,13 +1,7 @@
-import {
-  SubscribableInterface,
-  StoreInterface,
-  Store,
-  observe,
-  observable,
-  batchStart,
-  batchEnd,
-  ObserveFn
-} from "../main/dev";
+import { observable, batchStart, batchEnd, observe } from "../observable";
+import { ObserveFn } from "../observable/types";
+import { StoreInterface } from "../store/types";
+import { SubscribableInterface } from "../subscribable/types";
 import { RedomComponent } from "@lufrai/redom";
 
 // TODO: Test
@@ -87,7 +81,9 @@ export class ConnectedComponent<
   el;
   _mounted = false;
   _component: T;
-  _subscription?: ReturnType<SubscribableInterface<Store>["subscribe"]>;
+  _subscription?: ReturnType<
+    SubscribableInterface<StoreInterface>["subscribe"]
+  >;
   _store;
   _id;
   _filterUpdate;
