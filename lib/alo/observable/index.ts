@@ -90,7 +90,19 @@ export function observe(fn: ObserveFn) {
   };
 }
 
-export const set = function<T extends Observable<any>, K extends keyof T>(
+export const unsetProp = function<T extends Observable<any>, K extends keyof T>(
+  obj: T,
+  key: K
+) {
+  const { storage, propObserverIdSetMap } = observableInfoMap[
+    obj.__observableId
+  ];
+  delete storage[key];
+  delete obj[key];
+  delete propObserverIdSetMap[key as any];
+};
+
+export const setProp = function<T extends Observable<any>, K extends keyof T>(
   obj: T,
   key: K,
   value: T[K],
@@ -100,7 +112,8 @@ export const set = function<T extends Observable<any>, K extends keyof T>(
   const { storage, propObserverIdSetMap } = observableInfoMap[
     obj.__observableId
   ];
-  const observerIdSet: BooleanSet = (propObserverIdSetMap[key as any] = {});
+  const observerIdSet: BooleanSet = (propObserverIdSetMap[key as any] =
+    propObserverIdSetMap[key as any] || {});
 
   if (deep) {
     if (_.isPlainObject(value)) {
@@ -116,7 +129,7 @@ export const set = function<T extends Observable<any>, K extends keyof T>(
     }
   }
 
-  if (storage[key] !== undefined) {
+  if (storage[key] !== undefined && obj[key] !== undefined) {
     console.log("already existing");
     setValue(storage, observerIdSet, key, value);
     return;
@@ -175,7 +188,7 @@ export function observable<T extends Dictionary<any>>(
   });
 
   for (const [key, value] of Object.entries(obj)) {
-    set(resultObj, key, value, deep);
+    setProp(resultObj, key, value, deep);
   }
 
   return resultObj as Observable<T>;
@@ -183,12 +196,8 @@ export function observable<T extends Dictionary<any>>(
 
 const notifyObservers = function(observerIdSet) {
   let notify = true;
-  let batchInfo;
-  if (currentBatchId != null) {
-    batchInfo = batchInfoMap[currentBatchId];
-    if (batchInfo.count > 0) {
-      notify = false;
-    }
+  if (batchInfo.count > 0) {
+    notify = false;
   }
 
   for (const observerId of Object.keys(observerIdSet)) {
@@ -212,43 +221,30 @@ export function notify<T extends Observable<any>, K extends keyof T>(
   }
 }
 
-let batchInfoMap: Dictionary<{ count: number; observerIds: string[] }> = {};
-let nextBatchId = 0;
-let currentBatchId;
+const batchInfo: { count: number; observerIds: string[] } = {
+  count: 0,
+  observerIds: []
+};
 export const batch = function(fn: () => void) {
-  const batchId =
-    currentBatchId != null ? batchStart(currentBatchId) : batchStart();
+  batchStart();
   fn();
-  batchEnd(batchId);
+  batchEnd();
 };
 
-export const batchStart = function(batchId: number = nextBatchId++) {
-  currentBatchId = batchId;
-  if (batchInfoMap[batchId] == null) {
-    batchInfoMap[batchId] = {
-      count: 0,
-      observerIds: []
-    };
-  }
-
-  batchInfoMap[batchId].count++;
-
-  return batchId;
+export const batchStart = function() {
+  batchInfo.count++;
 };
 
-export const batchPause = function() {
-  currentBatchId = undefined;
-};
+export const batchEnd = function() {
+  if (batchInfo.count === 0) return;
 
-export const batchEnd = function(batchId) {
-  let batchInfo = batchInfoMap[batchId];
   batchInfo.count--;
   if (batchInfo.count === 0) {
-    for (const observerId of batchInfo.observerIds) {
+    let observerIds = batchInfo.observerIds;
+    batchInfo.observerIds = [];
+    for (const observerId of observerIds) {
       callObserver(observerId);
     }
-    delete batchInfoMap[batchId];
-    currentBatchId = undefined;
   }
 };
 
