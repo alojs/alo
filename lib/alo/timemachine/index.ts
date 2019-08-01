@@ -1,21 +1,18 @@
 import { actionTypes, Store } from "../store";
 import { cloneDeep } from "../util";
-import { combineMutators } from "../mutator";
-import { createUniqueActionId } from "./util";
+import { combineMutators, typeMutator } from "../mutator";
 import { Listener } from "../subscribable/types";
-import { setAction, actionsMutator, ACTIONS_TAG } from "./actions";
+import {
+  setAction,
+  actionsMutator,
+  ACTIONS_TAG,
+  SET_ACTION,
+  TrackedAction
+} from "./mutator/actions";
 import { Subscribable } from "../subscribable";
-import { createTag } from "../event";
 import { dispatchThunk, cloneAction, StoreInterface } from "../main/core";
-
-const ROOT_TAG = createTag({
-  name: "root",
-  children: [ACTIONS_TAG]
-});
-
-export const mutator = combineMutators({
-  actions: actionsMutator
-});
+import { batchStart, batchEnd } from "../observable";
+import { mutator, setPointInTime, setReplaying } from "./mutator";
 
 export class Timemachine<T extends StoreInterface<any> = any> {
   store: Store<typeof mutator>;
@@ -23,7 +20,6 @@ export class Timemachine<T extends StoreInterface<any> = any> {
   unsubscribe: null | ReturnType<Subscribable["subscribe"]>;
   initialTargetState: any;
   replaying = false;
-  orderIdx = 0;
 
   constructor(targetStore: T) {
     this.targetStore = targetStore;
@@ -35,23 +31,75 @@ export class Timemachine<T extends StoreInterface<any> = any> {
 
   targetStoreListener: Listener<T> = store => {
     const action = store.getAction();
-    const id = action.meta.tmp.timemachineActionId || createUniqueActionId();
-    this.store.dispatch(setAction(action, id, this.orderIdx));
-    this.orderIdx++;
+    const lockPointInTime = this.store.getState().lockPointInTime;
+    this.store.dispatch(
+      setAction(action, action.meta.tmp.timemachineActionId, lockPointInTime)
+    );
+    if (action.meta.tmp.timemachineActionId == null && lockPointInTime) {
+      this.replay();
+    }
   };
 
-  replay() {
-    if (this.replaying) {
+  movePointInTime({
+    step = 0,
+    position
+  }: {
+    step?: number;
+    position?: "first" | "last";
+  }) {
+    const state = this.store.getState();
+    const pointsInTime = Object.keys(state.actions);
+    const index = pointsInTime.indexOf(state.pointInTime);
+
+    let nextPointInTime;
+    if (position) {
+      if (position == "first") {
+        nextPointInTime = pointsInTime[0];
+      }
+      if (position == "last") {
+        nextPointInTime = pointsInTime[pointsInTime.length - 1];
+      }
+    }
+
+    if (step) {
+      nextPointInTime = pointsInTime[index + step];
+    }
+
+    if (!nextPointInTime) {
+      return;
+    }
+
+    batchStart();
+    Promise.resolve()
+      .then(() => {
+        return this.store.dispatch(setPointInTime(nextPointInTime));
+      })
+      .then(() => {
+        return this.replay();
+      })
+      .then(() => {
+        batchEnd();
+      });
+  }
+
+  replay({ bulletTime = 0 } = {}) {
+    const state = this.store.getState();
+    if (state.replaying) {
       throw new Error("Timemachine already replaying");
     }
-    this.replaying = true;
-    this.orderIdx = 0;
+    this.store.dispatch(setReplaying(true));
 
-    const actions = this.store.getState().actions;
+    const actions = state.actions;
+    const pointInTime = parseInt(state.pointInTime);
     const newInitialState = cloneDeep(this.initialTargetState);
-    dispatchThunk(this.targetStore, async store => {
+
+    return dispatchThunk(this.targetStore, async store => {
+      if (!bulletTime) {
+        batchStart();
+      }
       for (const [id, trackedAction] of Object.entries(actions)) {
         if (trackedAction.disabled) continue;
+        if (parseInt(trackedAction.id) > pointInTime) break;
 
         let action = cloneAction(trackedAction.action);
         action.meta.tmp.timemachineActionId = id;
@@ -61,14 +109,21 @@ export class Timemachine<T extends StoreInterface<any> = any> {
 
         store.dispatch(action);
 
-        await new Promise(res => {
-          setTimeout(() => {
-            res(true);
-          }, 500);
-        });
+        if (bulletTime) {
+          // TODO: Remove promise dependency
+          await new Promise(res => {
+            setTimeout(() => {
+              res(true);
+            }, bulletTime);
+          });
+        }
       }
 
-      this.replaying = false;
+      if (!bulletTime) {
+        batchEnd();
+      }
+
+      this.store.dispatch(setReplaying(false));
     });
   }
 

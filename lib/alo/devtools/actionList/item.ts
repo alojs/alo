@@ -1,11 +1,13 @@
-import { el } from "@lufrai/redom";
-import { toggleAction } from "../../timemachine/actions";
+import { el, setAttr } from "@lufrai/redom";
+import { toggleAction, TrackedAction } from "../../timemachine/mutator/actions";
 import { actionTypes } from "../../store";
 import { BATCH_ACTION_TYPE } from "../../util/dispatchBatch";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { STORE } from "../store";
 import { ObservingListItem } from "@lib/alo/redom";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
+import { Observable } from "@lib/alo/main/core";
+import { setPointInTime } from "@lib/alo/timemachine/mutator";
 
 export const CREATE_ACTION_LIST_ITEM = createBlueprint({
   create: ({ ioc }) => onSelectAction => {
@@ -19,7 +21,7 @@ export const CREATE_ACTION_LIST_ITEM = createBlueprint({
   }
 });
 
-class ActionListItem extends ObservingListItem {
+class ActionListItem extends ObservingListItem<TrackedAction> {
   onSelectAction;
   store: BlueprintEntity<typeof STORE>;
   globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;
@@ -36,14 +38,28 @@ class ActionListItem extends ObservingListItem {
     ""
   );
   dateTimeEl = el("div");
+  pointInTimeEl = el("input", {
+    type: "radio",
+    style: { marginTop: "-3px", marginRight: "10px" },
+    onchange: evt => {
+      if (evt.currentTarget.checked) {
+        const selectedStore = this.store.getState().selectedStore;
+        const timemachine = this.globalState.timemachines[selectedStore];
+        timemachine.getStore().dispatch(setPointInTime(this.state.item.id));
+        timemachine.replay();
+      }
+    }
+  });
   disabledInputEl = el("input", {
     type: "checkbox",
+    style: { marginTop: "0", marginLeft: "10px" },
     onchange: evt => {
       const selectedStore = this.store.getState().selectedStore;
       const timemachine = this.globalState.timemachines[selectedStore];
       timemachine
         .getStore()
         .dispatch(toggleAction(this.state.item.id, !evt.currentTarget.checked));
+      timemachine.replay();
     }
   });
   batchItemTypes = el("span", {
@@ -57,7 +73,7 @@ class ActionListItem extends ObservingListItem {
       }
     },
     [
-      el("div", this.disabledInputEl),
+      this.pointInTimeEl,
       el(
         "a",
         {
@@ -65,11 +81,22 @@ class ActionListItem extends ObservingListItem {
           onclick: e => {
             if (this.onSelectAction) this.onSelectAction(e, this.state.item.id);
           },
-          style: { color: "#ddd", flex: 1, outline: "none" }
+          style: {
+            display: "flex",
+            color: "#ddd",
+            flex: 1,
+            outline: "none",
+            textDecoration: "none"
+          }
         },
-        [this.titleEl, this.batchItemTypes]
+        [
+          el("span", [this.titleEl, this.batchItemTypes], {
+            style: { flex: 1 }
+          }),
+          (this.dateTimeEl = el("div"))
+        ]
       ),
-      (this.dateTimeEl = el("div"))
+      el("div", this.disabledInputEl)
     ]
   );
 
@@ -78,7 +105,8 @@ class ActionListItem extends ObservingListItem {
     {
       style: {
         padding: "5px",
-        borderBottom: "1px solid #666",
+        borderBottomWidth: "1px",
+        borderBottomStyle: "solid",
         borderLeftWidth: "2px",
         borderLeftStyle: "solid"
       }
@@ -95,15 +123,48 @@ class ActionListItem extends ObservingListItem {
 
     this.observe(() => {
       const trackedAction = this.state.item;
+      const selectedStore = this.store.getState().selectedStore;
+      const timemachine = this.globalState.timemachines[selectedStore];
+      const pointInTime = timemachine.getStore().getState().pointInTime;
+
+      this.pointInTimeEl.checked = pointInTime === trackedAction.id;
+
+      this.disabledInputEl.checked = !trackedAction.disabled;
+      const numericPointInTime = parseInt(pointInTime);
+      const numericActionid = parseInt(trackedAction.id);
+      this.flexWrapperEl.style.opacity =
+        numericActionid > numericPointInTime || trackedAction.disabled
+          ? "0.5"
+          : "1";
+    });
+
+    this.observe(() => {
+      const trackedAction = this.state.item;
+      const selectedStore = this.store.getState().selectedStore;
+      const timemachine = this.globalState.timemachines[selectedStore];
+      const replaying = timemachine.getStore().getState().replaying;
+      const initAction = trackedAction.action.type === actionTypes.INIT;
+
+      this.disabledInputEl.disabled = replaying || initAction;
+      this.pointInTimeEl.disabled = replaying;
+    });
+
+    this.observe(() => {
+      const trackedAction = this.state.item;
 
       const state = this.store.getState();
 
       if (trackedAction.id === state.selectedActionId) {
-        this.el.style.backgroundColor = "#292929";
-        this.el.style.borderLeftColor = "#bbb";
+        this.el.style.backgroundColor = "#29292e";
+        this.el.style.borderLeftColor = "#656767";
+        this.el.style.borderBottomColor = "#55576c";
       } else {
-        this.el.style.backgroundColor = "";
+        this.el.style.backgroundColor =
+          trackedAction.order !== 0 && trackedAction.order % 2 === 0
+            ? ""
+            : "#232325";
         this.el.style.borderLeftColor = "transparent";
+        this.el.style.borderBottomColor = "#2b2b2b";
       }
 
       this.titleEl.textContent = trackedAction.action.type;
@@ -121,9 +182,6 @@ class ActionListItem extends ObservingListItem {
         const msecs = (date.getMilliseconds() + "").padStart(3, "0");
         this.dateTimeEl.textContent = `${hour}:${min}:${secs}.${msecs}`;
       }
-
-      this.disabledInputEl.checked = !trackedAction.disabled;
-      this.flexWrapperEl.style.opacity = trackedAction.disabled ? "0.5" : "1";
 
       if (itemAction.type === BATCH_ACTION_TYPE) {
         this.batchItemTypes.textContent = `( ${itemAction.payload

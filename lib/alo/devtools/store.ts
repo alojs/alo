@@ -1,7 +1,7 @@
 import { typeMutator } from "../mutator";
 import { Store } from "../store";
 import { createBlueprint } from "wald";
-import { observable, set, notify } from "../observable";
+import { observable, setProp, notify } from "../observable";
 import { ActionNormalizer } from "../actionNormalizer/";
 import { ActionNormalizerInterface } from "../actionNormalizer/types";
 import { BatchActionNormalizerDecorator } from "../actionNormalizer/batchActionNormalizerDecorator";
@@ -48,7 +48,7 @@ export const mutator = typeMutator(function(action, state: RootState) {
 
   if (action.type === SET_ACTION) {
     if (!state.actions[action.payload.id]) {
-      set(
+      setProp(
         state.actions,
         action.payload.id,
         {

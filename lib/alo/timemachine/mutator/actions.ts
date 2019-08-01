@@ -1,7 +1,14 @@
-import { typeMutator } from "../mutator";
-import { Action } from "../action/types";
-import { createTag, setTag } from "../event";
-import { set } from "../observable";
+import { typeMutator } from "../../mutator";
+import { Action } from "../../action/types";
+import { createTag, setTag } from "../../event";
+import { setProp } from "../../observable";
+
+let actionIdCache = 0;
+const createUniqueActionId = function() {
+  return actionIdCache++ + "";
+};
+
+let orderCache = 0;
 
 export type TrackedAction = {
   id: string;
@@ -16,10 +23,19 @@ type TrackedActionsObject = {
 };
 
 export const SET_ACTION = "SET_ACTION";
-export const setAction = function(action, id, order) {
+export const setAction = function(action, id, lockPointInTime = false) {
+  let newAction = false;
+  let order: number | null = null;
+
+  if (id == null) {
+    order = orderCache++;
+    id = createUniqueActionId();
+    newAction = true;
+  }
+
   return {
     type: SET_ACTION,
-    payload: { id, action, order },
+    payload: { id, action, order, newAction, lockPointInTime },
     meta: {
       pure: true
     }
@@ -55,16 +71,27 @@ export const actionsMutator = typeMutator(function(
       const id = action.payload.id;
 
       if (!state[id]) {
-        set(
+        setProp(
           state,
           id,
-          <TrackedAction>{ id, disabled: false, trackState: false },
+          <TrackedAction>{
+            id,
+            disabled: false,
+            trackState: false,
+            order: null as any
+          },
           true
         );
       }
 
-      state[id].order = action.payload.order;
+      if (action.payload.order != null) {
+        state[id].order = action.payload.order;
+      }
+      let oldChildAction = state[id].action;
       state[id].action = childAction;
+      if (oldChildAction && oldChildAction.meta.date) {
+        state[id].action.meta.date = oldChildAction.meta.date;
+      }
 
       setTag(action.event, ACTION_TAG, id);
     }

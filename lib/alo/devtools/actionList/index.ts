@@ -21,7 +21,7 @@ export class ActionList extends ObservingComponent {
   createItem: BlueprintEntity<typeof CREATE_ACTION_LIST_ITEM>;
 
   listEl = list(
-    el("ul", { style: { margin: "0", padding: "0" } }),
+    el("ul", { style: { margin: "0", padding: "10px 0 0 0" } }),
     (() => {
       return this.createItem(this.onSelectItem);
     }) as any,
@@ -32,8 +32,9 @@ export class ActionList extends ObservingComponent {
     "div",
     {
       style: {
-        height: "100%",
-        "overflow-y": "auto"
+        backgroundColor: "#212125",
+        flex: 1,
+        "overflow-y": "scroll"
       }
     },
     this.listEl

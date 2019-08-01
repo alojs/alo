@@ -1,6 +1,6 @@
 import { el, setChildren, text, router } from "@lufrai/redom";
 import { STORE, setActionDetailsTab } from "../store";
-import { TrackedAction } from "../../timemachine/actions";
+import { TrackedAction } from "../../timemachine/mutator/actions";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { JsonTree } from "../jsonTree";
 import { ObservingComponent } from "./../../redom";
@@ -135,36 +135,41 @@ export class ActionDetails extends ObservingComponent {
   store: BlueprintEntity<typeof STORE>;
   globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;
   routerWrap = el("div");
-  routerButtons = el("div", [
-    el(
-      "button",
-      {
-        onclick: () => {
-          this.store.dispatch(setActionDetailsTab("action"));
-        }
-      },
-      "Action"
-    ),
-    el(
-      "button",
-      {
-        onclick: () => {
-          this.store.dispatch(setActionDetailsTab("patch"));
-        }
-      },
-      "Patch"
-    ),
-    el(
-      "button",
-      {
-        onclick: () => {
-          this.store.dispatch(setActionDetailsTab("state"));
-        }
-      },
-      "State"
-    )
+  buttonActionEl = el(
+    "button",
+    {
+      onclick: () => {
+        this.store.dispatch(setActionDetailsTab("action"));
+      }
+    },
+    "Action"
+  );
+  buttonPatchEl = el(
+    "button",
+    {
+      onclick: () => {
+        this.store.dispatch(setActionDetailsTab("patch"));
+      }
+    },
+    "Patch"
+  );
+  buttonStateEl = el(
+    "button",
+    {
+      onclick: () => {
+        this.store.dispatch(setActionDetailsTab("state"));
+      }
+    },
+    "State"
+  );
+  routerButtons = el("div", { style: { marginBottom: "10px" } }, [
+    this.buttonActionEl,
+    " ",
+    this.buttonPatchEl,
+    " ",
+    this.buttonStateEl
   ]);
-  el = el("div", { style: { padding: "5px" } });
+  el = el("div", { style: { padding: "10px 20px" } });
   router = router(this.routerWrap, {
     none: function() {
       return { el: text("No action selected") };
@@ -202,6 +207,11 @@ export class ActionDetails extends ObservingComponent {
     });
     this.observe(() => {
       const tab = this.state.tab;
+
+      this.buttonActionEl.disabled = tab === "action";
+      this.buttonPatchEl.disabled = tab === "patch";
+      this.buttonStateEl.disabled = tab === "state";
+
       if (this.state.storeAction == null) {
         this.router.update("none");
         setChildren(this.el, [this.routerWrap]);
