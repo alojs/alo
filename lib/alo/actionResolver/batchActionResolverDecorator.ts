@@ -1,5 +1,5 @@
 import { AbstractActionResolverDecorator } from ".";
-import { batchStart, batchPause, batchEnd } from "../observable";
+import { batchStart, batchEnd } from "../observable";
 import { createEvent } from "../event";
 import { BATCH_ACTION_TYPE } from "../util/dispatchBatch";
 import { Action } from "../action/types";
@@ -8,7 +8,7 @@ import { ResolveOptions } from "./types";
 export class BatchActionResolverDecorator extends AbstractActionResolverDecorator {
   _eventByBatchId = {};
   _childsByBatchId = {};
-  _observableBatchIdByBatchId = {};
+  _observableBatchByBatchId = {};
 
   resolve(options: ResolveOptions) {
     const { store, setAction, applyMutator } = options;
@@ -33,13 +33,11 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
     delete action.meta.parentBatchIds;
 
     if (action.meta.batchItem && action.type !== BATCH_ACTION_TYPE) {
-      if (this._observableBatchIdByBatchId[rootBatchId] == null) {
-        this._observableBatchIdByBatchId[rootBatchId] = batchStart();
+      if (this._observableBatchByBatchId[rootBatchId] == null) {
+        batchStart();
+        this._observableBatchByBatchId[rootBatchId] = true;
       }
-      batchStart(this._observableBatchIdByBatchId[rootBatchId]);
       applyMutator(action);
-      batchEnd(this._observableBatchIdByBatchId[rootBatchId]);
-      batchPause();
     }
 
     if (action.type === BATCH_ACTION_TYPE) {
@@ -63,8 +61,9 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
 
     delete this._eventByBatchId[batchId];
 
-    if (this._observableBatchIdByBatchId[rootBatchId] != null) {
-      batchEnd(this._observableBatchIdByBatchId[rootBatchId]);
+    if (this._observableBatchByBatchId[rootBatchId]) {
+      delete this._observableBatchByBatchId[rootBatchId];
+      batchEnd();
     }
 
     return this._actionResolver.resolve(options);
