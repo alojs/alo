@@ -61,7 +61,11 @@ export const createRedoThunk = function(id) {
       type: redoActionTypePrefix + id
     });
     if (action && action.meta && action.meta.undoableCache) {
-      store.dispatch(action.meta.undoableCache);
+      store.dispatch({
+        type: action.meta.undoableCache.type,
+        payload: action.meta.undoableCache.payload,
+        meta: action.meta.undoableCache.meta
+      });
       delete action.meta.undoableCache;
     }
   });

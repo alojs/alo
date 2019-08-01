@@ -57,20 +57,23 @@ export abstract class ObservingComponent {
   }
 }
 
-export abstract class ObservingListItem extends ObservingComponent {
+export abstract class ObservingListItem<
+  I = any,
+  C = any
+> extends ObservingComponent {
   state = observable({
     index: null as any,
-    item: null as any,
-    items: null as any,
-    context: null as any
+    item: (null as unknown) as I,
+    items: (null as unknown) as I[],
+    context: (null as unknown) as C
   });
   update(item, index, items, context) {
-    const id = batchStart();
+    batchStart();
     this.state.item = item;
     this.state.index = index;
     this.state.items = items;
     this.state.context = context;
-    batchEnd(id);
+    batchEnd();
   }
 }
 
