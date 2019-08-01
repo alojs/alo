@@ -25,9 +25,10 @@ import {
   createRedoThunk,
   ActionResolverInterface,
   UndoableMutatorState,
-  set
-} from "../../dist/alo/core";
-import { attachStoreToDevtools, Devtools } from "../../dist/alo/dev";
+  setProp,
+  unsetProp
+} from "@lib/alo/main/core";
+import { attachStoreToDevtools, Devtools } from "@lib/alo/devtools";
 
 import { el, setChildren, list } from "@lufrai/redom";
 
@@ -92,13 +93,13 @@ const store = new Store({
         case "create":
           if (action.meta.do) {
             const id = action.payload.id;
-            set(state.people, id, action.payload, true);
+            setProp(state.people, id, action.payload, true);
             notify(state, "people");
             setTag(action.event, PERSON_TAG, id);
             setUndoData(action, "people", id);
           } else if (action.meta.undo) {
             const id = getUndoData(action, "people");
-            delete state.people[id];
+            unsetProp(state.people, id);
             notify(state, "people");
             setTag(action.event, PERSON_TAG, id);
           }
