@@ -200,21 +200,44 @@ export class Devtools extends ObservingComponent {
       [
         el(
           "div",
-          { style: { padding: "5px", "border-bottom": "1px solid #333", backgroundColor: '#1c1c1c' } },
+          { style: { display: 'flex', padding: "5px", "border-bottom": "1px solid #333", backgroundColor: '#1c1c1c' } },
           [
-            this.storeSelect,
-            ' ',
-            (view.heightEl = <any>el("input", {
-              onchange: (event: KeyboardEvent) => {
-                if (event.currentTarget) {
-                  this.store.dispatch(
-                    setHeight(event.currentTarget["value"])
-                  );
+            el('div', [
+              'Store: ',
+              this.storeSelect,
+            ]),
+            el('div', { style: { textAlign: 'center', flex: '1' }}, [
+              el('button', { onclick: () => {
+                const actionText = window.prompt('Action json', `{
+  "type": "",
+  "payload": ""
+}`)
+                if (!actionText) return;
+
+                try {
+                  const action = JSON.parse(actionText)
+                  const storeName = this.store.getState().selectedStore;
+                  globalDevtoolsState.stores[storeName].dispatch(action);
                 }
-              }
-            })),
-            ' ',
-            replayButton
+                catch(err) {
+                  console.error(err)
+                }
+              }}, 'Dispatch')
+            ]),
+            el('div', [
+              replayButton,
+              ' ',
+              'Height: ',
+              (view.heightEl = <any>el("input", {
+                onchange: (event: KeyboardEvent) => {
+                  if (event.currentTarget) {
+                    this.store.dispatch(
+                      setHeight(event.currentTarget["value"])
+                    );
+                  }
+                }
+              }))
+            ])
           ]
         ),
         el("div",
