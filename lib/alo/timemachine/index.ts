@@ -19,7 +19,8 @@ export class Timemachine<T extends StoreInterface<any> = any> {
   targetStore: T;
   unsubscribe: null | ReturnType<Subscribable["subscribe"]>;
   initialTargetState: any;
-  replaying = false;
+
+  lastPointInTime;
 
   constructor(targetStore: T) {
     this.targetStore = targetStore;
@@ -31,11 +32,36 @@ export class Timemachine<T extends StoreInterface<any> = any> {
 
   targetStoreListener: Listener<T> = store => {
     const action = store.getAction();
-    const lockPointInTime = this.store.getState().lockPointInTime;
-    this.store.dispatch(
+    const state = this.store.getState();
+
+    const lockPointInTime = state.lockPointInTime;
+    const customPointInTime =
+      this.lastPointInTime && this.lastPointInTime !== state.pointInTime;
+
+    const setActionAction = this.store.dispatch(
       setAction(action, action.meta.tmp.timemachineActionId, lockPointInTime)
     );
-    if (action.meta.tmp.timemachineActionId == null && lockPointInTime) {
+
+    if (!setActionAction) return;
+
+    if (setActionAction.payload.newAction) {
+      this.lastPointInTime = setActionAction.payload.id;
+    }
+
+    // Makes sure that we never start recursive replays
+    if (state.replaying) {
+      return;
+    }
+
+    // We have to manually replay after a dispatched action when:
+    // - The action is new and we are currently locked in time
+    //     Reason: We have to revert the state changes of the new action
+    // - The point in time previously was changed by the devtools user but the point in time wasnt locked
+    //     Reason: The dispatched action actually applied to the state of the custom point in time, we replay to apply it to the latest point in time
+    if (
+      (setActionAction.payload.newAction && lockPointInTime) ||
+      (!lockPointInTime && customPointInTime)
+    ) {
       this.replay();
     }
   };
