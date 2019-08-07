@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { ActionResolver } from ".";
-import { createEvent, setTag, createTag } from "../event";
+import { setTag, createTag } from "../event";
 import { Store } from "../store";
 
 describe("ActionResolver", function() {

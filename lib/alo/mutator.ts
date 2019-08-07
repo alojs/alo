@@ -19,15 +19,15 @@ type MutatorsReturnObject<TMutatorsObj extends MutatorsObj> = {
 export const combineMutators = function<
   TMutatorsObj extends MutatorsObj = MutatorsObj
 >(mutators: TMutatorsObj) {
-  const mutatorPairs = Object.entries(mutators);
+  const mutatorKeys = Object.keys(mutators);
   const mutator = function(
     action: Action,
     state: Partial<MutatorsReturnObject<TMutatorsObj>> = {}
   ): MutatorsReturnObject<TMutatorsObj> {
     let result: any = {};
 
-    for (const [propName, mutator] of mutatorPairs) {
-      result[propName] = mutator(action, state[propName]);
+    for (const propName of mutatorKeys) {
+      result[propName] = mutators[propName](action, state[propName]);
     }
 
     return result;

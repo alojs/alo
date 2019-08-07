@@ -16,10 +16,24 @@ import { createPatch } from "rfc6902";
 import { BlueprintEntity } from "wald";
 import { createIoc } from "./ioc";
 import _ from "lodash";
-import { observable, setProp, notify } from "../observable";
+import {
+  observable,
+  setProp,
+  notify,
+  observe,
+  batchStart,
+  batchEnd
+} from "../observable";
 import { dispatchBatch } from "../util/dispatchBatch";
-import { ObservingComponent } from "../redom";
+import { ObservingComponent, setAloCore } from "../redom";
 import { setLockPointInTime } from "../timemachine/mutator";
+
+setAloCore({
+  observe,
+  observable,
+  batchStart,
+  batchEnd
+});
 
 export type GlobalDevtoolsState = {
   stores: { [index: string]: Store };

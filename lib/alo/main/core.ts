@@ -36,5 +36,3 @@ export * from "../util/dispatchPromise";
 export * from "../util/dispatchActions";
 export * from "../util/types";
 export { once, findInArray } from "../util";
-
-export * from "../redom";

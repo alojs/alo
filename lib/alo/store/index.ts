@@ -13,9 +13,8 @@ import { Mutator } from "../mutator";
 import { setWildCard } from "../event";
 import { StoreInterface } from "./types";
 import { Subscribable } from "../subscribable";
-import { cloneDeep as _cloneDeep } from "../util";
+import { cloneDeep as _cloneDeep, isPlainObject } from "../util";
 import { observe, observable, batch } from "../observable";
-import _ from "lodash";
 import { ObserveFn, AvoidFn } from "../observable/types";
 
 export var actionTypes = {
@@ -159,7 +158,7 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
 
   _applyMutatorBatch(action: Action) {
     if (action.type === actionTypes.INIT) {
-      this._observable.state = _.isPlainObject(action.payload)
+      this._observable.state = isPlainObject(action.payload)
         ? observable(action.payload)
         : action.payload;
       setWildCard(action.event);
@@ -167,7 +166,7 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
 
     try {
       let result = this._mutator(action, this._observable.state);
-      if (_.isPlainObject(result)) {
+      if (isPlainObject(result)) {
         result = observable(result);
       }
       this._observable.state = result;

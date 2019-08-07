@@ -4,13 +4,22 @@ import { StoreInterface } from "../store/types";
 import { SubscribableInterface } from "../subscribable/types";
 import { RedomComponent } from "@lufrai/redom";
 
-// TODO: Test
+var coreCache: {
+  observe: typeof observe;
+  observable: typeof observable;
+  batchStart: typeof batchStart;
+  batchEnd: typeof batchEnd;
+};
+export const setAloCore = function(core: typeof coreCache) {
+  coreCache = core;
+};
 
 export abstract class ObservingComponent {
   _subscriptions: { [key: string]: ReturnType<typeof observe> } = {};
   _observeFunctions: ObserveFn[] = [];
   _mounted = false;
   _started = false;
+
   observe(fn: ObserveFn) {
     const length = this._observeFunctions.push(fn);
     const idx = length - 1;
@@ -30,7 +39,7 @@ export abstract class ObservingComponent {
     };
   }
   _startSubscription = (fn, idx) => {
-    this._subscriptions[idx] = observe(fn);
+    this._subscriptions[idx] = coreCache.observe(fn);
   };
   startSubscriptions() {
     if (this._started) {
@@ -61,19 +70,20 @@ export abstract class ObservingListItem<
   I = any,
   C = any
 > extends ObservingComponent {
-  state = observable({
+  state = coreCache.observable({
     index: null as any,
     item: (null as unknown) as I,
     items: (null as unknown) as I[],
     context: (null as unknown) as C
   });
+
   update(item, index, items, context) {
-    batchStart();
+    coreCache.batchStart();
     this.state.item = item;
     this.state.index = index;
     this.state.items = items;
     this.state.context = context;
-    batchEnd();
+    coreCache.batchEnd();
   }
 }
 

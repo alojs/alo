@@ -1,7 +1,6 @@
 // Originally created by dongwoo-kim (https://github.com/dongwoo-kim)
 // https://github.com/nhn/tui.grid/blob/55278fba5303fcef928715cbb003aeed0964dd29/src/helper/observable.ts
 
-import _ from "lodash";
 import { Dictionary } from "../util/types";
 import {
   ObserverInfo,
@@ -11,6 +10,7 @@ import {
   ObserveFn,
   AvoidFn
 } from "./types";
+import { isPlainObject } from "../util/isPlainObject";
 
 const generateObserverId = (() => {
   let lastId = 0;
@@ -37,7 +37,11 @@ const observableInfoMap: Dictionary<ObservableInfo<any>> = {};
 const observerIdStack: string[] = [];
 
 function isObservable<T>(resultObj: T): resultObj is Observable<T> {
-  return _.isObjectLike(resultObj) && resultObj["__observableId"] != null;
+  return (
+    resultObj !== null &&
+    typeof resultObj === "object" &&
+    resultObj["__observableId"] != null
+  );
 }
 
 let observerAvoid = false;
@@ -116,15 +120,19 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
     propObserverIdSetMap[key as any] || {});
 
   if (deep) {
-    if (_.isPlainObject(value)) {
-      value = observable(value);
-    } else if (_.isArray(value)) {
-      for (const [itemKey, itemValue] of Object.entries(value)) {
-        if (!_.isPlainObject(itemValue)) {
-          continue;
-        }
+    const isObject = value !== null && typeof value === "object";
+    if (isObject) {
+      if (Array.isArray(value)) {
+        for (const itemKey of Object.keys(value)) {
+          var itemValue = value[itemKey];
+          if (!isPlainObject(itemValue)) {
+            continue;
+          }
 
-        value[itemKey] = observable(itemValue);
+          value[itemKey] = observable(itemValue);
+        }
+      } else {
+        value = observable(value);
       }
     }
   }
@@ -187,8 +195,8 @@ export function observable<T extends Dictionary<any>>(
     value: observableId
   });
 
-  for (const [key, value] of Object.entries(obj)) {
-    setProp(resultObj, key, value, deep);
+  for (const key of Object.keys(obj)) {
+    setProp(resultObj, key, obj[key], deep);
   }
 
   return resultObj as Observable<T>;

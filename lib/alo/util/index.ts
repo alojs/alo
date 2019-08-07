@@ -33,6 +33,8 @@ export const findInArray = function(
   }
 };
 
+export { isPlainObject } from "./isPlainObject";
+
 export const cloneDeep = function(value) {
   return clone(value);
 };
