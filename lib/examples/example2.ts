@@ -26,7 +26,7 @@ import {
   ActionResolverInterface,
   UndoableMutatorState,
   setProp,
-  unsetProp
+  removeProp
 } from "@lib/alo/main/core";
 import { attachStoreToDevtools, Devtools } from "@lib/alo/devtools";
 
@@ -99,7 +99,7 @@ const store = new Store({
             setUndoData(action, "people", id);
           } else if (action.meta.undo) {
             const id = getUndoData(action, "people");
-            unsetProp(state.people, id);
+            removeProp(state.people, id);
             notify(state, "people");
             setTag(action.event, PERSON_TAG, id);
           }
