@@ -94,10 +94,10 @@ export function observe(fn: ObserveFn) {
   };
 }
 
-export const unsetProp = function<T extends Observable<any>, K extends keyof T>(
-  obj: T,
-  key: K
-) {
+export const removeProp = function<
+  T extends Observable<any>,
+  K extends keyof T
+>(obj: T, key: K) {
   const { storage, propObserverIdSetMap } = observableInfoMap[
     obj.__observableId
   ];
