@@ -1,7 +1,7 @@
 import { Action } from "./action/types";
 
 export interface Mutator<T = any> {
-  (action: Action, state: T): T;
+  (action: Action, state: T, parent?: any, key?: any): T;
 }
 
 export const typeMutator = function<T extends Mutator>(consumer: T) {
@@ -24,13 +24,16 @@ export const combineMutators = function<
     action: Action,
     state: Partial<MutatorsReturnObject<TMutatorsObj>> = {}
   ): MutatorsReturnObject<TMutatorsObj> {
-    let result: any = {};
-
     for (const propName of mutatorKeys) {
-      result[propName] = mutators[propName](action, state[propName]);
+      (state as any)[propName] = mutators[propName](
+        action,
+        state[propName],
+        state,
+        propName
+      );
     }
 
-    return result;
+    return state as any;
   };
 
   return mutator;
