@@ -138,6 +138,7 @@ export class ActionDetails extends ObservingComponent {
   buttonActionEl = el(
     "button",
     {
+      title: "Show action tab",
       onclick: () => {
         this.store.dispatch(setActionDetailsTab("action"));
       }
@@ -147,6 +148,7 @@ export class ActionDetails extends ObservingComponent {
   buttonPatchEl = el(
     "button",
     {
+      title: "Show patch tab",
       onclick: () => {
         this.store.dispatch(setActionDetailsTab("patch"));
       }
@@ -156,6 +158,7 @@ export class ActionDetails extends ObservingComponent {
   buttonStateEl = el(
     "button",
     {
+      title: "Show state tab",
       onclick: () => {
         this.store.dispatch(setActionDetailsTab("state"));
       }

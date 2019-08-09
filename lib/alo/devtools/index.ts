@@ -119,6 +119,7 @@ export class Devtools extends ObservingComponent {
     const replayButton = el(
       "button",
       {
+        title: "Replay all active actions in slow-mo",
         onclick: () => {
           const storeName = this.store.getState().selectedStore;
           globalDevtoolsState.timemachines[storeName].replay({
@@ -132,6 +133,7 @@ export class Devtools extends ObservingComponent {
     const gotoStartButton = el(
       "button",
       {
+        title: "Travel to the beginning of time",
         onclick: () => {
           const storeName = this.store.getState().selectedStore;
           globalDevtoolsState.timemachines[storeName].movePointInTime({
@@ -145,6 +147,7 @@ export class Devtools extends ObservingComponent {
     const goBackButton = el(
       "button",
       {
+        title: "Travel one action backwards",
         onclick: () => {
           const storeName = this.store.getState().selectedStore;
           globalDevtoolsState.timemachines[storeName].movePointInTime({
@@ -158,6 +161,7 @@ export class Devtools extends ObservingComponent {
     const goFurtherButton = el(
       "button",
       {
+        title: "Travel one action onwards",
         onclick: () => {
           const storeName = this.store.getState().selectedStore;
           globalDevtoolsState.timemachines[storeName].movePointInTime({
@@ -171,6 +175,7 @@ export class Devtools extends ObservingComponent {
     const gotoEndButton = el(
       "button",
       {
+        title: "Travel to the end of time",
         onclick: () => {
           const storeName = this.store.getState().selectedStore;
           globalDevtoolsState.timemachines[storeName].movePointInTime({
@@ -195,7 +200,7 @@ export class Devtools extends ObservingComponent {
               this.storeSelect,
             ]),
             el('div', { style: { textAlign: 'center', flex: '1' }}, [
-              el('button', { onclick: () => {
+              el('button', { title: 'Create and dispatch a new action', onclick: () => {
                 const actionText = window.prompt('Action json', `{
   "type": "",
   "payload": ""
@@ -212,8 +217,9 @@ export class Devtools extends ObservingComponent {
                 }
               }}, 'Dispatch'),
               ' ',
-              el('button', { onclick: () => {
-                // TODO: Add confirmation dialog
+              el('button', { title: 'Remove disabled actions', onclick: () => {
+                const answer = window.confirm('Do you really want to remove the disabled actions?')
+                if (!answer) return;
 
                 const storeName = this.store.getState().selectedStore;
                 const timeMachine = globalDevtoolsState.timemachines[storeName];
@@ -250,7 +256,7 @@ export class Devtools extends ObservingComponent {
                 }
               }}, 'Sweep'),
               ' ',
-              el('button', { onclick: () => {
+              el('button', { title: 'Remove all actions and set current state as new INIT state', onclick: () => {
                 // TODO Implement: Set current state as new INIT state
               }}, 'Commit')
             ]),
