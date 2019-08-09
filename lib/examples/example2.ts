@@ -69,10 +69,14 @@ const createInitialState = (): {
   notPeople: {};
   people: { [key: string]: { id: string; name: string; surname: string } };
   undo: UndoableMutatorState;
+  peopleCount: number;
 } => ({
   notPeople: {},
   people: {},
-  undo: undefined as any
+  undo: undefined as any,
+  get peopleCount() {
+    return Object.keys(this.people).length
+  }
 });
 
 const UNDO_ID = "personsCreateUndo";
