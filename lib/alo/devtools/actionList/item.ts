@@ -160,9 +160,7 @@ class ActionListItem extends ObservingListItem<TrackedAction> {
         this.el.style.borderBottomColor = "#55576c";
       } else {
         this.el.style.backgroundColor =
-          trackedAction.order !== 0 && trackedAction.order % 2 === 0
-            ? ""
-            : "#232325";
+          this.state.index === 0 || this.state.index % 2 === 0 ? "" : "#232427";
         this.el.style.borderLeftColor = "transparent";
         this.el.style.borderBottomColor = "#2b2b2b";
       }

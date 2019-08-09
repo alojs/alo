@@ -11,7 +11,7 @@ import {
 } from "./mutator/actions";
 import { Subscribable } from "../subscribable";
 import { dispatchThunk, cloneAction, StoreInterface } from "../main/core";
-import { batchStart, batchEnd } from "../observable";
+import { batchStart, batchEnd, observe } from "../observable";
 import { mutator, setPointInTime, setReplaying } from "./mutator";
 
 export class Timemachine<T extends StoreInterface<any> = any> {
@@ -34,36 +34,22 @@ export class Timemachine<T extends StoreInterface<any> = any> {
     const action = store.getAction();
     const state = this.store.getState();
 
-    const lockPointInTime = state.lockPointInTime;
     const customPointInTime =
       this.lastPointInTime && this.lastPointInTime !== state.pointInTime;
 
-    const setActionAction = this.store.dispatch(
-      setAction(action, action.meta.tmp.timemachineActionId, lockPointInTime)
-    );
+    const actionId = action.meta.tmp.timemachineActionId;
 
-    if (!setActionAction) return;
+    // The state is locked while we are time traveling
+    if (customPointInTime && !actionId) {
+      if (state.replaying) {
+        return;
+      }
 
-    if (setActionAction.payload.newAction) {
-      this.lastPointInTime = setActionAction.payload.id;
-    }
-
-    // Makes sure that we never start recursive replays
-    if (state.replaying) {
+      this.replay();
       return;
     }
 
-    // We have to manually replay after a dispatched action when:
-    // - The action is new and we are currently locked in time
-    //     Reason: We have to revert the state changes of the new action
-    // - The point in time previously was changed by the devtools user but the point in time wasnt locked
-    //     Reason: The dispatched action actually applied to the state of the custom point in time, we replay to apply it to the latest point in time
-    if (
-      (setActionAction.payload.newAction && lockPointInTime) ||
-      (!lockPointInTime && customPointInTime)
-    ) {
-      this.replay();
-    }
+    this.store.dispatch(setAction(action, action.meta.tmp.timemachineActionId));
   };
 
   movePointInTime({
@@ -166,6 +152,14 @@ export class Timemachine<T extends StoreInterface<any> = any> {
       this.targetStoreListener,
       true
     );
+
+    observe((avoid) => {
+      const state = this.store.getState();
+      const actions = state.actions
+      avoid();
+
+      this.lastPointInTime = Object.keys(actions).pop()
+    })
   }
 
   disable() {

@@ -1,7 +1,7 @@
 import { typeMutator } from "../../mutator";
 import { Action } from "../../action/types";
 import { createTag, setTag } from "../../event";
-import { setProp } from "../../observable";
+import { setProp, removeProp, notify } from "../../observable";
 
 let actionIdCache = 0;
 const createUniqueActionId = function() {
@@ -20,6 +20,14 @@ export type TrackedAction = {
 
 type TrackedActionsObject = {
   [key: string]: TrackedAction;
+};
+
+export const REMOVE_ACTION = "REMOVE_ACTION";
+export const removeAction = function(id) {
+  return {
+    type: REMOVE_ACTION,
+    payload: id
+  };
 };
 
 export const SET_ACTION = "SET_ACTION";
@@ -50,6 +58,7 @@ export const toggleAction = function(id, toggle) {
   };
 };
 
+// TODO: Remove these event tags
 export const ACTION_DISABLED_TAG = createTag({ name: "disabled" });
 export const ACTION_TAG = createTag({
   name: "action",
@@ -63,7 +72,9 @@ export const ACTIONS_TAG = createTag({
 
 export const actionsMutator = typeMutator(function(
   action,
-  state: TrackedActionsObject = {}
+  state: TrackedActionsObject = {},
+  parent,
+  key
 ) {
   if (action.meta.do) {
     if (action.type == SET_ACTION) {
@@ -82,6 +93,7 @@ export const actionsMutator = typeMutator(function(
           },
           true
         );
+        notify(parent, key);
       }
 
       if (action.payload.order != null) {
@@ -94,6 +106,12 @@ export const actionsMutator = typeMutator(function(
       }
 
       setTag(action.event, ACTION_TAG, id);
+    }
+
+    if (action.type === REMOVE_ACTION) {
+      const id = action.payload;
+      removeProp(state, id);
+      notify(parent, key);
     }
   }
 

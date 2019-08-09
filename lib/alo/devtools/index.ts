@@ -10,7 +10,7 @@ import {
   setSelectedActionId
 } from "./store";
 import { ACTION_DETAILS } from "./actionDetails";
-import { SET_ACTION } from "../timemachine/mutator/actions";
+import { SET_ACTION, removeAction } from "../timemachine/mutator/actions";
 import { cloneDeep } from "../util";
 import { createPatch } from "rfc6902";
 import { BlueprintEntity } from "wald";
@@ -26,7 +26,7 @@ import {
 } from "../observable";
 import { dispatchBatch } from "../util/dispatchBatch";
 import { ObservingComponent, setAloCore } from "../redom";
-import { setLockPointInTime } from "../timemachine/mutator";
+import { setPointInTime } from "../timemachine/mutator";
 
 setAloCore({
   observe,
@@ -83,18 +83,6 @@ export class Devtools extends ObservingComponent {
       }
     }
   );
-
-  lockInputEl = el("input", {
-    style: { margin: "0" },
-    id: "lockPointInTime",
-    type: "checkbox",
-    onchange: evt => {
-      const storeName = this.store.getState().selectedStore;
-      globalDevtoolsState.timemachines[storeName].store.dispatch(
-        setLockPointInTime(evt.target.checked)
-      );
-    }
-  });
 
   constructor({
     targetElSelector = "body",
@@ -202,7 +190,7 @@ export class Devtools extends ObservingComponent {
           "div",
           { style: { display: 'flex', padding: "5px", "border-bottom": "1px solid #333", backgroundColor: '#1c1c1c' } },
           [
-            el('div', [
+            el('div', { style: { flex: '1' }}, [
               'Store: ',
               this.storeSelect,
             ]),
@@ -222,9 +210,51 @@ export class Devtools extends ObservingComponent {
                 catch(err) {
                   console.error(err)
                 }
-              }}, 'Dispatch')
+              }}, 'Dispatch'),
+              ' ',
+              el('button', { onclick: () => {
+                // TODO: Add confirmation dialog
+
+                const storeName = this.store.getState().selectedStore;
+                const timeMachine = globalDevtoolsState.timemachines[storeName];
+                const timeMachineStore = timeMachine.getStore();
+                const state = timeMachineStore.getState();
+
+                const pointInTime = state.pointInTime;
+                const pointInTimeInt = parseInt(state.pointInTime);
+
+                batchStart();
+                const actionIds = Object.keys(state.actions).reverse();
+                let newPointInTime: boolean|string = false;
+                let idx = 0;
+                for(const actionId of actionIds) {
+                  const action = state.actions[actionId];
+                  if (action.disabled || parseInt(actionId) > pointInTimeInt) {
+                    if (pointInTime === actionId || newPointInTime === actionId) {
+                      newPointInTime = actionIds[idx + 1];
+                    }
+                    timeMachineStore.dispatch(removeAction(action.id))
+                  }
+
+                  idx++;
+                }
+
+                if (newPointInTime !== false) {
+                  timeMachineStore.dispatch(setPointInTime(newPointInTime));
+                }
+
+                batchEnd();
+
+                if (newPointInTime !== false) {
+                  timeMachine.replay();
+                }
+              }}, 'Sweep'),
+              ' ',
+              el('button', { onclick: () => {
+                // TODO Implement: Set current state as new INIT state
+              }}, 'Commit')
             ]),
-            el('div', [
+            el('div', { style: { flex: '1', textAlign: 'right' }}, [
               replayButton,
               ' ',
               'Height: ',
@@ -254,8 +284,8 @@ export class Devtools extends ObservingComponent {
               { style: { display: 'flex', flexDirection: 'column', flex: 1, "border-right": "1px solid #333" } },
               [
                 view.actionList = ioc.get({ blueprint: ACTION_LIST }),
-                el('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '5px', backgroundColor: '#1c1c1c', borderTop: '1px solid #333' } },
-                  el('div', { style: { display: 'inline-block' }}, [
+                el('div', { style: { display: 'flex', justifyContent: 'center', padding: '5px', backgroundColor: '#1c1c1c', borderTop: '1px solid #333' } },
+                  el('div', [
                     gotoStartButton,
                     ' ',
                     goBackButton,
@@ -263,10 +293,6 @@ export class Devtools extends ObservingComponent {
                     goFurtherButton,
                     ' ',
                     gotoEndButton
-                  ]),
-                  el('div', [
-                    el('label', { for: 'lockPointInTime', style: { verticalAlign: 'bottom' } }, 'Lock: '),
-                    this.lockInputEl
                   ])
                 )
               ]

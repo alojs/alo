@@ -55,18 +55,18 @@ export class ActionList extends ObservingComponent {
     this.globalState = globalState;
     this.createItem = createItem;
 
-    this.observe(() => {
+    this.observe(avoid => {
       const selectedStore = this.store.getState().selectedStore;
       const timemachine = this.globalState.timemachines[selectedStore];
       if (!timemachine) return;
 
       const timemachineState = timemachine.getStore().getState();
+      const actions = timemachineState.actions;
+      avoid();
 
-      const sortedTrackedActions = Object.values(timemachineState.actions).sort(
-        (a, b) => {
-          return a.order - b.order;
-        }
-      );
+      const sortedTrackedActions = Object.values(actions).sort((a, b) => {
+        return a.order - b.order;
+      });
       this.listEl.update(sortedTrackedActions);
 
       const sortedTrackedActionsLength = sortedTrackedActions.length;
