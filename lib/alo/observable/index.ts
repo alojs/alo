@@ -78,9 +78,10 @@ function setValue<T, K extends keyof T>(
   }
 }
 
-export function observe(fn: ObserveFn) {
+export function observe(fn: ObserveFn, notifyInBatches = false) {
   const observerId = generateObserverId();
   observerInfoMap[observerId] = {
+    notifyInBatches,
     fn,
     targetObserverIdSets: []
   };
@@ -93,6 +94,8 @@ export function observe(fn: ObserveFn) {
     });
   };
 }
+
+const getterObservers = {}
 
 export const removeProp = function<
   T extends Observable<any>,
@@ -110,9 +113,10 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
   obj: T,
   key: K,
   value: T[K],
-  deep = false
+  deep = false,
+  origObj?: T
 ) {
-  const getter = (Object.getOwnPropertyDescriptor(obj, key) || {}).get;
+  const getter = origObj ? (Object.getOwnPropertyDescriptor(origObj, key) || {}).get: undefined;
   const { storage, propObserverIdSetMap } = observableInfoMap[
     obj.__observableId
   ];
@@ -160,7 +164,7 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
     observe(() => {
       const value = getter.call(obj);
       setValue(storage, observerIdSet, key, value);
-    });
+    }, true);
   } else {
     (storage as any)[key] = value;
     Object.defineProperty(obj, key, {
@@ -196,7 +200,7 @@ export function observable<T extends Dictionary<any>>(
   });
 
   for (const key of Object.keys(obj)) {
-    setProp(resultObj, key, obj[key], deep);
+    setProp(resultObj, key, obj[key], deep, obj);
   }
 
   return resultObj as Observable<T>;
@@ -209,7 +213,7 @@ const notifyObservers = function(observerIdSet) {
   }
 
   for (const observerId of Object.keys(observerIdSet)) {
-    if (notify) {
+    if (notify || observerInfoMap[observerId].notifyInBatches) {
       callObserver(observerId);
     } else {
       if (batchInfo.observerIds.indexOf(observerId) >= 0) continue;

@@ -1,5 +1,5 @@
 import { Timemachine } from "../timemachine";
-import { Store } from "../store";
+import { Store, actionTypes } from "../store";
 import { el, setChildren, list } from "@lufrai/redom";
 import { ACTION_LIST } from "./actionList";
 import {
@@ -330,11 +330,16 @@ export class Devtools extends ObservingComponent {
 
         const timemachine = new Timemachine(store);
 
-        let targetState = timemachine.getInitialTargetState();
+        let targetState;
+
         timemachine.getStore().subscribe(timemachineStore => {
           const action = timemachineStore.getAction();
           if (action.type !== SET_ACTION) {
             return;
+          }
+
+          if (action.payload.action.type === actionTypes.INIT) {
+            targetState = timemachine.getInitialTargetState();
           }
 
           const newTargetState = cloneDeep(store.getState());

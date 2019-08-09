@@ -7,6 +7,7 @@ export type AvoidFn = () => void;
 export type ObserveFn = (avoidFn: AvoidFn) => any;
 
 export interface ObserverInfo {
+  notifyInBatches: boolean;
   fn: ObserveFn;
   targetObserverIdSets: BooleanSet[];
 }

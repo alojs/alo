@@ -157,7 +157,9 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
   };
 
   _applyMutatorBatch(action: Action) {
-    if (action.type === actionTypes.INIT) {
+    const isInitAction = action.type === actionTypes.INIT;
+
+    if (isInitAction) {
       this._observable.state = isPlainObject(action.payload)
         ? observable(action.payload)
         : action.payload;
@@ -166,7 +168,8 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
 
     try {
       let result = this._mutator(action, this._observable.state);
-      if (isPlainObject(result)) {
+      // TODO: Maybe the observable should just return an observable of the user wants to use observables?
+      if (isInitAction && isPlainObject(result)) {
         result = observable(result);
       }
       this._observable.state = result;
