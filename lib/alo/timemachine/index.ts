@@ -24,7 +24,7 @@ export class Timemachine<T extends StoreInterface<any> = any> {
 
   constructor(targetStore: T) {
     this.targetStore = targetStore;
-    this.initialTargetState = cloneDeep(targetStore.getAction().payload);
+    this.initialTargetState = cloneDeep(targetStore.getState());
     this.store = new Store({
       mutator
     });
