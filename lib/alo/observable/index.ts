@@ -58,7 +58,16 @@ function callObserver(observerId: string) {
   observerAvoid = false;
   observerIdStack.push(observerId);
 
-  observerInfoMap[observerId].fn(avoid);
+  const observerInfo = observerInfoMap[observerId];
+
+  if (observerInfo.running) {
+    console.error("Bad observer", observerInfo.fn);
+    throw new Error(`Bad recursion detected in observer`);
+  }
+
+  observerInfo.running = true;
+  observerInfo.fn(avoid);
+  observerInfo.running = false;
 
   if (!observerAvoid) {
     observerIdStack.pop();
@@ -78,9 +87,13 @@ function setValue<T, K extends keyof T>(
   }
 }
 
-export function observe(fn: ObserveFn, notifyInBatches = false) {
+export function observe(
+  fn: ObserveFn,
+  notifyInBatches: string | boolean = false
+) {
   const observerId = generateObserverId();
   observerInfoMap[observerId] = {
+    running: false,
     notifyInBatches,
     fn,
     targetObserverIdSets: []
@@ -94,8 +107,6 @@ export function observe(fn: ObserveFn, notifyInBatches = false) {
     });
   };
 }
-
-const getterObservers = {}
 
 export const removeProp = function<
   T extends Observable<any>,
@@ -113,10 +124,8 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
   obj: T,
   key: K,
   value: T[K],
-  deep = false,
-  origObj?: T
+  deep = false
 ) {
-  const getter = origObj ? (Object.getOwnPropertyDescriptor(origObj, key) || {}).get: undefined;
   const { storage, propObserverIdSetMap } = observableInfoMap[
     obj.__observableId
   ];
@@ -160,19 +169,12 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
     }
   });
 
-  if (typeof getter === "function") {
-    observe(() => {
-      const value = getter.call(obj);
+  (storage as any)[key] = value;
+  Object.defineProperty(obj, key, {
+    set(value) {
       setValue(storage, observerIdSet, key, value);
-    }, true);
-  } else {
-    (storage as any)[key] = value;
-    Object.defineProperty(obj, key, {
-      set(value) {
-        setValue(storage, observerIdSet, key, value);
-      }
-    });
-  }
+    }
+  });
 };
 
 export function observable<T extends Dictionary<any>>(
@@ -200,7 +202,7 @@ export function observable<T extends Dictionary<any>>(
   });
 
   for (const key of Object.keys(obj)) {
-    setProp(resultObj, key, obj[key], deep, obj);
+    setProp(resultObj, key, obj[key], deep);
   }
 
   return resultObj as Observable<T>;
@@ -213,7 +215,12 @@ const notifyObservers = function(observerIdSet) {
   }
 
   for (const observerId of Object.keys(observerIdSet)) {
-    if (notify || observerInfoMap[observerId].notifyInBatches) {
+    const notifyInBatches = observerInfoMap[observerId].notifyInBatches;
+    if (
+      notify ||
+      notifyInBatches === true ||
+      notifyInBatches === batchInfo.batchId
+    ) {
       callObserver(observerId);
     } else {
       if (batchInfo.observerIds.indexOf(observerId) >= 0) continue;
@@ -233,9 +240,10 @@ export function notify<T extends Observable<any>, K extends keyof T>(
   }
 }
 
-const batchInfo: { count: number; observerIds: string[] } = {
+const batchInfo: { count: number; observerIds: string[]; batchId: any } = {
   count: 0,
-  observerIds: []
+  observerIds: [],
+  batchId: null
 };
 export const batch = function(fn: () => void) {
   batchStart();
@@ -270,3 +278,55 @@ export function getOriginObject<T>(obj: Observable<T>) {
 
   return result;
 }
+
+let computedPropsBatchIdx = 0;
+export const computedProps = function<
+  P extends {
+    [key: string]: (
+      obj: any,
+      value: any,
+      key: any,
+      avoid: AvoidFn,
+      init: boolean
+    ) => any;
+  }
+>(propsObj: P, batch: boolean = true): { [K in keyof P]: ReturnType<P[K]> } {
+  const batchId = "computed-props-" + computedPropsBatchIdx++;
+
+  let obj = {};
+  const objKeys = Object.keys(propsObj);
+  for (const key of objKeys) {
+    obj[key] = null;
+  }
+
+  obj = observable(obj, false);
+
+  for (const key of objKeys) {
+    let init = true;
+    observe(function(avoid) {
+      let prevBatchId = batchInfo.batchId;
+      if (batch) {
+        batchStart();
+        batchInfo.batchId = batchId;
+      }
+
+      const value = propsObj[key](
+        obj,
+        observableInfoMap[obj["__observableId"]].storage[key],
+        key,
+        avoid,
+        init
+      );
+      avoid();
+      obj[key] = value;
+
+      if (batch) {
+        batchEnd();
+        batchInfo.batchId = prevBatchId;
+      }
+    }, batchId);
+    init = false;
+  }
+
+  return obj as any;
+};
