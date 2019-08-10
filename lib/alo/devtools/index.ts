@@ -257,6 +257,29 @@ export class Devtools extends ObservingComponent {
               }}, 'Sweep'),
               ' ',
               el('button', { title: 'Remove all actions and set current state as new INIT state', onclick: () => {
+                const answer = window.confirm('Do you really want to remove all actions and set the current state as new INIT state?')
+                if (!answer) return;
+
+                const storeName = this.store.getState().selectedStore;
+                const timeMachine = globalDevtoolsState.timemachines[storeName];
+                const timeMachineStore = timeMachine.getStore();
+                const state = timeMachineStore.getState();
+
+                batchStart();
+                const actionIds = Object.keys(state.actions);
+                for(const actionId of actionIds) {
+                  timeMachineStore.dispatch(removeAction(actionId))
+                }
+                timeMachine.lastPointInTime = '0'
+
+                const targetState = globalDevtoolsState.stores[storeName].getState();
+                timeMachine.initialTargetState = cloneDeep(targetState)
+                globalDevtoolsState.stores[storeName].dispatch({
+                  type: actionTypes.INIT,
+                  payload: targetState
+                })
+                batchEnd();
+
                 // TODO Implement: Set current state as new INIT state
               }}, 'Commit')
             ]),
@@ -338,7 +361,8 @@ export class Devtools extends ObservingComponent {
             return;
           }
 
-          if (action.payload.action.type === actionTypes.INIT) {
+          const isInitAction = action.payload.action.type === actionTypes.INIT;
+          if (isInitAction) {
             targetState = timemachine.getInitialTargetState();
           }
 
@@ -347,7 +371,10 @@ export class Devtools extends ObservingComponent {
             let old = targetState;
             let aNew = newTargetState;
 
-            return () => createPatch(old, aNew);
+            return () =>
+              isInitAction
+                ? "Its the beginning of time, what did you expect?"
+                : createPatch(old, aNew);
           })();
           targetState = newTargetState;
 
