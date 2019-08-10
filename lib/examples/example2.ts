@@ -26,7 +26,10 @@ import {
   ActionResolverInterface,
   UndoableMutatorState,
   setProp,
-  removeProp
+  removeProp,
+  computedProps,
+  observe,
+  observable
 } from "@lib/alo/main/core";
 import { attachStoreToDevtools, Devtools } from "@lib/alo/devtools";
 
@@ -69,14 +72,10 @@ const createInitialState = (): {
   notPeople: {};
   people: { [key: string]: { id: string; name: string; surname: string } };
   undo: UndoableMutatorState;
-  peopleCount: number;
 } => ({
   notPeople: {},
   people: {},
-  undo: undefined as any,
-  get peopleCount() {
-    return Object.keys(this.people).length
-  }
+  undo: undefined as any
 });
 
 const UNDO_ID = "personsCreateUndo";
@@ -121,6 +120,35 @@ const store = new Store({
       return state;
     }
   )
+});
+
+const computed = computedProps({
+  peopleCount: function() {
+    return Object.keys(store.getState().people).length;
+  },
+  peopleCountIsEven: function(obj) {
+    return obj.peopleCount % 2 === 0;
+  },
+  funWithProps: function(obj, v, k, avoid, init) {
+    if (init) {
+      v = observable({ k });
+    }
+
+    const count = obj.peopleCount;
+
+    avoid();
+
+    v.k += count;
+
+    return v;
+  },
+  notFunny: function(obj) {
+    return obj.funWithProps.k;
+  }
+});
+
+observe(() => {
+  console.log(JSON.stringify(computed));
 });
 
 const personsEl = list(
