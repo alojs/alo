@@ -1,20 +1,11 @@
-console.log("examples namespace started");
-
-//import { App } from "./../app";
-//new App().init();
-
 import {
   Store,
   ActionResolver,
   BatchActionResolverDecorator,
-  createTag,
-  setTag,
   typeMutator,
   BatchActionNormalizerDecorator,
   dispatchBatch,
-  dispatchThunk,
   ActionNormalizer,
-  cloneAction,
   DateActionNormalizerDecorator,
   createUndoableMutator,
   notify,
@@ -28,12 +19,12 @@ import {
   setProp,
   removeProp,
   computedProps,
-  observe,
-  observable
+  observe
 } from "@lib/alo/main/core";
 import { attachStoreToDevtools, Devtools } from "@lib/alo/devtools";
 
 import { el, setChildren, list } from "@lufrai/redom";
+import { ObservingListItem } from "@lib/alo/main/redom";
 
 let actionNormalizer = new ActionNormalizer();
 actionNormalizer = new DateActionNormalizerDecorator({ actionNormalizer });
@@ -42,18 +33,6 @@ actionNormalizer = new BatchActionNormalizerDecorator({ actionNormalizer });
 
 let actionResolver: ActionResolverInterface = new ActionResolver();
 actionResolver = new BatchActionResolverDecorator({ actionResolver });
-
-const NAME_TAG = createTag({ name: "name" });
-const SURNAME_TAG = createTag({ name: "surname" });
-const PERSON_TAG = createTag({
-  name: "person",
-  children: [NAME_TAG, SURNAME_TAG]
-});
-const PEOPLE_TAG = createTag({
-  name: "people",
-  entityContainer: true,
-  children: [PERSON_TAG]
-});
 
 let ids = 0;
 const createPerson = () => ({
@@ -69,12 +48,12 @@ const createPerson = () => ({
 });
 
 const createInitialState = (): {
-  notPeople: {};
-  people: { [key: string]: { id: string; name: string; surname: string } };
+  notperson: {};
+  person: { [key: string]: { id: string; name: string; surname: string } };
   undo: UndoableMutatorState;
 } => ({
-  notPeople: {},
-  people: {},
+  notperson: {},
+  person: {},
   undo: undefined as any
 });
 
@@ -96,22 +75,19 @@ const store = new Store({
         case "create":
           if (action.meta.do) {
             const id = action.payload.id;
-            setProp(state.people, id, action.payload, true);
-            notify(state, "people");
-            setTag(action.event, PERSON_TAG, id);
-            setUndoData(action, "people", id);
+            setProp(state.person, id, action.payload, true);
+            notify(state, "person");
+            setUndoData(action, "person", id);
           } else if (action.meta.undo) {
-            const id = getUndoData(action, "people");
-            removeProp(state.people, id);
-            notify(state, "people");
-            setTag(action.event, PERSON_TAG, id);
+            const id = getUndoData(action, "person");
+            removeProp(state.person, id);
+            notify(state, "person");
           }
 
           break;
 
         case "surname":
-          state.people[action.payload.id].surname = action.payload.surname;
-          setTag(action.event, SURNAME_TAG, action.payload.id);
+          state.person[action.payload.id].surname = action.payload.surname;
           break;
       }
 
@@ -122,45 +98,47 @@ const store = new Store({
   )
 });
 
+let computedCalcs = 0;
 const computed = computedProps({
-  peopleCount: function() {
-    return Object.keys(store.getState().people).length;
+  personCount: function() {
+    computedCalcs++;
+    return Object.keys(store.getState().person).length;
   },
-  peopleCountIsEven: function(obj) {
-    return obj.peopleCount % 2 === 0;
+  personCountX2: function(obj) {
+    computedCalcs++;
+    return obj.personCount * 2;
   },
-  funWithProps: function(obj, v, k, avoid, init) {
-    if (init) {
-      v = observable({ k });
-    }
-
-    const count = obj.peopleCount;
-
-    avoid();
-
-    v.k += count;
-
-    return v;
-  },
-  notFunny: function(obj) {
-    return obj.funWithProps.k;
+  personCountNegative: function(obj) {
+    computedCalcs++;
+    return obj.personCount - obj.personCountX2;
   }
 });
 
+const personCountEl = el("pre");
 observe(() => {
-  console.log(JSON.stringify(computed));
+  personCountEl.textContent =
+    "Computed props: " +
+    JSON.stringify({
+      calculations: computedCalcs,
+      results: computed
+    }) +
+    " " +
+    Math.random();
 });
 
-const personsEl = list(
-  "ul",
-  class Item {
-    el = el("li");
-    update(data) {
-      this.el.textContent = JSON.stringify(data);
-    }
-  },
-  "id"
-);
+class PersonListItem extends ObservingListItem {
+  el = el("li");
+  constructor() {
+    super();
+    const self = this;
+    this.observe(function() {
+      self.el.textContent =
+        JSON.stringify(self.state.item) + " " + Math.random();
+    });
+  }
+}
+
+const personsEl = list("ul", PersonListItem, "id");
 
 const view: any = {};
 const app = el("div", [
@@ -193,6 +171,7 @@ const app = el("div", [
     { onclick: () => dispatchBatch(store, createRedoThunk(UNDO_ID)) },
     "Redo"
   ),
+  personCountEl,
   personsEl
 ]);
 
@@ -201,71 +180,13 @@ setChildren(document.querySelector("#app")!, [app, devToolsEl]);
 if (process.env.NODE_ENV === "development") {
   new Devtools({ targetElSelector: "div.dev" });
   attachStoreToDevtools({ store, name: "blub" });
-  attachStoreToDevtools({ store: new Store({ mutator: () => {} }) });
 }
 
-store.observe(function() {
-  const people = store.getState().people;
+store.observe(function(_, avoid) {
+  const person = store.getState().person;
+  avoid();
 
   requestAnimationFrame(() => {
-    personsEl.update(Object.values(people));
+    personsEl.update(Object.values(person));
   });
 });
-
-() => {
-  const result = dispatchBatch(store, async function(ds) {
-    dispatchBatch(ds, ds => {
-      console.log("whaaaaaat");
-      ds.dispatch(createPerson());
-
-      const batch = dispatchBatch(ds, ds => {
-        ds.dispatch({ type: "create", payload: createPerson() });
-
-        dispatchThunk(ds, ds => {
-          ds.dispatch({ type: "create", payload: createPerson() });
-          ds.dispatch({ type: "create", payload: createPerson() });
-        });
-      });
-
-      ds.dispatch(cloneAction(batch!));
-
-      /*const batch8 = dispatchBatch(ds, ds => {
-      ds.dispatch({ type: "create", payload: 2 });
-
-      const batch2 = dispatchBatch(ds, ds => {
-        ds.dispatch({ type: "create", payload: 3 });
-        ds.dispatch({ type: "create", payload: 4 });
-      });
-
-      ds.dispatch({ type: "create", payload: 5 });
-
-      ds.dispatch(cloneAction(batch2!));
-
-      const thunkBatch1 = dispatchThunk(ds, ds => {
-        ds.dispatch({ type: "create", payload: 5 });
-        ds.dispatch({ type: "create", payload: 6 });
-        ds.dispatch({ type: "create", payload: 7 });
-      });
-
-      //console.log("thunkBatch1", thunkBatch1);
-
-      dispatchActions(ds, thunkBatch1.map(a => cloneAction(a)));
-    });*/
-    });
-  }).then(batch9 => {
-    console.log(store.getState().people.length);
-
-    dispatchBatch(store, createUndoThunk(UNDO_ID));
-    dispatchBatch(store, createUndoThunk(UNDO_ID));
-    dispatchBatch(store, createUndoThunk(UNDO_ID));
-    dispatchBatch(store, createUndoThunk(UNDO_ID));
-    //dispatchBatch(store, createUndoThunk(UNDO_ID));
-    /*dispatchThunk(store, createUndoThunk(UNDO_ID));
-  dispatchThunk(store, createUndoThunk(UNDO_ID));
-  dispatchThunk(store, createUndoThunk(UNDO_ID));
-  dispatchThunk(store, createUndoThunk(UNDO_ID));
-  dispatchThunk(store, createUndoThunk(UNDO_ID));
-  /*dispatchThunk(store, createUndoThunk(UNDO_ID))
-  dispatchThunk(store, createUndoThunk(UNDO_ID))*/
-  });
-};
