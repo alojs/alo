@@ -16,6 +16,9 @@ const copyTypesToDist = function({ nameSpaceId }) {
   }
 
   const typesOutPath = paths.dist(`${nameSpaceId}/types`);
+  if (!fs.existsSync(typesOutPath)) {
+    return;
+  }
   shell.cp("-r", typesSrcPath, typesOutPath);
 
   const mainFiles = fs.readdirSync(path.join(typesOutPath, "main"));
