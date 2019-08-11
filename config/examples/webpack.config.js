@@ -99,5 +99,8 @@ module.exports = function(env, argv) {
   });
 
   config = webpackUtil.normalizeConfig(config);
+
+  config.optimization.sideEffects = false;
+
   return config;
 };
