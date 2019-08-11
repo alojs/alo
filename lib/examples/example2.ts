@@ -177,7 +177,10 @@ const app = el("div", [
 
 const devToolsEl = el("div.dev");
 setChildren(document.querySelector("#app")!, [app, devToolsEl]);
-if (process.env.NODE_ENV === "development") {
+
+const forceDevtools = true;
+
+if (forceDevtools || process.env.NODE_ENV === "development") {
   new Devtools({ targetElSelector: "div.dev" });
   attachStoreToDevtools({ store, name: "blub" });
 }
