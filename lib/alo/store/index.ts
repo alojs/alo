@@ -167,7 +167,12 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
     }
 
     try {
-      let result = this._mutator(action, this._observable.state);
+      let result = this._mutator(
+        action,
+        this._observable.state,
+        "state",
+        this._observable
+      );
       // TODO: Maybe the observable should just return an observable of the user wants to use observables?
       if (isInitAction && isPlainObject(result)) {
         result = observable(result);

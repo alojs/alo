@@ -73,8 +73,8 @@ export const ACTIONS_TAG = createTag({
 export const actionsMutator = typeMutator(function(
   action,
   state: TrackedActionsObject = {},
-  parent,
-  key
+  key,
+  parent
 ) {
   if (action.meta.do) {
     if (action.type == SET_ACTION) {
@@ -93,7 +93,7 @@ export const actionsMutator = typeMutator(function(
           },
           true
         );
-        notify(parent, key);
+        notify(parent, key!);
       }
 
       if (action.payload.order != null) {
@@ -111,7 +111,7 @@ export const actionsMutator = typeMutator(function(
     if (action.type === REMOVE_ACTION) {
       const id = action.payload;
       removeProp(state, id);
-      notify(parent, key);
+      notify(parent, key!);
     }
   }
 

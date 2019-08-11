@@ -1,7 +1,7 @@
 import { Action } from "./action/types";
 
 export interface Mutator<T = any> {
-  (action: Action, state: T, parent?: any, key?: any): T;
+  (action: Action, state: T, key?: string | number, parent?: any): T;
 }
 
 export const typeMutator = function<T extends Mutator>(consumer: T) {
@@ -28,8 +28,8 @@ export const combineMutators = function<
       (state as any)[propName] = mutators[propName](
         action,
         state[propName],
-        state,
-        propName
+        propName,
+        state
       );
     }
 
