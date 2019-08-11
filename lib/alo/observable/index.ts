@@ -208,24 +208,43 @@ export function observable<T extends Dictionary<any>>(
   return resultObj as Observable<T>;
 }
 
+// Used to optimize observer-to-observer calls:
+// For nested notifyObservers calls, the observers will be called only once in the most outward notifyObservers call
+const plannedObserverCalls = {};
+let nextPlanIdx = 0;
 const notifyObservers = function(observerIdSet) {
+  let planIdx = nextPlanIdx++;
+
   let notify = true;
   if (batchInfo.count > 0) {
     notify = false;
   }
 
-  for (const observerId of Object.keys(observerIdSet)) {
+  const observerIds = Object.keys(observerIdSet);
+  for (const observerId of observerIds) {
+    if (plannedObserverCalls[observerId] != null) {
+      continue;
+    }
+
+    plannedObserverCalls[observerId] = planIdx;
+  }
+  for (const observerId of observerIds) {
     const notifyInBatches = observerInfoMap[observerId].notifyInBatches;
     if (
       notify ||
       notifyInBatches === true ||
       notifyInBatches === batchInfo.batchId
     ) {
+      if (plannedObserverCalls[observerId] !== planIdx) {
+        continue;
+      }
       callObserver(observerId);
     } else {
       if (batchInfo.observerIds.indexOf(observerId) >= 0) continue;
       batchInfo.observerIds.push(observerId);
     }
+
+    delete plannedObserverCalls[observerId];
   }
 };
 
