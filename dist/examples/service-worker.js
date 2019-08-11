@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.b1373b1565c9c7a9fc144fa4d5b86d85.js"
+  "precache-manifest.95595c6a4823ea020945e19c6fc53d98.js"
 );
 
 workbox.core.skipWaiting();
@@ -37,7 +37,7 @@ self.__precacheManifest = [
   },
   {
     "url": "app-shell.html",
-    "revision": "8c4bc7cd63d3cc457ece5c43eebe0936"
+    "revision": "34a09a62bc9abf1807ddd292b638d9ac"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
