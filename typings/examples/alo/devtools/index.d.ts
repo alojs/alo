@@ -3,19 +3,30 @@ import { Store } from "../store";
 import { ACTION_LIST } from "./actionList";
 import { STORE } from "./store";
 import { BlueprintEntity } from "wald";
-export declare const TIMEMACHINE: import("wald").Blueprint<({ ioc }: import("wald").BlueprintCreateFunctionOptions) => Timemachine<import("../store/types").StoreInterface<any>>, {
-    singleton: boolean;
-}>;
-export declare class Devtools<TS extends Store> {
+import { ObservingComponent } from "../redom";
+export declare type GlobalDevtoolsState = {
+    stores: {
+        [index: string]: Store;
+    };
+    timemachines: {
+        [index: string]: Timemachine;
+    };
+};
+export declare const attachStoreToDevtools: <S extends Store<import("../mutator").Mutator<any>>>({ store, name }: {
+    store: S;
+    name?: string | undefined;
+}) => void;
+export declare class Devtools extends ObservingComponent {
     el: HTMLElement;
     view: {
         actionList: BlueprintEntity<typeof ACTION_LIST>;
         heightEl: HTMLInputElement;
     };
     store: BlueprintEntity<typeof STORE>;
-    timemachine: BlueprintEntity<typeof TIMEMACHINE>;
-    constructor(targetStore: TS, targetElSelector?: string, inline?: boolean);
-    enable(): void;
-    update(): void;
+    storeSelect: import("@lufrai/redom").List;
+    constructor({ targetElSelector, inline }: {
+        targetElSelector?: any;
+        inline?: any;
+    });
 }
 //# sourceMappingURL=index.d.ts.map

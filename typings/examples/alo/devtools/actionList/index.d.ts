@@ -1,22 +1,21 @@
-import { List } from "redom";
 import { CREATE_ACTION_LIST_ITEM } from "./item";
 import { STORE } from "../store";
-import { TIMEMACHINE } from "..";
 import { BlueprintEntity } from "wald";
+import { ObservingComponent } from "../../redom";
+import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 export declare const ACTION_LIST: import("wald").Blueprint<({ ioc }: import("wald").BlueprintCreateFunctionOptions) => ActionList, import("wald").BlueprintMeta>;
-export declare class ActionList {
-    el: HTMLElement;
-    view: {
-        list: List;
-    };
+export declare class ActionList extends ObservingComponent {
     actionCountCache: number;
     store: BlueprintEntity<typeof STORE>;
-    timemachine: BlueprintEntity<typeof TIMEMACHINE>;
-    constructor({ store, timemachine, createItem }: {
+    globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;
+    createItem: BlueprintEntity<typeof CREATE_ACTION_LIST_ITEM>;
+    listEl: import("@lufrai/redom").List;
+    el: HTMLDivElement;
+    constructor({ store, globalState, createItem }: {
         store: any;
-        timemachine: any;
+        globalState: any;
         createItem: BlueprintEntity<typeof CREATE_ACTION_LIST_ITEM>;
     });
-    update(): void;
+    onSelectItem: (e: any, actionId: any) => void;
 }
 //# sourceMappingURL=index.d.ts.map

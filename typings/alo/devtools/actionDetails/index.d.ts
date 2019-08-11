@@ -1,5 +1,5 @@
 import { STORE } from "../store";
-import { TrackedAction } from "../../timemachine/actions";
+import { TrackedAction } from "../../timemachine/mutator/actions";
 import { BlueprintEntity } from "wald";
 import { ObservingComponent } from "./../../redom";
 import { StoreState } from "../../store/types";
@@ -17,6 +17,9 @@ export declare class ActionDetails extends ObservingComponent {
     store: BlueprintEntity<typeof STORE>;
     globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;
     routerWrap: HTMLDivElement;
+    buttonActionEl: HTMLButtonElement;
+    buttonPatchEl: HTMLButtonElement;
+    buttonStateEl: HTMLButtonElement;
     routerButtons: HTMLDivElement;
     el: HTMLDivElement;
     router: import("@lufrai/redom").Router;

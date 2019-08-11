@@ -3,6 +3,8 @@ export declare type BooleanSet = Dictionary<boolean>;
 export declare type AvoidFn = () => void;
 export declare type ObserveFn = (avoidFn: AvoidFn) => any;
 export interface ObserverInfo {
+    notifyInBatches: boolean | string;
+    running: boolean;
     fn: ObserveFn;
     targetObserverIdSets: BooleanSet[];
 }

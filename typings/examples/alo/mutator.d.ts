@@ -1,6 +1,6 @@
 import { Action } from "./action/types";
 export interface Mutator<T = any> {
-    (action: Action, state: T): T;
+    (action: Action, state: T, key?: string | number, parent?: any): T;
 }
 export declare const typeMutator: <T extends Mutator<any>>(consumer: T) => T;
 declare type MutatorsObj = {

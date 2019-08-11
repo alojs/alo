@@ -9,11 +9,8 @@ declare type RootState = {
             statePatch: any;
         };
     };
+    selectedStore: any;
 };
-export declare const HEIGHT_TAG: string;
-export declare const SELECTED_ACTION_ID_TAG: string;
-export declare const ACTION_DETAILS_TAB_TAG: string;
-export declare const ROOT_TAG: string;
 export declare const mutator: (action: import("../action/types").Action, state: RootState) => RootState;
 export declare const setActionDetailsTab: (tabName: string) => {
     type: string;
@@ -31,6 +28,10 @@ export declare const setAction: (id: any, state: any, statePatch: any) => {
     };
 };
 export declare const setHeight: (height: any) => {
+    type: string;
+    payload: any;
+};
+export declare const setSelectedStore: (storeName: any) => {
     type: string;
     payload: any;
 };

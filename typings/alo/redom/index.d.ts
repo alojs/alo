@@ -1,8 +1,14 @@
-import { observe } from "../observable";
+import { observable, observe } from "../observable";
 import { ObserveFn } from "../observable/types";
 import { StoreInterface } from "../store/types";
 import { SubscribableInterface } from "../subscribable/types";
 import { RedomComponent } from "@lufrai/redom";
+export declare const setAloCore: (core: {
+    observe: typeof observe;
+    observable: typeof observable;
+    batchStart: () => void;
+    batchEnd: () => void;
+}) => void;
 export declare abstract class ObservingComponent {
     _subscriptions: {
         [key: string]: ReturnType<typeof observe>;
@@ -17,12 +23,12 @@ export declare abstract class ObservingComponent {
     onmount(): void;
     onunmount(): void;
 }
-export declare abstract class ObservingListItem extends ObservingComponent {
+export declare abstract class ObservingListItem<I = any, C = any> extends ObservingComponent {
     state: import("../observable/types").Observable<{
         index: any;
-        item: any;
-        items: any;
-        context: any;
+        item: I;
+        items: I[];
+        context: C;
     }>;
     update(item: any, index: any, items: any, context: any): void;
 }

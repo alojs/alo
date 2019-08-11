@@ -1,5 +1,5 @@
 import { Event, Entity } from "./types";
-import { Action } from "../main/dev";
+import { Action } from "../action/types";
 export declare const createTag: ({ name, children, entityContainer }?: {
     name?: string | undefined;
     children?: string[] | undefined;

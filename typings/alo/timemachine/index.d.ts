@@ -1,33 +1,35 @@
 import { Store } from "../store";
 import { Listener } from "../subscribable/types";
+import { TrackedAction } from "./mutator/actions";
 import { Subscribable } from "../subscribable";
 import { StoreInterface } from "../main/core";
-export declare const mutator: (action: import("../action/types").Action, state?: Partial<{
-    actions: {
-        [key: string]: import("./actions").TrackedAction;
-    };
-}>) => {
-    actions: {
-        [key: string]: import("./actions").TrackedAction;
-    };
-};
+import { mutator } from "./mutator";
 export declare class Timemachine<T extends StoreInterface<any> = any> {
     store: Store<typeof mutator>;
     targetStore: T;
     unsubscribe: null | ReturnType<Subscribable["subscribe"]>;
     initialTargetState: any;
-    replaying: boolean;
-    orderIdx: number;
+    lastPointInTime: any;
     constructor(targetStore: T);
     targetStoreListener: Listener<T>;
-    replay(): void;
+    movePointInTime({ step, position }: {
+        step?: number;
+        position?: "first" | "last";
+    }): void;
+    replay({ bulletTime }?: {
+        bulletTime?: number | undefined;
+    }): Promise<import("../action/types").Action[]>;
     getStore(): Store<(action: import("../action/types").Action, state?: Partial<{
+        replaying: any;
+        pointInTime: any;
         actions: {
-            [key: string]: import("./actions").TrackedAction;
+            [key: string]: TrackedAction;
         };
     }>) => {
+        replaying: any;
+        pointInTime: any;
         actions: {
-            [key: string]: import("./actions").TrackedAction;
+            [key: string]: TrackedAction;
         };
     }>;
     getInitialTargetState(): any;
