@@ -19,19 +19,23 @@ export declare class Timemachine<T extends StoreInterface<any> = any> {
     replay({ bulletTime }?: {
         bulletTime?: number | undefined;
     }): Promise<import("../action/types").Action[]>;
-    getStore(): Store<(action: import("../action/types").Action, state?: Partial<{
-        replaying: any;
-        pointInTime: any;
-        actions: {
+    getStore(): Store<(action: import("../action/types").Action, state?: Partial<import("../mutator/types").MutatorsReturnObject<{
+        replaying: (action: import("../action/types").Action, state?: any) => any;
+        pointInTime: (action: import("../action/types").Action, state?: any) => any;
+        actions: (action: import("../action/types").Action, state: {
+            [key: string]: TrackedAction;
+        } | undefined, key: string | number | undefined, parent: any) => {
             [key: string]: TrackedAction;
         };
-    }>) => {
-        replaying: any;
-        pointInTime: any;
-        actions: {
+    }>>) => import("../mutator/types").MutatorsReturnObject<{
+        replaying: (action: import("../action/types").Action, state?: any) => any;
+        pointInTime: (action: import("../action/types").Action, state?: any) => any;
+        actions: (action: import("../action/types").Action, state: {
+            [key: string]: TrackedAction;
+        } | undefined, key: string | number | undefined, parent: any) => {
             [key: string]: TrackedAction;
         };
-    }>;
+    }>>;
     getInitialTargetState(): any;
     enable(): void;
     disable(): void;

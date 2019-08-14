@@ -3,7 +3,7 @@ import { ActionNormalizerInterface, NormalizeOptions } from "../actionNormalizer
 import { ActionResolverInterface } from "../actionResolver/types";
 import { DeepPartial } from "../util/types";
 import { Listener, SubscribableInterface } from "../subscribable/types";
-import { Mutator } from "../mutator";
+import { Mutator } from "../mutator/types";
 import { StoreInterface } from "./types";
 import { cloneDeep as _cloneDeep } from "../util";
 import { AvoidFn } from "../observable/types";

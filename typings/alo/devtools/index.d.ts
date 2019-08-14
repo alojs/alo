@@ -12,7 +12,7 @@ export declare type GlobalDevtoolsState = {
         [index: string]: Timemachine;
     };
 };
-export declare const attachStoreToDevtools: <S extends Store<import("../mutator").Mutator<any>>>({ store, name }: {
+export declare const attachStoreToDevtools: <S extends Store<import("../mutator/types").Mutator<any>>>({ store, name }: {
     store: S;
     name?: string | undefined;
 }) => void;

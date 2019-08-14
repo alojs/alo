@@ -1,4 +1,4 @@
-<img src="https://raw.github.com/alojs/alo/4-dev/static/readme/logo.png" alt="logo"/>
+<img width="400px" style="max-width: 100%;" src="https://raw.github.com/alojs/alo/4-dev/static/readme/logo.png" alt="logo"/>
 
 -------
 
