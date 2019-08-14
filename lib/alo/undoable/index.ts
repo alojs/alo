@@ -1,6 +1,6 @@
 import { actionTypes } from "../store";
 import { NewAction } from "../action/types";
-import { Mutator, typeMutator } from "../mutator";
+import { typeMutator } from "../mutator";
 import { Tag } from "../event/types";
 import { setTagChildren, setTag } from "../event";
 import { typeThunk } from "../main/core";

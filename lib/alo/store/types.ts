@@ -1,4 +1,4 @@
-import { Mutator } from "../mutator";
+import { Mutator } from "../mutator/types";
 import {
   ActionNormalizerInterface,
   NormalizeOptions

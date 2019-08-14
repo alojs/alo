@@ -7,10 +7,8 @@ export * from "../action/types";
 export * from "../event";
 export * from "../event/types";
 
-export { combineMutators, typeMutator } from "../mutator";
-
-// exporting interfaces results in warnings (https://github.com/webpack/webpack/issues/7378)
-export * from "../selector";
+export * from "../mutator";
+export * from "../mutator/types";
 
 export * from "../undoable";
 export * from "../undoable/types";

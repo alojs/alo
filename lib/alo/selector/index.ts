@@ -1,17 +1,4 @@
-import { Action } from "./action/types";
-import { FirstArgument } from "./util/types";
-
-export interface SelectFuncResult<T = any> {
-  changed?: boolean;
-  value: T;
-}
-
-type SelectFunc<T = any> = (options: any, last?: false | T) => T;
-
-export interface SelectorResult<T extends SelectFunc> {
-  changed: boolean;
-  value: ReturnType<T>["value"];
-}
+import { SelectorResultsObj, CombinedSelectorResults } from "./types";
 
 const equalityCheck = function(options, last, next) {
   return last === next;
@@ -81,15 +68,6 @@ export const createSelector = function<
       value: lastValue
     };
   };
-};
-
-type SelectorResultsObj = {
-  [propName: string]: SelectFuncResult;
-};
-
-type CombinedSelectorResults<T extends SelectorResultsObj> = {
-  value: { [P in keyof T]: T[P]["value"] };
-  changed: boolean;
 };
 
 export const combineSelectorResults = function<T extends SelectorResultsObj>(

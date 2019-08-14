@@ -9,7 +9,7 @@ import { ActionResolverInterface } from "../actionResolver/types";
 import { DeepPartial } from "../util/types";
 import { isAction } from "../action";
 import { Listener, SubscribableInterface } from "../subscribable/types";
-import { Mutator } from "../mutator";
+import { Mutator } from "../mutator/types";
 import { setWildCard } from "../event";
 import { StoreInterface } from "./types";
 import { Subscribable } from "../subscribable";

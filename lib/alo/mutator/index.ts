@@ -1,21 +1,10 @@
-import { Action } from "./action/types";
-
-export interface Mutator<T = any> {
-  (action: Action, state: T, key?: string | number, parent?: any): T;
-}
+import { Action } from "../action/types";
+import { Mutator, MutatorsObj, MutatorsReturnObject } from "./types";
 
 export const typeMutator = function<T extends Mutator<R>, R = any>(
   consumer: T
 ) {
   return consumer;
-};
-
-type MutatorsObj = {
-  [propName: string]: Mutator;
-};
-
-type MutatorsReturnObject<TMutatorsObj extends MutatorsObj> = {
-  [P in keyof TMutatorsObj]: ReturnType<TMutatorsObj[P]>;
 };
 
 export const combineMutators = function<
