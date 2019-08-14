@@ -4,7 +4,9 @@ export interface Mutator<T = any> {
   (action: Action, state: T, key?: string | number, parent?: any): T;
 }
 
-export const typeMutator = function<T extends Mutator>(consumer: T) {
+export const typeMutator = function<T extends Mutator<R>, R = any>(
+  consumer: T
+) {
   return consumer;
 };
 
