@@ -77,7 +77,7 @@ export class Timemachine<T extends StoreInterface<any> = any> {
       nextPointInTime = pointsInTime[index + step];
     }
 
-    if (!nextPointInTime) {
+    if (!nextPointInTime || state.pointInTime === nextPointInTime) {
       return;
     }
 
