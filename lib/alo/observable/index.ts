@@ -83,7 +83,7 @@ function setValue<T, K extends keyof T>(
 ) {
   if (storage[key] !== value) {
     storage[key] = value;
-    notifyObservers(observerIdSet);
+    notifyObservers(Object.keys(observerIdSet));
   }
 }
 
@@ -212,7 +212,7 @@ export function observable<T extends Dictionary<any>>(
 // For nested notifyObservers calls, the observers will be called only once in the most outward notifyObservers call
 const plannedObserverCalls = {};
 let nextPlanIdx = 0;
-const notifyObservers = function(observerIdSet) {
+const notifyObservers = function(observerIds: string[]) {
   let planIdx = nextPlanIdx++;
 
   let notify = true;
@@ -220,7 +220,6 @@ const notifyObservers = function(observerIdSet) {
     notify = false;
   }
 
-  const observerIds = Object.keys(observerIdSet);
   for (const observerId of observerIds) {
     if (plannedObserverCalls[observerId] != null) {
       continue;
@@ -240,8 +239,9 @@ const notifyObservers = function(observerIdSet) {
       }
       callObserver(observerId);
     } else {
-      if (batchInfo.observerIds.indexOf(observerId) >= 0) continue;
-      batchInfo.observerIds.push(observerId);
+      if (batchInfo.observerIds.indexOf(observerId) === -1) {
+        batchInfo.observerIds.push(observerId);
+      }
     }
 
     delete plannedObserverCalls[observerId];
@@ -255,7 +255,7 @@ export function notify<T extends Observable<any>, K extends keyof T>(
   if (isObservable(obj)) {
     const propObserverIdSetMap =
       observableInfoMap[obj.__observableId].propObserverIdSetMap[key as string];
-    notifyObservers(propObserverIdSetMap);
+    notifyObservers(Object.keys(propObserverIdSetMap));
   }
 }
 
@@ -281,9 +281,7 @@ export const batchEnd = function() {
   if (batchInfo.count === 0) {
     let observerIds = batchInfo.observerIds;
     batchInfo.observerIds = [];
-    for (const observerId of observerIds) {
-      callObserver(observerId);
-    }
+    notifyObservers(observerIds);
   }
 };
 
