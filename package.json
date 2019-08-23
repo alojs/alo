@@ -2,9 +2,9 @@
   "name": "alo",
   "version": "4.0.0-alpha.6",
   "description": "Mutation based state management",
-  "main": "dist/alo/dev.js",
+  "main": "dist/alo/core.js",
   "homepage": "https://github.com/alojs/alo",
-  "types": "typings/alo/main/dev.d.ts",
+  "types": "typings/alo/main/core.d.ts",
   "author": {
     "name": "Katja Lutz",
     "email": "alojs@katjalutz.ch",
