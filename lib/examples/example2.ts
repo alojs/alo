@@ -22,7 +22,7 @@ import {
 } from "@lib/alo/main/core";
 import { attachStoreToDevtools, Devtools } from "@lib/alo/devtools";
 
-import { el, setChildren, list } from "@lufrai/redom";
+import { el, setChildren, list, setAttr } from "@lufrai/redom";
 import { ObservingListItem } from "@lib/alo/main/redom";
 
 let actionNormalizer = new ActionNormalizer();
@@ -159,16 +159,16 @@ const app = el("div", [
     },
     "Add person"
   ),
-  el(
+  (view.undoBtn = el(
     "button",
     { onclick: () => dispatchBatch(store, createUndoThunk(UNDO_ID)) },
     "Undo"
-  ),
-  el(
+  )),
+  (view.redoBtn = el(
     "button",
     { onclick: () => dispatchBatch(store, createRedoThunk(UNDO_ID)) },
     "Redo"
-  ),
+  )),
   personCountEl,
   personsEl
 ]);
@@ -182,6 +182,16 @@ if (forceDevtools || process.env.NODE_ENV === "development") {
   new Devtools({ targetElSelector: "div.dev" });
   attachStoreToDevtools({ store, name: "blub" });
 }
+
+store.observe(function() {
+  const undoCount = store.getState().undo.past.length;
+  view.undoBtn.disabled = undoCount === 0;
+});
+
+store.observe(function() {
+  const redoCount = store.getState().undo.future.length;
+  view.redoBtn.disabled = redoCount === 0;
+});
 
 store.observe(function(_, avoid) {
   const person = store.getState().person;
