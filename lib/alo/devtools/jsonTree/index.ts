@@ -1,12 +1,11 @@
 import { el, list, setChildren, text } from "@lufrai/redom";
-import { isArray } from "util";
-import _ from "lodash";
+import { isPlainObject } from "@lib/alo/util";
 
 const isPrimitive = function(value) {
-  const isPlainObject = _.isPlainObject(value);
-  const isArray = !isPlainObject && _.isArray(value);
+  const isObject = isPlainObject(value);
+  const isArray = !isPlainObject && Array.isArray(value);
 
-  return !isPlainObject && !isArray;
+  return !isObject && !isArray;
 };
 
 export class JsonTree {
@@ -28,10 +27,10 @@ export class JsonTree {
   init() {
     const value = this.value;
 
-    const isPlainObject = _.isPlainObject(value);
-    const isArray = !isPlainObject && _.isArray(value);
+    const isObject = isPlainObject(value);
+    const isArray = !isObject && Array.isArray(value);
 
-    if (isPlainObject || isArray) {
+    if (isObject || isArray) {
       this.type = isArray ? "array" : "object";
 
       const propsList = list("table", ((_, [key, value]) => {

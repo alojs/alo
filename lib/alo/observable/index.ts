@@ -133,20 +133,17 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
     propObserverIdSetMap[key as any] || {});
 
   if (deep) {
-    const isObject = value !== null && typeof value === "object";
-    if (isObject) {
-      if (Array.isArray(value)) {
-        for (const itemKey of Object.keys(value)) {
-          var itemValue = value[itemKey];
-          if (!isPlainObject(itemValue)) {
-            continue;
-          }
-
-          value[itemKey] = observable(itemValue);
+    if (Array.isArray(value)) {
+      for (const itemKey of Object.keys(value)) {
+        var itemValue = value[itemKey];
+        if (!isPlainObject(itemValue)) {
+          continue;
         }
-      } else {
-        value = observable(value);
+
+        value[itemKey] = observable(itemValue);
       }
+    } else if (isPlainObject(value)) {
+      value = observable(value);
     }
   }
 
