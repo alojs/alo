@@ -6,7 +6,6 @@ import {
   BatchActionNormalizerDecorator,
   dispatchBatch,
   ActionNormalizer,
-  DateActionNormalizerDecorator,
   createUndoableMutator,
   notify,
   UndoableActionNormalizerDecorator,
@@ -27,7 +26,6 @@ import { el, setChildren, list } from "@lufrai/redom";
 import { ObservingListItem } from "@lib/alo/main/redom";
 
 let actionNormalizer = new ActionNormalizer();
-actionNormalizer = new DateActionNormalizerDecorator({ actionNormalizer });
 actionNormalizer = new UndoableActionNormalizerDecorator({ actionNormalizer });
 actionNormalizer = new BatchActionNormalizerDecorator({ actionNormalizer });
 

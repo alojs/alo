@@ -174,20 +174,20 @@ class ActionListItem extends ObservingListItem<TrackedAction> {
         this.disabledInputEl.style.opacity = "0";
       }
 
-      if (itemAction.meta.date) {
-        const date: Date = itemAction.meta.date;
-        const hour = (date.getHours() + "").padStart(2, "0");
-        const min = (date.getMinutes() + "").padStart(2, "0");
-        const secs = (date.getSeconds() + "").padStart(2, "0");
-        const msecs = (date.getMilliseconds() + "").padStart(3, "0");
-        this.dateTimeEl.textContent = `${hour}:${min}:${secs}.${msecs}`;
-      }
-
       if (itemAction.type === BATCH_ACTION_TYPE) {
         this.batchItemTypes.textContent = `( ${itemAction.payload
           .map(batchItem => batchItem.type)
           .join(" , ")} )`;
       }
+    });
+
+    this.observe(() => {
+      const date = this.state.item.date;
+      const hour = (date.getHours() + "").padStart(2, "0");
+      const min = (date.getMinutes() + "").padStart(2, "0");
+      const secs = (date.getSeconds() + "").padStart(2, "0");
+      const msecs = (date.getMilliseconds() + "").padStart(3, "0");
+      this.dateTimeEl.textContent = `${hour}:${min}:${secs}.${msecs}`;
     });
   }
 }

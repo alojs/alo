@@ -12,6 +12,7 @@ let orderCache = 0;
 
 export type TrackedAction = {
   id: string;
+  date: Date;
   action: Action;
   disabled: boolean;
   trackState: boolean;
@@ -41,13 +42,22 @@ export const setAction = function(action, id, lockPointInTime = false) {
     newAction = true;
   }
 
-  return {
+  let obj = {
     type: SET_ACTION,
-    payload: { id, action, order, newAction, lockPointInTime },
+    payload: {
+      id,
+      action,
+      order,
+      newAction,
+      lockPointInTime,
+      date: newAction ? new Date() : null
+    },
     meta: {
       pure: true
     }
   };
+
+  return obj;
 };
 
 const TOGGLE_ACTION = "TOGGLE_ACTION";
@@ -87,6 +97,7 @@ export const actionsMutator = typeMutator(function(
           id,
           <TrackedAction>{
             id,
+            date: action.payload.date,
             disabled: false,
             trackState: false,
             order: null as any
