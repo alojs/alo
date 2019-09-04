@@ -2,12 +2,13 @@ import { assert } from "chai";
 import { ActionResolver } from ".";
 import { setTag, createTag } from "../event";
 import { Store } from "../store";
+import { typeMutator } from "../mutator";
 
 describe("ActionResolver", function() {
   const store = new Store({
-    mutator: action => {
+    mutator: typeMutator((_, action) => {
       if (action.type === "setTag") setTag(action.event, createTag());
-    }
+    })
   });
 
   let gotCalled = false;
