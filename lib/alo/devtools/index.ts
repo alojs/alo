@@ -279,8 +279,6 @@ export class Devtools extends ObservingComponent {
                   payload: targetState
                 })
                 batchEnd();
-
-                // TODO Implement: Set current state as new INIT state
               }}, 'Commit')
             ]),
             el('div', { style: { flex: '1', textAlign: 'right' }}, [
