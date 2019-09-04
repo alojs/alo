@@ -168,12 +168,12 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
 
     try {
       let result = this._mutator(
-        action,
         this._observable.state,
+        action,
         "state",
         this._observable
       );
-      // TODO: Maybe the observable should just return an observable of the user wants to use observables?
+      // TODO: Maybe this should only happen if the user wants to use observables? Option-worthy?
       if (isInitAction && isPlainObject(result)) {
         result = observable(result);
       }

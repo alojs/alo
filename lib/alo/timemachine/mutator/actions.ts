@@ -71,8 +71,8 @@ export const ACTIONS_TAG = createTag({
 });
 
 export const actionsMutator = typeMutator(function(
-  action,
   state: TrackedActionsObject = {},
+  action,
   key,
   parent
 ) {

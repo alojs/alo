@@ -68,8 +68,8 @@ const store = new Store({
   actionNormalizer,
   mutator: typeMutator(
     (
-      action,
-      state: ReturnType<typeof createInitialState> = createInitialState()
+      state: ReturnType<typeof createInitialState> = createInitialState(),
+      action
     ) => {
       switch (action.type) {
         case "create":
@@ -91,7 +91,7 @@ const store = new Store({
           break;
       }
 
-      state.undo = undoableMutator(action, state.undo);
+      state.undo = undoableMutator(state.undo, action);
 
       return state;
     }

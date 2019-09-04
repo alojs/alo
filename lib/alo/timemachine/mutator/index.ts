@@ -23,14 +23,14 @@ export const setReplaying = function(value = false) {
 };
 
 export const mutator = combineMutators({
-  replaying: typeMutator(function(action, state = false) {
+  replaying: typeMutator(function(state = false, action) {
     if (action.type === SET_REPLAYING) {
       state = action.payload;
     }
 
     return state;
   }),
-  pointInTime: typeMutator(function(action, state = "0") {
+  pointInTime: typeMutator(function(state = "0", action) {
     if (!action.meta.do) return state;
 
     if (action.type === SET_ACTION && action.payload.newAction) {

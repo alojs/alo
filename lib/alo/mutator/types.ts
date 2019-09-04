@@ -1,7 +1,7 @@
 import { Action } from "../action/types";
 
 export interface Mutator<T = any> {
-  (action: Action, state: T, key?: string | number, parent?: any): T;
+  (state: T, action: Action, key?: string | number, parent?: any): T;
 }
 
 export type MutatorsObj = {

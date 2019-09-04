@@ -20,7 +20,7 @@ type RootState = {
   selectedStore;
 };
 
-export const mutator = typeMutator(function(action, state: RootState) {
+export const mutator = typeMutator(function(state: RootState, action) {
   if (!state) {
     state = observable({
       height: "50vh",
