@@ -71,6 +71,7 @@ export const createRedoThunk = function(id) {
   });
 };
 
+// TODO: This should use observable methods
 export const createUndoableMutator = function({
   id,
   tags = {},
@@ -92,8 +93,8 @@ export const createUndoableMutator = function({
   }
 
   return typeMutator(function(
-    action,
-    state: UndoableMutatorState = { past: [], future: [] }
+    state: UndoableMutatorState = { past: [], future: [] },
+    action
   ) {
     if (action.type === undoActionTypePrefix + id) {
       // Handle undo
