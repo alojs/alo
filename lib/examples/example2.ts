@@ -193,9 +193,9 @@ store.observe(function() {
   view.redoBtn.disabled = redoCount === 0;
 });
 
-store.observe(function(_, avoid) {
+store.observe(function(_, pause) {
   const person = store.getState().person;
-  avoid();
+  pause();
 
   requestAnimationFrame(() => {
     personsEl.update(Object.values(person));
