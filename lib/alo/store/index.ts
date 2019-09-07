@@ -15,7 +15,7 @@ import { StoreInterface } from "./types";
 import { Subscribable } from "../subscribable";
 import { cloneDeep as _cloneDeep, isPlainObject } from "../util";
 import { observe, observable, batch } from "../observable";
-import { ObserveFn, AvoidFn } from "../observable/types";
+import { PauseObserverFn } from "../observable/types";
 
 export var actionTypes = {
   INIT: "@@init"
@@ -136,9 +136,9 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
     });
   };
 
-  observe(func: (store: this, avoidFn: AvoidFn) => any) {
-    return observe(avoidFn => {
-      func(this, avoidFn);
+  observe(func: (store: this, pauseObserverFn: PauseObserverFn) => any) {
+    return observe(pauseObserverFn => {
+      func(this, pauseObserverFn);
     });
   }
 

@@ -336,10 +336,10 @@ export class Devtools extends ObservingComponent {
 
     this.view = <any>view;
 
-    this.observe(avoid => {
+    this.observe(pauseObserver => {
       const stores = globalDevtoolsState.stores;
 
-      avoid();
+      pauseObserver();
 
       const storeNames = Object.keys(stores);
       for (const key of storeNames) {

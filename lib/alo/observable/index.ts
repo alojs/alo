@@ -8,7 +8,7 @@ import {
   Observable,
   BooleanSet,
   ObserveFn,
-  AvoidFn
+  PauseObserverFn
 } from "./types";
 import { isPlainObject } from "../util/isPlainObject";
 
@@ -33,9 +33,6 @@ const observerInfoMap: Dictionary<ObserverInfo> = {};
 
 const observableInfoMap: Dictionary<ObservableInfo<any>> = {};
 
-// observerId stack for managing recursive observing calls
-const observerIdStack: string[] = [];
-
 function isObservable<T>(resultObj: T): resultObj is Observable<T> {
   return (
     resultObj !== null &&
@@ -44,19 +41,22 @@ function isObservable<T>(resultObj: T): resultObj is Observable<T> {
   );
 }
 
-let observerAvoid = false;
-const avoid: AvoidFn = function() {
-  if (observerAvoid) {
-    return;
-  }
+export const pauseObserver: PauseObserverFn = function(pause = true) {
+  if (!currentObserver.id) return;
 
-  observerAvoid = true;
-  observerIdStack.pop();
+  currentObserver.pause = pause;
 };
 
+const currentObserver: { id: null | string; pause: boolean } = {
+  id: null,
+  pause: false
+};
 function callObserver(observerId: string) {
-  observerAvoid = false;
-  observerIdStack.push(observerId);
+  let previousId = currentObserver.id;
+  let previousPause = currentObserver.pause;
+
+  currentObserver.pause = false;
+  currentObserver.id = observerId;
 
   const observerInfo = observerInfoMap[observerId];
 
@@ -66,13 +66,11 @@ function callObserver(observerId: string) {
   }
 
   observerInfo.running = true;
-  observerInfo.fn(avoid);
+  observerInfo.fn(pauseObserver);
   observerInfo.running = false;
 
-  if (!observerAvoid) {
-    observerIdStack.pop();
-  }
-  observerAvoid = false;
+  currentObserver.id = previousId;
+  currentObserver.pause = previousPause;
 }
 
 function setValue<T, K extends keyof T>(
@@ -148,6 +146,7 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
   }
 
   if (storage[key] !== undefined && obj[key] !== undefined) {
+    // TODO: Remove this console.log?
     console.log("already existing");
     setValue(storage, observerIdSet, key, value);
     return;
@@ -157,11 +156,21 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
     configurable: true,
     enumerable: true,
     get() {
-      const observerId = observerIdStack[observerIdStack.length - 1];
-      if (observerId && !observerIdSet[observerId]) {
-        observerIdSet[observerId] = true;
-        observerInfoMap[observerId].targetObserverIdSets.push(observerIdSet);
+      // The current observer is paused for registering get calls (triggered by pauseObserver)
+      if (currentObserver.pause) {
+        return storage[key];
       }
+
+      const observerId = currentObserver.id;
+      // There is no active observer, or the current observer is already tracked
+      if (!observerId || observerIdSet[observerId]) {
+        return storage[key];
+      }
+
+      // An observer asked for a property on the observable, we have to track this
+      observerIdSet[observerId] = true;
+      observerInfoMap[observerId].targetObserverIdSets.push(observerIdSet);
+
       return storage[key];
     }
   });
@@ -300,7 +309,7 @@ export const computedProps = function<
       obj: any,
       value: any,
       key: any,
-      avoid: AvoidFn,
+      pauseObserver: PauseObserverFn,
       init: boolean
     ) => any;
   }
@@ -317,22 +326,20 @@ export const computedProps = function<
 
   for (const key of objKeys) {
     let init = true;
-    observe(function(avoid) {
+    observe(function(pauseObserver) {
       let prevBatchId = batchInfo.batchId;
       if (batch) {
         batchStart();
         batchInfo.batchId = batchId;
       }
 
-      const value = propsObj[key](
+      obj[key] = propsObj[key](
         obj,
         observableInfoMap[obj["__observableId"]].storage[key],
         key,
-        avoid,
+        pauseObserver,
         init
       );
-      avoid();
-      obj[key] = value;
 
       if (batch) {
         batchEnd();

@@ -153,12 +153,9 @@ export class Timemachine<T extends StoreInterface<any> = any> {
       true
     );
 
-    observe(avoid => {
+    observe(() => {
       const state = this.store.getState();
-      const actions = state.actions;
-      avoid();
-
-      this.lastPointInTime = Object.keys(actions).pop();
+      this.lastPointInTime = Object.keys(state.actions).pop();
     });
   }
 

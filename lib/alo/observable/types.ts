@@ -2,9 +2,9 @@ import { Dictionary } from "../util/types";
 
 export type BooleanSet = Dictionary<boolean>;
 
-export type AvoidFn = () => void;
+export type PauseObserverFn = (pause?: boolean) => void;
 
-export type ObserveFn = (avoidFn: AvoidFn) => any;
+export type ObserveFn = (pauseObserverFn: PauseObserverFn) => any;
 
 export interface ObserverInfo {
   notifyInBatches: boolean | string;
