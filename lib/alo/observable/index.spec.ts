@@ -1,10 +1,71 @@
 import { assert } from "chai";
-import { observable, observe, avoid } from ".";
+import { observable, observe, pauseObserver, computedProps } from ".";
 
 describe("observable", function() {
-  describe("observe", function() {});
+  describe("computedProps", function() {
+    const obj = observable({
+      prop: "value"
+    });
 
-  describe("avoid", function() {
+    let prop2called = 0;
+    let prop3called = 0;
+
+    const computed = computedProps({
+      prop: () => obj.prop,
+      prop2: obj => {
+        prop2called++;
+
+        return obj.prop;
+      },
+      prop3: obj => {
+        prop3called++;
+
+        return {
+          prop: obj.prop,
+          prop2: obj.prop2
+        };
+      }
+    });
+
+    let observerCalled = 0;
+    observe(() => {
+      observerCalled++;
+      [computed.prop, computed.prop2, computed.prop3];
+    });
+
+    obj.prop = "value2";
+
+    it("should only update each prop once on a change", function() {
+      // the asserted value is 2 because the observers have to be called once on initialization
+      assert.equal(prop2called, 2);
+      assert.equal(prop3called, 2);
+    });
+
+    it("should only notify prop observers once at the end of all computations", function() {
+      assert.equal(observerCalled, 2);
+    });
+  });
+
+  describe("observe", function() {
+    const obj = observable({
+      prop: "value"
+    });
+
+    it("should observe called observable props", function() {
+      let called = 0;
+      let tmp;
+      observe(() => {
+        tmp = obj.prop;
+        called++;
+      });
+
+      obj.prop = "value2";
+
+      assert.equal(called, 2);
+    });
+  });
+
+  describe("pauseObserver", function() {
     const obj = observable({
       prop1: "1",
       prop2: "2",
@@ -27,10 +88,10 @@ describe("observable", function() {
     observe(function() {
       tmp[1] = obj.prop1;
 
-      avoid();
+      pauseObserver();
       tmp[2] = obj.prop2;
       obj.prop4recursive++;
-      avoid(false);
+      pauseObserver(false);
 
       tmp[3] = obj.prop3;
 
@@ -46,19 +107,19 @@ describe("observable", function() {
     changedProp = 3;
     obj.prop3 = "3.3";
 
-    it("should only avoid prop tracking after it was actually called", function() {
+    it("should only pause prop tracking after it was actually called", function() {
       assert.equal(calledOnPropsMap[1], true);
     });
 
-    it("should avoid prop tracking after it was called", function() {
+    it("should pause prop tracking after it was called", function() {
       assert.equal(calledOnPropsMap[2], undefined);
     });
 
-    it("should not avoid prop tracking after it was disabled by avoid(false)", function() {
+    it("should not pause prop tracking after it was disabled by pauseObserver(false)", function() {
       assert.equal(calledOnPropsMap[3], true);
     });
 
-    it("should not avoid prop tracking on recursive observer calls", function() {
+    it("should not pause prop tracking on recursive observer calls", function() {
       assert.equal(recursiveCalled, 3);
     });
   });
