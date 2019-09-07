@@ -7,20 +7,20 @@ export declare const setReplaying: (value?: boolean) => {
     type: string;
     payload: boolean;
 };
-export declare const mutator: (action: import("../../action/types").Action, state?: Partial<import("../../mutator/types").MutatorsReturnObject<{
-    replaying: (action: import("../../action/types").Action, state?: any) => any;
-    pointInTime: (action: import("../../action/types").Action, state?: any) => any;
-    actions: (action: import("../../action/types").Action, state: {
+export declare const mutator: (state: Partial<import("../../mutator/types").MutatorsReturnObject<{
+    replaying: (state: any, action: import("../../action/types").Action) => any;
+    pointInTime: (state: any, action: import("../../action/types").Action) => any;
+    actions: (state: {
         [key: string]: TrackedAction;
-    } | undefined, key: string | number | undefined, parent: any) => {
+    } | undefined, action: import("../../action/types").Action, key: string | number | undefined, parent: any) => {
         [key: string]: TrackedAction;
     };
-}>>) => import("../../mutator/types").MutatorsReturnObject<{
-    replaying: (action: import("../../action/types").Action, state?: any) => any;
-    pointInTime: (action: import("../../action/types").Action, state?: any) => any;
-    actions: (action: import("../../action/types").Action, state: {
+}>> | undefined, action: import("../../action/types").Action) => import("../../mutator/types").MutatorsReturnObject<{
+    replaying: (state: any, action: import("../../action/types").Action) => any;
+    pointInTime: (state: any, action: import("../../action/types").Action) => any;
+    actions: (state: {
         [key: string]: TrackedAction;
-    } | undefined, key: string | number | undefined, parent: any) => {
+    } | undefined, action: import("../../action/types").Action, key: string | number | undefined, parent: any) => {
         [key: string]: TrackedAction;
     };
 }>;

@@ -4,7 +4,7 @@ import { ActionResolverInterface } from "../actionResolver/types";
 import { SubscribableInterface } from "../subscribable/types";
 import { Action, NewAction } from "../action/types";
 import { Store } from ".";
-import { AvoidFn } from "../observable/types";
+import { PauseObserverFn } from "../observable/types";
 export interface StoreDispatchApi<S = any> {
     dispatch: (action: NewAction) => Action | undefined;
     getState: () => S;
@@ -19,7 +19,7 @@ export interface StoreInterface<T extends Mutator = any> extends StoreDispatchAp
     getState: () => ReturnType<ReturnType<T>>;
     getAction: () => Action;
     subscribe: SubscribableInterface["subscribe"];
-    observe(func: (store: this, avoid: AvoidFn) => any): any;
+    observe(func: (store: this, pauseObserver: PauseObserverFn) => any): any;
     _applyMutator: (action: Action) => void;
     _applyMutatorBatch: (action: Action) => void;
     _callSubscribers: () => void;

@@ -6,7 +6,7 @@ import { Listener, SubscribableInterface } from "../subscribable/types";
 import { Mutator } from "../mutator/types";
 import { StoreInterface } from "./types";
 import { cloneDeep as _cloneDeep } from "../util";
-import { AvoidFn } from "../observable/types";
+import { PauseObserverFn } from "../observable/types";
 export declare var actionTypes: {
     INIT: string;
 };
@@ -50,7 +50,7 @@ export declare class Store<T extends Mutator = Mutator> implements StoreInterfac
      * Send a message which will trigger an action
      */
     dispatch: (action: NewAction) => Action | undefined;
-    observe(func: (store: this, avoidFn: AvoidFn) => any): () => void;
+    observe(func: (store: this, pauseObserverFn: PauseObserverFn) => any): () => void;
     _callSubscribers: () => void;
     _afterDispatchNormalization: NormalizeOptions["callBack"];
     _applyMutatorBatch(action: Action): void;

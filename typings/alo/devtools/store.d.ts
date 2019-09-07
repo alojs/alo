@@ -11,7 +11,7 @@ declare type RootState = {
     };
     selectedStore: any;
 };
-export declare const mutator: (action: import("../action/types").Action, state: RootState) => RootState;
+export declare const mutator: (state: RootState, action: import("../action/types").Action) => RootState;
 export declare const setActionDetailsTab: (tabName: string) => {
     type: string;
     payload: string;
@@ -39,7 +39,7 @@ export declare const setSelectedActionId: (actionId: any) => {
     type: string;
     payload: any;
 };
-export declare const STORE: import("wald").Blueprint<() => Store<(action: import("../action/types").Action, state: RootState) => RootState>, {
+export declare const STORE: import("wald").Blueprint<() => Store<(state: RootState, action: import("../action/types").Action) => RootState>, {
     singleton: boolean;
 }>;
 export {};

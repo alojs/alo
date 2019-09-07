@@ -3,13 +3,8 @@ export declare const setUndoData: (action: UndoableAction, key: string | number,
 export declare const getUndoData: (action: UndoableAction, key: string | number) => any;
 export declare const createUndoThunk: (id: any) => (store: import("../store/types").StoreDispatchApi<any>) => void;
 export declare const createRedoThunk: (id: any) => (store: import("../store/types").StoreDispatchApi<any>) => void;
-export declare const createUndoableMutator: ({ id, tags, actionFilter }: {
+export declare const createUndoableMutator: ({ id, actionFilter }: {
     id: string;
-    tags?: {
-        self?: string | undefined;
-        past?: string | undefined;
-        future?: string | undefined;
-    } | undefined;
     actionFilter?: ActionFilter | undefined;
-}) => (action: import("../action/types").Action, state?: UndoableMutatorState) => UndoableMutatorState;
+}) => (state: UndoableMutatorState | undefined, action: import("../action/types").Action) => UndoableMutatorState;
 //# sourceMappingURL=index.d.ts.map

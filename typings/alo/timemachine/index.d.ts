@@ -15,24 +15,24 @@ export declare class Timemachine<T extends StoreInterface<any> = any> {
     movePointInTime({ step, position }: {
         step?: number;
         position?: "first" | "last";
-    }): void;
+    }): Promise<any> | undefined;
     replay({ bulletTime }?: {
         bulletTime?: number | undefined;
     }): Promise<import("../action/types").Action[]>;
-    getStore(): Store<(action: import("../action/types").Action, state?: Partial<import("../mutator/types").MutatorsReturnObject<{
-        replaying: (action: import("../action/types").Action, state?: any) => any;
-        pointInTime: (action: import("../action/types").Action, state?: any) => any;
-        actions: (action: import("../action/types").Action, state: {
+    getStore(): Store<(state: Partial<import("../mutator/types").MutatorsReturnObject<{
+        replaying: (state: any, action: import("../action/types").Action) => any;
+        pointInTime: (state: any, action: import("../action/types").Action) => any;
+        actions: (state: {
             [key: string]: TrackedAction;
-        } | undefined, key: string | number | undefined, parent: any) => {
+        } | undefined, action: import("../action/types").Action, key: string | number | undefined, parent: any) => {
             [key: string]: TrackedAction;
         };
-    }>>) => import("../mutator/types").MutatorsReturnObject<{
-        replaying: (action: import("../action/types").Action, state?: any) => any;
-        pointInTime: (action: import("../action/types").Action, state?: any) => any;
-        actions: (action: import("../action/types").Action, state: {
+    }>> | undefined, action: import("../action/types").Action) => import("../mutator/types").MutatorsReturnObject<{
+        replaying: (state: any, action: import("../action/types").Action) => any;
+        pointInTime: (state: any, action: import("../action/types").Action) => any;
+        actions: (state: {
             [key: string]: TrackedAction;
-        } | undefined, key: string | number | undefined, parent: any) => {
+        } | undefined, action: import("../action/types").Action, key: string | number | undefined, parent: any) => {
             [key: string]: TrackedAction;
         };
     }>>;
