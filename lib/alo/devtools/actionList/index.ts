@@ -56,7 +56,8 @@ export class ActionList extends ObservingComponent {
     this.createItem = createItem;
 
     this.observe(pauseObserver => {
-      const selectedStore = this.store.getState().selectedStore;
+      const state = this.store.getState();
+      const selectedStore = state.selectedStore;
       const timemachine = this.globalState.timemachines[selectedStore];
       if (!timemachine) return;
 
@@ -70,7 +71,10 @@ export class ActionList extends ObservingComponent {
       this.listEl.update(sortedTrackedActions);
 
       const sortedTrackedActionsLength = sortedTrackedActions.length;
-      if (this.actionCountCache != sortedTrackedActionsLength) {
+      if (
+        state.selectedActionId == null &&
+        this.actionCountCache != sortedTrackedActionsLength
+      ) {
         this.el.scrollTop = this.el.scrollHeight;
       }
       this.actionCountCache = sortedTrackedActionsLength;
@@ -78,6 +82,8 @@ export class ActionList extends ObservingComponent {
   }
 
   onSelectItem = (e, actionId) => {
-    this.store.dispatch(setSelectedActionId(actionId));
+    let newActionid =
+      this.store.getState().selectedActionId !== actionId ? actionId : null;
+    this.store.dispatch(setSelectedActionId(newActionid));
   };
 }

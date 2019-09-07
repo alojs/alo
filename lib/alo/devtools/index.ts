@@ -130,16 +130,30 @@ export class Devtools extends ObservingComponent {
       "Replay"
     );
 
+    const createGotoPointInTimeHandler = movePointInTimeOptions => {
+      return async () => {
+        const state = this.store.getState();
+        const storeName = state.selectedStore;
+        const pointInTime = await globalDevtoolsState.timemachines[
+          storeName
+        ].movePointInTime(movePointInTimeOptions);
+        if (state.selectedActionId == null) {
+          return;
+        }
+        if (pointInTime == null) {
+          return;
+        }
+        this.store.dispatch(setSelectedActionId(pointInTime));
+      };
+    };
+
     const gotoStartButton = el(
       "button",
       {
         title: "Travel to the beginning of time",
-        onclick: () => {
-          const storeName = this.store.getState().selectedStore;
-          globalDevtoolsState.timemachines[storeName].movePointInTime({
-            position: "first"
-          });
-        }
+        onclick: createGotoPointInTimeHandler({
+          position: "first"
+        })
       },
       "|<"
     );
@@ -148,12 +162,9 @@ export class Devtools extends ObservingComponent {
       "button",
       {
         title: "Travel one action backwards",
-        onclick: () => {
-          const storeName = this.store.getState().selectedStore;
-          globalDevtoolsState.timemachines[storeName].movePointInTime({
-            step: -1
-          });
-        }
+        onclick: createGotoPointInTimeHandler({
+          step: -1
+        })
       },
       "<"
     );
@@ -162,12 +173,9 @@ export class Devtools extends ObservingComponent {
       "button",
       {
         title: "Travel one action onwards",
-        onclick: () => {
-          const storeName = this.store.getState().selectedStore;
-          globalDevtoolsState.timemachines[storeName].movePointInTime({
-            step: 1
-          });
-        }
+        onclick: createGotoPointInTimeHandler({
+          step: 1
+        })
       },
       ">"
     );
@@ -176,12 +184,9 @@ export class Devtools extends ObservingComponent {
       "button",
       {
         title: "Travel to the end of time",
-        onclick: () => {
-          const storeName = this.store.getState().selectedStore;
-          globalDevtoolsState.timemachines[storeName].movePointInTime({
-            position: "last"
-          });
-        }
+        onclick: createGotoPointInTimeHandler({
+          position: "last"
+        })
       },
       ">|"
     );
@@ -326,7 +331,7 @@ export class Devtools extends ObservingComponent {
             ),
             el(
               "div",
-              { style: { flex: 3, "overflow-y": "scroll", backgroundColor: '#22262b' } },
+              { style: { flex: 3, "overflow-y": "auto", backgroundColor: '#22262b' } },
               ioc.get({ blueprint: ACTION_DETAILS })
             )
           ]

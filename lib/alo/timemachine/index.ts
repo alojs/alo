@@ -82,7 +82,7 @@ export class Timemachine<T extends StoreInterface<any> = any> {
     }
 
     batchStart();
-    Promise.resolve()
+    return Promise.resolve()
       .then(() => {
         return this.store.dispatch(setPointInTime(nextPointInTime));
       })
@@ -91,6 +91,7 @@ export class Timemachine<T extends StoreInterface<any> = any> {
       })
       .then(() => {
         batchEnd();
+        return nextPointInTime;
       });
   }
 

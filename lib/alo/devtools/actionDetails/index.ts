@@ -134,7 +134,7 @@ export class ActionDetails extends ObservingComponent {
   });
   store: BlueprintEntity<typeof STORE>;
   globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;
-  routerWrap = el("div");
+  routerWrap = el("div", { style: { flex: "1", overflowY: "auto" } });
   buttonActionEl = el(
     "button",
     {
@@ -172,7 +172,15 @@ export class ActionDetails extends ObservingComponent {
     " ",
     this.buttonStateEl
   ]);
-  el = el("div", { style: { padding: "10px 20px" } });
+  el = el("div", {
+    style: {
+      padding: "10px 0 10px 20px",
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+      boxSizing: "border-box"
+    }
+  });
   router = router(this.routerWrap, {
     none: function() {
       return { el: text("No action selected") };
@@ -195,7 +203,9 @@ export class ActionDetails extends ObservingComponent {
       if (!timemachine) return;
 
       const timemachineState = timemachine.getStore().getState();
-      const actionId = state.selectedActionId;
+      let actionId = state.selectedActionId;
+      if (actionId == null) actionId = timemachineState.pointInTime;
+
       if (actionId != null) {
         this.state.timemachineAction = timemachineState.actions[actionId];
         this.state.storeAction = state.actions[actionId];

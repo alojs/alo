@@ -6,7 +6,7 @@ import { createBlueprint, BlueprintEntity } from "wald";
 import { STORE } from "../store";
 import { ObservingListItem } from "@lib/alo/redom";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
-import { Observable } from "@lib/alo/main/core";
+import { batchStart, batchEnd } from "../../observable";
 import { setPointInTime } from "@lib/alo/timemachine/mutator";
 
 export const CREATE_ACTION_LIST_ITEM = createBlueprint({
@@ -43,9 +43,15 @@ class ActionListItem extends ObservingListItem<TrackedAction> {
     style: { marginTop: "-3px", marginRight: "10px" },
     onchange: evt => {
       if (evt.currentTarget.checked) {
-        const selectedStore = this.store.getState().selectedStore;
+        const state = this.store.getState();
+        const selectedStore = state.selectedStore;
         const timemachine = this.globalState.timemachines[selectedStore];
+        batchStart();
         timemachine.getStore().dispatch(setPointInTime(this.state.item.id));
+        if (state.selectedActionId !== null) {
+          this.onSelectAction(evt, this.state.item.id);
+        }
+        batchEnd();
         timemachine.replay();
       }
     }
