@@ -1,2 +1,2 @@
-import * as undoable from '.'
+import * as undoable from ".";
 undoable;
