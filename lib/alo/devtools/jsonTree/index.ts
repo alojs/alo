@@ -1,4 +1,4 @@
-import { el, list, setChildren, text } from "@lufrai/redom";
+import { el, list, setChildren, text, mount } from "@lufrai/redom";
 import { isPlainObject } from "@lib/alo/util";
 
 const isPrimitive = function(value) {
@@ -49,7 +49,8 @@ export class JsonTree {
                 style: {
                   color: keyColor,
                   padding: "3px 3px 3px 21px",
-                  "margin-right": "3px"
+                  "margin-right": "3px",
+                  "vertical-align": "top"
                 }
               },
               keyLabel
@@ -60,7 +61,6 @@ export class JsonTree {
           let itemParent;
           let showItem = this.showItemDefault;
           let update = function() {
-            //item.el.style.display = (showItem)? 'block': 'none'
             keyEl.textContent = `${showItem ? "v " : "> "}${keyLabel}`;
             if (showItem) {
               setChildren(itemParent, new JsonTree(value) as any);
@@ -83,13 +83,15 @@ export class JsonTree {
           keyEl.style.color = keyColor;
           keyEl.style.textDecoration = "none";
           rootEl = el("tr", [
-            el("td", { style: { "vertical-align": "top" } }, keyEl),
-            (itemParent = el("td", { style: { "padding-left": "4px" } }))
+            el(
+              "td",
+              { style: { "vertical-align": "top", padding: "3px" } },
+              keyEl
+            ),
+            (itemParent = el("td", { style: { padding: "3px" } }))
           ]);
           update();
         }
-
-        rootEl.style.padding = "3px 0";
 
         return { el: rootEl };
       }) as any);
@@ -139,6 +141,17 @@ export class JsonTree {
       return;
     }
 
-    this.el.textContent = JSON.stringify(value, null, "  ");
+    let stringifiedValue =
+      typeof value === "string"
+        ? `"${value}"`
+        : JSON.stringify(value, null, "  ");
+    mount(
+      this.el,
+      el(
+        "pre",
+        { style: { margin: "0", fontFamily: "inherit" } },
+        stringifiedValue
+      )
+    );
   }
 }
