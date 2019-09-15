@@ -53,7 +53,7 @@ export const attachStoreToDevtools = function<S extends Store>({
   store: S;
   name?: string;
 }) {
-  setProp(globalDevtoolsState.stores, name + storeIdx++, store);
+  setProp(globalDevtoolsState.stores, storeIdx++ + " - " + name, store);
   notify(globalDevtoolsState, "stores");
 };
 
@@ -391,7 +391,8 @@ export class Devtools extends ObservingComponent {
         setProp(globalDevtoolsState.timemachines, key, timemachine);
         notify(globalDevtoolsState, "timemachines");
 
-        if (storeNames.length === 1) {
+        const state = this.store.getState();
+        if (state.selectedStore == undefined) {
           this.store.dispatch(setSelectedStore(key));
         }
       }
