@@ -3,7 +3,7 @@ import { isPlainObject } from "@lib/alo/util";
 
 const isPrimitive = function(value) {
   const isObject = isPlainObject(value);
-  const isArray = !isPlainObject && Array.isArray(value);
+  const isArray = !isObject && Array.isArray(value);
 
   return !isObject && !isArray;
 };
