@@ -351,3 +351,34 @@ export const computedProps = function<
 
   return obj as any;
 };
+
+export const extract = function(observable, deep: number | boolean = true) {
+  let result = observable;
+
+  if (deep === false) {
+    deep = 1;
+  }
+
+  const nextDeep = deep === true ? deep : deep - 1;
+
+  if (Array.isArray(observable)) {
+    result = [];
+    for (let value of observable) {
+      if (deep) {
+        value = extract(value, nextDeep);
+      }
+      result.push(value);
+    }
+  } else if (isObservable(observable)) {
+    result = {};
+    for (const key of Object.keys(observable)) {
+      let value = observable[key];
+      if (deep) {
+        value = extract(value, nextDeep);
+      }
+      result[key] = value;
+    }
+  }
+
+  return result;
+};
