@@ -12,21 +12,10 @@ import {
 } from "./types";
 import { isPlainObject } from "../util/isPlainObject";
 
-const generateObserverId = (() => {
-  let lastId = 0;
-  return () => {
-    lastId += 1;
-    return `@observer${lastId}`;
-  };
-})();
-
-const generateObservableId = (() => {
-  let lastId = 0;
-  return () => {
-    lastId += 1;
-    return `@observable${lastId}`;
-  };
-})();
+let nextId = 0;
+const generateUniqueId = function() {
+  return `${nextId++}`;
+};
 
 // store all observer info
 const observerInfoMap: Dictionary<ObserverInfo> = {};
@@ -89,7 +78,7 @@ export function observe(
   fn: ObserveFn,
   notifyInBatches: string | boolean = false
 ) {
-  const observerId = generateObserverId();
+  const observerId = generateUniqueId();
   observerInfoMap[observerId] = {
     running: false,
     notifyInBatches,
@@ -195,7 +184,7 @@ export function observable<T extends Dictionary<any>>(
     throw new Error("Array object cannot be Reactive");
   }
 
-  const observableId = generateObservableId();
+  const observableId = generateUniqueId();
   const resultObj = {} as T;
 
   observableInfoMap[observableId] = {
