@@ -1,4 +1,4 @@
-import { el, setChildren, text, router } from "@lufrai/redom";
+import { el, setChildren, text, router, setAttr } from "@lufrai/redom";
 import { STORE, setActionDetailsTab } from "../store";
 import { TrackedAction } from "../../timemachine/mutator/actions";
 import { createBlueprint, BlueprintEntity } from "wald";
@@ -7,6 +7,7 @@ import { ObservingComponent } from "./../../redom";
 import { observable } from "../../observable";
 import { StoreState } from "../../store/types";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
+import * as styles from "../styles";
 
 export const ACTION_DETAILS = createBlueprint({
   create: ({ ioc }) => {
@@ -139,6 +140,7 @@ export class ActionDetails extends ObservingComponent {
     "button",
     {
       title: "Show action tab",
+      style: styles.button,
       onclick: () => {
         this.store.dispatch(setActionDetailsTab("action"));
       }
@@ -149,6 +151,7 @@ export class ActionDetails extends ObservingComponent {
     "button",
     {
       title: "Show patch tab",
+      style: styles.button,
       onclick: () => {
         this.store.dispatch(setActionDetailsTab("patch"));
       }
@@ -159,6 +162,7 @@ export class ActionDetails extends ObservingComponent {
     "button",
     {
       title: "Show state tab",
+      style: styles.button,
       onclick: () => {
         this.store.dispatch(setActionDetailsTab("state"));
       }
@@ -222,8 +226,19 @@ export class ActionDetails extends ObservingComponent {
       const tab = this.state.tab;
 
       this.buttonActionEl.disabled = tab === "action";
+      setAttr(this.buttonActionEl, {
+        style: tab === "action" ? styles.buttonActive : styles.button
+      });
+
       this.buttonPatchEl.disabled = tab === "patch";
+      setAttr(this.buttonPatchEl, {
+        style: tab === "patch" ? styles.buttonActive : styles.button
+      });
+
       this.buttonStateEl.disabled = tab === "state";
+      setAttr(this.buttonStateEl, {
+        style: tab === "state" ? styles.buttonActive : styles.button
+      });
 
       if (this.state.storeAction == null) {
         this.router.update("none");

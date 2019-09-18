@@ -127,7 +127,7 @@ export class JsonTree {
 
     this.el.style["border-radius"] = "3px";
     this.el.style["padding"] = "3px";
-    this.el.style["background-color"] = "#28332b";
+    this.el.style["background-color"] = "#31383a";
     this.el.style["color"] = "white";
     this.el.style["float"] = "left";
 
@@ -149,7 +149,14 @@ export class JsonTree {
       this.el,
       el(
         "pre",
-        { style: { margin: "0", fontFamily: "inherit" } },
+        {
+          style: {
+            margin: "0",
+            fontFamily: "inherit",
+            color: "inherit",
+            fontSize: "inherit"
+          }
+        },
         stringifiedValue
       )
     );

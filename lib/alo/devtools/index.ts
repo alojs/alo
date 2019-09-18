@@ -27,6 +27,7 @@ import {
 import { dispatchBatch } from "../util/dispatchBatch";
 import { ObservingComponent, setAloCore } from "../redom";
 import { setPointInTime } from "../timemachine/mutator";
+import * as styles from "./styles";
 
 setAloCore({
   observe,
@@ -68,6 +69,7 @@ export class Devtools extends ObservingComponent {
 
   storeSelect = list(
     el("select", {
+      style: styles.select,
       onchange: evt => {
         dispatchBatch(this.store, function(store) {
           store.dispatch(setSelectedStore(evt.target.value));
@@ -120,6 +122,7 @@ export class Devtools extends ObservingComponent {
       "button",
       {
         title: "Replay all active actions in slow-mo",
+        style: styles.button,
         onclick: () => {
           const storeName = this.store.getState().selectedStore;
           globalDevtoolsState.timemachines[storeName].replay({
@@ -151,6 +154,7 @@ export class Devtools extends ObservingComponent {
       "button",
       {
         title: "Travel to the beginning of time",
+        style: styles.button,
         onclick: createGotoPointInTimeHandler({
           position: "first"
         })
@@ -162,6 +166,7 @@ export class Devtools extends ObservingComponent {
       "button",
       {
         title: "Travel one action backwards",
+        style: styles.button,
         onclick: createGotoPointInTimeHandler({
           step: -1
         })
@@ -173,6 +178,7 @@ export class Devtools extends ObservingComponent {
       "button",
       {
         title: "Travel one action onwards",
+        style: styles.button,
         onclick: createGotoPointInTimeHandler({
           step: 1
         })
@@ -184,6 +190,7 @@ export class Devtools extends ObservingComponent {
       "button",
       {
         title: "Travel to the end of time",
+        style: styles.button,
         onclick: createGotoPointInTimeHandler({
           position: "last"
         })
@@ -205,7 +212,7 @@ export class Devtools extends ObservingComponent {
               this.storeSelect,
             ]),
             el('div', { style: { textAlign: 'center', flex: '1' }}, [
-              el('button', { title: 'Create and dispatch a new action', onclick: () => {
+              el('button', { title: 'Create and dispatch a new action', style: styles.button, onclick: () => {
                 const actionText = window.prompt('Action json', `{
   "type": "",
   "payload": ""
@@ -222,7 +229,7 @@ export class Devtools extends ObservingComponent {
                 }
               }}, 'Dispatch'),
               ' ',
-              el('button', { title: 'Remove disabled actions', onclick: () => {
+              el('button', { title: 'Remove disabled actions', style: styles.button, onclick: () => {
                 const answer = window.confirm('Do you really want to remove the disabled actions?')
                 if (!answer) return;
 
@@ -261,7 +268,7 @@ export class Devtools extends ObservingComponent {
                 }
               }}, 'Sweep'),
               ' ',
-              el('button', { title: 'Remove all actions and set current state as new INIT state', onclick: () => {
+              el('button', { title: 'Remove all actions and set current state as new INIT state', style: styles.button, onclick: () => {
                 const answer = window.confirm('Do you really want to remove all actions and set the current state as new INIT state?')
                 if (!answer) return;
 
