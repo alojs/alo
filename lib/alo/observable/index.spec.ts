@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { observable, observe, pauseObserver, computedProps } from ".";
+import { observable, observe, pauseObserver, computation } from ".";
 
 describe("observable", function() {
   describe("computedProps", function() {
@@ -10,7 +10,7 @@ describe("observable", function() {
     let prop2called = 0;
     let prop3called = 0;
 
-    const computed = computedProps({
+    const computed = computation({
       prop: () => obj.prop,
       prop2: obj => {
         prop2called++;

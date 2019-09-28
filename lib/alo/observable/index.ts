@@ -291,8 +291,8 @@ export function getOriginObject<T>(obj: Observable<T>) {
   return result;
 }
 
-let computedPropsBatchIdx = 0;
-export const computedProps = function<
+let computationBatchIdx = 0;
+export const computation = function<
   P extends {
     [key: string]: (
       obj: any,
@@ -303,7 +303,7 @@ export const computedProps = function<
     ) => any;
   }
 >(propsObj: P, batch: boolean = true): { [K in keyof P]: ReturnType<P[K]> } {
-  const batchId = "computed-props-" + computedPropsBatchIdx++;
+  const batchId = "computation-" + computationBatchIdx++;
 
   let obj = {};
   const objKeys = Object.keys(propsObj);

@@ -17,13 +17,13 @@ import {
   UndoableMutatorState,
   setProp,
   removeProp,
-  computedProps,
+  computation,
   observe,
   extract
 } from "@lib/alo/main/core";
 import { attachStoreToDevtools, Devtools } from "@lib/alo/devtools";
 
-import { el, setChildren, list, setAttr } from "@lufrai/redom";
+import { el, setChildren, list, setAttr, RedomComponent } from "@lufrai/redom";
 import { ObserverListItem } from "@lib/alo/main/redom";
 
 let actionNormalizer = new ActionNormalizer();
@@ -98,7 +98,7 @@ const store = new Store({
 });
 
 let computedCalcs = 0;
-const computed = computedProps({
+const computed = computation({
   personCount: function() {
     computedCalcs++;
     return Object.keys(store.getState().person).length;
@@ -125,7 +125,7 @@ observe(() => {
     Math.random();
 });
 
-class PersonListItem extends ObserverListItem {
+class PersonListItem extends ObserverListItem implements RedomComponent {
   el = el("li");
   oninit() {
     const self = this;
