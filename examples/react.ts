@@ -1,9 +1,10 @@
-// https://codesandbox.io/s/modest-wilbur-r3b6r
+// React: https://codesandbox.io/s/modest-wilbur-r3b6r
+// Preact: https://codesandbox.io/s/confident-microservice-rmv1o
 
 import { observe } from "alo";
 import React from "react";
 
-export class ObservingRender extends React.PureComponent {
+export class ObserverComponent extends React.PureComponent {
   startObserver() {
     if (this.unobserve) this.unobserve();
     this.unobserve = null;
@@ -11,7 +12,7 @@ export class ObservingRender extends React.PureComponent {
   }
 
   observer = () => {
-    this.dom = this.props.fn(this.props);
+    this.dom = this.props.render(this.props);
     if (!this.unobserve) {
       return;
     }
