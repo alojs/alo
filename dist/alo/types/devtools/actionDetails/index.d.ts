@@ -1,7 +1,7 @@
 import { STORE } from "../store";
 import { TrackedAction } from "../../timemachine/mutator/actions";
 import { BlueprintEntity } from "wald";
-import { ObservingComponent } from "./../../redom";
+import { Observer } from "./../../redom";
 import { StoreState } from "../../store/types";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 export declare const ACTION_DETAILS: import("wald").Blueprint<({ ioc }: import("wald").BlueprintCreateFunctionOptions) => ActionDetails, {
@@ -12,7 +12,7 @@ declare type ActionDetailsState = {
     timemachineAction: TrackedAction | null;
     storeAction: StoreState<ActionDetails["store"]>["actions"][0] | null;
 };
-export declare class ActionDetails extends ObservingComponent {
+export declare class ActionDetails extends Observer {
     state: import("../../observable/types").Observable<ActionDetailsState>;
     store: BlueprintEntity<typeof STORE>;
     globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;

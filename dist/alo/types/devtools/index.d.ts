@@ -3,7 +3,7 @@ import { Store } from "../store";
 import { ACTION_LIST } from "./actionList";
 import { STORE } from "./store";
 import { BlueprintEntity } from "wald";
-import { ObservingComponent } from "../redom";
+import { Observer } from "../redom";
 export declare type GlobalDevtoolsState = {
     stores: {
         [index: string]: Store;
@@ -16,7 +16,7 @@ export declare const attachStoreToDevtools: <S extends Store<import("../mutator/
     store: S;
     name?: string | undefined;
 }) => void;
-export declare class Devtools extends ObservingComponent {
+export declare class Devtools extends Observer {
     el: HTMLElement;
     view: {
         actionList: BlueprintEntity<typeof ACTION_LIST>;

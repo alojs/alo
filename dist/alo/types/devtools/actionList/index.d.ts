@@ -1,10 +1,10 @@
 import { CREATE_ACTION_LIST_ITEM } from "./item";
 import { STORE } from "../store";
 import { BlueprintEntity } from "wald";
-import { ObservingComponent } from "../../redom";
+import { Observer } from "../../redom";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 export declare const ACTION_LIST: import("wald").Blueprint<({ ioc }: import("wald").BlueprintCreateFunctionOptions) => ActionList, import("wald").BlueprintMeta>;
-export declare class ActionList extends ObservingComponent {
+export declare class ActionList extends Observer {
     actionCountCache: number;
     store: BlueprintEntity<typeof STORE>;
     globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;

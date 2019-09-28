@@ -9,7 +9,7 @@ export declare const setAloCore: (core: {
     batchStart: () => void;
     batchEnd: () => void;
 }) => void;
-export declare abstract class ObservingComponent {
+export declare abstract class Observer {
     _subscriptions: {
         [key: string]: ReturnType<typeof observe>;
     };
@@ -23,13 +23,16 @@ export declare abstract class ObservingComponent {
     onmount(): void;
     onunmount(): void;
 }
-export declare abstract class ObservingListItem<I = any, C = any> extends ObservingComponent {
+export declare abstract class ObserverListItem<I = any, C = any, ID = any> extends Observer {
     state: import("../observable/types").Observable<{
         index: any;
         item: I;
         items: I[];
         context: C;
+        initData: ID;
     }>;
+    init: boolean;
+    constructor(initData: any);
     update(item: any, index: any, items: any, context: any): void;
 }
 export declare class ConnectedComponent<S extends StoreInterface = any, T extends RedomComponent = any> {

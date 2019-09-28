@@ -10,7 +10,7 @@ export declare const batch: (fn: () => void) => void;
 export declare const batchStart: () => void;
 export declare const batchEnd: () => void;
 export declare function getOriginObject<T>(obj: Observable<T>): T;
-export declare const computedProps: <P extends {
+export declare const computation: <P extends {
     [key: string]: (obj: any, value: any, key: any, pauseObserver: PauseObserverFn, init: boolean) => any;
 }>(propsObj: P, batch?: boolean) => { [K in keyof P]: ReturnType<P[K]>; };
 export declare const extract: (observable: any, deep?: boolean) => any;
