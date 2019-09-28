@@ -25,7 +25,7 @@ import {
   batchEnd
 } from "../observable";
 import { dispatchBatch } from "../util/dispatchBatch";
-import { ObservingComponent, setAloCore } from "../redom";
+import { Observer, setAloCore } from "../redom";
 import { setPointInTime } from "../timemachine/mutator";
 import * as styles from "./styles";
 
@@ -58,7 +58,7 @@ export const attachStoreToDevtools = function<S extends Store>({
   notify(globalDevtoolsState, "stores");
 };
 
-export class Devtools extends ObservingComponent {
+export class Devtools extends Observer {
   el: HTMLElement;
   view: {
     actionList: BlueprintEntity<typeof ACTION_LIST>;

@@ -14,7 +14,7 @@ export const setAloCore = function(core: typeof coreCache) {
   coreCache = core;
 };
 
-export abstract class ObservingComponent {
+export abstract class Observer {
   _subscriptions: { [key: string]: ReturnType<typeof observe> } = {};
   _observeFunctions: ObserveFn[] = [];
   _mounted = false;
@@ -66,16 +66,25 @@ export abstract class ObservingComponent {
   }
 }
 
-export abstract class ObservingListItem<
+export abstract class ObserverListItem<
   I = any,
-  C = any
-> extends ObservingComponent {
+  C = any,
+  ID = any
+> extends Observer {
   state = coreCache.observable({
     index: null as any,
     item: (null as unknown) as I,
     items: (null as unknown) as I[],
-    context: (null as unknown) as C
+    context: (null as unknown) as C,
+    initData: (null as unknown) as ID
   });
+
+  init = true;
+
+  constructor(initData) {
+    super();
+    this.state.initData = initData;
+  }
 
   update(item, index, items, context) {
     coreCache.batchStart();
@@ -84,6 +93,9 @@ export abstract class ObservingListItem<
     this.state.items = items;
     this.state.context = context;
     coreCache.batchEnd();
+
+    if (this.init && this["oninit"]) this["oninit"]();
+    this.init = false;
   }
 }
 

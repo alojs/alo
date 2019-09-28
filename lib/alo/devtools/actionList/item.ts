@@ -4,7 +4,7 @@ import { actionTypes } from "../../store";
 import { BATCH_ACTION_TYPE } from "../../util/dispatchBatch";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { STORE } from "../store";
-import { ObservingListItem } from "@lib/alo/redom";
+import { ObserverListItem } from "@lib/alo/redom";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 import { batchStart, batchEnd } from "../../observable";
 import { setPointInTime } from "@lib/alo/timemachine/mutator";
@@ -21,7 +21,7 @@ export const CREATE_ACTION_LIST_ITEM = createBlueprint({
   }
 });
 
-class ActionListItem extends ObservingListItem<TrackedAction> {
+class ActionListItem extends ObserverListItem<TrackedAction> {
   onSelectAction;
   store: BlueprintEntity<typeof STORE>;
   globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;
@@ -122,12 +122,10 @@ class ActionListItem extends ObservingListItem<TrackedAction> {
     this.flexWrapperEl
   );
 
-  constructor({ store, globalState, onSelectAction }) {
-    super();
-
-    this.globalState = globalState;
-    this.store = store;
-    this.onSelectAction = onSelectAction;
+  oninit() {
+    this.globalState = this.state.initData.globalState;
+    this.store = this.state.initData.store;
+    this.onSelectAction = this.state.initData.onSelectAction;
 
     this.observe(() => {
       const trackedAction = this.state.item;

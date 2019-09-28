@@ -3,7 +3,7 @@ import { STORE, setActionDetailsTab } from "../store";
 import { TrackedAction } from "../../timemachine/mutator/actions";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { JsonTree } from "../jsonTree";
-import { ObservingComponent } from "./../../redom";
+import { Observer } from "./../../redom";
 import { observable } from "../../observable";
 import { StoreState } from "../../store/types";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
@@ -69,7 +69,7 @@ class StateTab {
   }
 }
 
-class JsonBox extends ObservingComponent {
+class JsonBox extends Observer {
   state = observable({
     show: false,
     data: null
@@ -127,7 +127,7 @@ type ActionDetailsState = {
   storeAction: StoreState<ActionDetails["store"]>["actions"][0] | null;
 };
 
-export class ActionDetails extends ObservingComponent {
+export class ActionDetails extends Observer {
   state = observable(<ActionDetailsState>{
     timemachineAction: null,
     storeAction: null,
