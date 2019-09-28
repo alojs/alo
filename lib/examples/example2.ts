@@ -18,12 +18,13 @@ import {
   setProp,
   removeProp,
   computedProps,
-  observe
+  observe,
+  extract
 } from "@lib/alo/main/core";
 import { attachStoreToDevtools, Devtools } from "@lib/alo/devtools";
 
 import { el, setChildren, list, setAttr } from "@lufrai/redom";
-import { ObservingListItem } from "@lib/alo/main/redom";
+import { ObserverListItem } from "@lib/alo/main/redom";
 
 let actionNormalizer = new ActionNormalizer();
 actionNormalizer = new UndoableActionNormalizerDecorator({ actionNormalizer });
@@ -124,10 +125,9 @@ observe(() => {
     Math.random();
 });
 
-class PersonListItem extends ObservingListItem {
+class PersonListItem extends ObserverListItem {
   el = el("li");
-  constructor() {
-    super();
+  oninit() {
     const self = this;
     this.observe(function() {
       self.el.textContent =
@@ -200,4 +200,8 @@ store.observe(function(_, pause) {
   requestAnimationFrame(() => {
     personsEl.update(Object.values(person));
   });
+});
+
+store.observe(function(_, pause) {
+  console.log(extract(store.getState()));
 });

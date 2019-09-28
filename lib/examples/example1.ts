@@ -1,7 +1,7 @@
 import { mount, list } from "@lufrai/redom";
 import { observable, observe, set, notify, batch } from "@lib/alo/main/dev";
 import { el } from "@lufrai/redom";
-import { ObservingListItem, ObservingComponent } from "@lib/alo/redom";
+import { ObserverListItem, Observer } from "@lib/alo/redom";
 
 type State = {
   count: number;
@@ -11,16 +11,14 @@ type State = {
   };
 };
 
-class Item extends ObservingListItem {
+class Item extends ObserverListItem {
   // prettier-ignore
   view = {
     input: el('input', { oninput: (evt) => this.state.item.name = evt.currentTarget.value }),
     lengthLabel: el('span')
   }
   el = el("li", [this.view.input, this.view.lengthLabel]);
-  constructor() {
-    super();
-
+  oninit() {
     this.observe(() => {
       const self = this;
       const color = this.state.context.color;
@@ -44,7 +42,7 @@ const generateId = (function() {
   return () => idx++ + "";
 })();
 
-class App extends ObservingComponent {
+class App extends Observer {
   subs: Function[] = [];
   state: State = observable({
     count: 1,
@@ -86,9 +84,7 @@ class App extends ObservingComponent {
     this.view.color,
     this.view.items
   ]);
-  constructor() {
-    super();
-
+  oninit() {
     this.observe(() => {
       this.view.color.value = this.state.color;
     });
