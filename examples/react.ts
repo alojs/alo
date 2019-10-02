@@ -1,10 +1,10 @@
 // React: https://codesandbox.io/s/modest-wilbur-r3b6r
-// Preact: https://codesandbox.io/s/confident-microservice-rmv1o
+// Preact: https://codesandbox.io/s/brave-payne-dywvz
 
 import { observe } from "alo";
 import React from "react";
 
-export class ObserverComponent extends React.PureComponent {
+export class Observer extends React.PureComponent {
   startObserver() {
     if (this.unobserve) this.unobserve();
     this.unobserve = null;
