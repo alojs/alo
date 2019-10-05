@@ -1,5 +1,6 @@
 // React: https://codesandbox.io/s/modest-wilbur-r3b6r
 // Preact: https://codesandbox.io/s/distracted-snyder-v3igi
+// Preact v2: https://codesandbox.io/s/elegant-sunset-n9e79
 
 import { observe } from "alo";
 import React from "react";
