@@ -302,7 +302,10 @@ export const computation = function<
       init: boolean
     ) => any;
   }
->(propsObj: P, batch: boolean = true): { [K in keyof P]: ReturnType<P[K]> } {
+>(
+  propsObj: P,
+  batch: boolean = true
+): [{ [K in keyof P]: ReturnType<P[K]> }, () => void] {
   const batchId = "computation-" + computationBatchIdx++;
 
   let obj = {};
@@ -313,33 +316,47 @@ export const computation = function<
 
   obj = observable(obj, false);
 
+  let subscriptions = [] as Function[];
+  let unsubscribed = false;
+  const unsubscribeFn = function() {
+    if (unsubscribed) return;
+    for (const subscription of subscriptions) {
+      subscription();
+    }
+    unsubscribed = true;
+  };
+
   for (const key of objKeys) {
     let init = true;
-    observe(function(pauseObserver) {
-      let prevBatchId = batchInfo.batchId;
-      if (batch) {
-        batchStart();
-        batchInfo.batchId = batchId;
-      }
+    subscriptions.push(
+      observe(function(pauseObserver) {
+        let prevBatchId = batchInfo.batchId;
+        if (batch) {
+          batchStart();
+          batchInfo.batchId = batchId;
+        }
 
-      obj[key] = propsObj[key](
-        obj,
-        observableInfoMap[obj["__observableId"]].storage[key],
-        key,
-        pauseObserver,
-        init
-      );
+        obj[key] = propsObj[key](
+          obj,
+          observableInfoMap[obj["__observableId"]].storage[key],
+          key,
+          pauseObserver,
+          init
+        );
 
-      if (batch) {
-        batchEnd();
-        batchInfo.batchId = prevBatchId;
-      }
-    }, batchId);
+        if (batch) {
+          batchEnd();
+          batchInfo.batchId = prevBatchId;
+        }
+      }, batchId)
+    );
     init = false;
   }
 
-  return obj as any;
+  return [obj as any, unsubscribeFn];
 };
+
+computation.empty = function(): any {};
 
 export const extract = function(observable, deep = true) {
   let result = observable;

@@ -98,7 +98,7 @@ const store = new Store({
 });
 
 let computedCalcs = 0;
-const computed = computation({
+const [computed] = computation({
   personCount: function() {
     computedCalcs++;
     return Object.keys(store.getState().person).length;

@@ -10,7 +10,7 @@ describe("observable", function() {
     let prop2called = 0;
     let prop3called = 0;
 
-    const computed = computation({
+    const [computed] = computation({
       prop: () => obj.prop,
       prop2: obj => {
         prop2called++;
@@ -43,6 +43,21 @@ describe("observable", function() {
 
     it("should only notify prop observers once at the end of all computations", function() {
       assert.equal(observerCalled, 2);
+    });
+
+    describe("unsubscribe fn", function() {
+      it("should end subscriptions of the computation", function() {
+        const [computed, unsubscribe] = computation({
+          one: computation.empty,
+          two: function(obj, val) {
+            obj.one;
+            return val != null ? val + 1 : 0;
+          }
+        });
+        unsubscribe();
+        computed.one = 1;
+        assert.equal(computed.two, 0);
+      });
     });
   });
 
