@@ -7,12 +7,9 @@ const equalityCheck = function(options, last, next) {
 export const createPrimitiveSelector = function<
   T extends (options: any) => any
 >(select: T) {
-  return createSelector(
-    select,
-    {
-      equalityCheck
-    }
-  );
+  return createSelector(select, {
+    equalityCheck
+  });
 };
 
 export const createSelector = function<

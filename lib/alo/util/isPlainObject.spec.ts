@@ -23,7 +23,10 @@ describe("isPlainObject", function() {
   });
 
   it("should return false for functions", function() {
-    assert.equal(isPlainObject(() => {}), false);
+    assert.equal(
+      isPlainObject(() => {}),
+      false
+    );
   });
 
   it("should return false for arrays", function() {

@@ -167,7 +167,7 @@ export const tagIsSet = function(
   }
 
   const wildCardIsSet =
-    !tagIsSet && (checkWildCard && parentWildCardIsSet(event, tag, entity));
+    !tagIsSet && checkWildCard && parentWildCardIsSet(event, tag, entity);
 
   return !!(tagIsSet || wildCardIsSet);
 };
