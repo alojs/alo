@@ -1,10 +1,10 @@
 module.exports = function({ envIsTest }) {
   let config = {
-    isNode: false,
-    isLibrary: false,
-    id: "examples",
+    isNode: <%= input.isNode ? 'true': 'false' %>,
+    isLibrary: <%= input.isLibrary ? 'true': 'false' %>,
+    id: "<%= input.id %>",
     useHot: true,
-    devServerPort: 8081
+    devServerPort: <%= input.devServerPort %>
   };
 
   config.useWorkBox = !config.isLibrary;

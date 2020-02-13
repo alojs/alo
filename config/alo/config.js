@@ -1,9 +1,10 @@
-module.exports = function() {
+module.exports = function({ envIsTest }) {
   let config = {
     isNode: false,
     isLibrary: true,
     id: "alo",
-    useHot: true
+    useHot: true,
+    devServerPort: 8080
   };
 
   config.useWorkBox = !config.isLibrary;

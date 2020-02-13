@@ -26,6 +26,7 @@ module.exports = function({ isNode } = { isNode: false }) {
     "@babel/plugin-syntax-dynamic-import",
     "@babel/proposal-class-properties",
     "@babel/proposal-object-rest-spread",
+    "universal-import",
     "lodash",
     emotionPlugin,
     "macros"
@@ -64,7 +65,7 @@ module.exports = function({ isNode } = { isNode: false }) {
     compact: false,
     overrides: [
       {
-        test: paths.lib("**/*.jsx"),
+        test: [paths.lib("**/*.jsx"), paths.lib("**/*.tsx")],
         plugins: [transformReactJsxPlugin]
       },
       {

@@ -6,7 +6,6 @@ const paths = common.paths;
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const WorkboxPlugin = require("workbox-webpack-plugin");
 const webpack = require("webpack");
@@ -46,18 +45,13 @@ module.exports = function({
   isLibrary,
   useHtmlCreation
 }) {
-  const envIsTesting = util.envIsTesting(env);
+  const envIsTest = util.envIsTest(env);
   const devMode = process.env.NODE_ENV !== "production";
 
   const config = {
     output: {},
     target: "web",
-    plugins: {
-      miniCssExtract: new MiniCssExtractPlugin({
-        filename: devMode ? "[name].css" : "[name].[hash].css",
-        chunkFilename: devMode ? "[id].css" : "[id].[hash].css"
-      })
-    },
+    plugins: {},
     module: {
       rules: {
         images: {
@@ -82,11 +76,6 @@ module.exports = function({
         }
       }
     },
-    optimization: {
-      minimizer: {
-        optimizeCSSAssets: new OptimizeCSSAssetsPlugin({})
-      }
-    },
     devServer: {
       hot: useHot,
       contentBase: [outputDir, paths.static(nameSpaceId)],
@@ -102,11 +91,20 @@ module.exports = function({
     }
   };
 
-  if (useWorkBox) {
+  if (!devMode) {
+    config.optimization = {
+      minimizer: {
+        optimizeCSSAssets: new OptimizeCSSAssetsPlugin({})
+      }
+    };
+  }
+
+  // TODO: Has to be upgraded for workbox 5
+  if (false && useWorkBox) {
     const distFiles = shell.ls("-RA", outputDir);
 
     let dynamicGlobPatterns = [];
-    if (!envIsTesting && useHtmlCreation)
+    if (!envIsTest && useHtmlCreation)
       dynamicGlobPatterns.push("app-shell.html");
     let workBoxOptions = {
       exclude: [/index\.html/, /\.map$/],
@@ -166,8 +164,7 @@ module.exports = function({
     config.output.globalObject = "typeof self !== 'undefined' ? self : this";
   }
 
-  if (useCodeSplitting) {
-    config.plugins.hashedModuleIds = new webpack.HashedModuleIdsPlugin();
+  if (useCodeSplitting && !devMode) {
     config.optimization = config.optimization || {};
     (config.optimization.splitChunks = {
       chunks: "all",
@@ -182,7 +179,7 @@ module.exports = function({
       (config.optimization.runtimeChunk = "single");
   }
 
-  if (!envIsTesting && useHtmlCreation) {
+  if (!envIsTest && useHtmlCreation) {
     let htmlWebpackPluginOptions = {
       template: paths.lib(`${nameSpaceId}/assets/index.html`)
     };

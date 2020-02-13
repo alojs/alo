@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { paths, mergeDirectories } = require("../../lib/node");
+const { loadConfig } = require("../../lib/node/namespace");
 const concat = require("../../lib/node/concatJs");
 const { runScript } = require("../../lib/node/scripts");
 
@@ -175,7 +176,9 @@ const build = function({
     } catch (err) {}
   }
 
-  if (!testing && !argv.watch) {
+  const nameSpaceConfig = loadConfig(nameSpaceId);
+
+  if (!testing && !argv.watch && !nameSpaceConfig.isNode) {
     const staticDir = paths.static(nameSpaceId);
     if (fs.existsSync(staticDir)) {
       mergeDirectories({
@@ -196,8 +199,6 @@ const build = function({
   if (!testing && !argv.watch) {
     copyTypesToDist({ nameSpaceId });
   }
-
-  // TODO: Implement single namespace dist copy
 };
 
 module.exports = build;

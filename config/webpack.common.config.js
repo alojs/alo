@@ -2,15 +2,17 @@ const common = require("../lib/node");
 const util = common.webpack;
 const paths = common.paths;
 const TerserPlugin = require("terser-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
+const StatsPlugin = require("stats-webpack-plugin");
+const webpack = require("webpack");
 
 const createCssRule = ({
   test,
   useModules = true,
-  envIsTesting,
+  envIsTest,
   envIsProd,
   useSass = false,
-  usePostCss = false,
+  usePostCss = true,
   isNode
 }) => {
   const useSourceMap = true;
@@ -19,10 +21,12 @@ const createCssRule = ({
     test: test,
     use: []
   };
-  if (!envIsTesting) {
+  if (!envIsTest) {
     let styleLoader = {
-      loader: !envIsProd ? "style-loader" : MiniCssExtractPlugin.loader,
-      options: { sourceMap: envIsProd ? useSourceMap : undefined }
+      loader: ExtractCssChunks.loader,
+      options: {
+        hmr: util.envIsWatch()
+      }
     };
     let cssLoader = {
       loader: "css-loader",
@@ -30,12 +34,12 @@ const createCssRule = ({
     };
 
     if (useModules) {
-      cssLoader.options.modules = true;
-      cssLoader.options.localIdentName = !envIsProd
+      cssLoader.options.modules = { mode: "local" };
+      cssLoader.options.modules.localIdentName = !envIsProd
         ? "[path]_[name]_[local]"
         : "[hash:base64:3]";
       if (isNode) {
-        cssLoader.options.exportOnlyLocals = true;
+        cssLoader.options.onlyLocals = true;
       }
     }
 
@@ -86,15 +90,11 @@ const createCssRule = ({
             implementation: require("sass"),
             // Always has to be enabled for resolve-url-loader
             sourceMap: true,
-            sourceMapContents: false
+            sassOptions: {
+              sourceMapContents: false
+            }
           }
         };
-
-        // Add Fiber if it is installed
-        try {
-          const Fiber = require("fibers");
-          sassLoader.options.fiber = Fiber;
-        } catch (err) {}
 
         cssRule.use.push(sassLoader);
       }
@@ -113,9 +113,10 @@ module.exports = function({
   isNode = false,
   outputDir,
   isLibrary = false,
-  nameSpaceId
+  nameSpaceId,
+  nameSpace
 }) {
-  const envIsTesting = util.envIsTesting(env);
+  const envIsTest = util.envIsTest(env);
   const envIsProd = process.env.NODE_ENV === "production";
 
   const config = {
@@ -149,7 +150,10 @@ module.exports = function({
         terser: new TerserPlugin({
           cache: true,
           parallel: true,
-          sourceMap: true
+          sourceMap: true,
+          // Mostly has to be disabled because it adds its banner text in front of our own banner (getBannerPlugin)
+          // Our own banner adds #!/usr/bin/env node to files which would only be on the second line after the terser banner
+          extractComments: false
         })
       }
     },
@@ -187,29 +191,27 @@ module.exports = function({
         },
         pcssModule: createCssRule({
           envIsProd,
-          envIsTesting,
+          envIsTest,
           test: /\.module\.pcss$/,
-          usePostCss: true,
           isNode
         }),
         pcss: createCssRule({
           envIsProd,
-          envIsTesting,
+          envIsTest,
           test: /^(?!.*\.module).*\.pcss$/,
-          usePostCss: true,
           useModules: false,
           isNode
         }),
         sassModule: createCssRule({
           envIsProd,
-          envIsTesting,
+          envIsTest,
           test: /\.module\.scss$/,
           useSass: true,
           isNode
         }),
         sass: createCssRule({
           envIsProd,
-          envIsTesting,
+          envIsTest,
           test: /^(?!.*\.module).*\.scss$/,
           useSass: true,
           useModules: false,
@@ -217,13 +219,13 @@ module.exports = function({
         }),
         cssModule: createCssRule({
           envIsProd,
-          envIsTesting,
+          envIsTest,
           test: /\.module\.css$/,
           isNode
         }),
         css: createCssRule({
           envIsProd,
-          envIsTesting,
+          envIsTest,
           test: /^(?!.*\.module).*\.css$/,
           useModules: false,
           isNode
@@ -254,7 +256,14 @@ module.exports = function({
     }
   };
 
-  if (envIsTesting || isNode) {
+  if (!isLibrary) {
+    // Makes sure that sideeffects of apps are included in the final build
+    config.optimization.sideEffects = false;
+  }
+
+  config.plugins.stats = new StatsPlugin("stats.json");
+
+  if (envIsTest) {
     const nodeExternals = require("webpack-node-externals");
     config.externals.push(
       nodeExternals({
@@ -262,6 +271,24 @@ module.exports = function({
         whitelist: [/\.(?!(?:jsx?|json|tsx?)$).{1,5}$/i]
       })
     );
+  } else {
+    if (nameSpace.isNode) {
+      config.externals.push({
+        express: 'require("express")',
+        got: 'require("got")'
+      });
+    }
+  }
+
+  if (envIsProd) {
+    config.plugins.hashedModuleIds = new webpack.HashedModuleIdsPlugin();
+  }
+
+  if (!isNode) {
+    config.plugins.extractCssChunks = new ExtractCssChunks({
+      filename: !envIsProd ? "[name].css" : "[name].[hash].css",
+      chunkFilename: !envIsProd ? "[id].css" : "[id].[hash].css"
+    });
   }
 
   return config;
