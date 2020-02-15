@@ -3,6 +3,7 @@
 /coverage
 !/coverage/.gitkeep
 /dist/*
+!/dist/alo
 !/dist/.gitkeep
 /node_modules
 /tmp/*
