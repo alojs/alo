@@ -23,10 +23,7 @@ export const observerHOC = function<P = {}>({
   createState?;
 }): FunctionComponent<P> {
   return function(props) {
-    props["view"] = view;
-    props["createState"] = createState;
-
-    return createElement(Observer as any, props);
+    return createElement(Observer as any, { ...props, view, createState });
   };
 };
 
@@ -34,6 +31,7 @@ export class Observer<P = { createState?; view? }, S = {}> extends Component<
   P,
   S
 > {
+  rendering = false;
   updating = false;
   computation;
   renderedVnode;
@@ -121,7 +119,10 @@ export class Observer<P = { createState?; view? }, S = {}> extends Component<
     }
     this.renderedVnode = this.view(this.$props, this.$state, $computed);
     this.updating = true;
-    this.forceUpdate();
+
+    if (!this.rendering) {
+      this.forceUpdate();
+    }
 
     return this.renderedVnode;
   };
@@ -143,11 +144,13 @@ export class Observer<P = { createState?; view? }, S = {}> extends Component<
   view(props, state, computed) {}
 
   render() {
+    this.rendering = true;
     if (!this.updating) {
       this.mapPropsToOps();
     }
 
     this.updating = false;
+    this.rendering = false;
 
     return this.renderedVnode;
   }
