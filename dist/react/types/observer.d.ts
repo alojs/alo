@@ -8,6 +8,7 @@ export declare class Observer<P = {
     createState?: any;
     view?: any;
 }, S = {}> extends Component<P, S> {
+    rendering: boolean;
     updating: boolean;
     computation: any;
     renderedVnode: any;
