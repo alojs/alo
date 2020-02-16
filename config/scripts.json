@@ -1,17 +1,20 @@
 {
   "build": {
     "nameSpaces": [
-      "alo"
+      "alo",
+      "react"
     ]
   },
   "coverage": {
     "nameSpaces": [
-      "alo"
+      "alo",
+      "react"
     ]
   },
   "test": {
     "nameSpaces": [
-      "alo"
+      "alo",
+      "react"
     ]
   }
 }

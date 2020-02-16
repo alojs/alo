@@ -22,7 +22,8 @@
             ],
             "@project/*": [
                 "../*"
-            ]
+            ],
+            "alo": ["../dist/alo/core"]
         }
     },
     "include": [

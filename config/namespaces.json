@@ -1,7 +1,8 @@
 {
   "ids": [
     "alo",
-    "examples"
+    "examples",
+    "react"
   ],
-  "nextDevServerPort": 8082
+  "nextDevServerPort": 8083
 }
