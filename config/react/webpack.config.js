@@ -107,7 +107,7 @@ module.exports = function(env, argv) {
 
   config.externals.push({
     react: "react",
-    alo: "alo"
+    alo: envIsTest ? "../../../dist/alo/core.js" : "alo"
   });
 
   /*config.module.rules.babel.use[0].options.presets[0][1].targets = {
