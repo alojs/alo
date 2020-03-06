@@ -13,24 +13,28 @@ import {
   observe,
   ObserveFn
 } from "alo";
-import { createElement, Component, FunctionComponent } from "react";
+import { Component, FunctionComponent, ReactElement } from "react";
 
-export const observerHOC = function<P = {}>({
-  view,
-  createState
-}: {
-  view: FunctionComponent<P>;
-  createState?;
-}): FunctionComponent<P> {
-  return function(props) {
-    return createElement(Observer as any, { ...props, view, createState });
-  };
+export const observerWithState = function<S = any, P = {}>(
+  createState: (props: P) => S,
+  view: (props: P, state: S) => ReactElement | null
+): FunctionComponent<P> {
+  const Observer = observer<P>(view);
+  Observer.prototype.createState = createState;
+
+  return Observer;
 };
 
-export class Observer<P = { createState?; view? }, S = {}> extends Component<
-  P,
-  S
-> {
+export const observer = function<P = {}>(
+  view: (props: P, state: any) => ReactElement | null
+): FunctionComponent<P> {
+  class CustomObserver extends Observer {}
+  CustomObserver.prototype.view = view;
+
+  return CustomObserver as any;
+};
+
+export class Observer<P = {}> extends Component<P> {
   rendering = false;
   updating = false;
   computation;
@@ -41,9 +45,9 @@ export class Observer<P = { createState?; view? }, S = {}> extends Component<
   observers: ReturnType<typeof observe>[] = [];
   observeFunctions: ObserveFn[] = [];
 
-  $state: Observable<S>;
-  $props = observable<P>({ view: null, createState: null } as any);
-  knownKeys = { view: true, createState: true };
+  $state: Observable<ReturnType<this["createState"]>>;
+  $props = observable<P>({} as any);
+  knownKeys = {};
   $computed;
 
   observe(fn: ObserveFn) {
@@ -82,10 +86,7 @@ export class Observer<P = { createState?; view? }, S = {}> extends Component<
 
   UNSAFE_componentWillMount() {
     this.mapPropsToOps();
-    if (this.props["createState"] != null) {
-      this.createState = this.props["createState"];
-    }
-    this.$state = observable(this.createState());
+    this.$state = observable(this.createState(this.$props)) as any;
 
     if (this.observeFunctions) {
       this.startObservers();
@@ -114,9 +115,6 @@ export class Observer<P = { createState?; view? }, S = {}> extends Component<
   viewObserver = $computed => {
     if (!this.computing) return this.renderedVnode;
 
-    if (this.$props["view"]) {
-      this.view = this.$props["view"];
-    }
     this.renderedVnode = this.view(this.$props, this.$state, $computed);
     this.updating = true;
 
@@ -127,7 +125,7 @@ export class Observer<P = { createState?; view? }, S = {}> extends Component<
     return this.renderedVnode;
   };
 
-  createState() {
+  createState(props) {
     return this.state || {};
   }
 
