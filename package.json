@@ -1,6 +1,6 @@
 {
   "name": "alo",
-  "version": "4.0.0-alpha.15",
+  "version": "4.0.0-alpha.17",
   "description": "Mutation based state management",
   "main": "dist/alo/core.js",
   "homepage": "https://github.com/alojs/alo",

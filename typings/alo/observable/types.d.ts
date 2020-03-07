@@ -15,4 +15,10 @@ export interface ObservableInfo<T extends Dictionary<any>> {
 export declare type Observable<T extends Dictionary<any>> = T & {
     __observableId: number;
 };
+export declare type ComputationMap = {
+    [key: string]: (obj: any, value: any, key: any, pauseObserver: PauseObserverFn, init: boolean) => any;
+};
+export declare type ComputationValues<P extends ComputationMap> = {
+    [K in keyof P]: ReturnType<P[K]>;
+};
 //# sourceMappingURL=types.d.ts.map
