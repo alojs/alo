@@ -21,3 +21,17 @@ export interface ObservableInfo<T extends Dictionary<any>> {
 export type Observable<T extends Dictionary<any>> = T & {
   __observableId: number;
 };
+
+export type ComputationMap = {
+  [key: string]: (
+    obj: any,
+    value: any,
+    key: any,
+    pauseObserver: PauseObserverFn,
+    init: boolean
+  ) => any;
+};
+
+export type ComputationValues<P extends ComputationMap> = {
+  [K in keyof P]: ReturnType<P[K]>;
+};

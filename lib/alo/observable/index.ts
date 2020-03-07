@@ -8,7 +8,9 @@ import {
   Observable,
   BooleanSet,
   ObserveFn,
-  PauseObserverFn
+  PauseObserverFn,
+  ComputationMap,
+  ComputationValues
 } from "./types";
 import { isPlainObject } from "../util/isPlainObject";
 
@@ -292,20 +294,10 @@ export function getOriginObject<T>(obj: Observable<T>) {
 }
 
 let computationBatchIdx = 0;
-export const computation = function<
-  P extends {
-    [key: string]: (
-      obj: any,
-      value: any,
-      key: any,
-      pauseObserver: PauseObserverFn,
-      init: boolean
-    ) => any;
-  }
->(
+export const computation = function<P extends ComputationMap>(
   propsObj: P,
   batch: boolean = true
-): [{ [K in keyof P]: ReturnType<P[K]> }, () => void] {
+): [ComputationValues<P>, () => void] {
   const batchId = "computation-" + computationBatchIdx++;
 
   let obj = {};
