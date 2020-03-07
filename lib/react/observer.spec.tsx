@@ -1,9 +1,9 @@
 import { assert } from "chai";
 import React from "react";
 import { render, fireEvent, cleanup } from "@testing-library/react";
-import { observable } from "alo";
+import { observable, ComputationMap, extract } from "alo";
 
-import { observer, observerWithState } from "./observer";
+import { observer, observerWithState, Observer } from "./observer";
 
 let helloWorldRenderCount = 0;
 const HelloWorld = function({ name = "world" }: { name?: string }) {
@@ -82,5 +82,67 @@ describe("observer", function() {
     // Even though we change the name this shouldnt trigger a rerender after the unmount
     $state.name = "john";
     assert.equal(nameRenderCount, 3);
+  });
+});
+
+const type = function<T>(some: T) {
+  return some;
+};
+
+describe("Observer", function() {
+  afterEach(function() {
+    cleanup();
+  });
+
+  it("should rerun computations", function() {
+    class MyObserver extends Observer<{ count: number }> {
+      computations = 0;
+      createState() {
+        return { multiply: 1 };
+      }
+      createComputation() {
+        return type<ComputationMap>({
+          countX: () => {
+            this.computations++;
+            return this.$props.count * this.$state.multiply;
+          },
+          countXX: obj => {
+            this.computations++;
+            return obj.countX * this.$state.multiply;
+          }
+        });
+      }
+      view(props, state, computed) {
+        this.computations++;
+
+        return (
+          <>
+            <input
+              data-testid="input"
+              onChange={evt =>
+                (this.$state.multiply = parseInt(evt.target.value))
+              }
+              value={this.$state.multiply}
+            />
+            <div data-testid="count">{computed.countXX}</div>
+            <div data-testid="computations">{this.computations}</div>
+          </>
+        );
+      }
+    }
+
+    const { getByTestId } = render(<MyObserver count={2} />);
+    // At this time the count should be 2 * 1 * 1
+    assert.equal(getByTestId("count").innerHTML, "2");
+
+    // Every computation runs once before and after mount making it 2 * 3
+    assert.equal(getByTestId("computations").innerHTML, "6");
+
+    // We increase the multiplier from 1 to 2, the calculation changes to 2 * 2 * 2
+    fireEvent.change(getByTestId("input"), { target: { value: 2 } });
+    assert.equal(getByTestId("count").innerHTML, "8");
+
+    // The upper change should trigger 3 additional computations
+    assert.equal(getByTestId("computations").innerHTML, "9");
   });
 });
