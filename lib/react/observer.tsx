@@ -10,6 +10,8 @@ import {
   batchStart,
   batchEnd,
   computation,
+  ComputationMap,
+  ComputationValues,
   observe,
   ObserveFn
 } from "alo";
@@ -48,7 +50,7 @@ export class Observer<P = {}> extends Component<P> {
   $state: Observable<ReturnType<this["createState"]>>;
   $props = observable<P>({} as any);
   knownKeys = {};
-  $computed;
+  $computed: ComputationValues<ReturnType<this["createComputation"]>>;
 
   observe(fn: ObserveFn) {
     this.observeFunctions.push(fn);
@@ -67,8 +69,12 @@ export class Observer<P = {}> extends Component<P> {
 
   startComputation() {
     this.computing = true;
-    const [computed, stopComputation] = computation(this.createComputation());
-    this.$computed = computed;
+
+    const computationMap = this.createComputation();
+    computationMap.viewObserver = this.viewObserver;
+    const [computed, stopComputation] = computation(computationMap);
+
+    this.$computed = computed as any;
     this.computation = stopComputation;
   }
 
@@ -78,10 +84,8 @@ export class Observer<P = {}> extends Component<P> {
     this.computation = null;
   }
 
-  createComputation() {
-    return {
-      viewObserver: this.viewObserver
-    };
+  createComputation(): ComputationMap {
+    return {};
   }
 
   UNSAFE_componentWillMount() {
@@ -139,7 +143,7 @@ export class Observer<P = {}> extends Component<P> {
     this.stopObservers();
   }
 
-  view(props, state, computed) {}
+  view(props: P, state: this["$state"], computed: this["$computed"]) {}
 
   render() {
     this.rendering = true;
