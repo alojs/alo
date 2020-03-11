@@ -48,7 +48,7 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
     pureByDefault = false
   }: {
     mutator: T;
-    state?: DeepPartial<ReturnType<ReturnType<T>>>;
+    state?: DeepPartial<ReturnType<T>>;
     actionNormalizer?: ActionNormalizerInterface;
     actionResolver?: ActionResolverInterface;
     subscribable?: SubscribableInterface<Store<T>>;
