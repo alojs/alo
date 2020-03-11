@@ -202,12 +202,6 @@ describe("observable", function() {
 
       assert.equal(count, 2);
     });
-
-    it("should not throw if called with a non observable", function() {
-      assert.doesNotThrow(function() {
-        notify({} as any, "prop");
-      });
-    });
   });
 
   describe("batchEnd", function() {

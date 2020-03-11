@@ -285,11 +285,9 @@ export function notify<T extends Observable<any>, K extends keyof T>(
   obj: T,
   key: K
 ) {
-  if (isObservable(obj)) {
-    const propObserverIdSetMap =
-      observableInfoMap[obj.__observableId].propObserverIdSetMap[key as string];
-    notifyObservers(Object.keys(propObserverIdSetMap));
-  }
+  const propObserverIdSetMap =
+    observableInfoMap[obj.__observableId].propObserverIdSetMap[key as string];
+  notifyObservers(Object.keys(propObserverIdSetMap));
 }
 
 const batchInfo: { count: number; observerIds: string[]; batchId: any } = {
