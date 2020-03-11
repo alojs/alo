@@ -1,8 +1,75 @@
 import { assert } from "chai";
-import { observable, observe, pauseObserver, computation } from ".";
+import {
+  observable,
+  observe,
+  pauseObserver,
+  computation,
+  removeProp,
+  isObservable,
+  setProp,
+  notify,
+  batchEnd
+} from ".";
 
 describe("observable", function() {
-  describe("computedProps", function() {
+  it("should not allow arrays as root", function() {
+    assert.throw(function() {
+      observable([]);
+    });
+  });
+
+  it("should not reconvert observables to new observables", function() {
+    let obj = observable({});
+    const oldId = obj.__observableId;
+
+    obj = observable(obj);
+    const newId = obj.__observableId;
+
+    assert.equal(oldId, newId);
+  });
+  describe("deep plain objects", function() {
+    it("should be converted to observables", function() {
+      const obj = observable({
+        deepObj: {
+          prop: "value"
+        }
+      });
+
+      assert.equal(isObservable(obj.deepObj), true);
+    });
+  });
+
+  describe("nonPlainObjects", function() {
+    it("should not be converted to observables", function() {
+      class IgnoreMe {}
+      const obj = observable({
+        toBeIgnored: new IgnoreMe(),
+        list: [new IgnoreMe()]
+      });
+
+      assert.equal(isObservable(obj.toBeIgnored), false);
+      assert.equal(isObservable(obj.list[0]), false);
+    });
+  });
+  describe("arrays", function() {
+    it("should be deeply checked for objects", function() {
+      const obj = observable({
+        list: [{ prop: "value" }]
+      });
+
+      let count = 0;
+      observe(function() {
+        obj.list[0].prop;
+        count++;
+      });
+      assert.equal(count, 1);
+
+      obj.list[0].prop = "newValue";
+      assert.equal(count, 2);
+    });
+  });
+
+  describe("computation", function() {
     const obj = observable({
       prop: "value"
     });
@@ -45,19 +112,77 @@ describe("observable", function() {
       assert.equal(observerCalled, 2);
     });
 
-    describe("unsubscribe fn", function() {
-      it("should end subscriptions of the computation", function() {
-        const [computed, unsubscribe] = computation({
-          one: computation.empty,
-          two: function(obj, val) {
-            obj.one;
-            return val != null ? val + 1 : 0;
+    it("should call all subscribers if batch is disabled", function() {
+      const state = observable({ prop: 1 });
+      const [computed] = computation(
+        {
+          one: function() {
+            return state.prop * 2;
+          },
+          two: function() {
+            return state.prop * 3;
           }
-        });
+        },
+        false
+      );
+
+      let count = 0;
+      observe(function() {
+        count++;
+        computed.one;
+        computed.two;
+      });
+
+      state.prop = 2;
+      assert.equal(count, 3);
+    });
+
+    describe("unsubscribe fn", function() {
+      const state = observable({ one: 0 });
+      const [computed, unsubscribe] = computation({
+        two: function(obj, val) {
+          state.one;
+          return val != null ? val + 1 : 0;
+        }
+      });
+
+      it("should end subscriptions of the computation", function() {
         unsubscribe();
-        computed.one = 1;
+        state.one = 1;
         assert.equal(computed.two, 0);
       });
+
+      it("should not throw when called multiple times", function() {
+        assert.doesNotThrow(unsubscribe);
+      });
+    });
+  });
+
+  describe("notify", function() {
+    it("should notify all observers", function() {
+      const obj = observable({
+        prop: "value"
+      });
+      let count = 0;
+      observe(() => {
+        obj.prop;
+        count++;
+      });
+      notify(obj, "prop");
+
+      assert.equal(count, 2);
+    });
+
+    it("should not throw if called with a non observable", function() {
+      assert.doesNotThrow(function() {
+        notify({} as any, "prop");
+      });
+    });
+  });
+
+  describe("batchEnd", function() {
+    it("should not throw if we are not in a batch", function() {
+      assert.doesNotThrow(batchEnd);
     });
   });
 
@@ -77,6 +202,35 @@ describe("observable", function() {
       obj.prop = "value2";
 
       assert.equal(called, 2);
+    });
+  });
+
+  describe("setProp", function() {
+    it("should set props that are already existing without throwing", function() {
+      const obj = observable({ prop: "value" });
+      assert.doesNotThrow(function() {
+        setProp(obj, "prop", "newValue");
+      });
+      assert.equal(obj.prop, "newValue");
+    });
+  });
+
+  describe("removeProp", function() {
+    it("should remove the prop from the observable and all observers", function() {
+      const obj = observable({
+        prop: "value"
+      });
+
+      let observerCalledCount = 0;
+      observe(function() {
+        observerCalledCount++;
+        obj.prop;
+      });
+
+      removeProp(obj, "prop");
+      obj.prop = "newValue";
+
+      assert.equal(observerCalledCount, 1);
     });
   });
 
@@ -136,6 +290,21 @@ describe("observable", function() {
 
     it("should not pause prop tracking on recursive observer calls", function() {
       assert.equal(recursiveCalled, 3);
+    });
+
+    it("should just skip if called not within an observer", function() {
+      assert.doesNotThrow(pauseObserver);
+    });
+
+    it("should throw an error for recursive observer calls", function() {
+      const state = observable({ prop: 0 });
+
+      assert.throw(function() {
+        observe(function() {
+          // Essentially listening on a prop and also changing it in the same observer....
+          state.prop++;
+        });
+      });
     });
   });
 });
