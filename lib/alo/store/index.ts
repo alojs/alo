@@ -13,9 +13,11 @@ import { Mutator } from "../mutator/types";
 import { setWildCard } from "../event";
 import { StoreInterface } from "./types";
 import { Subscribable } from "../subscribable";
-import { cloneDeep as _cloneDeep, isPlainObject } from "../util";
+import { cloneDeep as _cloneDeep } from "../util";
 import { observe, observable, batch } from "../observable";
 import { PauseObserverFn } from "../observable/types";
+
+import _ from "lodash";
 
 export var actionTypes = {
   INIT: "@@init"
@@ -160,7 +162,7 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
     const isInitAction = action.type === actionTypes.INIT;
 
     if (isInitAction) {
-      this._observable.state = isPlainObject(action.payload)
+      this._observable.state = _.isPlainObject(action.payload)
         ? observable(action.payload)
         : action.payload;
       setWildCard(action.event);
@@ -174,7 +176,7 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
         this._observable
       );
       // TODO: Maybe this should only happen if the user wants to use observables? Option-worthy?
-      if (isInitAction && isPlainObject(result)) {
+      if (isInitAction && _.isPlainObject(result)) {
         result = observable(result);
       }
       this._observable.state = result;

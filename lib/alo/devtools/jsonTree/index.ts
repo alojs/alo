@@ -1,8 +1,8 @@
 import { el, list, setChildren, text, mount } from "@lufrai/redom";
-import { isPlainObject } from "@lib/alo/util";
+import _ from "lodash";
 
 const isPrimitive = function(value) {
-  const isObject = isPlainObject(value);
+  const isObject = _.isPlainObject(value);
   const isArray = !isObject && Array.isArray(value);
 
   return !isObject && !isArray;
@@ -27,7 +27,7 @@ export class JsonTree {
   init() {
     const value = this.value;
 
-    const isObject = isPlainObject(value);
+    const isObject = _.isPlainObject(value);
     const isArray = !isObject && Array.isArray(value);
 
     if (isObject || isArray) {

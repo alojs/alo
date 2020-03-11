@@ -12,7 +12,8 @@ import {
   ComputationMap,
   ComputationValues
 } from "./types";
-import { isPlainObject } from "../util/isPlainObject";
+
+import _ from "lodash";
 
 let nextId = 0;
 const generateUniqueId = function() {
@@ -24,13 +25,15 @@ const observerInfoMap: Dictionary<ObserverInfo> = {};
 
 const observableInfoMap: Dictionary<ObservableInfo<any>> = {};
 
-function isObservable<T>(resultObj: T): resultObj is Observable<T> {
+export const isObservable = function<T>(
+  resultObj: T
+): resultObj is Observable<T> {
   return (
     resultObj !== null &&
     typeof resultObj === "object" &&
     resultObj["__observableId"] != null
   );
-}
+};
 
 export const pauseObserver: PauseObserverFn = function(pause = true) {
   if (!currentObserver.id) return;
@@ -125,13 +128,13 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
     if (Array.isArray(value)) {
       for (const itemKey of Object.keys(value)) {
         var itemValue = value[itemKey];
-        if (!isPlainObject(itemValue)) {
+        if (!_.isPlainObject(itemValue)) {
           continue;
         }
 
         value[itemKey] = observable(itemValue);
       }
-    } else if (isPlainObject(value)) {
+    } else if (_.isPlainObject(value)) {
       value = observable(value);
     }
   }
