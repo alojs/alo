@@ -285,17 +285,6 @@ export const batchEnd = function() {
   }
 };
 
-export function getOriginObject<T>(obj: Observable<T>) {
-  const result = {} as T;
-  const storage = observableInfoMap[obj.__observableId].storage;
-  for (const key of Object.keys(storage)) {
-    const value = storage[key];
-    result[key] = isObservable(value) ? getOriginObject(value) : value;
-  }
-
-  return result;
-}
-
 let computationBatchIdx = 0;
 export const computation = function<P extends ComputationMap>(
   propsObj: P,
@@ -349,31 +338,4 @@ export const computation = function<P extends ComputationMap>(
   }
 
   return [obj as any, unsubscribeFn];
-};
-
-computation.empty = function(): any {};
-
-export const extract = function(observable, deep = true) {
-  let result = observable;
-
-  if (Array.isArray(observable)) {
-    result = [];
-    for (let value of observable) {
-      if (deep) {
-        value = extract(value, deep);
-      }
-      result.push(value);
-    }
-  } else if (isObservable(observable)) {
-    result = {};
-    for (const key of Object.keys(observable)) {
-      let value = observable[key];
-      if (deep) {
-        value = extract(value, deep);
-      }
-      result[key] = value;
-    }
-  }
-
-  return result;
 };
