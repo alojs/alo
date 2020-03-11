@@ -115,11 +115,31 @@ export const getProp = function<T extends Observable<any>, K extends keyof T>(
   return propGetterMap[key]();
 };
 
+const observableArray = function<T extends Observable<any>, K extends keyof T>(
+  parentObj: T,
+  key: K,
+  value: any[]
+) {
+  for (const itemKey of Object.keys(value)) {
+    let itemValue = value[itemKey];
+
+    if (Array.isArray(itemValue)) {
+      itemValue = observableArray(parentObj, key, itemValue);
+    } else if (_.isPlainObject(itemValue)) {
+      itemValue = observable(itemValue);
+    }
+
+    value[itemKey] = itemValue;
+  }
+
+  return value;
+};
+
 export const setProp = function<T extends Observable<any>, K extends keyof T>(
   obj: T,
   key: K,
   value: T[K],
-  deep = false
+  deep = true
 ) {
   const { propObserverIdSetMap, propGetterMap } = observableInfoMap[
     obj.__observableId
@@ -156,14 +176,7 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
 
   if (deep) {
     if (Array.isArray(value)) {
-      for (const itemKey of Object.keys(value)) {
-        var itemValue = value[itemKey];
-        if (!_.isPlainObject(itemValue)) {
-          continue;
-        }
-
-        value[itemKey] = observable(itemValue);
-      }
+      value = observableArray(obj, key, value);
     } else if (_.isPlainObject(value)) {
       value = observable(value);
     }
