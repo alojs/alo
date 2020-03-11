@@ -67,18 +67,6 @@ function callObserver(observerId: string) {
   currentObserver.pause = previousPause;
 }
 
-function setValue<T, K extends keyof T>(
-  storage: T,
-  observerIdSet: BooleanSet,
-  key: keyof T,
-  value: T[K]
-) {
-  if (storage[key] !== value) {
-    storage[key] = value;
-    notifyObservers(Object.keys(observerIdSet));
-  }
-}
-
 export function observe(
   fn: ObserveFn,
   notifyInBatches: string | boolean = false
@@ -104,12 +92,27 @@ export const removeProp = function<
   T extends Observable<any>,
   K extends keyof T
 >(obj: T, key: K) {
-  const { storage, propObserverIdSetMap } = observableInfoMap[
+  const { propObserverIdSetMap, propGetterMap } = observableInfoMap[
     obj.__observableId
   ];
-  delete storage[key];
   delete obj[key];
+  delete propGetterMap[key];
   delete propObserverIdSetMap[key as any];
+};
+
+/**
+ * Silently get an observable property value (observer will not track it)
+ *
+ * @param obj Observable obj
+ * @param key Property key
+ */
+export const getProp = function<T extends Observable<any>, K extends keyof T>(
+  obj: T,
+  key: K
+): T[K] {
+  const { propGetterMap } = observableInfoMap[obj.__observableId];
+
+  return propGetterMap[key]();
 };
 
 export const setProp = function<T extends Observable<any>, K extends keyof T>(
@@ -118,9 +121,36 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
   value: T[K],
   deep = false
 ) {
-  const { storage, propObserverIdSetMap } = observableInfoMap[
+  const { propObserverIdSetMap, propGetterMap } = observableInfoMap[
     obj.__observableId
   ];
+
+  // If there already is a getter existing, then this prop is already observable
+  if (propGetterMap[key]) {
+    obj[key] = value;
+    return;
+  }
+
+  const property = Object.getOwnPropertyDescriptor(obj, key);
+  if (property && property.configurable === false) {
+    return;
+  }
+
+  const getter = property && property.get;
+  const setter = property && property.set;
+
+  /*
+  TODO: Maybe in the future we could allow calling setProp without a value
+  if ((!getter || setter) && arguments.length === 2) {
+    value = obj[key]
+  }
+  */
+
+  // This function can be used to access the value externally without triggering observers
+  propGetterMap[key] = function() {
+    return getter ? getter.call(obj) : value;
+  };
+
   const observerIdSet: BooleanSet = (propObserverIdSetMap[key as any] =
     propObserverIdSetMap[key as any] || {});
 
@@ -139,40 +169,44 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
     }
   }
 
-  if (storage[key] !== undefined && obj[key] !== undefined) {
-    // TODO: Remove this console.log?
-    console.log("already existing");
-    setValue(storage, observerIdSet, key, value);
-    return;
-  }
-
   Object.defineProperty(obj, key, {
     configurable: true,
     enumerable: true,
     get() {
+      const result = getter ? getter.call(obj) : value;
+
       // The current observer is paused for registering get calls (triggered by pauseObserver)
       if (currentObserver.pause) {
-        return storage[key];
+        return result;
       }
 
       const observerId = currentObserver.id;
       // There is no active observer, or the current observer is already tracked
       if (!observerId || observerIdSet[observerId]) {
-        return storage[key];
+        return result;
       }
 
       // An observer asked for a property on the observable, we have to track this
       observerIdSet[observerId] = true;
       observerInfoMap[observerId].targetObserverIdSets.push(observerIdSet);
 
-      return storage[key];
+      return result;
     }
   });
 
-  (storage as any)[key] = value;
   Object.defineProperty(obj, key, {
-    set(value) {
-      setValue(storage, observerIdSet, key, value);
+    set(newValue) {
+      const oldValue = getter ? getter.call(obj) : value;
+      if (oldValue === newValue) {
+        return;
+      }
+
+      if (setter) {
+        setter.call(obj, newValue);
+      } else {
+        value = newValue;
+      }
+      notifyObservers(Object.keys(observerIdSet));
     }
   });
 };
@@ -190,22 +224,21 @@ export function observable<T extends Dictionary<any>>(
   }
 
   const observableId = generateUniqueId();
-  const resultObj = {} as T;
 
   observableInfoMap[observableId] = {
-    storage: {},
-    propObserverIdSetMap: {}
+    propObserverIdSetMap: {},
+    propGetterMap: {}
   };
 
-  Object.defineProperty(resultObj, "__observableId", {
+  Object.defineProperty(obj, "__observableId", {
     value: observableId
   });
 
   for (const key of Object.keys(obj)) {
-    setProp(resultObj, key, obj[key], deep);
+    setProp(obj, key, obj[key], deep);
   }
 
-  return resultObj as Observable<T>;
+  return obj as Observable<T>;
 }
 
 // Used to optimize observer-to-observer calls:
@@ -322,7 +355,7 @@ export const computation = function<P extends ComputationMap>(
 
         obj[key] = propsObj[key](
           obj,
-          observableInfoMap[obj["__observableId"]].storage[key],
+          observableInfoMap[obj["__observableId"]].propGetterMap[key](),
           key,
           pauseObserver,
           init

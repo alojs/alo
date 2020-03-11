@@ -14,8 +14,10 @@ export interface ObserverInfo {
 }
 
 export interface ObservableInfo<T extends Dictionary<any>> {
-  storage: T;
   propObserverIdSetMap: Dictionary<BooleanSet>;
+  propGetterMap: {
+    [K in keyof T]: () => T[K];
+  };
 }
 
 export type Observable<T extends Dictionary<any>> = T & {

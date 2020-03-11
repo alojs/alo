@@ -8,10 +8,40 @@ import {
   isObservable,
   setProp,
   notify,
-  batchEnd
+  batchEnd,
+  getProp
 } from ".";
 
 describe("observable", function() {
+  it("should ignore unconfigurable properties", function() {
+    let obj = {};
+    Object.defineProperty(obj, "prop", {
+      enumerable: true,
+      configurable: false,
+      get: function() {
+        return "hello";
+      }
+    });
+    obj = observable(obj);
+
+    assert.equal(obj["prop"], "hello");
+  });
+
+  it("should support existing getters/setters", function() {
+    let value;
+    const obj = observable({
+      set test(newValue) {
+        value = newValue;
+      },
+      get test() {
+        return "hello " + value;
+      }
+    });
+    (obj as any).test = "world";
+
+    assert.equal(obj.test, "hello world");
+  });
+
   it("should not allow arrays as root", function() {
     assert.throw(function() {
       observable([]);
@@ -202,6 +232,27 @@ describe("observable", function() {
       obj.prop = "value2";
 
       assert.equal(called, 2);
+    });
+  });
+
+  describe("getProp", function() {
+    it("should support getters", function() {
+      const obj = observable({
+        get prop() {
+          return "hello";
+        }
+      });
+      assert.equal(getProp(obj, "prop"), "hello");
+    });
+    it("should get prop value without triggering observser tracking", function() {
+      let count = 0;
+      const obj = observable({ prop: "value" });
+      observe(function() {
+        count++;
+        getProp(obj, "prop");
+      });
+      obj.prop = "newValue";
+      assert.equal(count, 1);
     });
   });
 
