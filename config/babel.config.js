@@ -1,7 +1,9 @@
 const paths = require("../lib/node/paths");
+const common = require("../lib/node");
+const util = common.webpack;
 
 module.exports = function({ isNode } = { isNode: false }) {
-  const envIsProd = process.env.NODE_ENV === "production";
+  const envIsProd = util.envIsProd();
 
   const transformReactJsxPlugin = [
     "@babel/transform-react-jsx",
@@ -41,8 +43,8 @@ module.exports = function({ isNode } = { isNode: false }) {
 
   // Define custom target platforms for babel
   if (isNode) {
-    babelPresetEnv[0][1].targets = {
-      node: "8"
+    babelPresetEnv[1].targets = {
+      node: 12
     };
   }
 
