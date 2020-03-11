@@ -17,6 +17,7 @@ export * from "../subscribable";
 export * from "../subscribable/types";
 
 export * from "./observable";
+export { observable as alo } from "./observable";
 
 export * from "../actionNormalizer";
 export * from "../actionNormalizer/types";
