@@ -115,11 +115,54 @@ export const getProp = function<T extends Observable<any>, K extends keyof T>(
   return propGetterMap[key]();
 };
 
+const arrayProto = Array.prototype;
+const arrayMethods = Object.create(arrayProto);
+
+const methodsToPatch = [
+  "push",
+  "pop",
+  "shift",
+  "unshift",
+  "splice",
+  "sort",
+  "reverse"
+];
+
+methodsToPatch.forEach(function(method) {
+  // cache original method
+  const original = arrayProto[method];
+  arrayMethods[method] = function(...args) {
+    const result = original.apply(this, args);
+
+    const { parentObj, key } = this.__observableArray;
+
+    let inserted;
+    switch (method) {
+      case "push":
+      case "unshift":
+        inserted = args;
+        break;
+      case "splice":
+        inserted = args.slice(2);
+        break;
+    }
+
+    if (inserted) observableArray(parentObj, key, inserted);
+
+    notify(parentObj, key);
+
+    return result;
+  };
+});
+
 const observableArray = function<T extends Observable<any>, K extends keyof T>(
   parentObj: T,
   key: K,
   value: any[]
 ) {
+  (value as any).__proto__ = arrayMethods;
+  (value as any).__observableArray = { parentObj, key };
+
   for (const itemKey of Object.keys(value)) {
     let itemValue = value[itemKey];
 
@@ -135,12 +178,26 @@ const observableArray = function<T extends Observable<any>, K extends keyof T>(
   return value;
 };
 
-export const setProp = function<T extends Observable<any>, K extends keyof T>(
-  obj: T,
-  key: K,
-  value: T[K],
-  deep = true
-) {
+const observableValue = function(obj, key, value) {
+  if (Array.isArray(value)) {
+    value = observableArray(obj, key, value);
+  } else if (_.isPlainObject(value)) {
+    value = observable(value);
+  }
+
+  return value;
+};
+
+export const setProp = function<
+  T extends Observable<any> | any[],
+  K extends keyof T
+>(obj: T, key: K, value: T[K]) {
+  if (obj.__observableArray) {
+    obj[key] = observableValue(obj, key, value);
+    notify(obj.__observableArray.parentObj, obj.__observableArray.key);
+    return;
+  }
+
   const { propObserverIdSetMap, propGetterMap } = observableInfoMap[
     obj.__observableId
   ];
@@ -174,13 +231,7 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
   const observerIdSet: BooleanSet = (propObserverIdSetMap[key as any] =
     propObserverIdSetMap[key as any] || {});
 
-  if (deep) {
-    if (Array.isArray(value)) {
-      value = observableArray(obj, key, value);
-    } else if (_.isPlainObject(value)) {
-      value = observable(value);
-    }
-  }
+  value = observableValue(obj, key, value);
 
   Object.defineProperty(obj, key, {
     configurable: true,
@@ -214,6 +265,8 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
         return;
       }
 
+      newValue = observableValue(key, value, newValue);
+
       if (setter) {
         setter.call(obj, newValue);
       } else {
@@ -224,16 +277,13 @@ export const setProp = function<T extends Observable<any>, K extends keyof T>(
   });
 };
 
-export function observable<T extends Dictionary<any>>(
-  obj: T,
-  deep: boolean = true
-): Observable<T> {
+export function observable<T extends Dictionary<any>>(obj: T): Observable<T> {
   if (isObservable(obj)) {
     return obj;
   }
 
   if (Array.isArray(obj)) {
-    throw new Error("Array object cannot be Reactive");
+    throw new Error("Array object cannot be a root observable");
   }
 
   const observableId = generateUniqueId();
@@ -248,7 +298,7 @@ export function observable<T extends Dictionary<any>>(
   });
 
   for (const key of Object.keys(obj)) {
-    setProp(obj, key, obj[key], deep);
+    setProp(obj, key, obj[key]);
   }
 
   return obj as Observable<T>;
@@ -342,7 +392,7 @@ export const computation = function<P extends ComputationMap>(
     obj[key] = null;
   }
 
-  obj = observable(obj, false);
+  obj = observable(obj);
 
   let subscriptions = [] as Function[];
   let unsubscribed = false;
