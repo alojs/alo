@@ -27,6 +27,19 @@ describe("observable", function() {
     assert.equal(obj["prop"], "hello");
   });
 
+  it("should convert new object values to observables", function() {
+    const obj = observable({
+      prop: (undefined as unknown) as {},
+      list: [] as any[]
+    });
+
+    obj.prop = {};
+    obj.list.push({});
+
+    assert.equal(isObservable(obj.prop), true);
+    assert.equal(isObservable(obj.list[0]), true);
+  });
+
   it("should support existing getters/setters", function() {
     let value;
     const obj = observable({
@@ -82,6 +95,19 @@ describe("observable", function() {
     });
   });
   describe("arrays", function() {
+    it("should notify parent object on change", function() {
+      const obj = observable({
+        prop: [[0]]
+      });
+      let count = 0;
+      observe(function() {
+        count++;
+        obj.prop[0].length;
+      });
+
+      obj.prop[0].push(1);
+      assert.equal(count, 2);
+    });
     it("should be deeply checked for objects", function() {
       const obj = observable({
         list: [{ prop: "value" }]
@@ -96,6 +122,34 @@ describe("observable", function() {
 
       obj.list[0].prop = "newValue";
       assert.equal(count, 2);
+    });
+    it("should convert new items from splice", function() {
+      const obj = observable({
+        list: ["zero"] as any[]
+      });
+
+      obj.list.splice(obj.list.length, 0, "one", { two: true });
+
+      assert.equal(obj.list[0], "zero");
+      assert.equal(obj.list[1], "one");
+      assert.equal(isObservable(obj.list[2]), true);
+    });
+    it("should notify observer on sort", function() {
+      const obj = observable({
+        list: [3, 1, 2]
+      });
+      let count = 0;
+      observe(function() {
+        count++;
+        obj.list;
+      });
+
+      obj.list.sort(function(a, b) {
+        return a - b;
+      });
+
+      assert.equal(count, 2);
+      assert.deepEqual(obj.list, [1, 2, 3]);
     });
   });
 
@@ -257,6 +311,19 @@ describe("observable", function() {
         setProp(obj, "prop", "newValue");
       });
       assert.equal(obj.prop, "newValue");
+    });
+
+    it("should set array items and notify array parents", function() {
+      const obj = observable({ prop: [[0]] });
+      let count = 0;
+      observe(function() {
+        count++;
+        obj.prop[0][0];
+      });
+      setProp(obj.prop[0], 0, 1);
+
+      assert.equal(count, 2);
+      assert.equal(obj.prop[0][0], 1);
     });
   });
 
