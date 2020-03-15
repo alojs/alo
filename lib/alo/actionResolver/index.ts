@@ -1,30 +1,16 @@
 import { Action } from "../action/types";
-import { createEvent } from "../event";
 import { ActionResolverInterface, ResolveOptions } from "./types";
 
 export class ActionResolver implements ActionResolverInterface {
-  callSubscribersLazy: boolean;
-
-  constructor({
-    callSubscribersLazy = false
-  }: { callSubscribersLazy?: boolean } = {}) {
-    this.callSubscribersLazy = callSubscribersLazy;
-  }
-
   resolve({
     action,
     callSubscribers,
     applyMutator,
     setAction
   }: ResolveOptions): Action | undefined {
-    action.event = createEvent();
-
-    applyMutator(action as Action);
-
-    setAction(action as Action);
-    if (!this.callSubscribersLazy || action.event.tagsSet) {
-      callSubscribers();
-    }
+    applyMutator(action);
+    setAction(action);
+    callSubscribers();
 
     return action as Action;
   }

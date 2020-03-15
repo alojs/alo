@@ -1,4 +1,4 @@
-import { StoreDispatchApi, Action, NormalizedAction } from "../main/core";
+import { StoreDispatchApi, Action } from "../main/core";
 import { isPromiseLike } from ".";
 import { BatchAction, Thunk } from "./types";
 

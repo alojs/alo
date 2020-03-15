@@ -1,4 +1,4 @@
-import { Action, NewAction, NormalizedAction } from "../action/types";
+import { Action, NewAction } from "../action/types";
 import { ActionNormalizer } from "../actionNormalizer";
 import {
   ActionNormalizerInterface,
@@ -10,7 +10,6 @@ import { DeepPartial } from "../util/types";
 import { isAction } from "../action";
 import { Listener, SubscribableInterface } from "../subscribable/types";
 import { Mutator } from "../mutator/types";
-import { setWildCard } from "../event";
 import { StoreInterface } from "./types";
 import { Subscribable } from "../subscribable";
 import { cloneDeep as _cloneDeep } from "../util";
@@ -34,13 +33,12 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
   _mutator: Mutator;
   _actionNormalizer: ActionNormalizerInterface;
   _actionResolver: ActionResolverInterface;
-  _subscribable: SubscribableInterface<Store<T>>;
+  _subscribable: SubscribableInterface<Store<ReturnType<T["createState"]>>>;
   _cloneDeep: typeof _cloneDeep;
   _pureByDefault: boolean;
 
   constructor({
     mutator,
-    state,
     actionNormalizer = new ActionNormalizer(),
     actionResolver = new ActionResolver(),
     subscribable = new Subscribable(),
@@ -48,10 +46,9 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
     pureByDefault = false
   }: {
     mutator: T;
-    state?: DeepPartial<ReturnType<T>>;
     actionNormalizer?: ActionNormalizerInterface;
     actionResolver?: ActionResolverInterface;
-    subscribable?: SubscribableInterface<Store<T>>;
+    subscribable?: SubscribableInterface<Store<ReturnType<T["createState"]>>>;
     cloneDeep?: typeof _cloneDeep;
     pureByDefault?: boolean;
   }) {
@@ -70,14 +67,14 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
       meta: {
         impure: true
       },
-      payload: state
+      payload: this._mutator.createState()
     });
   }
 
   /**
    * Returns the current state
    */
-  getState = (): ReturnType<T> => {
+  getState = (): ReturnType<T["createState"]> => {
     return this._observable.state;
   };
 
@@ -112,7 +109,9 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
     return this._subscribable;
   }
 
-  setSubscribable(subscribable: SubscribableInterface<Store<T>>) {
+  setSubscribable(
+    subscribable: SubscribableInterface<Store<ReturnType<T["createState"]>>>
+  ) {
     this._subscribable = subscribable;
   }
 
@@ -132,7 +131,7 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
     if (!action.meta.tmp) action.meta.tmp = {};
 
     return this._actionNormalizer.normalize({
-      action: action as NormalizedAction,
+      action: action as Action,
       callBack: this._afterDispatchNormalization,
       store: this
     });
@@ -165,11 +164,10 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
       this._observable.state = _.isPlainObject(action.payload)
         ? observable(action.payload)
         : action.payload;
-      setWildCard(action.event);
     }
 
     try {
-      let result = this._mutator(
+      let result = this._mutator.mutate(
         this._observable.state,
         action,
         "state",

@@ -4,9 +4,6 @@ export * from "../store/types";
 export * from "../action";
 export * from "../action/types";
 
-export * from "../event";
-export * from "../event/types";
-
 export * from "../mutator";
 export * from "../mutator/types";
 

@@ -14,18 +14,18 @@ export interface StoreDispatchApi<S = any> {
   getState: () => S;
 }
 
-export interface StoreInterface<T extends Mutator = any>
-  extends StoreDispatchApi {
+export interface StoreInterface<
+  T extends Mutator = Mutator,
+  S = ReturnType<T["createState"]>
+> extends StoreDispatchApi<S> {
   getActionNormalizer: () => ActionNormalizerInterface;
   setActionNormalizer: (ActionNormalizer: ActionNormalizerInterface) => void;
 
   getActionResolver: () => ActionResolverInterface;
   setActionResolver: (actionResolver: ActionResolverInterface) => void;
 
-  getSubscribable: () => SubscribableInterface<Store<T>>;
-  setSubscribable: (subscribable: SubscribableInterface<Store<T>>) => void;
-
-  getState: () => ReturnType<ReturnType<T>>;
+  getSubscribable: () => SubscribableInterface<S>;
+  setSubscribable: (subscribable: SubscribableInterface<S>) => void;
 
   getAction: () => Action;
   subscribe: SubscribableInterface["subscribe"];

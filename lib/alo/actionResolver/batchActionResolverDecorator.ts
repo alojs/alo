@@ -1,6 +1,5 @@
 import { AbstractActionResolverDecorator } from ".";
 import { batchStart, batchEnd } from "../observable";
-import { createEvent } from "../event";
 import { BATCH_ACTION_TYPE } from "../util/dispatchBatch";
 import { Action } from "../action/types";
 import { ResolveOptions } from "./types";
@@ -23,8 +22,6 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
     const batchId = options.action.meta.batchId;
     const rootBatchId = options.action.meta.rootBatchId;
 
-    options.action.event = this._eventByBatchId[rootBatchId] =
-      this._eventByBatchId[rootBatchId] || createEvent();
     const action: Action = options.action as Action;
     delete action.meta.batchId;
     delete action.meta.rootBatchId;
@@ -58,8 +55,6 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
 
       return action;
     }
-
-    delete this._eventByBatchId[batchId];
 
     if (this._observableBatchByBatchId[rootBatchId]) {
       delete this._observableBatchByBatchId[rootBatchId];
