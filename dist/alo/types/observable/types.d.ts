@@ -9,8 +9,10 @@ export interface ObserverInfo {
     targetObserverIdSets: BooleanSet[];
 }
 export interface ObservableInfo<T extends Dictionary<any>> {
-    storage: T;
     propObserverIdSetMap: Dictionary<BooleanSet>;
+    propGetterMap: {
+        [K in keyof T]: () => T[K];
+    };
 }
 export declare type Observable<T extends Dictionary<any>> = T & {
     __observableId: number;

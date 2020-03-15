@@ -2,7 +2,7 @@ import {
   Store,
   ActionResolver,
   BatchActionResolverDecorator,
-  typeMutator,
+  typeMutation,
   BatchActionNormalizerDecorator,
   dispatchBatch,
   ActionNormalizer,
@@ -65,7 +65,7 @@ const undoableMutator = createUndoableMutator({
 const store = new Store({
   actionResolver,
   actionNormalizer,
-  mutator: typeMutator(
+  mutator: typeMutation(
     (
       state: ReturnType<typeof createInitialState> = createInitialState(),
       action

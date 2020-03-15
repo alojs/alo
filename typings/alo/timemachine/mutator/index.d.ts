@@ -1,27 +1,10 @@
 import { TrackedAction } from "./actions";
-export declare const setPointInTime: (actionId: string) => {
-    type: string;
-    payload: string;
-};
-export declare const setReplaying: (value?: boolean) => {
-    type: string;
-    payload: boolean;
-};
-export declare const mutator: (state: Partial<import("../../mutator/types").MutatorsReturnObject<{
-    replaying: (state: any, action: import("../../action/types").Action) => any;
-    pointInTime: (state: any, action: import("../../action/types").Action) => any;
-    actions: (state: {
-        [key: string]: TrackedAction;
-    } | undefined, action: import("../../action/types").Action, key: string | number | undefined, parent: any) => {
-        [key: string]: TrackedAction;
-    };
-}>> | undefined, action: import("../../action/types").Action) => import("../../mutator/types").MutatorsReturnObject<{
-    replaying: (state: any, action: import("../../action/types").Action) => any;
-    pointInTime: (state: any, action: import("../../action/types").Action) => any;
-    actions: (state: {
-        [key: string]: TrackedAction;
-    } | undefined, action: import("../../action/types").Action, key: string | number | undefined, parent: any) => {
-        [key: string]: TrackedAction;
-    };
+import { Dictionary } from "@lib/alo/util/types";
+export declare const mutation: import("../../mutator/types").Mutator<{
+    replaying: boolean;
+    pointInTime: string;
+    actions: Dictionary<TrackedAction>;
 }>;
+export declare const setReplaying: (payload: boolean) => import("../../action/types").NewActionWithPayload<boolean>;
+export declare const setPointInTime: (payload: any) => import("../../action/types").NewActionWithPayload<any>;
 //# sourceMappingURL=index.d.ts.map

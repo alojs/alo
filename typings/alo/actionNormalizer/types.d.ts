@@ -1,7 +1,7 @@
-import { StoreInterface, NormalizedAction, Action } from "../main/core";
+import { StoreInterface, Action } from "../main/core";
 export declare type NormalizeOptions = {
-    action: NormalizedAction;
-    callBack: (action: NormalizedAction) => Action | undefined;
+    action: Action;
+    callBack: (action: Action) => Action | undefined;
     store: StoreInterface;
 };
 export interface ActionNormalizerInterface {
