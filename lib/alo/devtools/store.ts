@@ -44,7 +44,6 @@ const setActionMutation = mutation.withPayload("SET_ACTION", function(
       state: null,
       statePatch: null
     });
-    notify(state, "actions");
   }
   state.actions[action.payload.id].state = action.payload.state;
   state.actions[action.payload.id].statePatch = action.payload.statePatch;

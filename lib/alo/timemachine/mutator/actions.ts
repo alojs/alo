@@ -25,7 +25,6 @@ export const removeAction = mutation.withPayload(REMOVE_ACTION, function(
   action: ActionWithPayload<string>
 ) {
   removeProp(state.actions, action.payload);
-  notify(state, "actions");
 });
 
 export const SET_ACTION = "SET_ACTION";
@@ -56,7 +55,6 @@ const setActionInState = mutation.withPayload(SET_ACTION, function(
       trackState: false,
       order: null as any
     });
-    notify(state, "actions");
   }
 
   if (action.payload.order != null) {
