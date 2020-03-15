@@ -61,6 +61,16 @@ describe("observable", function() {
     });
   });
 
+  it("should not convert $ and _ props to observables", function() {
+    let obj = observable({ $prop: {}, _prop: {}, $prop2: null as any });
+
+    obj.$prop2 = {};
+
+    assert.equal(isObservable(obj.$prop), false);
+    assert.equal(isObservable(obj._prop), false);
+    assert.equal(isObservable(obj.$prop2), false);
+  });
+
   it("should not reconvert observables to new observables", function() {
     let obj = observable({});
     const oldId = obj.__observableId;

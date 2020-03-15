@@ -156,33 +156,29 @@ methodsToPatch.forEach(function(method) {
 });
 
 const observableArray = function<T extends Observable<any>, K extends keyof T>(
-  parentObj: T,
+  value: any[],
   key: K,
-  value: any[]
+  parentObj: T
 ) {
   (value as any).__proto__ = arrayMethods;
-  (value as any).__observableArray = { parentObj, key };
+  Object.defineProperty(value, "__observableArray", {
+    configurable: true,
+    value: { parentObj, key }
+  });
 
   for (const itemKey of Object.keys(value)) {
-    let itemValue = value[itemKey];
-
-    if (Array.isArray(itemValue)) {
-      itemValue = observableArray(parentObj, key, itemValue);
-    } else if (_.isPlainObject(itemValue)) {
-      itemValue = observable(itemValue);
-    }
-
-    value[itemKey] = itemValue;
+    value[itemKey] = observableValue(value[itemKey], key, parentObj);
   }
 
   return value;
 };
 
-const observableValue = function(obj, key, value) {
+const observableValue = function(value, key, obj) {
   if (Array.isArray(value)) {
-    value = observableArray(obj, key, value);
+    value = observableArray(value, key, obj);
   } else if (_.isPlainObject(value)) {
-    value = observable(value);
+    console.log(value);
+    value = observable(value, key, obj);
   }
 
   return value;
@@ -193,7 +189,7 @@ export const setProp = function<
   K extends keyof T
 >(obj: T, key: K, value: T[K]) {
   if (obj.__observableArray) {
-    obj[key] = observableValue(obj, key, value);
+    obj[key] = observableValue(value, key, obj);
     notify(obj.__observableArray.parentObj, obj.__observableArray.key);
     return;
   }
@@ -231,7 +227,10 @@ export const setProp = function<
   const observerIdSet: BooleanSet = (propObserverIdSetMap[key as any] =
     propObserverIdSetMap[key as any] || {});
 
-  value = observableValue(obj, key, value);
+  const firstChar = key[0];
+  const isObservableValue = firstChar !== "$" && firstChar !== "_";
+
+  value = isObservableValue ? observableValue(value, key, obj) : value;
 
   Object.defineProperty(obj, key, {
     configurable: true,
@@ -265,7 +264,9 @@ export const setProp = function<
         return;
       }
 
-      newValue = observableValue(key, value, newValue);
+      newValue = isObservableValue
+        ? observableValue(newValue, key, obj)
+        : newValue;
 
       if (setter) {
         setter.call(obj, newValue);
@@ -277,7 +278,11 @@ export const setProp = function<
   });
 };
 
-export function observable<T extends Dictionary<any>>(obj: T): Observable<T> {
+export function observable<T extends Dictionary<any>>(
+  obj: T,
+  key?,
+  parent?
+): Observable<T> {
   if (isObservable(obj)) {
     return obj;
   }
