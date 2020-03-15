@@ -460,3 +460,28 @@ export const computation = function<P extends ComputationMap>(
 
   return [obj as any, unsubscribeFn];
 };
+
+export const extract = function(obj, deep = true) {
+  let result = obj;
+
+  if (Array.isArray(obj)) {
+    result = [];
+    for (let value of obj) {
+      if (deep) {
+        value = extract(value, deep);
+      }
+      result.push(value);
+    }
+  } else if (isObservable(obj)) {
+    result = {};
+    for (const key of Object.keys(obj)) {
+      let value = obj[key];
+      if (deep) {
+        value = extract(value, deep);
+      }
+      result[key] = value;
+    }
+  }
+
+  return result;
+};
