@@ -1,5 +1,6 @@
-import { typeMutator } from "../mutator";
+import { typeMutation, mutator } from "../mutator";
 import { Store } from "../store";
+import { Dictionary } from "../util/types";
 import { createBlueprint } from "wald";
 import { observable, setProp, notify } from "../observable";
 import { ActionNormalizer } from "../actionNormalizer/";
@@ -8,109 +9,66 @@ import { BatchActionNormalizerDecorator } from "../actionNormalizer/batchActionN
 import { ActionResolver } from "../actionResolver";
 import { ActionResolverInterface } from "../actionResolver/types";
 import { BatchActionResolverDecorator } from "../actionResolver/batchActionResolverDecorator";
+import { ActionWithPayload } from "../action/types";
 
-const SET_HEIGHT_TYPE = "SET_HEIGHT";
-const SET_SELECTED_ACTION_ID = "SET_SELECTED_ACTION_ID";
-
-type RootState = {
-  height: string;
-  selectedActionId: string | null;
-  actionDetailsTab: string;
-  actions: { [id: string]: { state; statePatch } };
-  selectedStore;
-};
-
-export const mutator = typeMutator(function(state: RootState, action) {
-  if (!state) {
-    state = observable({
-      height: "50vh",
-      actionDetailsTab: "action",
-      selectedActionId: null,
-      selectedStore: null,
-      actions: {}
-    });
-  }
-
-  if (
-    action.type === SET_ACTION_DETAILS_TAB &&
-    state.actionDetailsTab !== action.payload
-  ) {
-    state.actionDetailsTab = action.payload;
-  }
-
-  if (action.type === SET_HEIGHT_TYPE && state.height !== action.payload) {
-    state.height = action.payload;
-  }
-
-  if (action.type === SET_SELECTED_STORE) {
-    state.selectedStore = action.payload;
-  }
-
-  if (action.type === SET_ACTION) {
-    if (!state.actions[action.payload.id]) {
-      setProp(
-        state.actions,
-        action.payload.id,
-        {
-          state: null,
-          statePatch: null
-        },
-        true
-      );
-      notify(state, "actions");
-    }
-    state.actions[action.payload.id].state = action.payload.state;
-    state.actions[action.payload.id].statePatch = action.payload.statePatch;
-  }
-
-  if (
-    action.type === SET_SELECTED_ACTION_ID &&
-    state.selectedActionId !== action.payload
-  ) {
-    state.selectedActionId = action.payload;
-  }
-
-  return state;
+const mutation = mutator(function() {
+  return {
+    height: "50vh",
+    actionDetailsTab: "action",
+    selectedActionId: null as string | null,
+    selectedStore: (null as unknown) as string,
+    actions: {} as Dictionary<{ state; statePatch }>
+  };
 });
 
-const SET_ACTION_DETAILS_TAB = "SET_ACTION_DETAILS_TAB";
-export const setActionDetailsTab = function(tabName: string) {
-  return {
-    type: SET_ACTION_DETAILS_TAB,
-    payload: tabName
-  };
-};
+export const setActionDetailsTab = mutation.withPayload(
+  "SET_ACTION_DETAILS_TAB",
+  function(state, action: ActionWithPayload<string>) {
+    state.actionDetailsTab = action.payload;
+  }
+);
 
-const SET_ACTION = "SET_ACTION";
+export const setHeight = mutation.withPayload("SET_HEIGHT", function(
+  state,
+  action: ActionWithPayload<string>
+) {
+  state.height = action.payload;
+});
+
+const setActionMutation = mutation.withPayload("SET_ACTION", function(
+  state,
+  action
+) {
+  if (!state.actions[action.payload.id]) {
+    setProp(state.actions, action.payload.id, {
+      state: null,
+      statePatch: null
+    });
+    notify(state, "actions");
+  }
+  state.actions[action.payload.id].state = action.payload.state;
+  state.actions[action.payload.id].statePatch = action.payload.statePatch;
+});
+
 export const setAction = function(id, state, statePatch) {
-  return {
-    type: SET_ACTION,
-    payload: { id, state, statePatch },
-    meta: { pure: true }
-  };
+  const action = setActionMutation({ id, state, statePatch });
+  action.meta = { pure: true };
+  return action;
 };
 
-export const setHeight = function(height) {
-  return {
-    type: SET_HEIGHT_TYPE,
-    payload: height
-  };
-};
+export const setSelectedStore = mutation.withPayload(
+  "SET_SELECTED_STORE",
+  function(state, action: ActionWithPayload<string>) {
+    state.selectedStore = action.payload;
+  }
+);
 
-const SET_SELECTED_STORE = "SET_SELECTED_STORE";
-export const setSelectedStore = function(storeName) {
-  return {
-    type: SET_SELECTED_STORE,
-    payload: storeName
-  };
-};
-
-export const setSelectedActionId = function(actionId) {
-  return {
-    type: SET_SELECTED_ACTION_ID,
-    payload: actionId
-  };
-};
+export const setSelectedActionId = mutation.withPayload(
+  "SET_SELECTED_ACTION_ID",
+  function(state, action: ActionWithPayload<string | null>) {
+    state.selectedActionId = action.payload;
+  }
+);
 
 const createStore = function() {
   let actionNormalizer: ActionNormalizerInterface = new ActionNormalizer();
@@ -119,7 +77,7 @@ const createStore = function() {
   let actionResolver: ActionResolverInterface = new ActionResolver();
   actionResolver = new BatchActionResolverDecorator({ actionResolver });
 
-  return new Store({ mutator, actionResolver, actionNormalizer });
+  return new Store({ mutator: mutation, actionResolver, actionNormalizer });
 };
 
 export const STORE = createBlueprint({

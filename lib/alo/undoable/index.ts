@@ -1,6 +1,6 @@
 import { actionTypes } from "../store";
 import { NewAction } from "../action/types";
-import { typeMutator } from "../mutator";
+import { typeMutation } from "../mutator";
 import { typeThunk } from "../util/dispatchThunk";
 import {
   UndoableAction,
@@ -77,7 +77,7 @@ export const createUndoableMutator = function({
   id: string;
   actionFilter?: ActionFilter;
 }) {
-  return typeMutator(function(
+  return typeMutation(function(
     state: UndoableMutatorState = observable({ past: [], future: [] }),
     action
   ) {

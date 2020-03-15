@@ -64,9 +64,12 @@ class ActionListItem extends ObserverListItem<TrackedAction> {
       const timemachine = this.globalState.timemachines[selectedStore];
 
       // TODO: Add batching
-      timemachine
-        .getStore()
-        .dispatch(toggleAction(this.state.item.id, !evt.currentTarget.checked));
+      timemachine.getStore().dispatch(
+        toggleAction({
+          id: this.state.item.id,
+          toggle: !evt.currentTarget.checked
+        })
+      );
       timemachine.replay();
     }
   });

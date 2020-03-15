@@ -1,21 +1,14 @@
 import { actionTypes, Store } from "../store";
 import { cloneDeep } from "../util";
-import { combineMutators, typeMutator } from "../mutator";
 import { Listener } from "../subscribable/types";
-import {
-  setAction,
-  actionsMutator,
-  ACTIONS_TAG,
-  SET_ACTION,
-  TrackedAction
-} from "./mutator/actions";
+import { setAction } from "./mutator/actions";
 import { Subscribable } from "../subscribable";
 import { dispatchThunk, cloneAction, StoreInterface } from "../main/core";
 import { batchStart, batchEnd, observe } from "../observable";
-import { mutator, setPointInTime, setReplaying } from "./mutator";
+import { mutation, setPointInTime, setReplaying } from "./mutator";
 
 export class Timemachine<T extends StoreInterface<any> = any> {
-  store: Store<typeof mutator>;
+  store: Store<typeof mutation>;
   targetStore: T;
   unsubscribe: null | ReturnType<Subscribable["subscribe"]>;
   initialTargetState: any;
@@ -26,7 +19,7 @@ export class Timemachine<T extends StoreInterface<any> = any> {
     this.targetStore = targetStore;
     this.initialTargetState = cloneDeep(targetStore.getState());
     this.store = new Store({
-      mutator
+      mutator: mutation
     });
   }
 
