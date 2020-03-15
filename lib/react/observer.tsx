@@ -71,7 +71,7 @@ export class Observer<P = {}> extends Component<P> {
     this.computing = true;
 
     const computationMap = this.createComputation();
-    computationMap.viewObserver = this.viewObserver;
+    computationMap._viewObserver = this.viewObserver;
     const [computed, stopComputation] = computation(computationMap);
 
     this.$computed = computed as any;
