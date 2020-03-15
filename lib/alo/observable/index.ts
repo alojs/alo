@@ -20,6 +20,9 @@ const generateUniqueId = function() {
   return `${nextId++}`;
 };
 
+const PARENT_KEY = "__observableParent";
+const ID_KEY = "__observableId";
+
 // store all observer info
 const observerInfoMap: Dictionary<ObserverInfo> = {};
 
@@ -31,7 +34,7 @@ export const isObservable = function<T>(
   return (
     resultObj !== null &&
     typeof resultObj === "object" &&
-    resultObj["__observableId"] != null
+    resultObj[ID_KEY] != null
   );
 };
 
@@ -67,6 +70,15 @@ function callObserver(observerId: string) {
   currentObserver.pause = previousPause;
 }
 
+const notifyParent = function(obj) {
+  const parentInfo = obj[PARENT_KEY];
+  if (!parentInfo) {
+    return;
+  }
+
+  notify(parentInfo.parent, parentInfo.key);
+};
+
 export function observe(
   fn: ObserveFn,
   notifyInBatches: string | boolean = false
@@ -98,6 +110,8 @@ export const removeProp = function<
   delete obj[key];
   delete propGetterMap[key];
   delete propObserverIdSetMap[key as any];
+
+  notifyParent(obj);
 };
 
 /**
@@ -134,7 +148,7 @@ methodsToPatch.forEach(function(method) {
   arrayMethods[method] = function(...args) {
     const result = original.apply(this, args);
 
-    const { parentObj, key } = this.__observableArray;
+    const { parent, key } = this[PARENT_KEY];
 
     let inserted;
     switch (method) {
@@ -147,9 +161,9 @@ methodsToPatch.forEach(function(method) {
         break;
     }
 
-    if (inserted) observableArray(parentObj, key, inserted);
+    if (inserted) observableArray(parent, key, inserted);
 
-    notify(parentObj, key);
+    notify(parent, key);
 
     return result;
   };
@@ -161,10 +175,6 @@ const observableArray = function<T extends Observable<any>, K extends keyof T>(
   parentObj: T
 ) {
   (value as any).__proto__ = arrayMethods;
-  Object.defineProperty(value, "__observableArray", {
-    configurable: true,
-    value: { parentObj, key }
-  });
 
   for (const itemKey of Object.keys(value)) {
     value[itemKey] = observableValue(value[itemKey], key, parentObj);
@@ -173,12 +183,22 @@ const observableArray = function<T extends Observable<any>, K extends keyof T>(
   return value;
 };
 
-const observableValue = function(value, key, obj) {
+const observableValue = function(value, key, parent) {
+  let isObservableValue = false;
+
   if (Array.isArray(value)) {
-    value = observableArray(value, key, obj);
+    value = observableArray(value, key, parent);
+    isObservableValue = true;
   } else if (_.isPlainObject(value)) {
-    console.log(value);
-    value = observable(value, key, obj);
+    value = observable(value, key, parent);
+    isObservableValue = true;
+  }
+
+  if (isObservableValue) {
+    Object.defineProperty(value, PARENT_KEY, {
+      configurable: true,
+      value: { parent, key }
+    });
   }
 
   return value;
@@ -188,9 +208,9 @@ export const setProp = function<
   T extends Observable<any> | any[],
   K extends keyof T
 >(obj: T, key: K, value: T[K]) {
-  if (obj.__observableArray) {
+  if (obj[PARENT_KEY] && obj[ID_KEY] === undefined) {
     obj[key] = observableValue(value, key, obj);
-    notify(obj.__observableArray.parentObj, obj.__observableArray.key);
+    notifyParent(obj);
     return;
   }
 
@@ -276,6 +296,8 @@ export const setProp = function<
       notifyObservers(Object.keys(observerIdSet));
     }
   });
+
+  notifyParent(obj);
 };
 
 export function observable<T extends Dictionary<any>>(
@@ -298,7 +320,7 @@ export function observable<T extends Dictionary<any>>(
     propGetterMap: {}
   };
 
-  Object.defineProperty(obj, "__observableId", {
+  Object.defineProperty(obj, ID_KEY, {
     value: observableId
   });
 
@@ -421,7 +443,7 @@ export const computation = function<P extends ComputationMap>(
 
         obj[key] = propsObj[key](
           obj,
-          observableInfoMap[obj["__observableId"]].propGetterMap[key](),
+          observableInfoMap[obj[ID_KEY]].propGetterMap[key](),
           key,
           pauseObserver,
           init

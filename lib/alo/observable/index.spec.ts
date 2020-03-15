@@ -335,6 +335,30 @@ describe("observable", function() {
       assert.equal(count, 2);
       assert.equal(obj.prop[0][0], 1);
     });
+
+    it("should notify parent object observers", function() {
+      let count = 0;
+      const obj = observable({ prop: {} as any });
+      observe(function() {
+        count++;
+        obj.prop;
+      });
+
+      setProp(obj.prop, "subprop", "value");
+      assert.equal(count, 2);
+    });
+
+    it("should not notify parent object observers on already existing props", function() {
+      let count = 0;
+      const obj = observable({ prop: { subprop: "" } });
+      observe(function() {
+        count++;
+        obj.prop;
+      });
+
+      setProp(obj.prop, "subprop", "value");
+      assert.equal(count, 1);
+    });
   });
 
   describe("removeProp", function() {
@@ -353,6 +377,18 @@ describe("observable", function() {
       obj.prop = "newValue";
 
       assert.equal(observerCalledCount, 1);
+    });
+
+    it("should notify parent object observers", function() {
+      let count = 0;
+      const obj = observable({ prop: { subprop: true } as any });
+      observe(function() {
+        count++;
+        obj.prop;
+      });
+
+      removeProp(obj.prop, "subprop");
+      assert.equal(count, 2);
     });
   });
 
