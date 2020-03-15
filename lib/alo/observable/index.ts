@@ -71,10 +71,12 @@ function callObserver(observerId: string) {
 }
 
 const notifyParent = function(obj) {
-  const parentInfo = obj[PARENT_KEY];
-  if (!parentInfo) {
+  const getParentInfo = obj[PARENT_KEY];
+  if (!getParentInfo) {
     return;
   }
+
+  const parentInfo = getParentInfo();
 
   notify(parentInfo.parent, parentInfo.key);
 };
@@ -148,7 +150,7 @@ methodsToPatch.forEach(function(method) {
   arrayMethods[method] = function(...args) {
     const result = original.apply(this, args);
 
-    const { parent, key } = this[PARENT_KEY];
+    const { parent, key } = this[PARENT_KEY]();
 
     let inserted;
     switch (method) {
@@ -195,9 +197,12 @@ const observableValue = function(value, key, parent) {
   }
 
   if (isObservableValue) {
+    // TODO: Maybe we could check if the parent already is set & uptodate
     Object.defineProperty(value, PARENT_KEY, {
       configurable: true,
-      value: { parent, key }
+      value: function() {
+        return { parent, key };
+      }
     });
   }
 
