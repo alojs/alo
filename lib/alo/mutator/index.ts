@@ -1,5 +1,16 @@
-import { Action, NewAction } from "../action/types";
-import { Mutation, MutatorsObj, MutatorsReturnObject, Mutator } from "./types";
+import {
+  Action,
+  NewAction,
+  NewActionWithPayload,
+  ActionWithPayload
+} from "../action/types";
+import {
+  Mutation,
+  MutatorsObj,
+  MutatorsReturnObject,
+  MutatorInterface,
+  MutationWithPayload
+} from "./types";
 import { Dictionary } from "../util/types";
 
 export const typeMutation = function<T extends Mutation<R>, R = any>(
@@ -8,52 +19,79 @@ export const typeMutation = function<T extends Mutation<R>, R = any>(
   return consumer;
 };
 
-const mutate = typeMutation(function(state, action, key, parent) {
-  const mutation = this.mutations[action.type];
-  if (mutation) {
-    const newState = mutation(state, action, key, parent);
-    if (newState !== undefined) {
-      state = newState;
-    }
+export abstract class AbstractMutator<S = any> implements MutatorInterface {
+  mutate(state, action, key, parent): S {
+    throw "Has to be implemented";
+  }
+  createState(): S {
+    throw "Has to be implemented";
+  }
+}
+
+export class Mutator<S = any> extends AbstractMutator<S> {
+  _mutations = {} as Dictionary<Mutation<S>>;
+  _genericMutations = {} as Dictionary<Mutation<S>>;
+  _genericMutationsList = [] as Mutation<S>[];
+
+  constructor({ createState }: { createState: () => S }) {
+    super();
+    this.createState = createState;
   }
 
-  for (const aMutation of this.genericMutationsList) {
-    if (mutation === aMutation) continue;
-
-    const newState = aMutation(state, action, key, parent);
-    if (newState !== undefined) {
-      state = newState;
+  mutate(state, action, key, parent) {
+    const mutation = this._mutations[action.type];
+    if (mutation) {
+      const newState = mutation(state, action, key, parent);
+      if (newState !== undefined) {
+        state = newState;
+      }
     }
+
+    for (const aMutation of this._genericMutationsList) {
+      if (mutation === aMutation) continue;
+
+      const newState = aMutation(state, action, key, parent);
+      if (newState !== undefined) {
+        state = newState;
+      }
+    }
+
+    return state;
   }
 
-  return state;
-});
-
-export const mutator = function<S = any>(createState: () => S): Mutator<S> {
-  const context = function(actionType: string, mutation, always = false) {
-    context.mutations[actionType] = mutation;
+  _set(actionType: string, mutation: Mutation<S>, always = false) {
+    this._mutations[actionType] = mutation;
     if (always) {
-      context.genericMutations[actionType] = mutation;
-      context.genericMutationsList = Object.values(context.genericMutations);
+      this._genericMutations[actionType] = mutation;
+      this._genericMutationsList = Object.values(this._genericMutations);
     }
+  }
 
-    return function(payload) {
+  set(actionType: string, mutation: Mutation<S>, always = false) {
+    this._set(actionType, mutation, always);
+
+    return function(): NewAction {
       return {
-        type: actionType,
-        payload
+        type: actionType
       };
     };
-  } as any;
+  }
 
-  context.withPayload = context;
-  context.mutations = {} as Dictionary<Mutation>;
-  context.genericMutations = {} as Dictionary<Mutation>;
-  context.genericMutationsList = [];
-  context.mutate = mutate;
-  context.createState = createState;
+  setWithPayload<P = any>(
+    actionType: string,
+    mutation: MutationWithPayload<S, P>,
+    always = false
+  ) {
+    this._set(actionType, mutation, always);
 
-  return context;
-};
+    return function(payload: P): NewActionWithPayload<P> {
+      return {
+        payload,
+        type: actionType
+      };
+    };
+  }
+}
 
 /*
 TODO: Rewrite

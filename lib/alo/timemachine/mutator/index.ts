@@ -1,24 +1,26 @@
 import { SET_ACTION, REMOVE_ACTION, TrackedAction } from "./actions";
-import { mutator } from "@lib/alo/mutator";
+import { Mutator } from "@lib/alo/mutator";
 import { ActionWithPayload } from "@lib/alo/main/core";
 import { Dictionary } from "@lib/alo/util/types";
 
-export const mutation = mutator(function() {
-  return {
-    replaying: false,
-    pointInTime: "0",
-    actions: {} as Dictionary<TrackedAction>
-  };
+export const mutator = new Mutator({
+  createState: function() {
+    return {
+      replaying: false,
+      pointInTime: "0",
+      actions: {} as Dictionary<TrackedAction>
+    };
+  }
 });
 
-export const setReplaying = mutation.withPayload("SET_REPLAYING", function(
+export const setReplaying = mutator.setWithPayload("SET_REPLAYING", function(
   state,
   action: ActionWithPayload<boolean>
 ) {
   state.replaying = action.payload;
 });
 
-export const setPointInTime = mutation.withPayload(
+export const setPointInTime = mutator.setWithPayload(
   "SET_POINT_IN_TIME",
   function(state, action: ActionWithPayload<any>) {
     if (!action.meta.do) return;

@@ -1,8 +1,8 @@
-import { typeMutation, mutator } from "../mutator";
+import { Mutator } from "../mutator";
 import { Store } from "../store";
 import { Dictionary } from "../util/types";
 import { createBlueprint } from "wald";
-import { observable, setProp, notify } from "../observable";
+import { setProp } from "../observable";
 import { ActionNormalizer } from "../actionNormalizer/";
 import { ActionNormalizerInterface } from "../actionNormalizer/types";
 import { BatchActionNormalizerDecorator } from "../actionNormalizer/batchActionNormalizerDecorator";
@@ -11,31 +11,33 @@ import { ActionResolverInterface } from "../actionResolver/types";
 import { BatchActionResolverDecorator } from "../actionResolver/batchActionResolverDecorator";
 import { ActionWithPayload } from "../action/types";
 
-const mutation = mutator(function() {
-  return {
-    height: "50vh",
-    actionDetailsTab: "action",
-    selectedActionId: null as string | null,
-    selectedStore: (null as unknown) as string,
-    actions: {} as Dictionary<{ state; statePatch }>
-  };
+const mutator = new Mutator({
+  createState: function() {
+    return {
+      height: "50vh",
+      actionDetailsTab: "action",
+      selectedActionId: null as string | null,
+      selectedStore: (null as unknown) as string,
+      actions: {} as Dictionary<{ state; statePatch }>
+    };
+  }
 });
 
-export const setActionDetailsTab = mutation.withPayload(
+export const setActionDetailsTab = mutator.setWithPayload(
   "SET_ACTION_DETAILS_TAB",
   function(state, action: ActionWithPayload<string>) {
     state.actionDetailsTab = action.payload;
   }
 );
 
-export const setHeight = mutation.withPayload("SET_HEIGHT", function(
+export const setHeight = mutator.setWithPayload("SET_HEIGHT", function(
   state,
   action: ActionWithPayload<string>
 ) {
   state.height = action.payload;
 });
 
-const setActionMutation = mutation.withPayload("SET_ACTION", function(
+const setActionMutation = mutator.setWithPayload("SET_ACTION", function(
   state,
   action
 ) {
@@ -55,14 +57,14 @@ export const setAction = function(id, state, statePatch) {
   return action;
 };
 
-export const setSelectedStore = mutation.withPayload(
+export const setSelectedStore = mutator.setWithPayload(
   "SET_SELECTED_STORE",
   function(state, action: ActionWithPayload<string>) {
     state.selectedStore = action.payload;
   }
 );
 
-export const setSelectedActionId = mutation.withPayload(
+export const setSelectedActionId = mutator.setWithPayload(
   "SET_SELECTED_ACTION_ID",
   function(state, action: ActionWithPayload<string | null>) {
     state.selectedActionId = action.payload;
@@ -76,7 +78,7 @@ const createStore = function() {
   let actionResolver: ActionResolverInterface = new ActionResolver();
   actionResolver = new BatchActionResolverDecorator({ actionResolver });
 
-  return new Store({ mutator: mutation, actionResolver, actionNormalizer });
+  return new Store({ mutator, actionResolver, actionNormalizer });
 };
 
 export const STORE = createBlueprint({

@@ -1,16 +1,18 @@
 import { assert } from "chai";
 import { Store } from "../store";
-import { mutator } from "../mutator";
+import { Mutator } from "../mutator";
 
 describe("ActionResolver", function() {
-  const mutation = mutator(function() {
-    return {};
+  const mutator = new Mutator({
+    createState: function() {
+      return {};
+    }
   });
 
-  const set = mutation("set", function() {});
+  const set = mutator.set("set", function() {});
 
   const store = new Store({
-    mutator: mutation
+    mutator
   });
 
   let gotCalled = false;

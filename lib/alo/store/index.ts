@@ -9,7 +9,7 @@ import { ActionResolverInterface } from "../actionResolver/types";
 import { DeepPartial } from "../util/types";
 import { isAction } from "../action";
 import { Listener, SubscribableInterface } from "../subscribable/types";
-import { Mutator } from "../mutator/types";
+import { MutatorInterface } from "../mutator/types";
 import { StoreInterface } from "./types";
 import { Subscribable } from "../subscribable";
 import { cloneDeep as _cloneDeep } from "../util";
@@ -22,7 +22,8 @@ export var actionTypes = {
   INIT: "@@init"
 };
 
-export class Store<T extends Mutator = Mutator> implements StoreInterface {
+export class Store<T extends MutatorInterface = MutatorInterface>
+  implements StoreInterface {
   _isMutating: boolean;
   _observable: {
     state: any;
@@ -30,7 +31,7 @@ export class Store<T extends Mutator = Mutator> implements StoreInterface {
     state: null
   });
   _action: Action;
-  _mutator: Mutator;
+  _mutator: MutatorInterface;
   _actionNormalizer: ActionNormalizerInterface;
   _actionResolver: ActionResolverInterface;
   _subscribable: SubscribableInterface<Store<ReturnType<T["createState"]>>>;

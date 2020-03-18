@@ -1,6 +1,6 @@
 import { Action, ActionWithPayload } from "../../action/types";
-import { setProp, removeProp, notify } from "../../observable";
-import { mutation } from ".";
+import { setProp, removeProp } from "../../observable";
+import { mutator } from ".";
 
 let actionIdCache = 0;
 const createUniqueActionId = function() {
@@ -20,7 +20,7 @@ export type TrackedAction = {
 
 export const REMOVE_ACTION = "REMOVE_ACTION";
 
-export const removeAction = mutation.withPayload(REMOVE_ACTION, function(
+export const removeAction = mutator.setWithPayload(REMOVE_ACTION, function(
   state,
   action: ActionWithPayload<string>
 ) {
@@ -29,7 +29,7 @@ export const removeAction = mutation.withPayload(REMOVE_ACTION, function(
 
 export const SET_ACTION = "SET_ACTION";
 
-const setActionInState = mutation.withPayload(SET_ACTION, function(
+const setActionInState = mutator.setWithPayload(SET_ACTION, function(
   state,
   action: ActionWithPayload<{
     id;
@@ -91,7 +91,7 @@ export const setAction = function(action, id, lockPointInTime = false) {
   return tsAction;
 };
 
-export const toggleAction = mutation.withPayload("TOGGLE_ACTION", function(
+export const toggleAction = mutator.setWithPayload("TOGGLE_ACTION", function(
   state,
   action: ActionWithPayload<{ id; toggle }>
 ) {

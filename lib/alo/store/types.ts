@@ -1,4 +1,4 @@
-import { Mutator } from "../mutator/types";
+import { MutatorInterface } from "../mutator/types";
 import {
   ActionNormalizerInterface,
   NormalizeOptions
@@ -15,7 +15,7 @@ export interface StoreDispatchApi<S = any> {
 }
 
 export interface StoreInterface<
-  T extends Mutator = Mutator,
+  T extends MutatorInterface = MutatorInterface,
   S = ReturnType<T["createState"]>
 > extends StoreDispatchApi<S> {
   getActionNormalizer: () => ActionNormalizerInterface;
