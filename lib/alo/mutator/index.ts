@@ -93,29 +93,33 @@ export class Mutator<S = any> extends AbstractMutator<S> {
   }
 }
 
-/*
-TODO: Rewrite
-export const combineMutators = function<
-  TMutatorsObj extends MutatorsObj = MutatorsObj
->(mutators: TMutatorsObj) {
-  const mutatorKeys = Object.keys(mutators);
-  const mutator = typeMutation(function(
-    state: Partial<MutatorsReturnObject<TMutatorsObj>> = {},
-    action: Action
-  ): MutatorsReturnObject<TMutatorsObj> {
-    for (const propName of mutatorKeys) {
-      (state as any)[propName] = mutators[propName](
-        state[propName],
-        action,
-        propName,
-        state
-      );
+export class CombinedMutator<
+  T extends Dictionary<MutatorInterface>
+> extends AbstractMutator {
+  _mutators: T;
+
+  constructor(mutators: T) {
+    super();
+    this._mutators = mutators;
+  }
+
+  createState(): { [M in keyof T]: ReturnType<T[M]["createState"]> } {
+    let result = {};
+
+    for (const key of Object.keys(this._mutators)) {
+      const mutator = this._mutators[key];
+      result[key as any] = mutator.createState();
     }
 
-    return state as any;
-  });
+    return result as any;
+  }
 
-  return mutator;
-};
+  mutate(state, action) {
+    for (const key of Object.keys(this._mutators)) {
+      const mutator = this._mutators[key];
+      state[key] = mutator.mutate(state[key], action, key, state);
+    }
 
-*/
+    return state;
+  }
+}
