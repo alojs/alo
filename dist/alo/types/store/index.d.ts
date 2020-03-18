@@ -2,20 +2,20 @@ import { Action, NewAction } from "../action/types";
 import { ActionNormalizerInterface, NormalizeOptions } from "../actionNormalizer/types";
 import { ActionResolverInterface } from "../actionResolver/types";
 import { Listener, SubscribableInterface } from "../subscribable/types";
-import { Mutator } from "../mutator/types";
+import { MutatorInterface } from "../mutator/types";
 import { StoreInterface } from "./types";
 import { cloneDeep as _cloneDeep } from "../util";
 import { PauseObserverFn } from "../observable/types";
 export declare var actionTypes: {
     INIT: string;
 };
-export declare class Store<T extends Mutator = Mutator> implements StoreInterface {
+export declare class Store<T extends MutatorInterface = MutatorInterface> implements StoreInterface {
     _isMutating: boolean;
     _observable: {
         state: any;
     };
     _action: Action;
-    _mutator: Mutator;
+    _mutator: MutatorInterface;
     _actionNormalizer: ActionNormalizerInterface;
     _actionResolver: ActionResolverInterface;
     _subscribable: SubscribableInterface<Store<ReturnType<T["createState"]>>>;

@@ -1,4 +1,4 @@
-import { Mutator } from "../mutator/types";
+import { MutatorInterface } from "../mutator/types";
 import { ActionNormalizerInterface, NormalizeOptions } from "../actionNormalizer/types";
 import { ActionResolverInterface } from "../actionResolver/types";
 import { SubscribableInterface } from "../subscribable/types";
@@ -8,7 +8,7 @@ export interface StoreDispatchApi<S = any> {
     dispatch: (action: NewAction) => Action | undefined;
     getState: () => S;
 }
-export interface StoreInterface<T extends Mutator = Mutator, S = ReturnType<T["createState"]>> extends StoreDispatchApi<S> {
+export interface StoreInterface<T extends MutatorInterface = MutatorInterface, S = ReturnType<T["createState"]>> extends StoreDispatchApi<S> {
     getActionNormalizer: () => ActionNormalizerInterface;
     setActionNormalizer: (ActionNormalizer: ActionNormalizerInterface) => void;
     getActionResolver: () => ActionResolverInterface;

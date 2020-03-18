@@ -2,9 +2,9 @@ import { Store } from "../store";
 import { Listener } from "../subscribable/types";
 import { Subscribable } from "../subscribable";
 import { StoreInterface } from "../main/core";
-import { mutation } from "./mutator";
+import { mutator } from "./mutator";
 export declare class Timemachine<T extends StoreInterface<any> = any> {
-    store: Store<typeof mutation>;
+    store: Store<typeof mutator>;
     targetStore: T;
     unsubscribe: null | ReturnType<Subscribable["subscribe"]>;
     initialTargetState: any;
@@ -18,7 +18,7 @@ export declare class Timemachine<T extends StoreInterface<any> = any> {
     replay({ bulletTime }?: {
         bulletTime?: number | undefined;
     }): Promise<import("../action/types").Action[]>;
-    getStore(): Store<import("../mutator/types").Mutator<{
+    getStore(): Store<import("../mutator").Mutator<{
         replaying: boolean;
         pointInTime: string;
         actions: import("../util/types").Dictionary<import("./mutator/actions").TrackedAction>;

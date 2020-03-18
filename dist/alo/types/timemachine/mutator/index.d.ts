@@ -1,6 +1,7 @@
 import { TrackedAction } from "./actions";
+import { Mutator } from "@lib/alo/mutator";
 import { Dictionary } from "@lib/alo/util/types";
-export declare const mutation: import("../../mutator/types").Mutator<{
+export declare const mutator: Mutator<{
     replaying: boolean;
     pointInTime: string;
     actions: Dictionary<TrackedAction>;
