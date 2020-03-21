@@ -1,4 +1,4 @@
-import clone from "fast-clone";
+import createClone from "rfdc";
 
 export const isPromiseLike = function(promise): promise is Promise<any> {
   return promise && (<Promise<any>>promise).then !== undefined;
@@ -33,6 +33,4 @@ export const findInArray = function(
   }
 };
 
-export const cloneDeep = function(value) {
-  return clone(value);
-};
+export const cloneDeep = createClone();
