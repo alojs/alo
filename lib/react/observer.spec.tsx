@@ -1,9 +1,15 @@
 import { assert } from "chai";
 import React from "react";
 import { render, fireEvent, cleanup } from "@testing-library/react";
-import { observable, ComputationMap, extract } from "alo";
+import { observable } from "alo";
 
-import { observer, observerWithState, Observer } from "./observer";
+import {
+  hydrate,
+  observer,
+  useObservable,
+  useComputation,
+  useProps
+} from "./observer";
 
 let helloWorldRenderCount = 0;
 const HelloWorld = function({ name = "world" }: { name?: string }) {
@@ -19,32 +25,28 @@ describe("observer", function() {
   const HelloWorldHOC = observer(HelloWorld);
 
   let counterRenderCount = 0;
-  const Counter = observerWithState(
-    function() {
-      return {
-        count: 0
-      };
-    },
-    function(_, state) {
-      counterRenderCount++;
+  const Counter = observer(function() {
+    const state = useObservable(function() {
+      return { count: 0 };
+    });
+    counterRenderCount++;
 
-      return (
-        <>
-          <button onClick={() => state.count++}>count</button>
-          <div>{state.count}</div>
-        </>
-      );
-    }
-  );
+    return (
+      <>
+        <button onClick={() => state.count++}>count</button>
+        <div>{state.count}</div>
+      </>
+    );
+  });
 
-  it("should render hello world (twice)", function() {
+  it("should render hello world", function() {
     helloWorldRenderCount = 0;
 
     const { getByText } = render(<HelloWorldHOC />);
     assert.exists(getByText("hello world"));
 
     // This is an important test for ssr since componentDidMount will not be called there
-    assert.equal(helloWorldRenderCount, 2);
+    assert.equal(helloWorldRenderCount, 1);
   });
 
   it("should render hello mars", function() {
@@ -71,78 +73,78 @@ describe("observer", function() {
     const { unmount } = render(<NameObserver />);
 
     // The count should be 2 from a basic render (it renders before and after mount)
-    assert.equal(nameRenderCount, 2);
+    assert.equal(nameRenderCount, 1);
 
     // Before unmount we quickly test if the state subscription worked
     $state.name = "alice";
-    assert.equal(nameRenderCount, 3);
+    assert.equal(nameRenderCount, 2);
 
     unmount();
 
     // Even though we change the name this shouldnt trigger a rerender after the unmount
     $state.name = "john";
-    assert.equal(nameRenderCount, 3);
+    assert.equal(nameRenderCount, 2);
   });
 });
 
-const type = function<T>(some: T) {
-  return some;
-};
+describe("hydrate", function() {
+  let renderCount = 0;
 
-describe("Observer", function() {
   afterEach(function() {
     cleanup();
+    renderCount = 0;
   });
 
-  it("should rerun computations", function() {
-    class MyObserver extends Observer<{ count: number }> {
-      computations = 0;
-      createState() {
-        return { multiply: 1 };
-      }
-      createComputation() {
-        return type<ComputationMap>({
-          countX: () => {
-            this.computations++;
-            return this.$props.count * this.$state.multiply;
-          },
-          countXX: obj => {
-            this.computations++;
-            return obj.countX * this.$state.multiply;
+  const Hello = hydrate(
+    function(props: { count: number; multiply?: number }) {
+      let $props = useProps({ multiply: 1, ...props });
+      let comp = useComputation<{ countX2: number }>(function() {
+        return {
+          countX2: function() {
+            return $props.count * $props.multiply;
           }
-        });
-      }
-      view(props, state, computed) {
-        this.computations++;
+        };
+      });
 
-        return (
-          <>
-            <input
-              data-testid="input"
-              onChange={evt =>
-                (this.$state.multiply = parseInt(evt.target.value))
-              }
-              value={this.$state.multiply}
-            />
-            <div data-testid="count">{computed.countXX}</div>
-            <div data-testid="computations">{this.computations}</div>
-          </>
-        );
-      }
-    }
+      return { comp, props: $props };
+    },
+    observer(function({ comp, props }) {
+      renderCount++;
 
-    const { getByTestId } = render(<MyObserver count={2} />);
-    // At this time the count should be 2 * 1 * 1
-    assert.equal(getByTestId("count").innerHTML, "2");
+      return (
+        <div>
+          <div data-testid="result">{comp.countX2}</div>
+          <div data-testid="multiply">{props.multiply}</div>
+        </div>
+      );
+    })
+  );
 
-    // Every computation runs once before and after mount making it 2 * 3
-    assert.equal(getByTestId("computations").innerHTML, "6");
+  it("should hydrate the component props", function() {
+    const { rerender, getByTestId } = render(<Hello count={0} />);
 
-    // We increase the multiplier from 1 to 2, the calculation changes to 2 * 2 * 2
-    fireEvent.change(getByTestId("input"), { target: { value: 2 } });
-    assert.equal(getByTestId("count").innerHTML, "8");
+    assert.equal(renderCount, 1);
+    assert.equal(getByTestId("result").innerHTML, "0");
 
-    // The upper change should trigger 3 additional computations
-    assert.equal(getByTestId("computations").innerHTML, "9");
+    // Rerender without changing the prop should not render the component
+    rerender(<Hello count={0} />);
+    assert.equal(renderCount, 1);
+  });
+
+  it("should rerender once on props change", function() {
+    const { rerender, getByTestId } = render(<Hello count={0} />);
+
+    rerender(<Hello count={1} />);
+    assert.equal(renderCount, 2);
+    assert.equal(getByTestId("result").innerHTML, "1");
+  });
+
+  it("should rerender once if props change that are observed in hydration AND component", function() {
+    const { rerender, getByTestId } = render(<Hello count={0} />);
+
+    rerender(<Hello count={2} multiply={2} />);
+    assert.equal(renderCount, 2);
+    assert.equal(getByTestId("result").innerHTML, "4");
+    assert.equal(getByTestId("multiply").innerHTML, "2");
   });
 });

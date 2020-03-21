@@ -1,7 +1,6 @@
 // Originally created by dongwoo-kim (https://github.com/dongwoo-kim)
 // https://github.com/nhn/tui.grid/blob/55278fba5303fcef928715cbb003aeed0964dd29/src/helper/observable.ts
 
-import { Dictionary } from "../util/types";
 import {
   ObserverInfo,
   ObservableInfo,
@@ -24,9 +23,9 @@ const PARENT_KEY = "__observableParent";
 const ID_KEY = "__observableId";
 
 // store all observer info
-const observerInfoMap: Dictionary<ObserverInfo> = {};
+const observerInfoMap: Record<string, ObserverInfo> = {};
 
-const observableInfoMap: Dictionary<ObservableInfo<any>> = {};
+const observableInfoMap: Record<string, ObservableInfo<any>> = {};
 
 export const isObservable = function<T>(
   resultObj: T
@@ -44,17 +43,7 @@ export const pauseObserver: PauseObserverFn = function(pause = true) {
   currentObserver.pause = pause;
 };
 
-const currentObserver: { id: null | string; pause: boolean } = {
-  id: null,
-  pause: false
-};
-function callObserver(observerId: string) {
-  let previousId = currentObserver.id;
-  let previousPause = currentObserver.pause;
-
-  currentObserver.pause = false;
-  currentObserver.id = observerId;
-
+export const observerStart = function(observerId: string) {
   const observerInfo = observerInfoMap[observerId];
 
   if (observerInfo.running) {
@@ -62,12 +51,38 @@ function callObserver(observerId: string) {
     throw new Error(`Bad recursion detected in observer`);
   }
 
-  observerInfo.running = true;
-  observerInfo.fn(pauseObserver);
-  observerInfo.running = false;
+  observerInfo.previousObserverId = currentObserver.id;
+  observerInfo.previousObserverPause = currentObserver.pause;
 
-  currentObserver.id = previousId;
-  currentObserver.pause = previousPause;
+  currentObserver.pause = false;
+  currentObserver.id = observerId;
+
+  observerInfo.running = true;
+};
+
+export const observerEnd = function(observerId: string) {
+  const observerInfo = observerInfoMap[observerId];
+  observerInfo.running = false;
+  currentObserver.id = observerInfo.previousObserverId;
+  currentObserver.pause = observerInfo.previousObserverPause;
+};
+
+const currentObserver: { id: null | string; pause: boolean } = {
+  id: null,
+  pause: false
+};
+function callObserver(observerId: string) {
+  const observerInfo = observerInfoMap[observerId];
+
+  if (observerInfo.autoStart) {
+    observerStart(observerId);
+  }
+
+  observerInfo.fn(pauseObserver);
+
+  if (observerInfo.autoStart) {
+    observerEnd(observerId);
+  }
 }
 
 const notifyParent = function(obj) {
@@ -81,25 +96,34 @@ const notifyParent = function(obj) {
   notify(parentInfo.parent, parentInfo.key);
 };
 
+export const unobserve = function(observerId) {
+  observerInfoMap[observerId].targetObserverIdSets.forEach(idSet => {
+    delete idSet[observerId];
+  });
+};
+
 export function observe(
   fn: ObserveFn,
-  notifyInBatches: string | boolean = false
+  notifyInBatches: string | boolean = false,
+  autoStart = true
 ) {
   const observerId = generateUniqueId();
   observerInfoMap[observerId] = {
     running: false,
+    autoStart,
+    previousObserverId: null,
+    previousObserverPause: false,
     notifyInBatches,
     fn,
     targetObserverIdSets: []
   };
-  callObserver(observerId);
+
+  if (autoStart) {
+    callObserver(observerId);
+  }
 
   // return unobserve function
-  return () => {
-    observerInfoMap[observerId].targetObserverIdSets.forEach(idSet => {
-      delete idSet[observerId];
-    });
-  };
+  return observerId;
 }
 
 export const removeProp = function<
@@ -305,7 +329,7 @@ export const setProp = function<
   notifyParent(obj);
 };
 
-export function observable<T extends Dictionary<any>>(
+export function observable<T extends Record<string, any>>(
   obj: T,
   key?,
   parent?
@@ -391,16 +415,20 @@ const batchInfo: { count: number; observerIds: string[]; batchId: any } = {
   batchId: null
 };
 export const batch = function(fn: () => void) {
-  batchStart();
+  const prevBatch = batchStart();
   fn();
-  batchEnd();
+  batchEnd(prevBatch);
 };
 
-export const batchStart = function() {
+export const batchStart = function(batchId?) {
+  const prevBatchId = batchInfo.batchId;
   batchInfo.count++;
+  batchInfo.batchId = batchId;
+
+  return prevBatchId;
 };
 
-export const batchEnd = function() {
+export const batchEnd = function(prevBatchId?) {
   if (batchInfo.count === 0) return;
 
   batchInfo.count--;
@@ -409,13 +437,15 @@ export const batchEnd = function() {
     batchInfo.observerIds = [];
     notifyObservers(observerIds);
   }
+
+  batchInfo.batchId = prevBatchId;
 };
 
 let computationBatchIdx = 0;
-export const computation = function<P extends ComputationMap>(
-  propsObj: P,
-  batch: boolean = true
-): [ComputationValues<P>, () => void] {
+export const computation = function<
+  T extends {},
+  P extends ComputationMap<T> = ComputationMap<T>
+>(propsObj: P, batch: boolean = true): [ComputationValues<P>, () => void] {
   const batchId = "computation-" + computationBatchIdx++;
 
   let obj = {};
@@ -426,24 +456,23 @@ export const computation = function<P extends ComputationMap>(
 
   obj = observable(obj);
 
-  let subscriptions = [] as Function[];
+  let observerIds = [] as string[];
   let unsubscribed = false;
   const unsubscribeFn = function() {
     if (unsubscribed) return;
-    for (const subscription of subscriptions) {
-      subscription();
+    for (const observerId of observerIds) {
+      unobserve(observerId);
     }
     unsubscribed = true;
   };
 
   for (const key of objKeys) {
     let init = true;
-    subscriptions.push(
+    observerIds.push(
       observe(function(pauseObserver) {
-        let prevBatchId = batchInfo.batchId;
+        let prevBatchId;
         if (batch) {
-          batchStart();
-          batchInfo.batchId = batchId;
+          prevBatchId = batchStart(batchId);
         }
 
         obj[key] = propsObj[key](
@@ -455,8 +484,7 @@ export const computation = function<P extends ComputationMap>(
         );
 
         if (batch) {
-          batchEnd();
-          batchInfo.batchId = prevBatchId;
+          batchEnd(prevBatchId);
         }
       }, batchId)
     );

@@ -171,7 +171,11 @@ describe("observable", function() {
     let prop2called = 0;
     let prop3called = 0;
 
-    const [computed] = computation({
+    const [computed] = computation<{
+      prop: string;
+      prop2: string;
+      prop3: { prop: string; prop2: string };
+    }>({
       prop: () => obj.prop,
       prop2: obj => {
         prop2called++;
@@ -234,7 +238,7 @@ describe("observable", function() {
     describe("unsubscribe fn", function() {
       const state = observable({ one: 0 });
       const [computed, unsubscribe] = computation({
-        two: function(obj, val) {
+        two: function(obj, val: number) {
           state.one;
           return val != null ? val + 1 : 0;
         }

@@ -46,12 +46,12 @@ class ActionListItem extends ObserverListItem<TrackedAction> {
         const state = this.store.getState();
         const selectedStore = state.selectedStore;
         const timemachine = this.globalState.timemachines[selectedStore];
-        batchStart();
+        const prevBatch = batchStart();
         timemachine.getStore().dispatch(setPointInTime(this.state.item.id));
         if (state.selectedActionId !== null) {
           this.onSelectAction(evt, this.state.item.id);
         }
-        batchEnd();
+        batchEnd(prevBatch);
         timemachine.replay();
       }
     }

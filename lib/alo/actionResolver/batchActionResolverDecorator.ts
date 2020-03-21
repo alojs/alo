@@ -29,9 +29,11 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
     const parentBatchIds = options.action.meta.parentBatchIds;
     delete action.meta.parentBatchIds;
 
+    let prevBatch;
+
     if (action.meta.batchItem && action.type !== BATCH_ACTION_TYPE) {
       if (this._observableBatchByBatchId[rootBatchId] == null) {
-        batchStart();
+        prevBatch = batchStart();
         this._observableBatchByBatchId[rootBatchId] = true;
       }
       applyMutator(action);
@@ -58,7 +60,7 @@ export class BatchActionResolverDecorator extends AbstractActionResolverDecorato
 
     if (this._observableBatchByBatchId[rootBatchId]) {
       delete this._observableBatchByBatchId[rootBatchId];
-      batchEnd();
+      batchEnd(prevBatch);
     }
 
     return this._actionResolver.resolve(options);

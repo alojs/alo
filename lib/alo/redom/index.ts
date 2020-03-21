@@ -1,4 +1,10 @@
-import { observable, batchStart, batchEnd, observe } from "../observable";
+import {
+  observable,
+  batchStart,
+  batchEnd,
+  observe,
+  unobserve
+} from "../observable";
 import { ObserveFn } from "../observable/types";
 import { StoreInterface } from "../store/types";
 import { SubscribableInterface } from "../subscribable/types";
@@ -34,7 +40,7 @@ export abstract class Observer {
         return;
       }
 
-      this._subscriptions[idx]();
+      unobserve(this._subscriptions[idx]);
       delete this._subscriptions[idx];
     };
   }
@@ -51,7 +57,7 @@ export abstract class Observer {
   clearSubscriptions() {
     for (const fn of Object.values(this._subscriptions)) {
       if (!fn) continue;
-      fn();
+      unobserve(fn);
     }
     this._started = false;
     this._subscriptions = {};
@@ -87,12 +93,12 @@ export abstract class ObserverListItem<
   }
 
   update(item, index, items, context) {
-    coreCache.batchStart();
+    const prevBatch = coreCache.batchStart();
     this.state.item = item;
     this.state.index = index;
     this.state.items = items;
     this.state.context = context;
-    coreCache.batchEnd();
+    coreCache.batchEnd(prevBatch);
 
     if (this.init && this["oninit"]) this["oninit"]();
     this.init = false;

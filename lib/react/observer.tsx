@@ -6,154 +6,166 @@
 import {
   Observable,
   observable,
-  setProp,
-  batchStart,
-  batchEnd,
   computation,
   ComputationMap,
   ComputationValues,
   observe,
-  ObserveFn
+  observerStart,
+  observerEnd,
+  unobserve,
+  batchStart,
+  batchEnd,
+  setProp
 } from "alo";
-import { Component, FunctionComponent, ReactElement } from "react";
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useRef,
+  ComponentClass,
+  ComponentType
+} from "react";
 
-export const observerWithState = function<S = any, P = {}>(
-  createState: (props: P) => S,
-  view: (props: P, state: S) => ReactElement | null
-): FunctionComponent<P> {
-  const Observer = observer<P>(view);
-  Observer.prototype.createState = createState;
+export const useObservable = function<S extends () => any>(
+  createState: S
+): Observable<ReturnType<S>> {
+  const ref = useRef();
+  if (!ref.current) {
+    ref.current = observable(createState());
+  }
 
-  return Observer;
+  return ref.current as any;
 };
 
-export const observer = function<P = {}>(
-  view: (props: P, state: any) => ReactElement | null
-): FunctionComponent<P> {
-  class CustomObserver extends Observer {}
-  CustomObserver.prototype.view = view;
+export const useComputation = function<
+  T extends {},
+  S extends () => ComputationMap<T> = () => ComputationMap<T>
+>(createComputation: S): ComputationValues<ReturnType<S>> {
+  const ref = useRef<any>();
+  if (!ref.current) {
+    ref.current = computation(createComputation());
+  }
 
-  return CustomObserver as any;
+  useEffect(function() {
+    return function() {
+      ref.current[1]();
+    };
+  }, []);
+
+  return ref.current[0];
 };
 
-export class Observer<P = {}> extends Component<P> {
-  rendering = false;
-  updating = false;
-  computation;
-  renderedVnode;
-  id;
-  computing = false;
-
-  observers: ReturnType<typeof observe>[] = [];
-  observeFunctions: ObserveFn[] = [];
-
-  $state: Observable<ReturnType<this["createState"]>>;
-  $props = observable<P>({} as any);
-  knownKeys = {};
-  $computed: ComputationValues<ReturnType<this["createComputation"]>>;
-
-  observe(fn: ObserveFn) {
-    this.observeFunctions.push(fn);
-  }
-  startObservers() {
-    for (const observeFn of this.observeFunctions) {
-      this.observers.push(observe(observeFn));
-    }
-  }
-  stopObservers() {
-    for (const fn of Object.values(this.observers)) {
-      fn();
-    }
-    this.observers = [];
-  }
-
-  startComputation() {
-    this.computing = true;
-
-    const computationMap = this.createComputation();
-    computationMap._viewObserver = this.viewObserver;
-    const [computed, stopComputation] = computation(computationMap);
-
-    this.$computed = computed as any;
-    this.computation = stopComputation;
-  }
-
-  stopComputation() {
-    this.computing = false;
-    this.computation();
-    this.computation = null;
-  }
-
-  createComputation(): ComputationMap {
-    return {};
-  }
-
-  UNSAFE_componentWillMount() {
-    this.mapPropsToOps();
-    this.$state = observable(this.createState(this.$props)) as any;
-
-    if (this.observeFunctions) {
-      this.startObservers();
-      this.stopObservers();
+export const observerClass = function<
+  P extends any,
+  C extends ComponentClass<P>
+>(ChildCompontent: C): C {
+  class Observer extends (ChildCompontent as any) {
+    componentWillUnmount() {
+      super.componentWillUnmount();
+      unobserve(this._observerId);
     }
 
-    this.startComputation();
-    this.stopComputation();
-  }
-
-  mapPropsToOps() {
-    const keys = Object.keys(this.props);
-    batchStart();
-    for (const key of keys) {
-      const value = this.props[key];
-      if (this.knownKeys[key] == null) {
-        this.knownKeys[key] = true;
-        setProp(this.$props, key as any, value);
-      } else {
-        this.$props[key] = value;
+    render() {
+      if (!this._observerId) {
+        this._observerId = observe(
+          () => {
+            this.forceUpdate();
+          },
+          false,
+          false
+        );
       }
+
+      observerStart(this._observerId);
+      const vdom = super.render();
+      observerEnd(this._observerId);
+
+      return vdom;
     }
-    batchEnd();
   }
 
-  viewObserver = $computed => {
-    if (!this.computing) return this.renderedVnode;
+  return Observer as any;
+};
 
-    this.renderedVnode = this.view(this.$props, this.$state, $computed);
-    this.updating = true;
+export const hydrate = function<T = {}, P = {}>(
+  hydration: (props: P) => T,
+  ObservingComponent: ComponentType<T>
+): FunctionComponent<P> {
+  const MemoComp = React.memo(function(props: T) {
+    return <ObservingComponent {...props} />;
+  });
 
-    if (!this.rendering) {
-      this.forceUpdate();
-    }
+  return function(props: P) {
+    const prevBatch = batchStart();
+    const hydratedProps = hydration(props);
+    useEffect(function() {
+      batchEnd(prevBatch);
+    });
 
-    return this.renderedVnode;
+    return <MemoComp {...hydratedProps} />;
   };
+};
 
-  createState(props) {
-    return this.state || {};
+export const useProps = function(props) {
+  const ref = useRef<{ knownKeys; $props }>();
+  if (!ref.current) {
+    ref.current = {
+      knownKeys: {},
+      $props: observable({})
+    };
   }
 
-  componentDidMount() {
-    this.startObservers();
-    this.startComputation();
+  const { knownKeys, $props } = ref.current;
+
+  mapPropsToObservable(knownKeys, $props, props);
+
+  return $props;
+};
+
+const mapPropsToObservable = function(knownKeys, observableProps, newProps) {
+  const keys = Object.keys(newProps);
+  let prevBatch = batchStart();
+  for (const key of keys) {
+    const value = newProps[key];
+    if (knownKeys[key] == null) {
+      knownKeys[key] = true;
+      setProp(observableProps, key as any, value);
+    } else {
+      observableProps[key] = value;
+    }
   }
+  batchEnd(prevBatch);
+};
 
-  componentWillUnmount() {
-    this.stopComputation();
-    this.stopObservers();
-  }
+export const observer = function<P extends any, C extends FunctionComponent<P>>(
+  component: C
+): C {
+  return function(props: P) {
+    const [_, refresh] = useState<{}>();
+    const idRef = useRef<string>();
 
-  view(props: P, state: this["$state"], computed: this["$computed"]) {}
-
-  render() {
-    this.rendering = true;
-    if (!this.updating) {
-      this.mapPropsToOps();
+    if (!idRef.current) {
+      idRef.current = observe(
+        function() {
+          refresh({});
+        },
+        false,
+        false
+      );
     }
 
-    this.updating = false;
-    this.rendering = false;
+    const observerId = idRef.current;
 
-    return this.renderedVnode;
-  }
-}
+    useEffect(function() {
+      return function() {
+        unobserve(idRef.current);
+      };
+    }, []);
+
+    observerStart(observerId);
+    const vdom = component(props);
+    observerEnd(observerId);
+
+    return vdom;
+  } as any;
+};
