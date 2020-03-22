@@ -4,11 +4,12 @@ import { render, fireEvent, cleanup } from "@testing-library/react";
 import { observable } from "alo";
 
 import {
-  hydrate,
+  hydrateObserver,
   observer,
   useObservable,
   useComputation,
-  useProps
+  useProps,
+  observerClass
 } from "./observer";
 
 let helloWorldRenderCount = 0;
@@ -65,11 +66,16 @@ describe("observer", function() {
   it("should not rerender after observable change when its unmounted", function() {
     const $state = observable({ name: "bob" });
     let nameRenderCount = 0;
-    const NameObserver = observer(function() {
-      nameRenderCount++;
+    const NameObserver = observerClass(
+      class NameObserver extends React.Component {
+        render() {
+          nameRenderCount++;
 
-      return <div>{$state.name}</div>;
-    });
+          return <div>{$state.name}</div>;
+        }
+      }
+    );
+
     const { unmount } = render(<NameObserver />);
 
     // The count should be 2 from a basic render (it renders before and after mount)
@@ -87,7 +93,7 @@ describe("observer", function() {
   });
 });
 
-describe("hydrate", function() {
+describe("hydrateObserver", function() {
   let renderCount = 0;
 
   afterEach(function() {
@@ -95,7 +101,7 @@ describe("hydrate", function() {
     renderCount = 0;
   });
 
-  const Hello = hydrate(
+  const Hello = hydrateObserver(
     function(props: { count: number; multiply?: number }) {
       let $props = useProps({ multiply: 1, ...props });
       let comp = useComputation<{ countX2: number }>(function() {
@@ -108,7 +114,7 @@ describe("hydrate", function() {
 
       return { comp, props: $props };
     },
-    observer(function({ comp, props }) {
+    function({ comp, props }) {
       renderCount++;
 
       return (
@@ -117,7 +123,7 @@ describe("hydrate", function() {
           <div data-testid="multiply">{props.multiply}</div>
         </div>
       );
-    })
+    }
   );
 
   it("should hydrate the component props", function() {
