@@ -23,7 +23,8 @@ import React, {
   useEffect,
   useRef,
   ComponentClass,
-  ComponentType
+  ComponentType,
+  FunctionComponentElement
 } from "react";
 
 export const useObservable = function<S extends () => any>(
@@ -55,58 +56,7 @@ export const useComputation = function<
   return ref.current[0];
 };
 
-export const observerClass = function<
-  P extends any,
-  C extends ComponentClass<P>
->(ChildCompontent: C): C {
-  class Observer extends (ChildCompontent as any) {
-    componentWillUnmount() {
-      super.componentWillUnmount();
-      unobserve(this._observerId);
-    }
-
-    render() {
-      if (!this._observerId) {
-        this._observerId = observe(
-          () => {
-            this.forceUpdate();
-          },
-          false,
-          false
-        );
-      }
-
-      observerStart(this._observerId);
-      const vdom = super.render();
-      observerEnd(this._observerId);
-
-      return vdom;
-    }
-  }
-
-  return Observer as any;
-};
-
-export const hydrate = function<T = {}, P = {}>(
-  hydration: (props: P) => T,
-  ObservingComponent: ComponentType<T>
-): FunctionComponent<P> {
-  const MemoComp = React.memo(function(props: T) {
-    return <ObservingComponent {...props} />;
-  });
-
-  return function(props: P) {
-    const prevBatch = batchStart();
-    const hydratedProps = hydration(props);
-    useEffect(function() {
-      batchEnd(prevBatch);
-    });
-
-    return <MemoComp {...hydratedProps} />;
-  };
-};
-
-export const useProps = function(props) {
+export const useProps = function<T = {}>(props: T): Observable<T> {
   const ref = useRef<{ knownKeys; $props }>();
   if (!ref.current) {
     ref.current = {
@@ -137,10 +87,42 @@ const mapPropsToObservable = function(knownKeys, observableProps, newProps) {
   batchEnd(prevBatch);
 };
 
-export const observer = function<P extends any, C extends FunctionComponent<P>>(
-  component: C
-): C {
-  return function(props: P) {
+export const hydrateObserver = function<H extends (props: any) => any>(
+  hydration: H,
+  ChildCompontent: ComponentType<ReturnType<H>>,
+  wrapObserver = true
+): FunctionComponent<Parameters<H>[0]> {
+  let WrappedComponent = ChildCompontent;
+  if (wrapObserver) {
+    if (
+      ChildCompontent.prototype &&
+      ChildCompontent.prototype instanceof React.Component
+    ) {
+      WrappedComponent = observerClass(ChildCompontent as any);
+    } else {
+      WrappedComponent = observer(ChildCompontent as any);
+    }
+  }
+
+  const MemoComp = React.memo(function(props: any) {
+    return <WrappedComponent {...props} />;
+  });
+
+  return function(props) {
+    const prevBatch = batchStart();
+    const hydratedProps = hydration(props);
+    useEffect(function() {
+      batchEnd(prevBatch);
+    });
+
+    return <MemoComp {...hydratedProps} />;
+  };
+};
+
+export const observer = function<T extends FunctionComponent<any>>(
+  ChildCompontent: T
+): T {
+  return function(props) {
     const [_, refresh] = useState<{}>();
     const idRef = useRef<string>();
 
@@ -163,9 +145,42 @@ export const observer = function<P extends any, C extends FunctionComponent<P>>(
     }, []);
 
     observerStart(observerId);
-    const vdom = component(props);
+    const vdom = (ChildCompontent as any)(props);
     observerEnd(observerId);
 
     return vdom;
   } as any;
+};
+
+export const observerClass = function<T extends ComponentClass<any>>(
+  ChildCompontent: T
+): T {
+  class Observer extends (ChildCompontent as any) {
+    componentWillUnmount() {
+      if (super.componentWillUnmount) {
+        super.componentWillUnmount();
+      }
+      unobserve(this._observerId);
+    }
+
+    render() {
+      if (!this._observerId) {
+        this._observerId = observe(
+          () => {
+            this.forceUpdate();
+          },
+          false,
+          false
+        );
+      }
+
+      observerStart(this._observerId);
+      const vdom = super.render();
+      observerEnd(this._observerId);
+
+      return vdom;
+    }
+  }
+
+  return Observer as any;
 };
