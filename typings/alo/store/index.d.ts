@@ -48,7 +48,7 @@ export declare class Store<T extends MutatorInterface = MutatorInterface> implem
      * Send a message which will trigger an action
      */
     dispatch: (action: NewAction) => Action | undefined;
-    observe(func: (store: this, pauseObserverFn: PauseObserverFn) => any): () => void;
+    observe(func: (store: this, pauseObserverFn: PauseObserverFn) => any): string;
     _callSubscribers: () => void;
     _afterDispatchNormalization: NormalizeOptions["callBack"];
     _applyMutatorBatch(action: Action): void;

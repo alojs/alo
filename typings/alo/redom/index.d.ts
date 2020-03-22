@@ -6,8 +6,8 @@ import { RedomComponent } from "@lufrai/redom";
 export declare const setAloCore: (core: {
     observe: typeof observe;
     observable: typeof observable;
-    batchStart: () => void;
-    batchEnd: () => void;
+    batchStart: (batchId?: any) => any;
+    batchEnd: (prevBatchId?: any) => void;
 }) => void;
 export declare abstract class Observer {
     _subscriptions: {
