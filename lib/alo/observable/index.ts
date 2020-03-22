@@ -47,6 +47,9 @@ export const observerStart = function(observerId: string) {
   const observerInfo = observerInfoMap[observerId];
 
   if (observerInfo.running) {
+    if (currentObserver.id) {
+      observerEnd(currentObserver.id);
+    }
     console.error("Bad observer", observerInfo.fn);
     throw new Error(`Bad recursion detected in observer`);
   }
