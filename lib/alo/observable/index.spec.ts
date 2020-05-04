@@ -161,6 +161,24 @@ describe("observable", function() {
       assert.equal(count, 2);
       assert.deepEqual(obj.list, [1, 2, 3]);
     });
+    it("should set previous parent to new converted items", function() {
+      const obj = observable({
+        list: [] as any[]
+      });
+      obj.list.unshift([]);
+
+      let count = 0;
+      observe(function() {
+        count++;
+        // We listen to the parent list
+        obj.list;
+      });
+
+      // We change the child list and this should notify the parent list
+      obj.list[0].unshift(0);
+
+      assert.equal(count, 2);
+    });
   });
 
   describe("computation", function() {

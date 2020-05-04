@@ -190,7 +190,7 @@ methodsToPatch.forEach(function(method) {
         break;
     }
 
-    if (inserted) observableArray(parent, key, inserted);
+    if (inserted) observableArray(inserted, key, parent);
 
     notify(parent, key);
 
