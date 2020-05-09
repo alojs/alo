@@ -241,7 +241,7 @@ export class Devtools extends Observer {
                 const pointInTime = state.pointInTime;
                 const pointInTimeInt = parseInt(state.pointInTime);
 
-                const prevBatch = batchStart();
+                batchStart();
                 const actionIds = Object.keys(state.actions).reverse();
                 let newPointInTime: boolean|string = false;
                 let idx = 0;
@@ -261,7 +261,7 @@ export class Devtools extends Observer {
                   timeMachineStore.dispatch(setPointInTime(newPointInTime));
                 }
 
-                batchEnd(prevBatch);
+                batchEnd();
 
                 if (newPointInTime !== false) {
                   timeMachine.replay();
@@ -277,7 +277,7 @@ export class Devtools extends Observer {
                 const timeMachineStore = timeMachine.getStore();
                 const state = timeMachineStore.getState();
 
-                const prevBatch = batchStart();
+                batchStart();
                 const actionIds = Object.keys(state.actions);
                 for(const actionId of actionIds) {
                   timeMachineStore.dispatch(removeAction(actionId))
@@ -290,7 +290,7 @@ export class Devtools extends Observer {
                   type: actionTypes.INIT,
                   payload: targetState
                 })
-                batchEnd(prevBatch);
+                batchEnd();
               }}, 'Commit')
             ]),
             el('div', { style: { flex: '1', textAlign: 'right' }}, [

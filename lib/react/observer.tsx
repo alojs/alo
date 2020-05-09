@@ -74,7 +74,7 @@ export const useProps = function<T = {}>(props: T): Observable<T> {
 
 const mapPropsToObservable = function(knownKeys, observableProps, newProps) {
   const keys = Object.keys(newProps);
-  let prevBatch = batchStart();
+  batchStart();
   for (const key of keys) {
     const value = newProps[key];
     if (knownKeys[key] == null) {
@@ -84,7 +84,7 @@ const mapPropsToObservable = function(knownKeys, observableProps, newProps) {
       observableProps[key] = value;
     }
   }
-  batchEnd(prevBatch);
+  batchEnd();
 };
 
 export const hydrateObserver = function<H extends (props: any) => any>(
@@ -109,10 +109,10 @@ export const hydrateObserver = function<H extends (props: any) => any>(
   });
 
   return function(props) {
-    const prevBatch = batchStart();
+    batchStart();
     const hydratedProps = hydration(props);
     useEffect(function() {
-      batchEnd(prevBatch);
+      batchEnd();
     });
 
     return <MemoComp {...hydratedProps} />;

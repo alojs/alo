@@ -74,7 +74,7 @@ export class Timemachine<T extends StoreInterface<any> = any> {
       return;
     }
 
-    const prevBatch = batchStart();
+    batchStart();
     return Promise.resolve()
       .then(() => {
         return this.store.dispatch(setPointInTime(nextPointInTime));
@@ -83,7 +83,7 @@ export class Timemachine<T extends StoreInterface<any> = any> {
         return this.replay();
       })
       .then(() => {
-        batchEnd(prevBatch);
+        batchEnd();
         return nextPointInTime;
       });
   }
@@ -100,10 +100,8 @@ export class Timemachine<T extends StoreInterface<any> = any> {
     const newInitialState = cloneDeep(this.initialTargetState);
 
     return dispatchThunk(this.targetStore, async store => {
-      let prevBatch;
-
       if (!bulletTime) {
-        prevBatch = batchStart();
+        batchStart();
       }
       for (const [id, trackedAction] of Object.entries(actions)) {
         if (trackedAction.disabled) continue;
@@ -128,7 +126,7 @@ export class Timemachine<T extends StoreInterface<any> = any> {
       }
 
       if (!bulletTime) {
-        batchEnd(prevBatch);
+        batchEnd();
       }
 
       this.store.dispatch(setReplaying(false));

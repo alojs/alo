@@ -387,7 +387,7 @@ const notifyObservers = function(observerIds: string[]) {
     if (
       notify ||
       notifyInBatches === true ||
-      notifyInBatches === batchInfo.batchId
+      (notifyInBatches && batchInfo.batchIdMap[notifyInBatches])
     ) {
       if (plannedObserverCalls[observerId] !== planIdx) {
         continue;
@@ -412,36 +412,51 @@ export function notify<T extends Observable<any>, K extends keyof T>(
   notifyObservers(Object.keys(propObserverIdSetMap));
 }
 
-const batchInfo: { count: number; observerIds: string[]; batchId: any } = {
+const batchInfo: {
+  count: number;
+  observerIds: string[];
+  batchIdMap: Record<string, number>;
+} = {
   count: 0,
   observerIds: [],
-  batchId: null
+  batchIdMap: {}
 };
-export const batch = function(fn: () => void) {
-  const prevBatch = batchStart();
+export const batch = function(fn: () => void, batchId?) {
+  batchStart(batchId);
   fn();
-  batchEnd(prevBatch);
+  batchEnd(batchId);
 };
 
 export const batchStart = function(batchId?) {
-  const prevBatchId = batchInfo.batchId;
   batchInfo.count++;
-  batchInfo.batchId = batchId;
 
-  return prevBatchId;
+  if (!batchId) {
+    return;
+  }
+
+  if (batchInfo.batchIdMap[batchId]) {
+    batchInfo.batchIdMap[batchId]++;
+  } else {
+    batchInfo.batchIdMap[batchId] = 1;
+  }
 };
 
-export const batchEnd = function(prevBatchId?) {
+export const batchEnd = function(batchId?) {
   if (batchInfo.count === 0) return;
 
   batchInfo.count--;
-  if (batchInfo.count === 0) {
-    let observerIds = batchInfo.observerIds;
-    batchInfo.observerIds = [];
-    notifyObservers(observerIds);
+  if (batchId) {
+    batchInfo.batchIdMap[batchId]--;
   }
 
-  batchInfo.batchId = prevBatchId;
+  if (batchInfo.count > 0) {
+    return;
+  }
+
+  let observerIds = batchInfo.observerIds;
+  batchInfo.observerIds = [];
+  batchInfo.batchIdMap = {};
+  notifyObservers(observerIds);
 };
 
 let computationBatchIdx = 0;
@@ -473,9 +488,8 @@ export const computation = function<
     let init = true;
     observerIds.push(
       observe(function(pauseObserver) {
-        let prevBatchId;
         if (batch) {
-          prevBatchId = batchStart(batchId);
+          batchStart(batchId);
         }
 
         obj[key] = propsObj[key](
@@ -487,7 +501,7 @@ export const computation = function<
         );
 
         if (batch) {
-          batchEnd(prevBatchId);
+          batchEnd(batchId);
         }
       }, batchId)
     );
