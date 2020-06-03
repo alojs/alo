@@ -23,7 +23,7 @@ class Item extends ObserverListItem {
       const self = this;
       const color = this.state.context.color;
 
-      requestAnimationFrame(function() {
+      requestAnimationFrame(function () {
         self.view.lengthLabel.style.color = color;
       });
     });
@@ -37,7 +37,7 @@ class Item extends ObserverListItem {
   }
 }
 
-const generateId = (function() {
+const generateId = (function () {
   let idx = 0;
   return () => idx++ + "";
 })();
@@ -47,17 +47,17 @@ class App extends Observer {
   state: State = observable({
     count: 1,
     items: {},
-    color: "blue"
+    color: "blue",
   });
   view = {
     count: el("input", {
-      oninput: e => (this.state.count = e.currentTarget.value)
+      oninput: (e) => (this.state.count = e.currentTarget.value),
     }),
     color: el("input", {
-      oninput: e => (this.state.color = e.currentTarget.value)
+      oninput: (e) => (this.state.color = e.currentTarget.value),
     }),
     countSuffix: el("span"),
-    items: list("ul", Item, "id")
+    items: list("ul", Item, "id"),
   };
 
   // prettier-ignore
@@ -96,7 +96,7 @@ class App extends Observer {
       const self = this;
       const items = Object.values(this.state.items);
 
-      requestAnimationFrame(function() {
+      requestAnimationFrame(function () {
         self.view.items.update(items, self.state);
       });
     });

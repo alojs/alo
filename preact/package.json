@@ -1,0 +1,13 @@
+{
+  "name": "alo-preact",
+  "amdName": "aloPreact",
+  "source": "lib/main.ts",
+  "main": "dist/main.js",
+  "module": "dist/main.m.js",
+  "umd:main": "dist/main.umd.js",
+  "esmodule": "dist/main.modern.js",
+  "types": "dist/main.d.ts",
+  "peerDependencies": {
+    "preact": ">= 10.4.4 < 11"
+  }
+}

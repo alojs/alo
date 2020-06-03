@@ -1,11 +1,4 @@
-/.npmrc
-/.vscode
 /coverage
-!/coverage/.gitkeep
-/dist/*
-!/dist/alo
-!/dist/react
-!/dist/.gitkeep
 /node_modules
-/tmp/*
-!/tmp/.gitkeep
+/.vscode
+dist

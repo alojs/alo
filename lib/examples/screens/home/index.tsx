@@ -4,7 +4,7 @@ import { Title } from "../../components/title";
 import { Base } from "../../layouts/base";
 import "./styles.pcss";
 
-export const Home = function(props: { ctx: GlobalContext; data; count }) {
+export const Home = function (props: { ctx: GlobalContext; data; count }) {
   props.ctx.pageMeta.title = "Home";
   props.ctx.pageMeta.description = "Some home description";
   props.ctx.pageMeta.keywords = "Some home keywords";

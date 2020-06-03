@@ -28,13 +28,13 @@ type AppSubscriptions = {
 };
 
 export const RouterContext = React.createContext<{ router: Router | null }>({
-  router: null
+  router: null,
 });
 
 export class App extends React.Component {
   state: AppState = {
     count: false,
-    data: {}
+    data: {},
   };
   ctx: GlobalContext;
   subscriptions: AppSubscriptions = {};
@@ -52,7 +52,7 @@ export class App extends React.Component {
         : { title: "", description: "", keywords: "" },
       updatePageMeta: () => {
         updatePageMeta(this.ctx.pageMeta);
-      }
+      },
     };
 
     if (!props.ssr) {
@@ -97,7 +97,7 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
-    this.subscriptions.router = this.ctx.router.subscribe(state => {
+    this.subscriptions.router = this.ctx.router.subscribe((state) => {
       this.ctx.routerState = state.route;
       this.setState(Object.assign({}, this.state));
     });
@@ -105,7 +105,7 @@ export class App extends React.Component {
     if (this.webSocketClient) {
       this.subscriptions.count = this.webSocketClient.subscribe(
         "/count",
-        count => {
+        (count) => {
           this.setState(Object.assign({}, this.state, { count }));
         }
       );

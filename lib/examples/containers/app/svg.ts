@@ -1,4 +1,4 @@
-export const appendSvg = function(elString, parent?: string) {
+export const appendSvg = function (elString, parent?: string) {
   var div = document.createElement("div");
   div.innerHTML = elString;
   var svgEl = div.firstChild as SVGElement;
@@ -9,6 +9,6 @@ export const appendSvg = function(elString, parent?: string) {
   }
 };
 
-export const getAppendSvgString = function(elString) {
+export const getAppendSvgString = function (elString) {
   return `<div style="display: none">${elString}</div>`;
 };

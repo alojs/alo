@@ -8,26 +8,26 @@ import {
   attachStoreToDevtools,
   Mutator,
   ActionWithPayload,
-  observe
+  observe,
 } from "@lib/alo/main/full";
 
 const mutator = new Mutator({
-  createState: function() {
+  createState: function () {
     return {
-      count: 0
+      count: 0,
     };
-  }
+  },
 });
 
-const increase = mutator.set("INC", function(state, action) {
+const increase = mutator.set("INC", function (state, action) {
   state.count++;
 });
 
-const decrease = mutator.set("DEC", function(state, action) {
+const decrease = mutator.set("DEC", function (state, action) {
   state.count--;
 });
 
-const set = mutator.setWithPayload("SET", function(
+const set = mutator.setWithPayload("SET", function (
   state,
   action: ActionWithPayload<number>
 ) {
@@ -35,7 +35,7 @@ const set = mutator.setWithPayload("SET", function(
 });
 
 const store = new Store({
-  mutator
+  mutator,
 });
 attachStoreToDevtools({ store });
 new Devtools({});
@@ -43,7 +43,7 @@ new Devtools({});
 const el = document.createElement("div");
 document.body.appendChild(el);
 
-observe(function() {
+observe(function () {
   el.innerHTML = store.getState().count + "";
 });
 

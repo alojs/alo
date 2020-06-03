@@ -1,1 +1,0 @@
-{"version":3,"file":"undoableActionNormalizerDecorator.d.ts","sourceRoot":"","sources":["../../../lib/alo/actionNormalizer/undoableActionNormalizerDecorator.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iCAAiC,EAAE,MAAM,GAAG,CAAC;AACtD,OAAO,EAAE,gBAAgB,EAAE,MAAM,SAAS,CAAC;AAE3C,qBAAa,iCAAkC,SAAQ,iCAAiC;IACtF,SAAS,CAAC,OAAO,EAAE,gBAAgB;CAOpC"}

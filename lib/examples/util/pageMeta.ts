@@ -1,9 +1,9 @@
 import { SsrData } from "../../common/types";
 
-export const createUpdate = function() {
+export const createUpdate = function () {
   let pageMetaCache;
 
-  return function(pageMeta: SsrData["result"]["pageMeta"]) {
+  return function (pageMeta: SsrData["result"]["pageMeta"]) {
     if (BUILD.IS_NODE) {
       return;
     }

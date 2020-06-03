@@ -19,7 +19,7 @@ import {
   removeProp,
   computation,
   observe,
-  extract
+  extract,
 } from "@lib/alo/main/core";
 import { attachStoreToDevtools, Devtools } from "@lib/alo/devtools";
 
@@ -39,11 +39,11 @@ const createPerson = () => ({
   payload: {
     id: ids++,
     name: "name" + (ids - 1),
-    surname: "surname" + (ids - 1)
+    surname: "surname" + (ids - 1),
   },
   meta: {
-    pure: true
-  }
+    pure: true,
+  },
 });
 
 const createInitialState = (): {
@@ -53,13 +53,13 @@ const createInitialState = (): {
 } => ({
   notperson: {},
   person: {},
-  undo: undefined as any
+  undo: undefined as any,
 });
 
 const UNDO_ID = "personsCreateUndo";
 const undoableMutator = createUndoableMutator({
   id: UNDO_ID,
-  actionFilter: action => action.type === "create"
+  actionFilter: (action) => action.type === "create",
 });
 
 const store = new Store({
@@ -94,23 +94,23 @@ const store = new Store({
 
       return state;
     }
-  )
+  ),
 });
 
 let computedCalcs = 0;
 const [computed] = computation({
-  personCount: function() {
+  personCount: function () {
     computedCalcs++;
     return Object.keys(store.getState().person).length;
   },
-  personCountX2: function(obj) {
+  personCountX2: function (obj) {
     computedCalcs++;
     return obj.personCount * 2;
   },
-  personCountNegative: function(obj) {
+  personCountNegative: function (obj) {
     computedCalcs++;
     return obj.personCount - obj.personCountX2;
-  }
+  },
 });
 
 const personCountEl = el("pre");
@@ -119,7 +119,7 @@ observe(() => {
     "Computed props: " +
     JSON.stringify({
       calculations: computedCalcs,
-      results: computed
+      results: computed,
     }) +
     " " +
     Math.random();
@@ -129,7 +129,7 @@ class PersonListItem extends ObserverListItem implements RedomComponent {
   el = el("li");
   oninit() {
     const self = this;
-    this.observe(function() {
+    this.observe(function () {
       self.el.textContent =
         JSON.stringify(self.state.item) + " " + Math.random();
     });
@@ -147,7 +147,7 @@ const app = el("div", [
       onclick: () => {
         const count = view.count.value;
         if (count > 1) {
-          dispatchBatch(store, function(ds) {
+          dispatchBatch(store, function (ds) {
             for (var idx = 0; idx < count; idx++) {
               ds.dispatch(createPerson());
             }
@@ -155,7 +155,7 @@ const app = el("div", [
         } else {
           store.dispatch(createPerson());
         }
-      }
+      },
     },
     "Add person"
   ),
@@ -170,7 +170,7 @@ const app = el("div", [
     "Redo"
   )),
   personCountEl,
-  personsEl
+  personsEl,
 ]);
 
 const devToolsEl = el("div.dev");
@@ -183,17 +183,17 @@ if (forceDevtools || process.env.NODE_ENV === "development") {
   attachStoreToDevtools({ store, name: "blub" });
 }
 
-store.observe(function() {
+store.observe(function () {
   const undoCount = store.getState().undo.past.length;
   view.undoBtn.disabled = undoCount === 0;
 });
 
-store.observe(function() {
+store.observe(function () {
   const redoCount = store.getState().undo.future.length;
   view.redoBtn.disabled = redoCount === 0;
 });
 
-store.observe(function(_, pause) {
+store.observe(function (_, pause) {
   const person = store.getState().person;
   pause();
 
@@ -202,6 +202,6 @@ store.observe(function(_, pause) {
   });
 });
 
-store.observe(function(_, pause) {
+store.observe(function (_, pause) {
   console.log(extract(store.getState()));
 });

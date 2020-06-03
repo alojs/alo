@@ -1,13 +1,27 @@
-<img width="400px" style="max-width: 100%;" src="https://raw.github.com/alojs/alo/4-dev/static/readme/logo.png" alt="logo"/>
+# [💡 Witney](https://github.com/witneyjs/witney)
 
--------
+[![](assets/badge.license.svg)](https://opensource.org/licenses/MIT)
+[![](assets/badge.npm.svg)](https://www.npmjs.com/package/witney)
+![](assets/badge.coverage.svg)
+[![](assets/badge.style.svg)](https://prettier.io/)
 
+---
 
-# [alo](https://github.com/alojs/alo)
+Don't wait to start with your javascript and typescript projects.
 
+Read [Getting started](http://www.witneyjs.com/getting_started.html) to learn how to start using Witney for your next projects.
 
-<a href="https://opensource.org/licenses/MIT"><img src="https://raw.github.com/alojs/alo/4-dev/static/readme/gen-badges/badge.0.svg?sanitize=true" alt="license"></a> <a href="https://www.npmjs.com/package/alo"><img src="https://raw.github.com/alojs/alo/4-dev/static/readme/gen-badges/badge.1.svg?sanitize=true" alt="npm"></a> <img src="https://raw.github.com/alojs/alo/4-dev/static/readme/gen-badges/badge.2.svg?sanitize=true" alt="Tests"> <img src="https://raw.github.com/alojs/alo/4-dev/static/readme/gen-badges/badge.3.svg?sanitize=true" alt="coverage"> <a href="https://prettier.io/"><img src="https://raw.github.com/alojs/alo/4-dev/static/readme/gen-badges/badge.4.svg?sanitize=true" alt="code style"></a> <img src="https://raw.github.com/alojs/alo/4-dev/static/readme/gen-badges/badge.5.svg?sanitize=true" alt="PRs"> 
+Features:
 
-Mutation based state management
-
-Demo (with devtools): https://codepen.io/katywings/pen/mNzjVd
+- 📦 Bundles with [microbundle](https://github.com/developit/microbundle)
+- 🧹 Formatting with [prettier](https://github.com/prettier/prettier)
+- 👨🏼‍⚖️ Typescript support with [ts-node](https://github.com/TypeStrong/ts-node) and [ts-jest](https://github.com/kulshekhar/ts-jest)
+- 📏 Tests and coverage with [jest](https://github.com/facebook/jest)
+- 🧢 Markdown site generation with [mallery](https://github.com/malleryjs/mallery/)
+- 🎰 Versioning with [standard-version](https://github.com/conventional-changelog/standard-version)
+- 🧰 Packed with commonly used dev scripts
+  - All written with 🧩 extensibility in mind
+  - Scripts for Building, Testing, Coverage, Server starting
+  - 🔖 Badges generator
+  - 🧐 Dependency license check
+  - 👽 Dependency gyp check

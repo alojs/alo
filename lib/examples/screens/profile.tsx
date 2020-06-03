@@ -3,7 +3,7 @@ import { GlobalContext } from "../containers/app";
 import { Title } from "../components/title";
 import { Base } from "../layouts/base";
 
-export const Profile = function(props: { ctx: GlobalContext }) {
+export const Profile = function (props: { ctx: GlobalContext }) {
   props.ctx.pageMeta.title = "Profile";
   props.ctx.pageMeta.description = 'This is a profile page">>';
   props.ctx.pageMeta.keywords = "Some profile keywords";

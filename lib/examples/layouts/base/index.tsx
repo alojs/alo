@@ -3,7 +3,7 @@ import { Link } from "../../containers/link";
 import "./styles.pcss";
 import { GlobalContext } from "../../containers/app";
 
-export const Base = function(props: { children; ctx: GlobalContext }) {
+export const Base = function (props: { children; ctx: GlobalContext }) {
   return (
     <div className="app">
       <div className="app__background" />

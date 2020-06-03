@@ -1,36 +1,14 @@
 {
-    "compilerOptions": {
-        "jsx": "react",
-        "noEmit": true,
-        "lib": [
-            "dom",
-            "es6",
-            "es2017",
-            "scripthost"
-        ],
-        "target": "es5",
-        "allowJs": true,
-        "isolatedModules": false,
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "baseUrl": "./lib",
-        "strict": false,
-        "strictNullChecks": true,
-        "paths": {
-            "@lib/*": [
-                "*"
-            ],
-            "@project/*": [
-                "../*"
-            ],
-            "alo": ["../dist/alo/core"]
-        }
-    },
-    "include": [
-        "**/*"
-    ],
-    "exclude": [
-        "./tmp",
-        "./typings"
-    ]
+  "compilerOptions": {
+    "jsx": "react",
+    "noEmit": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "paths": {
+      "alo": ["./lib/main.ts"],
+      "alo/store": ["./store/lib/main.ts"],
+      "alo/redom": ["./redom/lib/main.ts"]
+    }
+  }
 }
