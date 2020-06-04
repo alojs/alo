@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 
-const { spawn, args, buildArgs } = require("./lib");
+const { spawn, args, buildArgs, rmDir, pkgDir } = require("./lib");
 
-spawn("npx", [
-  "microbundle",
-  "--cwd",
-  "react",
-  "--raw",
-  "--jsx",
-  "React.createElement",
-  ...buildArgs(),
-  ...args,
-]);
+(async () => {
+  await rmDir(pkgDir("react", "dist"), { recursive: true });
+  spawn("npx", [
+    "microbundle",
+    "--cwd",
+    "react",
+    "--raw",
+    "--jsx",
+    "React.createElement",
+    ...buildArgs(),
+    ...args,
+  ]);
+})();
