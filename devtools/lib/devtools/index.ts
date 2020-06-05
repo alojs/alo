@@ -28,7 +28,7 @@ import {} from "alo/store";
 import { Observer, setAloCore } from "alo/redom";
 import { setPointInTime } from "../timemachine/mutator";
 import * as styles from "./styles";
-const toArray = require("lodash.toarray");
+import toArray from "lodash/toArray";
 
 setAloCore({
   observe,

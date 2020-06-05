@@ -15,8 +15,7 @@ import { Subscribable } from "../subscribable";
 import { cloneDeep as _cloneDeep } from "../util";
 import { observe, observable, batch } from "alo";
 import { PauseObserverFn } from "alo";
-
-const isPlainObject = require("lodash.isplainobject");
+import isPlainObject from "lodash/isPlainObject";
 
 export var actionTypes = {
   INIT: "@@init",

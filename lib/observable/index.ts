@@ -12,7 +12,7 @@ import {
   ComputationValues,
 } from "./types";
 
-const isPlainObject = require("lodash.isplainobject");
+import isPlainObject from "lodash/isPlainObject";
 
 let nextId = 0;
 const generateUniqueId = function () {

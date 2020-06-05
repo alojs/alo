@@ -1,5 +1,5 @@
 import { assert } from "chai";
-const isPlainObject = require("lodash.isplainobject");
+import isPlainObject from "lodash/isPlainObject";
 
 describe("isPlainObject", function () {
   it("should return true for {}", function () {

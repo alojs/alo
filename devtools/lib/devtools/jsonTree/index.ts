@@ -1,5 +1,5 @@
 import { el, list, setChildren, text, mount } from "redom";
-const isPlainObject = require("lodash.isplainobject");
+import isPlainObject from "lodash/isPlainObject";
 
 const isPrimitive = function (value) {
   const isObject = isPlainObject(value);
