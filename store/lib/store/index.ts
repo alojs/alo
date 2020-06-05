@@ -16,7 +16,7 @@ import { cloneDeep as _cloneDeep } from "../util";
 import { observe, observable, batch } from "alo";
 import { PauseObserverFn } from "alo";
 
-import _ from "lodash";
+const isPlainObject = require("lodash.isplainobject");
 
 export var actionTypes = {
   INIT: "@@init",
@@ -162,7 +162,7 @@ export class Store<T extends MutatorInterface = MutatorInterface>
     const isInitAction = action.type === actionTypes.INIT;
 
     if (isInitAction) {
-      this._observable.state = _.isPlainObject(action.payload)
+      this._observable.state = isPlainObject(action.payload)
         ? observable(action.payload)
         : action.payload;
     }
@@ -175,7 +175,7 @@ export class Store<T extends MutatorInterface = MutatorInterface>
         this._observable
       );
       // TODO: Maybe this should only happen if the user wants to use observables? Option-worthy?
-      if (isInitAction && _.isPlainObject(result)) {
+      if (isInitAction && isPlainObject(result)) {
         result = observable(result);
       }
       this._observable.state = result;
