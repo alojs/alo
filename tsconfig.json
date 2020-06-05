@@ -3,12 +3,13 @@
     "jsx": "react",
     "noEmit": true,
     "allowJs": true,
-    "baseUrl": ".",
+    "baseUrl": "./node_modules",
     "esModuleInterop": true,
+    "target": "es5",
     "paths": {
-      "alo": ["./lib/main.ts"],
-      "alo/store": ["./store/lib/main.ts"],
-      "alo/redom": ["./redom/lib/main.ts"]
+      "alo": ["../lib/main.ts"],
+      "alo/store": ["../store/lib/main.ts"],
+      "alo/redom": ["../redom/lib/main.ts"]
     }
   }
 }
