@@ -7,7 +7,7 @@ import {
   cloneAction,
   StoreInterface,
 } from "alo/store";
-import { cloneDeep } from "store/lib/util";
+import { cloneDeep } from "../../../store/lib/util";
 import { setAction } from "./mutator/actions";
 import { batchStart, batchEnd, observe } from "alo";
 import { mutator, setPointInTime, setReplaying } from "./mutator";

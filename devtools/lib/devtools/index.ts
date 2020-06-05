@@ -11,7 +11,7 @@ import {
 } from "./store";
 import { ACTION_DETAILS } from "./actionDetails";
 import { SET_ACTION, removeAction } from "../timemachine/mutator/actions";
-import { cloneDeep } from "store/lib/util";
+import { cloneDeep } from "../../../store/lib/util";
 import { createPatch } from "rfc6902";
 import { BlueprintEntity } from "wald";
 import { createIoc } from "./ioc";
