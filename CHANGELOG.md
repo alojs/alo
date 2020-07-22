@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0-alpha.26](https://github.com/alojs/alo/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2020-07-22)
+
+
+### Bug Fixes
+
+* **devtools:** remove circular mutator dependencies ([85e8b05](https://github.com/alojs/alo/commit/85e8b052c96b6fc3b48ed591d522149cbf47080f))
+
 ## [4.0.0-alpha.25](https://github.com/alojs/alo/compare/v4.0.0-alpha.24...v4.0.0-alpha.25) (2020-06-05)
 
 
