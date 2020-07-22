@@ -1,1 +1,1 @@
-export * from "./observer";
+export * from "../../react/lib/observer";
