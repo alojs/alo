@@ -12,5 +12,6 @@
       "alo/store": ["../store/lib/main.ts"],
       "alo/redom": ["../redom/lib/main.ts"]
     }
-  }
+  },
+  "exclude": ["node_modules", "**/dist"]
 }
