@@ -1,6 +1,6 @@
 import { Action, ActionWithPayload } from "alo/store";
 import { setProp, removeProp } from "alo";
-import { mutator } from ".";
+import { mutator, TrackedAction } from ".";
 
 let actionIdCache = 0;
 const createUniqueActionId = function () {
@@ -8,15 +8,6 @@ const createUniqueActionId = function () {
 };
 
 let orderCache = 0;
-
-export type TrackedAction = {
-  id: string;
-  date: Date;
-  action: Action;
-  disabled: boolean;
-  trackState: boolean;
-  order: number;
-};
 
 export const REMOVE_ACTION = "REMOVE_ACTION";
 

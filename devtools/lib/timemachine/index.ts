@@ -10,7 +10,8 @@ import {
 import { cloneDeep } from "../../../store/lib/util";
 import { setAction } from "./mutator/actions";
 import { batchStart, batchEnd, observe } from "alo";
-import { mutator, setPointInTime, setReplaying } from "./mutator";
+import { mutator, setReplaying } from "./mutator";
+import { setPointInTime } from "./mutator/setPointInTime";
 
 export class Timemachine<T extends StoreInterface<any> = any> {
   store: Store<typeof mutator>;

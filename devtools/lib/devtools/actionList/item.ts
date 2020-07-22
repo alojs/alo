@@ -1,12 +1,13 @@
 import { el, setAttr } from "redom";
-import { toggleAction, TrackedAction } from "../../timemachine/mutator/actions";
+import { toggleAction } from "../../timemachine/mutator/actions";
 import { actionTypes, BATCH_ACTION_TYPE } from "alo/store";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { STORE } from "../store";
 import { ObserverListItem } from "alo/redom";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 import { batchStart, batchEnd } from "alo";
-import { setPointInTime } from "../../timemachine/mutator";
+import { TrackedAction } from "../../timemachine/mutator";
+import { setPointInTime } from "../../timemachine/mutator/setPointInTime";
 
 export const CREATE_ACTION_LIST_ITEM = createBlueprint({
   create: ({ ioc }) => (onSelectAction) => {

@@ -1,6 +1,5 @@
 import { el, setChildren, text, router, setAttr } from "redom";
 import { STORE, setActionDetailsTab } from "../store";
-import { TrackedAction } from "../../timemachine/mutator/actions";
 import { createBlueprint, BlueprintEntity } from "wald";
 import { JsonTree } from "../jsonTree";
 import { Observer } from "alo/redom";
@@ -8,6 +7,7 @@ import { observable } from "alo";
 import { StoreState } from "alo/store";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
 import * as styles from "../styles";
+import { TrackedAction } from "../../timemachine/mutator";
 
 export const ACTION_DETAILS = createBlueprint({
   create: ({ ioc }) => {
