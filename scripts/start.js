@@ -2,4 +2,4 @@
 
 const { spawn } = require("./lib");
 
-spawn("npx", ["ts-node", "lib/main.ts"]);
+spawn("npx", ["ts-node", "example/lib/main.ts"]);
