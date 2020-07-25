@@ -1,13 +1,20 @@
 #!/usr/bin/env node
 
-const { writeFile, pkgDir } = require("./lib");
+const { writeFile, pkgDir, resolve, exists } = require("./lib");
 
-const createProxy = async (
-  module,
+const createProxy = async ({
+  moduleName,
   exportDefault = false,
-  exportNamed = true
-) => {
-  const mainPath = `./${module}/lib/main`;
+  exportNamed = true,
+} = {}) => {
+  const distPath = moduleName ? pkgDir(moduleName, "dist") : pkgDir("dist");
+  const mainDtsPath = resolve(distPath, "lib", "main.d.ts");
+
+  if (!(await exists(mainDtsPath))) {
+    return;
+  }
+
+  const mainPath = moduleName ? `./${moduleName}/lib/main` : "./lib/main";
   let proxySrc = "";
   if (exportNamed) {
     proxySrc += `export * from "${mainPath}";\n`;
@@ -18,12 +25,14 @@ const createProxy = async (
 export default DefaultProxy;\n`;
   }
 
-  await writeFile(pkgDir(module, "dist", "main.d.ts"), proxySrc);
+  const proxyPath = resolve(distPath, "main.d.ts");
+  await writeFile(proxyPath, proxySrc);
 };
 
 (async () => {
-  await createProxy("redom");
-  await createProxy("preact");
-  await createProxy("react");
-  await createProxy("store");
+  await createProxy();
+  await createProxy({ moduleName: "redom" });
+  await createProxy({ moduleName: "preact" });
+  await createProxy({ moduleName: "react" });
+  await createProxy({ moduleName: "store" });
 })();
