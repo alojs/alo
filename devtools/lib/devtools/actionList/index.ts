@@ -1,4 +1,4 @@
-import { el, list } from "redom";
+import { el, list, List } from "redom";
 import { CREATE_ACTION_LIST_ITEM } from "./item";
 import { STORE, setSelectedActionId } from "../store";
 import { BlueprintEntity, createBlueprint } from "wald";
@@ -20,25 +20,9 @@ export class ActionList extends Observer {
   globalState: BlueprintEntity<typeof GLOBAL_DEVTOOLS_STATE>;
   createItem: BlueprintEntity<typeof CREATE_ACTION_LIST_ITEM>;
 
-  listEl = list(
-    el("ul", { style: { margin: "0", padding: "10px 0 0 0" } }),
-    (() => {
-      return this.createItem(this.onSelectItem);
-    }) as any,
-    "id"
-  );
+  listEl: List;
 
-  el = el(
-    "div",
-    {
-      style: {
-        backgroundColor: "#212125",
-        flex: 1,
-        "overflow-y": "scroll",
-      },
-    },
-    this.listEl
-  );
+  el: HTMLElement;
 
   constructor({
     store,
@@ -54,6 +38,28 @@ export class ActionList extends Observer {
     this.store = store;
     this.globalState = globalState;
     this.createItem = createItem;
+
+    const self = this;
+
+    this.listEl = list(
+      el("ul", { style: { margin: "0", padding: "10px 0 0 0" } }),
+      function () {
+        return createItem(self.onSelectItem);
+      } as any,
+      "id"
+    );
+
+    this.el = el(
+      "div",
+      {
+        style: {
+          backgroundColor: "#212125",
+          flex: 1,
+          "overflow-y": "scroll",
+        },
+      },
+      this.listEl
+    );
 
     this.observe((pauseObserver) => {
       const state = this.store.getState();
