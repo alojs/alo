@@ -19,23 +19,14 @@ import {
   observable,
   setProp,
   notify,
-  observe,
   batchStart,
   batchEnd,
   Observable,
 } from "alo";
-import {} from "alo/store";
-import { Observer, setAloCore } from "alo/redom";
+import { Observer } from "alo/redom";
 import * as styles from "./styles";
 import toArray from "lodash/toArray";
 import { setPointInTime } from "../timemachine/mutator/setPointInTime";
-
-setAloCore({
-  observe,
-  observable,
-  batchStart,
-  batchEnd,
-});
 
 export type GlobalDevtoolsState = {
   stores: Observable<{ [index: string]: Store }>;
@@ -93,7 +84,7 @@ export class Devtools extends Observer {
   }: {
     targetElSelector?;
     inline?;
-  }) {
+  } = {}) {
     super();
 
     const ioc = createIoc({ globalDevtoolsState });
