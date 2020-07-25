@@ -19,7 +19,48 @@ const updatePkg = async function (moduleName, pkg) {
     `${moduleName}/lib`,
     `${moduleName}/dist`
   );
+  pkg.files = Array.from(new Set(pkg.files));
+
+  pkg.jest.collectCoverageFrom.push(`${moduleName}/lib/**/*.{ts,tsx,js,jsx}`);
+  pkg.jest.collectCoverageFrom = Array.from(
+    new Set(pkg.jest.collectCoverageFrom)
+  );
+
+  const exportsBase = `./${moduleName}`;
+  pkg.exports[exportsBase] = {
+    browser: `${exportsBase}/dist/main.m.js`,
+    umd: `${exportsBase}/dist/main.umd.js`,
+    import: `${exportsBase}/dist/main.m.js`,
+    require: `${exportsBase}/dist/main.js`,
+  };
+
+  // These entries should stay at the very end of the exports object
+  for (const entry of ["./package.json", "./"]) {
+    if (!pkg.exports[entry]) {
+      continue;
+    }
+
+    const value = pkg.exports[entry];
+    delete pkg.exports[entry];
+    pkg.exports[entry] = value;
+  }
+
   await writeJson(pkgDir("package.json"), pkg, {
+    spaces: "  ",
+  });
+};
+
+const updateTsconfig = async function (moduleName, pkg) {
+  const tsConfig = require("../tsconfig");
+  const pathAlias = `${pkg.name}/${moduleName}`;
+
+  if (tsConfig.compilerOptions.paths[pathAlias]) {
+    return;
+  }
+
+  tsConfig.compilerOptions.paths[pathAlias] = [`../${moduleName}/lib/main.ts`];
+  const tsConfigPath = resolve(pkgDir("tsconfig.json"));
+  await writeJson(tsConfigPath, tsConfig, {
     spaces: "  ",
   });
 };
@@ -56,9 +97,12 @@ const createModuleLib = async function (moduleDir) {
 const createBuildScript = async function (moduleName) {
   const buildScript = `#!/usr/bin/env node
 
-const { spawn, args, buildArgs } = require("./lib");
+const { spawn, args, buildArgs, rmDir, pkgDir } = require("./lib");
 
-spawn("npx", ["microbundle", "--cwd", "${moduleName}", "--raw", ...buildArgs(), ...args]);
+(async () => {
+  await rmDir(pkgDir("${moduleName}", "dist"), { recursive: true });
+  spawn("npx", ["microbundle", "--cwd", "${moduleName}", ...buildArgs(), ...args]);
+})();
 `;
 
   const scriptPath = scriptsDir(`build-${moduleName}.js`);
@@ -87,6 +131,7 @@ spawn("npx", ["microbundle", "--cwd", "${moduleName}", "--raw", ...buildArgs(), 
     const pkg = require("./../package");
 
     await updatePkg(moduleName, pkg);
+    await updateTsconfig(moduleName, pkg);
     await createModulePkg(moduleDir, moduleName, pkg);
     await createModuleLib(moduleDir);
     await createBuildScript(moduleName);
