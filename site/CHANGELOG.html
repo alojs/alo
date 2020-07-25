@@ -17,22 +17,39 @@
       <main>
         <h1 id="changelog"><a href="#changelog" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Changelog</h1>
 <p>All notable changes to this project will be documented in this file. See <a href="https://github.com/conventional-changelog/standard-version" target="_blank">standard-version</a> for commit guidelines.</p>
-<h2 id="400-alpha26-2020-07-22"><a href="#400-alpha26-2020-07-22" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/alojs/alo/compare/v4.0.0-alpha.25...v4.0.0-alpha.26" target="_blank">4.0.0-alpha.26</a> (2020-07-22)</h2>
+<h2 id="400-alpha27-2020-07-25"><a href="#400-alpha27-2020-07-25" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/alojs/alo/compare/v4.0.0-alpha.26...v4.0.0-alpha.27" target="_blank">4.0.0-alpha.27</a> (2020-07-25)</h2>
+<h3 id="-breaking-changes"><a href="#-breaking-changes" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>redom:</strong> remove setAloCore, import all internal dependencies</li>
+</ul>
+<h3 id="features"><a href="#features" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<ul>
+<li><strong>devtools:</strong> add default value for constructor options object (<a href="https://github.com/alojs/alo/commit/ab8caaba16a4b449ce5529e5aa2240d950d8df16" target="_blank">ab8caab</a>)</li>
+<li><strong>devtools:</strong> debounce action list updates (<a href="https://github.com/alojs/alo/commit/4e8bd68467eb1c959bf4bcc222f4ce2b9af9a58b" target="_blank">4e8bd68</a>)</li>
+</ul>
 <h3 id="bug-fixes"><a href="#bug-fixes" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
+<ul>
+<li><strong>devtools:</strong> make list items compatible with native es6 (<a href="https://github.com/alojs/alo/commit/44e0d72c963df0995f8e0f6928ac3ffce0852e84" target="_blank">44e0d72</a>)</li>
+</ul>
+<ul>
+<li><strong>redom:</strong> remove setAloCore, import all internal dependencies (<a href="https://github.com/alojs/alo/commit/befc67116ed78dfbc6e2ce93fc8d57d523261d7b" target="_blank">befc671</a>)</li>
+</ul>
+<h2 id="400-alpha26-2020-07-22"><a href="#400-alpha26-2020-07-22" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/alojs/alo/compare/v4.0.0-alpha.25...v4.0.0-alpha.26" target="_blank">4.0.0-alpha.26</a> (2020-07-22)</h2>
+<h3 id="bug-fixes-1"><a href="#bug-fixes-1" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
 <ul>
 <li><strong>devtools:</strong> remove circular mutator dependencies (<a href="https://github.com/alojs/alo/commit/85e8b052c96b6fc3b48ed591d522149cbf47080f" target="_blank">85e8b05</a>)</li>
 </ul>
 <h2 id="400-alpha25-2020-06-05"><a href="#400-alpha25-2020-06-05" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/alojs/alo/compare/v4.0.0-alpha.24...v4.0.0-alpha.25" target="_blank">4.0.0-alpha.25</a> (2020-06-05)</h2>
-<h3 id="bug-fixes-1"><a href="#bug-fixes-1" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
+<h3 id="bug-fixes-2"><a href="#bug-fixes-2" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
 <ul>
 <li>include lodash using es imports (<a href="https://github.com/alojs/alo/commit/7a12fa79693c8a1aa1e6fd5886b930025c080e70" target="_blank">7a12fa7</a>)</li>
 </ul>
 <h2 id="400-alpha24-2020-06-05"><a href="#400-alpha24-2020-06-05" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/alojs/alo/compare/v4.0.0-alpha.23...v4.0.0-alpha.24" target="_blank">4.0.0-alpha.24</a> (2020-06-05)</h2>
-<h3 id="-breaking-changes"><a href="#-breaking-changes" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
+<h3 id="-breaking-changes-1"><a href="#-breaking-changes-1" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
 <ul>
 <li>update project structure to witney v0.4.0</li>
 </ul>
-<h3 id="features"><a href="#features" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<h3 id="features-1"><a href="#features-1" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
 <ul>
 <li>implement default exports in create-type-proxies script (<a href="https://github.com/alojs/alo/commit/898c9c02a09705e3597de883ab124ceb64c430fe" target="_blank">898c9c0</a>)</li>
 </ul>
@@ -171,66 +188,99 @@
        "hash": "changelog",
        "children": [
         1,
-        3,
-        5
+        5,
+        7,
+        9
        ],
        "id": 0
       },
       {
        "level": "2",
-       "heading": "4.0.0-alpha.26 (2020-07-22)",
-       "hash": "400-alpha26-2020-07-22",
+       "heading": "4.0.0-alpha.27 (2020-07-25)",
+       "hash": "400-alpha27-2020-07-25",
        "children": [
-        2
-       ],
-       "id": 1
-      },
-      {
-       "level": "3",
-       "heading": "Bug Fixes",
-       "hash": "bug-fixes",
-       "children": [],
-       "id": 2
-      },
-      {
-       "level": "2",
-       "heading": "4.0.0-alpha.25 (2020-06-05)",
-       "hash": "400-alpha25-2020-06-05",
-       "children": [
+        2,
+        3,
         4
        ],
-       "id": 3
-      },
-      {
-       "level": "3",
-       "heading": "Bug Fixes",
-       "hash": "bug-fixes-1",
-       "children": [],
-       "id": 4
-      },
-      {
-       "level": "2",
-       "heading": "4.0.0-alpha.24 (2020-06-05)",
-       "hash": "400-alpha24-2020-06-05",
-       "children": [
-        6,
-        7
-       ],
-       "id": 5
+       "id": 1
       },
       {
        "level": "3",
        "heading": "⚠ BREAKING CHANGES",
        "hash": "-breaking-changes",
        "children": [],
-       "id": 6
+       "id": 2
       },
       {
        "level": "3",
        "heading": "Features",
        "hash": "features",
        "children": [],
+       "id": 3
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes",
+       "children": [],
+       "id": 4
+      },
+      {
+       "level": "2",
+       "heading": "4.0.0-alpha.26 (2020-07-22)",
+       "hash": "400-alpha26-2020-07-22",
+       "children": [
+        6
+       ],
+       "id": 5
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-1",
+       "children": [],
+       "id": 6
+      },
+      {
+       "level": "2",
+       "heading": "4.0.0-alpha.25 (2020-06-05)",
+       "hash": "400-alpha25-2020-06-05",
+       "children": [
+        8
+       ],
        "id": 7
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-2",
+       "children": [],
+       "id": 8
+      },
+      {
+       "level": "2",
+       "heading": "4.0.0-alpha.24 (2020-06-05)",
+       "hash": "400-alpha24-2020-06-05",
+       "children": [
+        10,
+        11
+       ],
+       "id": 9
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes-1",
+       "children": [],
+       "id": 10
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-1",
+       "children": [],
+       "id": 11
       }
      ]
     },
