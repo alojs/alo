@@ -142,8 +142,7 @@
     "collectCoverageFrom": [
       "lib/**/*.{ts,tsx,js,jsx}",
       "store/lib/**/*.{ts,tsx,js,jsx}",
-      "react/lib/**/*.{ts,tsx,js,jsx}",
-      "example/lib/**/*.{ts,tsx,js,jsx}"
+      "react/lib/**/*.{ts,tsx,js,jsx}"
     ]
   }
 }
