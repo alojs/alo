@@ -8,6 +8,52 @@
   "module": "dist/main.m.js",
   "umd:main": "dist/main.umd.js",
   "esmodule": "dist/main.modern.js",
+  "exports": {
+    ".": {
+      "browser": "./dist/main.m.js",
+      "umd": "./dist/main.umd.js",
+      "import": "./dist/main.m.js",
+      "require": "./dist/main.js"
+    },
+    "./example": {
+      "browser": "./example/dist/main.m.js",
+      "umd": "./example/dist/main.umd.js",
+      "import": "./example/dist/main.m.js",
+      "require": "./example/dist/main.js"
+    },
+    "./store": {
+      "browser": "./store/dist/main.m.js",
+      "umd": "./store/dist/main.umd.js",
+      "import": "./store/dist/main.m.js",
+      "require": "./store/dist/main.js"
+    },
+    "./preact": {
+      "browser": "./preact/dist/main.m.js",
+      "umd": "./preact/dist/main.umd.js",
+      "import": "./preact/dist/main.m.js",
+      "require": "./preact/dist/main.js"
+    },
+    "./react": {
+      "browser": "./react/dist/main.m.js",
+      "umd": "./react/dist/main.umd.js",
+      "import": "./react/dist/main.m.js",
+      "require": "./react/dist/main.js"
+    },
+    "./redom": {
+      "browser": "./redom/dist/main.m.js",
+      "umd": "./redom/dist/main.umd.js",
+      "import": "./redom/dist/main.m.js",
+      "require": "./redom/dist/main.js"
+    },
+    "./devtools": {
+      "browser": "./devtools/dist/main.m.js",
+      "umd": "./devtools/dist/main.umd.js",
+      "import": "./devtools/dist/main.m.js",
+      "require": "./devtools/dist/main.js"
+    },
+    "./package.json": "./package.json",
+    "./": "./"
+  },
   "types": "dist/main.d.ts",
   "authors": [
     "Katja Lutz <opensource@katjalutz.ch>"
@@ -66,7 +112,10 @@
     "selector/dist",
     "redom/package.json",
     "redom/lib",
-    "redom/dist"
+    "redom/dist",
+    "example/package.json",
+    "example/lib",
+    "example/dist"
   ],
   "standard-version": {
     "scripts": {
@@ -91,7 +140,8 @@
     "collectCoverageFrom": [
       "lib/**/*.{ts,tsx,js,jsx}",
       "store/lib/**/*.{ts,tsx,js,jsx}",
-      "react/lib/**/*.{ts,tsx,js,jsx}"
+      "react/lib/**/*.{ts,tsx,js,jsx}",
+      "example/lib/**/*.{ts,tsx,js,jsx}"
     ]
   }
 }

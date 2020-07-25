@@ -10,7 +10,11 @@
     "paths": {
       "alo": ["../lib/main.ts"],
       "alo/store": ["../store/lib/main.ts"],
-      "alo/redom": ["../redom/lib/main.ts"]
+      "alo/devtools": ["../devtools/lib/main.ts"],
+      "alo/react": ["../react/lib/main.ts"],
+      "alo/preact": ["../preact/lib/main.ts"],
+      "alo/redom": ["../redom/lib/main.ts"],
+      "alo/example": ["../example/lib/main.ts"]
     }
   },
   "exclude": ["node_modules", "**/dist"]
