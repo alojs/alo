@@ -9,16 +9,6 @@ import {
 import { StoreInterface, SubscribableInterface } from "alo/store";
 import { RedomComponent } from "redom";
 
-var coreCache: {
-  observe: typeof observe;
-  observable: typeof observable;
-  batchStart: typeof batchStart;
-  batchEnd: typeof batchEnd;
-};
-export const setAloCore = function (core: typeof coreCache) {
-  coreCache = core;
-};
-
 export abstract class Observer {
   _subscriptions: { [key: string]: ReturnType<typeof observe> } = {};
   _observeFunctions: ObserveFn[] = [];
@@ -44,7 +34,7 @@ export abstract class Observer {
     };
   }
   _startSubscription = (fn, idx) => {
-    this._subscriptions[idx] = coreCache.observe(fn);
+    this._subscriptions[idx] = observe(fn);
   };
   startSubscriptions() {
     if (this._started) {
@@ -76,7 +66,7 @@ export abstract class ObserverListItem<
   C = any,
   ID = any
 > extends Observer {
-  state = coreCache.observable({
+  state = observable({
     index: null as any,
     item: (null as unknown) as I,
     items: (null as unknown) as I[],
@@ -92,12 +82,12 @@ export abstract class ObserverListItem<
   }
 
   update(item, index, items, context) {
-    const prevBatch = coreCache.batchStart();
+    const prevBatch = batchStart();
     this.state.item = item;
     this.state.index = index;
     this.state.items = items;
     this.state.context = context;
-    coreCache.batchEnd(prevBatch);
+    batchEnd(prevBatch);
 
     if (this.init && this["oninit"]) this["oninit"]();
     this.init = false;
