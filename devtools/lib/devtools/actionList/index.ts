@@ -4,6 +4,7 @@ import { STORE, setSelectedActionId } from "../store";
 import { BlueprintEntity, createBlueprint } from "wald";
 import { Observer } from "alo/redom";
 import { GLOBAL_DEVTOOLS_STATE } from "../ioc";
+import debounce from "lodash/debounce";
 
 export const ACTION_LIST = createBlueprint({
   create: ({ ioc }) =>
@@ -61,6 +62,11 @@ export class ActionList extends Observer {
       this.listEl
     );
 
+    let sortedTrackedActions;
+    const updateList = debounce(() => {
+      this.listEl.update(sortedTrackedActions);
+    }, 500);
+
     this.observe((pauseObserver) => {
       const state = this.store.getState();
       const selectedStore = state.selectedStore;
@@ -71,10 +77,10 @@ export class ActionList extends Observer {
       const actions = timemachineState.actions;
       pauseObserver();
 
-      const sortedTrackedActions = Object.values(actions).sort((a, b) => {
+      sortedTrackedActions = Object.values(actions).sort((a, b) => {
         return a.order - b.order;
       });
-      this.listEl.update(sortedTrackedActions);
+      updateList();
 
       const sortedTrackedActionsLength = sortedTrackedActions.length;
       if (
